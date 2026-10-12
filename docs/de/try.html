@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="d0d83ed724d124e926adfa9ff80960db9899e67cc1c2e1ff042c67da153d8ca7"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="bde5e530e884c845ab6e4b8cd19fc869b7ce3a6f601bb7c2ea8e04d60e2f7eb6"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -469,7 +469,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Geben Sie eine gültige Zahl ein.", "integer": "Geben Sie eine ganze Zahl ein.", "range": "Verwenden Sie einen Wert innerhalb dieser Grenzen:", "summary": "Korrigieren Sie die markierten Zahlenfelder, bevor Sie den Plan erstellen oder JSON öffnen.", "sync": "Geben Sie diese Zahl zur Bestätigung erneut ein."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Geben Sie gültiges JSON ein.", "object": "Das Profil muss ein JSON-Objekt sein.", "finite": "Das Profil enthält eine nicht endliche Zahl.", "section": "Dieser Profilabschnitt muss ein Objekt oder null sein:", "transfer": "Belassen Sie dieses Profil im JSON-Modus: Wählen Sie das passende Krankheitsformular und unterstützte Feldwerte. Ihr JSON bleibt erhalten.", "restored": "JSON-Entwurf wiederhergestellt. Prüfen Sie ihn vor dem Erstellen eines Berichts.", "restoreLimited": "JSON-Entwurf wiederhergestellt; der Fragebogen konnte nicht geladen werden. Sie können im JSON-Modus fortfahren.", "questionnaireUnavailable": "Der ausgewählte Fragebogen ist nicht verfügbar oder passt nicht zu dieser Krankheit.", "switchFailed": "Das ausgewählte Formular konnte nicht geladen werden. Das bisherige Formular, die Antworten und der Bericht bleiben erhalten. Versuchen Sie es erneut."};
+const profileInputCopy = {"json": "Geben Sie gültiges JSON ein.", "object": "Das Profil muss ein JSON-Objekt sein.", "finite": "Das Profil enthält eine nicht endliche Zahl.", "section": "Dieser Profilabschnitt muss ein Objekt oder null sein:", "transfer": "Belassen Sie dieses Profil im JSON-Modus: Wählen Sie das passende Krankheitsformular und unterstützte Feldwerte. Ihr JSON bleibt erhalten.", "restored": "JSON-Entwurf wiederhergestellt. Prüfen Sie ihn vor dem Erstellen eines Berichts.", "restoreLimited": "JSON-Entwurf wiederhergestellt; der Fragebogen konnte nicht geladen werden. Sie können im JSON-Modus fortfahren.", "questionnaireUnavailable": "Der ausgewählte Fragebogen ist nicht verfügbar oder passt nicht zu dieser Krankheit.", "switchFailed": "Das ausgewählte Formular konnte nicht geladen werden. Das bisherige Formular, die Antworten und der Bericht bleiben erhalten. Versuchen Sie es erneut.", "exampleUnavailable": "Das ausgewählte Beispiel ist nicht verfügbar oder sein Profil passt nicht zur ausgewählten Krankheit.", "exampleFailed": "Das Beispiel konnte nicht geladen werden. Ihre bisherigen Daten und der Bericht bleiben erhalten. Versuchen Sie es erneut.", "exampleReportFailed": "Das Beispielprofil ist geladen, aber der Bericht ist nicht verfügbar. Sie können einen neuen Bericht erstellen.", "exampleLoaded": "Beispielprofil geladen. Prüfen Sie Daten und Quellen vor der Verwendung."};
 const questionnaireNoticeCopy = {"defaults": "Geben Sie bekannte Informationen ein. Fehlende Daten bleiben unbekannt und können den Bericht einschränken.", "starter": "Automatisch erstelltes Ausgangsformular: Wichtige Informationen können fehlen. Prüfen Sie Werte, fehlende Daten und Quellen mit qualifiziertem medizinischem Fachpersonal vor Behandlungsentscheidungen.", "unknown": "Nicht ausgefüllte Screeningfelder bleiben unbekannt. Sicherheitsprüfungen können ungeprüft bleiben; Vollständigkeit allein belegt keine klinische Eignung."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -599,6 +599,7 @@ let planSource = null;
 let reportReady = false;
 let planDirty = false;
 let activeExampleCaseId = null;
+let activeExampleSelection = '';
 let activeExampleHasPatient = false;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -1255,6 +1256,7 @@ function questionnaireDescription(group) {
 function renderForm(quest) {
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
+  activeExampleSelection = '';
   formProfileBase = null;
   removedProfileFields = new Set();
   answers = {};
@@ -2585,6 +2587,19 @@ async function ensureExamples() {
   return _examplesPromise;
 }
 
+async function loadExample(index) {
+  const expected = Number.isInteger(index) && EXAMPLES_MANIFEST[index];
+  if (!expected || !expected.case_id) throw new Error(profileInputCopy.exampleUnavailable);
+  const payload = await ensureExamples();
+  const matches = Array.isArray(payload) ? payload.filter(item => item && item.case_id === expected.case_id) : [];
+  const example = matches.length === 1 ? matches[0] : null;
+  if (!example || example.disease_id !== expected.disease_id || example.scenario_type !== expected.scenario_type ||
+      profileInputError(example.json) || (example.json.disease?.id ?? null) !== (expected.disease_id ?? null)) {
+    throw new Error(profileInputCopy.exampleUnavailable);
+  }
+  return example;
+}
+
 // Persist dropdown manifests across visits. Read by the early-paint
 // warmup at the top of the script body, written by loadAssets after a
 // successful boot so the next cold visit can paint dropdowns from
@@ -2968,65 +2983,64 @@ function populateFormFromProfile(quest, profile) {
   return true;
 }
 
-exampleSelect.addEventListener('change', async () => {
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {
-    const i = exampleSelect.value;
-    if (i === '') return;
-    const fullExamples = await ensureExamples();
-    const ex = fullExamples[parseInt(i, 10)];
-    setError(null);
-    // Prefer form mode: find a questionnaire that matches this example's
-    // disease and populate it. Fall back to JSON view only when no
-    // matching questionnaire exists (most diseases don't have one yet).
-    const qIdx = findQuestionnaireForProfile(ex.json);
-    if (qIdx >= 0) {
-      diseaseSelect.value = qIdx;
-      const quest = await loadQuestionnaire(qIdx);
-      renderForm(quest);
-      repopulateExamples(qIdx);
-      exampleSelect.value = i;
-      if (!populateFormFromProfile(quest, ex.json)) {
-        textarea.value = JSON.stringify(ex.json, null, 2);
+async function changeExample() {
+  const previous = activeExampleSelection;
+  let profileLoaded = false;
+  try {
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {
+      const selected = exampleSelect.value;
+      if (selected === '') return;
+      const example = await loadExample(Number(selected));
+      const qIndex = findQuestionnaireForProfile(example.json);
+      const quest = qIndex >= 0 ? await loadQuestionnaire(qIndex) : null;
+      // Complete fallible data loading before replacing the previous profile/report.
+      clearPlanState();
+      setError(null);
+      if (quest) {
+        diseaseSelect.value = String(qIndex);
+        renderForm(quest);
+        repopulateExamples(qIndex);
+        if (populateFormFromProfile(quest, example.json)) {
+          setMode('form');
+          lockFilledFields();
+          showExampleLockBanner();
+          textarea.value = JSON.stringify(buildProfile(), null, 2);
+        } else {
+          textarea.value = JSON.stringify(example.json, null, 2);
+          setMode('json');
+          setError(profileInputCopy.transfer);
+        }
+      } else {
+        renderForm(null);
+        diseaseSelect.value = '';
+        repopulateExamples(null);
+        textarea.value = JSON.stringify(example.json, null, 2);
         setMode('json');
-        setError(profileInputCopy.transfer);
-        clearPlanState();
-        return;
       }
-      setMode('form');
-      // Lock filled fields and reveal the personalize banner so the user
-      // can opt-in to editing the example's data.
-      lockFilledFields();
-      showExampleLockBanner();
-      // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
-      textarea.value = JSON.stringify(buildProfile(), null, 2);
-      // Show the pre-built case plan when one exists. Hidden starter stubs
-      // are form-prefill examples only, so they should not iframe a missing
-      // /cases/<id>.html page.
-      if (ex.case_id && ex.has_case_page !== false) {
-        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
-        setStatus('Example loaded ✓ Edit any field, or open the pre-built plan when you are ready.', 'ok');
-      } else {
-        clearPlanState();
-        setStatus('Starter example loaded ✓ Click «Generate» to build a plan.', 'ok');
+      activeExampleSelection = selected;
+      exampleSelect.value = selected;
+      profileLoaded = true;
+      saveDraft();
+      if (example.has_case_page !== false) {
+        await loadExamplePlan(example.case_id, example.patient_view_available !== false);
       }
+      setStatus(profileInputCopy.exampleLoaded, 'ok');
+      updateRunBtnEnabled();
+      updateImpactPanelLocal();
+    });
+  } catch (error) {
+    if (profileLoaded) {
+      clearPlanState();
+      setError(profileInputCopy.exampleReportFailed);
     } else {
-      setMode('json');
-      textarea.value = JSON.stringify(ex.json, null, 2);
-      // No questionnaire match: still show the prebuilt plan if a case file
-      // exists for this example.
-      if (ex.case_id && ex.has_case_page !== false) {
-        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
-        setStatus('Example loaded as JSON (no questionnaire for this disease yet)', 'ok');
-      } else {
-        clearPlanState();
-        setStatus('Starter example loaded as JSON', 'ok');
-      }
+      exampleSelect.value = previous;
+      setError(profileInputCopy.exampleFailed);
     }
-    saveDraft();
     updateRunBtnEnabled();
-    updateImpactPanelLocal();
-  });
-});
+  }
+}
+
+exampleSelect.addEventListener('change', changeExample);
 
 personalizeBtn && personalizeBtn.addEventListener('click', () => {
   if (isInteractionLocked()) return;

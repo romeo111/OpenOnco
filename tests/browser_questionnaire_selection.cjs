@@ -38,7 +38,8 @@ async function fixture(page){
   for(const name of ['loadQuestionnaire','changeDisease'])assert.equal(fn(page,name),fn(root,name));
   assert(page.includes("diseaseSelect.addEventListener('change', changeDisease)"));
   assert(page.includes('const quest = await loadQuestionnaire(idx)'));
-  assert.equal((page.match(/const quest = await loadQuestionnaire\(qIdx\)/g)||[]).length,2,'Example and QR loading share the identity guard');
+  assert(page.includes('const quest = await loadQuestionnaire(qIdx)'));
+  assert(page.includes('const quest = qIndex >= 0 ? await loadQuestionnaire(qIndex) : null'));
  }
  console.log('All 78 questionnaire identities survive payload reordering; network/missing/mismatched/malformed selection failures retain previous state; eleven clients passed');
 })().catch(e=>{console.error(e);process.exitCode=1;});

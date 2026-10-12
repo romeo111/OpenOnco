@@ -5268,6 +5268,7 @@ let planSource = null;
 let reportReady = false;
 let planDirty = false;
 let activeExampleCaseId = null;
+let activeExampleSelection = '';
 let activeExampleHasPatient = false;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -5924,6 +5925,7 @@ function questionnaireDescription(group) {{
 function renderForm(quest) {{
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
+  activeExampleSelection = '';
   formProfileBase = null;
   removedProfileFields = new Set();
   answers = {{}};
@@ -7254,6 +7256,19 @@ async function ensureExamples() {{
   return _examplesPromise;
 }}
 
+async function loadExample(index) {{
+  const expected = Number.isInteger(index) && EXAMPLES_MANIFEST[index];
+  if (!expected || !expected.case_id) throw new Error(profileInputCopy.exampleUnavailable);
+  const payload = await ensureExamples();
+  const matches = Array.isArray(payload) ? payload.filter(item => item && item.case_id === expected.case_id) : [];
+  const example = matches.length === 1 ? matches[0] : null;
+  if (!example || example.disease_id !== expected.disease_id || example.scenario_type !== expected.scenario_type ||
+      profileInputError(example.json) || (example.json.disease?.id ?? null) !== (expected.disease_id ?? null)) {{
+    throw new Error(profileInputCopy.exampleUnavailable);
+  }}
+  return example;
+}}
+
 // Persist dropdown manifests across visits. Read by the early-paint
 // warmup at the top of the script body, written by loadAssets after a
 // successful boot so the next cold visit can paint dropdowns from
@@ -7637,65 +7652,64 @@ function populateFormFromProfile(quest, profile) {{
   return true;
 }}
 
-exampleSelect.addEventListener('change', async () => {{
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {{
-    const i = exampleSelect.value;
-    if (i === '') return;
-    const fullExamples = await ensureExamples();
-    const ex = fullExamples[parseInt(i, 10)];
-    setError(null);
-    // Prefer form mode: find a questionnaire that matches this example's
-    // disease and populate it. Fall back to JSON view only when no
-    // matching questionnaire exists (most diseases don't have one yet).
-    const qIdx = findQuestionnaireForProfile(ex.json);
-    if (qIdx >= 0) {{
-      diseaseSelect.value = qIdx;
-      const quest = await loadQuestionnaire(qIdx);
-      renderForm(quest);
-      repopulateExamples(qIdx);
-      exampleSelect.value = i;
-      if (!populateFormFromProfile(quest, ex.json)) {{
-        textarea.value = JSON.stringify(ex.json, null, 2);
+async function changeExample() {{
+  const previous = activeExampleSelection;
+  let profileLoaded = false;
+  try {{
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.exampleHint, async () => {{
+      const selected = exampleSelect.value;
+      if (selected === '') return;
+      const example = await loadExample(Number(selected));
+      const qIndex = findQuestionnaireForProfile(example.json);
+      const quest = qIndex >= 0 ? await loadQuestionnaire(qIndex) : null;
+      // Complete fallible data loading before replacing the previous profile/report.
+      clearPlanState();
+      setError(null);
+      if (quest) {{
+        diseaseSelect.value = String(qIndex);
+        renderForm(quest);
+        repopulateExamples(qIndex);
+        if (populateFormFromProfile(quest, example.json)) {{
+          setMode('form');
+          lockFilledFields();
+          showExampleLockBanner();
+          textarea.value = JSON.stringify(buildProfile(), null, 2);
+        }} else {{
+          textarea.value = JSON.stringify(example.json, null, 2);
+          setMode('json');
+          setError(profileInputCopy.transfer);
+        }}
+      }} else {{
+        renderForm(null);
+        diseaseSelect.value = '';
+        repopulateExamples(null);
+        textarea.value = JSON.stringify(example.json, null, 2);
         setMode('json');
-        setError(profileInputCopy.transfer);
-        clearPlanState();
-        return;
       }}
-      setMode('form');
-      // Lock filled fields and reveal the personalize banner so the user
-      // can opt-in to editing the example's data.
-      lockFilledFields();
-      showExampleLockBanner();
-      // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
-      textarea.value = JSON.stringify(buildProfile(), null, 2);
-      // Show the pre-built case plan when one exists. Hidden starter stubs
-      // are form-prefill examples only, so they should not iframe a missing
-      // /cases/<id>.html page.
-      if (ex.case_id && ex.has_case_page !== false) {{
-        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
-        setStatus('{'Example loaded ✓ Edit any field, or open the pre-built plan when you are ready.' if target_lang == 'en' else 'Приклад завантажено ✓ Зміни поле або відкрий готовий план, коли буде потрібно.'}', 'ok');
-      }} else {{
-        clearPlanState();
-        setStatus('{'Starter example loaded ✓ Click «Generate» to build a plan.' if target_lang == 'en' else 'Стартовий приклад завантажено ✓ Натисни «Згенерувати», щоб побудувати план.'}', 'ok');
+      activeExampleSelection = selected;
+      exampleSelect.value = selected;
+      profileLoaded = true;
+      saveDraft();
+      if (example.has_case_page !== false) {{
+        await loadExamplePlan(example.case_id, example.patient_view_available !== false);
       }}
+      setStatus(profileInputCopy.exampleLoaded, 'ok');
+      updateRunBtnEnabled();
+      updateImpactPanelLocal();
+    }});
+  }} catch (error) {{
+    if (profileLoaded) {{
+      clearPlanState();
+      setError(profileInputCopy.exampleReportFailed);
     }} else {{
-      setMode('json');
-      textarea.value = JSON.stringify(ex.json, null, 2);
-      // No questionnaire match: still show the prebuilt plan if a case file
-      // exists for this example.
-      if (ex.case_id && ex.has_case_page !== false) {{
-        await loadExamplePlan(ex.case_id, ex.patient_view_available !== false);
-        setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
-      }} else {{
-        clearPlanState();
-        setStatus('{"Starter example loaded as JSON" if target_lang == "en" else "Стартовий приклад завантажено як JSON"}', 'ok');
-      }}
+      exampleSelect.value = previous;
+      setError(profileInputCopy.exampleFailed);
     }}
-    saveDraft();
     updateRunBtnEnabled();
-    updateImpactPanelLocal();
-  }});
-}});
+  }}
+}}
+
+exampleSelect.addEventListener('change', changeExample);
 
 personalizeBtn && personalizeBtn.addEventListener('click', () => {{
   if (isInteractionLocked()) return;
