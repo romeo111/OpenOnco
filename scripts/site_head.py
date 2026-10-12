@@ -1165,6 +1165,7 @@ def finalize_site_discovery(
     write_geo_lang_asset(output_dir)
     header_re = re.compile(r'<header class="top-bar site-header">.*?</header>|<!-- shared-site-header:start -->.*?<!-- shared-site-header:end -->', re.S)
     available_paths = _indexable_paths(output_dir)
+    reader_pages = []
     def enrich_page(page):
         rel = page.relative_to(output_dir).as_posix()
         original = page.read_text(encoding="utf-8")
@@ -1175,6 +1176,8 @@ def finalize_site_discovery(
         navigation = header_re.sub(lambda _: render_header_mount(locale, base, active, physical_paths)
                                    if deep else render_top_bar(active, locale, page_path=base, available_paths=physical_paths), original)
         updated = inject_geo_lang_redirect(inject_seo_metadata(navigation, path=rel, available_paths=available_paths), path=rel)
+        if 'data-shared-clinical-source' in updated:
+            reader_pages.append(page)
         if updated != original:
             page.write_text(updated, encoding="utf-8")
             return 1
@@ -1182,6 +1185,9 @@ def finalize_site_discovery(
 
     with ThreadPoolExecutor(max_workers=16) as pool:
         changed = sum(pool.map(enrich_page, pages))
+
+    from scripts.shared_clinical_reader import synchronize_reader_source_hashes
+    reader_bindings = synchronize_reader_source_hashes(output_dir, pages=reader_pages)
 
     if stats is None:
         stats = _auto_stats()
@@ -1192,6 +1198,7 @@ def finalize_site_discovery(
     llms_full = write_llms_full_txt(output_dir, stats=stats)
     return {
         "html_pages_enriched": changed,
+        "reader_source_bindings_updated": reader_bindings['updated'],
         "sitemap": str(sitemap),
         "robots": str(robots),
         "llms": str(llms),

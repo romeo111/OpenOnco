@@ -11561,6 +11561,8 @@ def build_site(output_dir: Path, *, progress: bool = False) -> dict:
     stage("Finalizing search discovery and generated whitespace")
     discovery_payload = finalize_site_discovery(output_dir)
     whitespace_normalized_files = _normalize_generated_text_whitespace(output_dir)
+    from scripts.shared_clinical_reader import synchronize_reader_source_hashes
+    final_reader_bindings = synchronize_reader_source_hashes(output_dir, pages=[output_dir / path for path in clinical_locales_payload['pages']])
 
     stage("Site generation completed")
     return {
@@ -11588,6 +11590,7 @@ def build_site(output_dir: Path, *, progress: bool = False) -> dict:
         "landing_assets": landing_assets,
         "excluded_case_pages_removed": excluded_case_pages_removed,
         "whitespace_normalized_files": whitespace_normalized_files,
+        "final_reader_source_bindings": final_reader_bindings,
     }
 
 
