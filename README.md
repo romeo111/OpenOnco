@@ -105,6 +105,14 @@ legacy/                         Historical implementation; not authoritative
 
 Read the [Charter](specs/CHARTER.md) first. English specifications are canonical; Ukrainian originals are retained under [specs/uk/](specs/uk/). Sources are referenced under their upstream licensing terms.
 
+Plan Builder's service worker stores the public questionnaire and example
+catalogs for later offline opening. Online requests fetch fresh data; failed
+requests can reuse a valid retained copy. This cache excludes submitted
+profiles, POST requests, API endpoints and other origins. Its regression check
+is `node tests/browser_workspace_cache.cjs`. Complete offline plan generation
+still needs a separate browser test of the runtime and disease-module loading;
+catalog caching alone does not verify that whole workflow.
+
 ## Help improve OpenOnco
 
 - Review the [DLBCL packet](https://openonco.info/review/dlbcl-1l/): inspect plans, traces and sources; export feedback locally. Engineering checks are not clinical sign-off.

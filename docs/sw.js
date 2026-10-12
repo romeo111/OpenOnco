@@ -1,6 +1,6 @@
 // OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Cache strategies:
-//   0. Network-first index with offline fallback, so releases refresh metadata.
+//   0. Network-first index and validated public form catalogs with offline fallback.
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
 //   2. Stale-while-revalidate for try.html + style.css — repeat visits
 //      paint instantly from cache while a fresh copy fetches in the
@@ -9,6 +9,7 @@
 // push automatically rotates the cache key.
 const CACHE_NAME = 'openonco-bundle-l4-e693dc4bad7c';
 const CORE_STREAM_VERSION = 'f87900953c2c';
+const WORKSPACE_DATA_PATHS = ['/questionnaires.json', '/examples.json'];
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -18,6 +19,7 @@ const PRECACHE = [
   '/try.html',
   '/ukr/try.html',
   '/style.css',
+  ...WORKSPACE_DATA_PATHS,
 ];
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
@@ -33,7 +35,11 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) =>
       // Precache best-effort: don't fail the SW install if a single
       // file 404s (e.g. an old deploy that hasn't shipped the index yet).
-      Promise.all(PRECACHE.map((u) => cache.add(u).catch(() => null)))
+      Promise.all(PRECACHE.map((u) => (
+        WORKSPACE_DATA_PATHS.includes(u)
+          ? workspaceDataResponse(cache, new Request(self.location.origin + u))
+          : cache.add(u)
+      ).catch(() => null)))
     ).then(() => self.skipWaiting())
   );
 });
@@ -86,6 +92,36 @@ function networkFirstBundleIndex(event) {
   }));
 }
 
+function isWorkspaceData(value, path) {
+  const id = path === '/questionnaires.json' ? 'id' : 'case_id';
+  return Array.isArray(value) && value.every(item => item && typeof item === 'object'
+    && typeof item[id] === 'string' && item[id].trim()
+    && (path !== '/questionnaires.json' || Array.isArray(item.groups)));
+}
+
+async function workspaceDataResponse(cache, request) {
+  const key = new URL(request.url).pathname;
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Workspace data HTTP ' + response.status);
+    if (!isWorkspaceData(await response.clone().json(), key)) throw new Error('Invalid workspace data');
+    if (cache) await cache.put(key, response.clone()).catch(() => {});
+    return response;
+  } catch (error) {
+    const cached = cache && await cache.match(key).catch(() => null);
+    if (cached && cached.ok) {
+      try {
+        if (isWorkspaceData(await cached.clone().json(), key)) return cached;
+      } catch (_) {}
+    }
+    throw error;
+  }
+}
+
+function networkFirstWorkspaceData(event) {
+  event.respondWith(caches.open(CACHE_NAME).catch(() => null).then(cache => workspaceDataResponse(cache, event.request)));
+}
+
 async function cachedVersionedBundle(cache, request) {
   if (request.cache === 'reload') return undefined;
   const exact = await cache.match(request, { ignoreSearch: false });
@@ -117,6 +153,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (url.pathname === '/openonco-engine-index.json') return networkFirstBundleIndex(event);
+  if (WORKSPACE_DATA_PATHS.includes(url.pathname)) return networkFirstWorkspaceData(event);
 
   // SWR for the small interactive shell (HTML + CSS).
   if (/^\/clinical-localization(?:\.[a-f0-9]{12})?\.js$/.test(url.pathname) ||
