@@ -113,3 +113,5 @@ The partial-download message remains distinct from full offline readiness.
 JavaScript options, including `force-cache`, are not localized. Finnish uses
 `Välimuisti`, consistent with the terminology in the
 [University of Helsinki browser-cache instructions](https://helpdesk.it.helsinki.fi/ohjeet/tuki-ja-neuvonta/selaimen-valimuistin-tyhjennys).
+
+Offline module preparation retries incomplete index, network, storage or integrity failures. Returning online schedules another pass only after an engine-generated plan; verified retained modules are reused and concurrent/completed passes remain deduplicated. A partial cache is not full offline readiness. `tests/browser_offline_bundle_retry.cjs` exercises the shipped client code in CI; this does not establish full browser offline engine or PDF behavior.

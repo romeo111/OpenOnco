@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="5866e014e142188e8d414fe508a1170cb3bf2fbd987acce0387672fbc26b0f22"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="8570176fc4a2a1a07571d2713294a49e2c58a3a4824969d9727953722dc9d3a2"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -1802,6 +1802,8 @@ function offlineBundleUrls() {
 async function cacheAllBundlesForOffline() {
   if (offlineCacheStarted) return;
   offlineCacheStarted = true;
+  let complete = false;
+  try {
   await loadBundleIndex();
   const urls = offlineBundleUrls();
   setOfflineCacheProgress(0, urls.length, 0);
@@ -1847,6 +1849,12 @@ async function cacheAllBundlesForOffline() {
       await yieldToBrowser(10);
     }
   }
+  complete = failed === 0;
+  } finally {
+    // A transient failure must not permanently disable preparation.
+    // Retained verified modules are reused on the next pass.
+    if (!complete) offlineCacheStarted = false;
+  }
 }
 
 function scheduleOfflineCacheWarmup() {
@@ -1860,6 +1868,10 @@ function scheduleOfflineCacheWarmup() {
     window.setTimeout(run, 1500);
   }
 }
+
+window.addEventListener('online', () => {
+  if (enginReady && planSource === 'generated') scheduleOfflineCacheWarmup();
+});
 
 // Resolve a disease_id from whatever the patient profile / form gives us.
 // Order: explicit disease.id (or top-level disease_id) → active

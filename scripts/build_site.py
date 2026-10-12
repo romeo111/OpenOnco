@@ -6447,6 +6447,8 @@ function offlineBundleUrls() {{
 async function cacheAllBundlesForOffline() {{
   if (offlineCacheStarted) return;
   offlineCacheStarted = true;
+  let complete = false;
+  try {{
   await loadBundleIndex();
   const urls = offlineBundleUrls();
   setOfflineCacheProgress(0, urls.length, 0);
@@ -6492,6 +6494,12 @@ async function cacheAllBundlesForOffline() {{
       await yieldToBrowser(10);
     }}
   }}
+  complete = failed === 0;
+  }} finally {{
+    // A transient failure must not permanently disable preparation.
+    // Retained verified modules are reused on the next pass.
+    if (!complete) offlineCacheStarted = false;
+  }}
 }}
 
 function scheduleOfflineCacheWarmup() {{
@@ -6505,6 +6513,10 @@ function scheduleOfflineCacheWarmup() {{
     window.setTimeout(run, 1500);
   }}
 }}
+
+window.addEventListener('online', () => {{
+  if (enginReady && planSource === 'generated') scheduleOfflineCacheWarmup();
+}});
 
 // Resolve a disease_id from whatever the patient profile / form gives us.
 // Order: explicit disease.id (or top-level disease_id) → active
