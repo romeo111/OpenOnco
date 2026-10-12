@@ -1,0 +1,155 @@
+{
+  "audit_date": "2026-10-12",
+  "baseline_commit": "a0d1552323c040166e1ec796122c7224e259e819",
+  "clinical_approval": false,
+  "status": "open_findings_not_a_fix",
+  "scope": "Source-backed integrity audit of CODOX-M/IVAC and actual synthetic engine exposure; no clinical record or treatment algorithm changes.",
+  "source_sha256": "3ff0a77a96ff4144c6791079a7f254b73e7c3e20dc00b5c4c5692fd692b9f1c7",
+  "primary_sources": [
+    {
+      "id": "eviQ-4489",
+      "version": "1",
+      "url": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4489-burkitt-lymphoma-high-risk-dm-r-codox-m",
+      "sections": [
+        "Treatment schedule",
+        "Detail"
+      ]
+    },
+    {
+      "id": "eviQ-4490",
+      "version": "2",
+      "url": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4490-burkitt-lymphoma-high-risk-r-ivac",
+      "sections": [
+        "Treatment schedule",
+        "Detail",
+        "Clinical information"
+      ]
+    },
+    {
+      "id": "eviQ-3727",
+      "url": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/3727-burkitt-lymphoma-dm-r-codox-m-r-ivac-overvi",
+      "sections": [
+        "Treatment overview",
+        "Indications and patient population"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "missing-ivac-ifosfamide",
+      "priority": "high",
+      "status": "confirmed_open",
+      "observed": "IVAC phase contains cytarabine, etoposide, rituximab and filgrastim but no ifosfamide or mesna. Missing drug survives actual engine materialization.",
+      "evidence": "eviQ 4490 v2 treatment schedule: ifosfamide days 1-5 with mesna; administration specifies hydration and uroprotection.",
+      "required_change": "Restore the block-specific ifosfamide and mesna reference context, then verify actual engine phases, legacy component view and all generated editions."
+    },
+    {
+      "id": "mixed-codox-calendar",
+      "priority": "high",
+      "status": "confirmed_open",
+      "observed": "CODOX-M contains vincristine day 1 only and combines IV methotrexate with IT methotrexate days 1 and 3; omits IT cytarabine.",
+      "evidence": "eviQ 4489 v1 treatment schedule distinguishes vincristine days 1 and 8, IT cytarabine days 1 and 3, IV methotrexate day 10 and IT methotrexate day 15.",
+      "required_change": "Select and clearly identify one reference protocol variant for both blocks. Do not mix Magrath, modified CODOX-M, LMB, or proven-CNS schedules."
+    },
+    {
+      "id": "shared-support-calendar",
+      "priority": "high",
+      "status": "confirmed_open",
+      "observed": "Both blocks use rituximab day 1 and filgrastim from day 13; HD-MTX preparation specifies leucovorin after 24 hours.",
+      "evidence": "eviQ 4489 and 4490 distinguish rituximab and filgrastim by block; 4489 starts IV folinate rescue 36 hours after IV methotrexate initiation, separately from oral folinate after IT methotrexate.",
+      "required_change": "Keep IV/IT folinate routes and clocks distinct; bind support to the selected block-specific protocol rather than copying one shared calendar."
+    },
+    {
+      "id": "inherited-rchop-monitoring",
+      "priority": "high",
+      "status": "confirmed_open",
+      "observed": "CODOX-M/IVAC points to MON-R-CHOP-REGIMEN. CHOEP-alloSCT also inherits that schedule; their monitoring is not regimen-specific.",
+      "evidence": "Current YAML references; eviQ 4489 and 4490 contain methotrexate clearance, cytarabine and ifosfamide-specific assessment.",
+      "required_change": "Add regimen-specific CODOX/IVAC monitoring. Audit CHOEP induction/transplant monitoring separately; this audit does not verify the transplant choice."
+    },
+    {
+      "id": "risk-cns-eligibility",
+      "priority": "high",
+      "status": "requires_separate_selection_audit",
+      "observed": "Engine exposes the alternating four-block record in both low- and high-risk synthetic Burkitt tracks. Notes include CNS-positive disease while the encoded IT schedule is generic; age greater than 65 routes to another regimen automatically.",
+      "evidence": "eviQ 3727 distinguishes low-risk, high-risk and proven-CNS protocols; eviQ 4490 includes older-patient dose modifications.",
+      "required_change": "Audit actual track conditions, CNS involvement and age/fitness decisions against the selected source. Do not claim a schedule repair validates treatment selection."
+    }
+  ],
+  "actual_engine_exposure": [
+    {
+      "synthetic_case_id": "bma-bma-myc-rearrangement-burkitt",
+      "phase_drug_ids": {
+        "alternating_block_a": [
+          "DRUG-CYCLOPHOSPHAMIDE",
+          "DRUG-VINCRISTINE",
+          "DRUG-DOXORUBICIN",
+          "DRUG-METHOTREXATE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ],
+        "alternating_block_b": [
+          "DRUG-CYTARABINE",
+          "DRUG-ETOPOSIDE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ]
+      },
+      "monitoring_schedule_id": "MON-R-CHOP-REGIMEN"
+    },
+    {
+      "synthetic_case_id": "burkitt-high-risk",
+      "phase_drug_ids": {
+        "alternating_block_a": [
+          "DRUG-CYCLOPHOSPHAMIDE",
+          "DRUG-VINCRISTINE",
+          "DRUG-DOXORUBICIN",
+          "DRUG-METHOTREXATE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ],
+        "alternating_block_b": [
+          "DRUG-CYTARABINE",
+          "DRUG-ETOPOSIDE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ]
+      },
+      "monitoring_schedule_id": "MON-R-CHOP-REGIMEN"
+    },
+    {
+      "synthetic_case_id": "burkitt-low-risk",
+      "phase_drug_ids": {
+        "alternating_block_a": [
+          "DRUG-CYCLOPHOSPHAMIDE",
+          "DRUG-VINCRISTINE",
+          "DRUG-DOXORUBICIN",
+          "DRUG-METHOTREXATE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ],
+        "alternating_block_b": [
+          "DRUG-CYTARABINE",
+          "DRUG-ETOPOSIDE",
+          "DRUG-RITUXIMAB",
+          "DRUG-FILGRASTIM"
+        ]
+      },
+      "monitoring_schedule_id": "MON-R-CHOP-REGIMEN"
+    }
+  ],
+  "release_requirements": [
+    "Actual phase/legacy component regression tests",
+    "Protocol-specific EN/UA rendered monitoring and route/timing assertions",
+    "Schema/reference validation",
+    "All affected synthetic case and Wiki editions finalized with reader hashes",
+    "Canonical ZIP/TAR member scope and search row verification",
+    "Offline WASM loading and existing-case regressions",
+    "Explicit production authorization remains pending for draft PR 669"
+  ],
+  "limits": [
+    "No source guideline is treated as individualized prescribing authority.",
+    "No dose changes, clinical record changes, algorithm changes or production deployment were made by this audit.",
+    "Efficacy, Ukraine reimbursement, disease eligibility and other patient watchpoints remain unreviewed."
+  ]
+}
