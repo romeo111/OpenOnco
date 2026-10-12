@@ -4,6 +4,12 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### TAX 327 citation access (2026-10-12)
+
+Prior solo-policy deployment `b1840fb111` passed full CI 38239241732; Pages and API are published. Citation audit found one Source with DOI/PMID but no URL: SRC-TAX327-TANNOCK-2004. PubMed PMID 15470213 and publisher NEJM DOI 10.1056/NEJMoa040720 confirm the stored title/year; added the canonical PubMed URL. No trial results, doses or routing rules changed. Four unprotected EN/UK educational clinician/patient reports now link the existing citation label; removing only the new anchors reproduces their original bodies exactly. Protected case prefixes remain untouched.
+
+34 citation/render checks and all 22 browser suites passed. Core ZIP `242271ab31f2`, gzip `ba96b63a417c`, 2624106 bytes; exactly one member changed (the source URL record). Proofs: `.tmp/tax327-source-proof.json`, `.tmp/tax327-static-links.json`. Primary records: https://pubmed.ncbi.nlm.nih.gov/15470213/ and https://www.nejm.org/doi/full/10.1056/NEJMoa040720. This verifies the citation identity/link, not all medical claims or current treatment applicability. Normal Pages/API delivery and live link verification are required.
+
 ### Solo publication and truthful optional review records (2026-10-12)
 
 The remaining two-person quota is replaced by detection of a current eligible content-review record. Publication itself has no reviewer quorum under §6.1. Stats, coverage, BMA display readiness and patient badges share `MIN_ELIGIBLE_CONTENT_REVIEWS=1`; existing authorization, current revision, scope, independent identity/author checks and required BMA dossier remain intact. Zero valid reviews remains unreviewed. Handbook `reviewed` is explicitly labelled declared editorial metadata, not credentialed clinical approval; raw MDT review rows are labelled recorded, not reviewed. The review dashboard describes optional current coverage and separates additional history from quorum. Source-literature requirements are unchanged.
