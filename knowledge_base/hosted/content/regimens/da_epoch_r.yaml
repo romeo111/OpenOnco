@@ -11,8 +11,7 @@ components:
   route: IV
 - drug_id: DRUG-ETOPOSIDE
   dose: 50 mg/m²/day
-  schedule: Continuous IV days 1-4 (96h infusion); dose adjust per ANC nadir prior
-    cycle
+  schedule: Continuous IV days 1-4 (96h infusion); dose adjust per ANC nadir prior cycle
   route: IV
 - drug_id: DRUG-DOXORUBICIN
   dose: 10 mg/m²/day
@@ -31,9 +30,8 @@ components:
   schedule: PO days 1-5
   route: PO
 cycle_length_days: 21
-total_cycles: 'Disease- and response-specific protocol: eviQ DA-R-EPOCH uses 6-8 cycles;
-  risk-adapted Burkitt schedules require a separate protocol, not an automatic universal
-  six-cycle course.'
+total_cycles: 'Disease- and response-specific protocol: eviQ DA-R-EPOCH uses 6-8 cycles; risk-adapted
+  Burkitt schedules require a separate protocol, not an automatic universal six-cycle course.'
 toxicity_profile: high
 premedication:
 - Standard rituximab premedications first dose
@@ -46,45 +44,41 @@ mandatory_supportive_care:
 - SUP-GCSF-NEUTROPENIA
 monitoring_schedule_id: MON-DA-EPOCH-R-REGIMEN
 dose_adjustments:
-- condition: 'Complete scheduled twice-weekly CBC series: ANC ≥0.5 × 10^9/L on all
-    measurements, with platelet nadir ≥25 × 10^9/L'
-  modification: 'eviQ reference paradigm: increase one dose level above the previous
-    cycle after clinical review. Use the applicable dose-level table; above starting
-    level 1, adjustments apply to etoposide, doxorubicin and cyclophosphamide. Do
-    not calculate an individualized dose from this text.'
+- condition: 'Complete scheduled twice-weekly CBC series: ANC ≥0.5 × 10^9/L on all measurements, with
+    platelet nadir ≥25 × 10^9/L'
+  modification: 'eviQ reference paradigm: increase one dose level above the previous cycle after clinical
+    review. Use the applicable dose-level table; above starting level 1, adjustments apply to etoposide,
+    doxorubicin and cyclophosphamide. Do not calculate an individualized dose from this text.'
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
-- condition: 'Complete scheduled twice-weekly CBC series: ANC <0.5 × 10^9/L on one
-    or two measurements, with platelet nadir ≥25 × 10^9/L'
-  modification: 'eviQ reference paradigm: retain the previous dose level, subject
-    to other toxicity and clinical assessment. A single low ANC does not automatically
-    require a dose-level reduction.'
+- condition: 'Complete scheduled twice-weekly CBC series: ANC <0.5 × 10^9/L on one or two measurements,
+    with platelet nadir ≥25 × 10^9/L'
+  modification: 'eviQ reference paradigm: retain the previous dose level, subject to other toxicity and
+    clinical assessment. A single low ANC does not automatically require a dose-level reduction.'
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
-- condition: 'Complete scheduled twice-weekly CBC series: ANC <0.5 × 10^9/L on three
-    or more measurements, or platelet nadir <25 × 10^9/L'
-  modification: 'eviQ reference paradigm: reduce one dose level below the previous
-    cycle after clinical review. Above starting level 1, use the protocol table for
-    etoposide, doxorubicin and cyclophosphamide; below starting level 1, only cyclophosphamide
-    is adjusted by this nadir paradigm.'
+- condition: 'Complete scheduled twice-weekly CBC series: ANC <0.5 × 10^9/L on three or more measurements,
+    or platelet nadir <25 × 10^9/L'
+  modification: 'eviQ reference paradigm: reduce one dose level below the previous cycle after clinical
+    review. Above starting level 1, use the protocol table for etoposide, doxorubicin and cyclophosphamide;
+    below starting level 1, only cyclophosphamide is adjusted by this nadir paradigm.'
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
 - condition: Incomplete nadir monitoring or missing previous dose level
-  modification: Obtain and review the scheduled CBC results and prior dose-level record
-    before choosing the next level. Extra CBCs obtained for clinical care do not replace
-    the scheduled twice-weekly measurements used by the protocol.
+  modification: Obtain and review the scheduled CBC results and prior dose-level record before choosing
+    the next level. Extra CBCs obtained for clinical care do not replace the scheduled twice-weekly measurements
+    used by the protocol.
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
 - condition: Growth-factor support during DA-EPOCH-R
-  modification: eviQ schedules filgrastim from day 6 until neutrophil recovery. This
-    support is not restricted to HIV-positive patients; use the applicable protocol
-    and clinical review for administration.
+  modification: eviQ schedules filgrastim from day 6 until neutrophil recovery. This support is not restricted
+    to HIV-positive patients; use the applicable protocol and clinical review for administration.
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
 - condition: CNS involvement or a disease-specific CNS prophylaxis requirement
-  modification: Specialist disease-specific protocol assessment is required. DA-R-EPOCH
-    has limited CNS penetration; this record does not prescribe a universal intercalated
-    HD-MTX schedule or a fixed number of intrathecal doses.
+  modification: Specialist disease-specific protocol assessment is required. DA-R-EPOCH has limited CNS
+    penetration; this record does not prescribe a universal intercalated HD-MTX schedule or a fixed number
+    of intrathecal doses.
   source_refs:
   - SRC-EVIQ-DA-R-EPOCH-783
 ukraine_availability:
@@ -92,82 +86,104 @@ ukraine_availability:
   all_components_reimbursed: true
 sources:
 - SRC-NCCN-BCELL-2025
+- SRC-EVIQ-EPOCH-PATIENT-783
+- SRC-EVIQ-MOUTH-PATIENT-3099
 between_visit_watchpoints:
-- trigger_ua: Виражена втома, мукозит
-  action_ua: Поширене — м'яка їжа, полоскання
-  urgency: log_at_next_visit
+- trigger_ua: Виражена втома
+  action_ua: Повідомте лікаря або медсестру про виражену втому.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Випадання волосся, нудота
-  action_ua: Очікувано — протиблювотні
-  urgency: log_at_next_visit
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Біль або виразки в роті без перелічених нижче ознак негайного звернення
+  action_ua: Повідомте лікаря або медсестру. Обирайте м’яку їжу та дбайливо доглядайте за ротом.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Поколювання в кистях/стопах
-  action_ua: Вінкристин нейропатія — занотовуйте
-  urgency: log_at_next_visit
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Нудота без неконтрольованого блювання
+  action_ua: Приймайте призначені протиблювотні за інструкцією команди. Повідомте лікаря або медсестру
+    про симптоми, що вас турбують.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Лихоманка вище 38°C
-  action_ua: Звертайтесь у лікарню негайно — тривала нейтропенія
-  urgency: er_now
-  cycle_day_window: Day 7-14
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Поколювання, оніміння або біль у кистях чи стопах
+  action_ua: Повідомте лікаря або медсестру, зокрема якщо симптоми заважають повсякденним діям.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-CTCAE-V5
-- trigger_ua: Нова задишка, прискорене серцебиття
-  action_ua: Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце
-  urgency: call_clinic_same_day
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Температура 38°C або вище; озноб, тремтіння чи різке погіршення самопочуття навіть без температури
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Тяжка інфузійна реакція на ритуксимаб
-  action_ua: Інфузія в клініці — медперсонал реагує негайно
-  urgency: er_now
-  cycle_day_window: Day 1 of cycle 1
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Нова задишка, біль у грудях або прискорене чи нерегулярне серцебиття
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
   sources:
-  - SRC-NCCN-BCELL-2025
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: 'Ознаки алергічної реакції під час або після інфузії: висип, свербіж, свистяче чи утруднене
+    дихання, озноб, запаморочення або непритомність'
+  action_ua: Під час інфузії негайно повідомте медперсонал. Після виходу з клініки негайно зв’яжіться
+    з лікарем або медсестрою чи зверніться до відділення невідкладної допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Неконтрольоване блювання або діарея
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-EPOCH-PATIENT-783
+- trigger_ua: Не можете їсти чи пити; неконтрольований біль або кровотеча з рота; утруднене відкривання
+    рота чи ковтання; білі плями в роті або сильний кашель під час їжі чи пиття
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою. Якщо не можете зв’язатися з лікувальною командою,
+    зверніться до найближчого відділення невідкладної допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-MOUTH-PATIENT-3099
+- trigger_ua: Нові проблеми з мовленням, зором, рівновагою чи координацією; сплутаність свідомості, слабкість
+    кінцівок або судоми
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-EPOCH-PATIENT-783
 last_reviewed: null
-notes: Dose-level selection requires a complete prior-cycle CBC series obtained twice
-  weekly, three days apart, and the previous dose level. It is not an automatic response
-  to one low ANC. Platelet nadir and other toxicity matter. Growth-factor support
-  and continuous-infusion monitoring are integral to the reference regimen. Burkitt
-  risk-adapted cycle counts and CNS-directed therapy are separate protocol decisions;
-  the shared record does not establish individualized eligibility, dose or efficacy.
-notes_ua: Вибір рівня дози потребує повної серії загальних аналізів крові попереднього
-  циклу двічі на тиждень із проміжком три дні та відомого попереднього рівня дози.
-  Один низький ANC не означає автоматичного зниження. Враховуйте надир тромбоцитів
-  та іншу токсичність. Підтримка факторами росту й моніторинг безперервної інфузії
-  входять до референтної схеми. Кількість циклів при лімфомі Беркіта з адаптацією
-  за ризиком і лікування ЦНС визначаються окремими протоколами; спільний запис не
-  встановлює індивідуальної придатності, дози чи ефективності.
+notes: Dose-level selection requires a complete prior-cycle CBC series obtained twice weekly, three days
+  apart, and the previous dose level. It is not an automatic response to one low ANC. Platelet nadir and
+  other toxicity matter. Growth-factor support and continuous-infusion monitoring are integral to the
+  reference regimen. Burkitt risk-adapted cycle counts and CNS-directed therapy are separate protocol
+  decisions; the shared record does not establish individualized eligibility, dose or efficacy.
+notes_ua: Вибір рівня дози потребує повної серії загальних аналізів крові попереднього циклу двічі на
+  тиждень із проміжком три дні та відомого попереднього рівня дози. Один низький ANC не означає автоматичного
+  зниження. Враховуйте надир тромбоцитів та іншу токсичність. Підтримка факторами росту й моніторинг безперервної
+  інфузії входять до референтної схеми. Кількість циклів при лімфомі Беркіта з адаптацією за ризиком і
+  лікування ЦНС визначаються окремими протоколами; спільний запис не встановлює індивідуальної придатності,
+  дози чи ефективності.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_11
 draft_revision: 2
 review_status: pending_clinical_signoff
 clinical_claims:
 - claim_id: epoch-scheduled-nadir-dose-level-paradigm
-  text: eviQ bases nadir dose-level adjustment on scheduled twice-weekly CBCs three
-    days apart. ANC at least 0.5 × 10^9/L on every scheduled measurement supports
-    increasing one level; one or two measurements below 0.5 supports retaining the
-    level; three or more supports lowering one level. A platelet nadir below 25 ×
-    10^9/L also supports lowering one level. Above starting level 1, adjustments involve
-    etoposide, doxorubicin and cyclophosphamide; below level 1, only cyclophosphamide
-    changes by this paradigm. Missing monitoring does not authorize automatic escalation.
+  text: eviQ bases nadir dose-level adjustment on scheduled twice-weekly CBCs three days apart. ANC at
+    least 0.5 × 10^9/L on every scheduled measurement supports increasing one level; one or two measurements
+    below 0.5 supports retaining the level; three or more supports lowering one level. A platelet nadir
+    below 25 × 10^9/L also supports lowering one level. Above starting level 1, adjustments involve etoposide,
+    doxorubicin and cyclophosphamide; below level 1, only cyclophosphamide changes by this paradigm. Missing
+    monitoring does not authorize automatic escalation.
   source_ids:
   - SRC-EVIQ-DA-R-EPOCH-783
-  scope: eviQ reference nadir paradigm only; not individualized dose calculation,
-    other toxicity modifications or clinical approval.
-  source_locator: 'eviQ 783 Dose modifications: Dose adjustment paradigm and ANC/platelet
-    nadir table.'
+  scope: eviQ reference nadir paradigm only; not individualized dose calculation, other toxicity modifications
+    or clinical approval.
+  source_locator: 'eviQ 783 Dose modifications: Dose adjustment paradigm and ANC/platelet nadir table.'
 - claim_id: epoch-growth-factor-and-protocol-context
-  text: eviQ DA-R-EPOCH schedules filgrastim from day 6 until neutrophil recovery,
-    without an HIV-only restriction. Treatment timing, cycle number and CNS-directed
-    therapy depend on the applicable disease-specific protocol; a universal six-cycle
-    Burkitt course or fixed intercalated methotrexate recipe is not established by
-    this shared regimen.
+  text: eviQ DA-R-EPOCH schedules filgrastim from day 6 until neutrophil recovery, without an HIV-only
+    restriction. Treatment timing, cycle number and CNS-directed therapy depend on the applicable disease-specific
+    protocol; a universal six-cycle Burkitt course or fixed intercalated methotrexate recipe is not established
+    by this shared regimen.
   source_ids:
   - SRC-EVIQ-DA-R-EPOCH-783
-  scope: Supportive care and protocol context only; no universal individual treatment
-    or CNS dosing instruction.
-  source_locator: eviQ 783 Treatment schedule, Blood tests, and Evidence/Burkitt/CNS
-    considerations.
+  scope: Supportive care and protocol context only; no universal individual treatment or CNS dosing instruction.
+  source_locator: eviQ 783 Treatment schedule, Blood tests, and Evidence/Burkitt/CNS considerations.

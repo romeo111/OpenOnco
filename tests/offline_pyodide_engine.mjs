@@ -250,6 +250,12 @@ const codoxConfirmedProfile=structuredClone(codoxExample.json);
 codoxConfirmedProfile.findings.cns_involvement=false;
 py.globals.set('_codox_json',JSON.stringify(codoxConfirmedProfile));
 const codoxState=JSON.parse(await py.runPythonAsync(`
+epoch_patient_points=epoch_track.regimen_data['between_visit_watchpoints']
+assert any('Температура 38°C або вище' in w['trigger_ua'] and w['urgency']=='contact_clinic_now' and not w.get('cycle_day_window') for w in epoch_patient_points)
+assert any('Нова задишка' in w['trigger_ua'] and w['urgency']=='contact_clinic_now' for w in epoch_patient_points)
+epoch_patient_html=render_plan_html(epoch_result,target_lang='en',mode='patient')
+assert 'Contact your doctor or nurse immediately' in epoch_patient_html
+assert 'Неконтрольоване блювання' in epoch_patient_html
 assert apply_disease_module(KB,disease_id='DIS-BURKITT')['ok']
 original_codox=generate_plan(json.loads(_codox_original_json),kb_root=KB)
 assert original_codox.default_indication_id is None and not original_codox.plan.tracks
