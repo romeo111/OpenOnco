@@ -40,6 +40,15 @@ The first command is a dry run. Output is normalized to LF line endings, so an i
 
 The default path inventory comes from committed `docs/` filenames plus the manifest. For a separate preview with additional destinations, pass `--inventory .tmp/preview-paths.json`, a JSON list of available relative HTML paths. Reader originals outside the manifest must be inventoried; they remain unchanged. A synchronized fingerprint proves source identity, not translation accuracy or clinical approval.
 
+When a partial release adds public pages, extend the existing sitemap separately:
+
+```bash
+python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages.json
+python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages.json --write
+```
+
+The dry run lists additions and metadata changes. The command preserves all previously indexed URLs, even when their HTML is absent from a partial checkout, and reads only selected page heads to exclude redirects, noindex pages and canonical aliases. It rejects preserved pages before opening selected HTML, uses the normal deterministic compressed sitemap writer and reciprocal language links, and changes no HTML. It cannot establish actual search-engine indexing, translation accuracy or clinical approval.
+
 ## Publish
 
 After deployment, check the eight main public pages in all eleven languages and the additional internal destinations linked from their headers:
