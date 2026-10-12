@@ -1208,13 +1208,24 @@ _COMMON_SCREENING_GROUP = {
 
 def _inject_common_screening(quest: dict) -> dict:
     """Append the universal screening group to a questionnaire's groups
-    list at bundle time, unless the YAML already has a group with the
-    same title (idempotent — manual customisation wins)."""
+    list at bundle time. Authored fields and groups take precedence; a
+    profile path must never have two controls with conflicting values."""
     groups = list(quest.get("groups") or [])
     title = _COMMON_SCREENING_GROUP["title"]
     if any(g.get("title") == title for g in groups):
         return quest
-    groups.append(_COMMON_SCREENING_GROUP)
+    existing = {
+        question.get("field")
+        for group in groups
+        for question in group.get("questions") or []
+    }
+    questions = [
+        question for question in _COMMON_SCREENING_GROUP["questions"]
+        if question.get("field") not in existing
+    ]
+    if not questions:
+        return quest
+    groups.append({**_COMMON_SCREENING_GROUP, "questions": questions})
     return {**quest, "groups": groups}
 
 
