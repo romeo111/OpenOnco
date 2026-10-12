@@ -4,35 +4,41 @@ variant_qualifier:
 disease_id: DIS-NSCLC
 escat_tier: IA
 evidence_summary: >
-  PD-L1 Tumor Proportion Score (TPS) is the primary predictive biomarker for
-  pembrolizumab selection in metastatic NSCLC without driver alterations. Three
-  threshold-stratified eligibility bands: TPS ≥50% — pembrolizumab monotherapy 1L
-  preferred (KEYNOTE-024; mPFS 10.3 vs 6.0 mo, HR 0.50); TPS ≥1% — pembrolizumab
-  + carboplatin + pemetrexed (non-sq, KEYNOTE-189) or pembrolizumab + carboplatin +
-  paclitaxel/nab-paclitaxel (sq, KEYNOTE-407); TPS 1-49% — chemo-IO combination
-  preferred over pembro mono. Testing by IHC 22C3 pharmDx mandatory on FFPE specimen.
-  Threshold-gated indication selection is performed by the algorithm layer
-  (ALGO-NSCLC, IND-NSCLC-PDL1-HIGH-MET-1L, IND-NSCLC-PDL1-LOW-NONSQ-MET-1L);
-  this BMA entry surfaces ESCAT tier context only.
+  PD-L1 TPS informs pembrolizumab monotherapy selection in metastatic NSCLC;
+  the TPS threshold for monotherapy must not be applied to chemo-immunotherapy.
+  KEYNOTE-189 studied pembrolizumab + pemetrexed + platinum in non-squamous
+  disease without sensitizing EGFR or ALK alterations. KEYNOTE-407 studied
+  pembrolizumab + carboplatin + either paclitaxel or nab-paclitaxel in squamous
+  disease. These combinations are not restricted to TPS >=1%; the trials
+  included TPS <1% and benefit was observed across PD-L1 categories.
+  The two taxanes are alternatives, not simultaneous components. Histology,
+  driver status, fitness and contraindications still require clinical assessment.
+  This record supplies evidence context, not a treatment-selection rule.
 evidence_summary_ua: >
-  PD-L1 TPS — основний предиктивний біомаркер для пембролізумабу при метастатичній
-  NSCLC без драйверних мутацій. Три порогових діапазони: TPS ≥50% — монотерапія
-  пембролізумабом 1Л (KEYNOTE-024); TPS ≥1% — пембролізумаб + карбоплатин + пеметрексед
-  (не-плоск., KEYNOTE-189) або + карбоплатин + паклітаксел (плоск., KEYNOTE-407);
-  TPS 1-49% — перевага комбінації хімія+ICI над монотерапією. Тестування IHC 22C3.
+  PD-L1 TPS впливає на вибір монотерапії пембролізумабом при метастатичному НМРЛ;
+  поріг TPS для монотерапії не можна переносити на хіміоімунотерапію.
+  KEYNOTE-189 досліджував пембролізумаб + пеметрексед + препарат платини при
+  неплоскоклітинній гістології без сенсибілізуючих змін EGFR або ALK.
+  KEYNOTE-407 досліджував пембролізумаб + карбоплатин + паклітаксел або
+  наб-паклітаксел при плоскоклітинній гістології. Ці комбінації не обмежені
+  TPS >=1%; дослідження включали TPS <1%, а користь спостерігалась у різних
+  категоріях PD-L1. Таксани є альтернативами, а не одночасними компонентами.
+  Гістологія, драйверні зміни, стан пацієнта та протипоказання потребують
+  клінічної оцінки. Цей запис пояснює докази, а не задає правило вибору лікування.
 regulatory_approval:
   fda:
   - pembrolizumab monotherapy — TPS≥50% metastatic NSCLC 1L (FDA approved 2016)
   - pembrolizumab + carboplatin + pemetrexed — non-sq metastatic NSCLC 1L TPS any (FDA approved 2017)
-  - pembrolizumab + carboplatin + paclitaxel/nab-paclitaxel — sq metastatic NSCLC 1L TPS any (FDA approved 2018)
+  - pembrolizumab + carboplatin + either paclitaxel or nab-paclitaxel — sq metastatic NSCLC 1L TPS any (FDA approved 2018)
   ema:
   - pembrolizumab — TPS≥50% metastatic NSCLC 1L (EMA approved 2017)
-  - pembrolizumab + chemo — TPS≥1% or any metastatic NSCLC 1L (EMA approved 2019)
+  - pembrolizumab + pemetrexed + platinum — non-squamous metastatic NSCLC 1L, no EGFR/ALK-positive mutations, regardless of TPS
+  - pembrolizumab + carboplatin + either paclitaxel or nab-paclitaxel — squamous metastatic NSCLC 1L, regardless of TPS
   ukraine: []
 recommended_combinations:
 - pembrolizumab monotherapy (TPS≥50% 1L per SRC-KEYNOTE-024-RECK-2016, SRC-NCCN-NSCLC-2025)
-- pembrolizumab + carboplatin + pemetrexed (TPS≥1% non-sq 1L per SRC-KEYNOTE-189-GANDHI-2018)
-- pembrolizumab + carboplatin + paclitaxel/nab-paclitaxel (TPS≥1% sq 1L per SRC-KEYNOTE-407-PAZ-ARES-2018)
+- pembrolizumab + carboplatin + pemetrexed (regardless of TPS; non-sq 1L, no sensitizing EGFR/ALK alterations; per SRC-KEYNOTE-189-GANDHI-2018)
+- pembrolizumab + carboplatin + either paclitaxel or nab-paclitaxel (regardless of TPS; sq 1L; per SRC-KEYNOTE-407-PAZ-ARES-2018)
 primary_sources:
 - SRC-KEYNOTE-024-RECK-2016
 - SRC-KEYNOTE-042-MOK-2019

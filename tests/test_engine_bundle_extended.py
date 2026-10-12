@@ -282,7 +282,7 @@ def test_lazy_load_disease_merges_with_core(
     ("auto_dlbcl_nos.json", "dis-dlbcl-nos"),
     ("auto_crc.json", "dis-crc"),
     ("auto_breast.json", "dis-breast"),
-    ("auto_nsclc.json", "dis-nsclc"),
+    ("patient_nsclc_pdl1_low_chemo_io.json", "dis-nsclc"),
 ])
 def test_lazy_loaded_disease_generates_same_plan_as_full_kb(
     bundle_out: dict, tmp_path: Path, example: str, disease_slug: str
@@ -310,6 +310,27 @@ def test_lazy_loaded_disease_generates_same_plan_as_full_kb(
         track.indication_id for track in full.plan.tracks
     ]
     assert partial.kb_resolved.get("reviewers") == full.kb_resolved.get("reviewers")
+    assert partial.plan.variant_actionability == full.plan.variant_actionability
+
+
+@pytest.mark.parametrize('histology', [None, 'squamous'])
+def test_lazy_nsclc_bundle_preserves_histology_withholding(bundle_out, tmp_path, histology):
+    profile = json.loads((REPO_ROOT / 'examples/patient_nsclc_pdl1_low_chemo_io.json').read_text(encoding='utf-8'))
+    profile['findings']['histology'] = histology
+    full = generate_plan(profile, kb_root=KB_CONTENT)
+    target = tmp_path / 'kb_root'
+    target.mkdir()
+    out_dir = Path(bundle_out['_dir'])
+    _unpack(out_dir / 'openonco-engine-core.zip', target)
+    _unpack(out_dir / 'disease/openonco-dis-nsclc.zip', target)
+    clear_load_cache()
+    partial = generate_plan(profile, kb_root=target / 'knowledge_base/hosted/content')
+    for result in (full, partial):
+        assert result.plan is not None
+        assert result.plan.knowledge_base_state['histology_selection_withheld'] is True
+        assert result.plan.tracks == result.plan.sequencing_tracks == []
+        assert result.default_indication_id is None
+        assert result.warnings
     assert partial.plan.variant_actionability == full.plan.variant_actionability
 
 
