@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-13",
+  "scope": "Upgrade cached Burkitt questionnaire scope controls in all eleven Plan Builder clients",
+  "clinical_approval": false,
+  "trigger": {
+    "ci_run": 38308008828,
+    "commit": "da77097c04",
+    "conclusion": "failure",
+    "check": "tests/browser_questionnaire_fields.cjs",
+    "cause": "Legacy cached Burkitt forms lacked the newly required risk/CNS group and retained stale review metadata."
+  },
+  "repair": "Canonical unanswered risk/CNS controls are embedded from the current authored YAML. Normalization removes old copies/defaults for those fields, inserts the current group once, clears obsolete review metadata, leaves input objects and unrelated questions unchanged, and is idempotent. The generator and all eleven existing clients use the same function.",
+  "verification": [
+    "All 24 Node browser checks in the actual CI workflow pass",
+    "27 focused questionnaire/scope Python tests pass; critical lint is clean",
+    "All eleven HTML diffs are confined to normalizeQuestionnaire; other code, catalogs and page bodies are unchanged",
+    "Legacy and recent cached forms match current data; duplicate scope controls and unsafe defaults are replaced, cached inputs remain unchanged"
+  ],
+  "limits": [
+    "This is a static-client cache migration, not a new clinical approval or a complete risk/eligibility classifier.",
+    "No KB, engine archive, clinical source or API behavior changes are introduced by this repair.",
+    "Production publication remains pending explicit approval after prior automatic review rejection."
+  ]
+}

@@ -4851,6 +4851,11 @@ def render_try(
     from scripts.nsclc_question_copy import messages_for as _nsclc_question_messages
     _nsclc_question_copy_json = json.dumps(_nsclc_question_messages(target_lang), ensure_ascii=False).replace('</', '<\\/')
     _nsclc_required_questions_json = json.dumps([question for group in _nsclc_form['groups'] for question in group['questions'] if question['field'] in {'findings.histology', 'findings.stage', 'findings.driver_negative', 'findings.nsclc_taxane_choice'}], ensure_ascii=False).replace('</', '<\\/')
+    _burkitt_form = _histology_yaml.safe_load((KB_ROOT / "questionnaires" / "quest_burkitt_1l.yaml").read_text(encoding="utf-8"))
+    _burkitt_scope_group = next(group for group in _burkitt_form['groups'] if any(
+        question['field'] == 'findings.cns_involvement' for question in group['questions']))
+    _burkitt_scope_json = json.dumps(_burkitt_scope_group, ensure_ascii=False).replace('</', '<\\/')
+    _burkitt_metadata_json = json.dumps({key: _burkitt_form[key] for key in ('last_reviewed', 'notes')}, ensure_ascii=False).replace('</', '<\\/')
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
@@ -6071,6 +6076,18 @@ function normalizeQuestionnaire(quest) {{
     const index = groups.findIndex(group => group.title !== screeningTitle);
     if (index >= 0) groups[index] = {{ ...groups[index], questions: [...requiredQuestions, ...(groups[index].questions || [])] }};
     else groups.unshift({{ title: 'Demographics + baseline status', questions: requiredQuestions }});
+  }}
+  if (quest.id === 'QUEST-BURKITT-1L-STUB') {{
+    // Cached scope controls may be absent or have obsolete defaults. Replace
+    // only these controls with the current authored, unanswered questions.
+    const scopeGroup = {_burkitt_scope_json};
+    const requiredFields = new Set(scopeGroup.questions.map(question => question.field));
+    for (let index = groups.length - 1; index >= 0; index--) {{
+      if (groups[index].title === scopeGroup.title) groups.splice(index, 1);
+      else groups[index] = {{ ...groups[index], questions: (groups[index].questions || []).filter(question => !requiredFields.has(question.field)) }};
+    }}
+    groups.splice(Math.min(1, groups.length), 0, scopeGroup);
+    quest = {{ ...quest, ...{_burkitt_metadata_json} }};
   }}
   return {{ ...quest, groups }};
 }}

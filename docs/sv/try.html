@@ -1344,6 +1344,18 @@ function normalizeQuestionnaire(quest) {
     if (index >= 0) groups[index] = { ...groups[index], questions: [...requiredQuestions, ...(groups[index].questions || [])] };
     else groups.unshift({ title: 'Demographics + baseline status', questions: requiredQuestions });
   }
+  if (quest.id === 'QUEST-BURKITT-1L-STUB') {
+    // Cached scope controls may be absent or have obsolete defaults. Replace
+    // only these controls with the current authored, unanswered questions.
+    const scopeGroup = {"title": "Protocol scope: documented risk and CNS assessment", "description": "Answer only from a documented assessment. Leave unconfirmed values unanswered; absent information does not mean low risk or CNS-negative.", "questions": [{"field": "findings.burkitt_high_risk", "label": "High-risk Burkitt confirmed for the selected reference protocol", "type": "boolean", "impact": "critical", "helper": "Risk classification must be established by the treating team; a legacy flag is not a complete assessment."}, {"field": "findings.cns_involvement", "label": "Proven CNS involvement", "type": "boolean", "impact": "critical", "helper": "No must represent a documented CNS assessment. Yes requires a separate CNS-specific protocol; unknown must remain unanswered."}]};
+    const requiredFields = new Set(scopeGroup.questions.map(question => question.field));
+    for (let index = groups.length - 1; index >= 0; index--) {
+      if (groups[index].title === scopeGroup.title) groups.splice(index, 1);
+      else groups[index] = { ...groups[index], questions: (groups[index].questions || []).filter(question => !requiredFields.has(question.field)) };
+    }
+    groups.splice(Math.min(1, groups.length), 0, scopeGroup);
+    quest = { ...quest, ...{"last_reviewed": null, "notes": "Draft questionnaire. Risk/CNS questions intentionally have no defaults; other wording/defaults and complete disease-specific assessment remain pending review."} };
+  }
   return { ...quest, groups };
 }
 
