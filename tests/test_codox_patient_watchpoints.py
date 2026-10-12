@@ -68,4 +68,6 @@ def test_patient_sources_and_protocol_boundary_are_explicit(result):
             assert source['source_type'] == 'patient_information'
             assert source['url'].startswith('https://www.eviq.org.au/')
     cns = yaml.safe_load((KB / 'regimens/codox_ivac_proven_cns.yaml').read_text(encoding='utf-8'))
-    assert not cns.get('between_visit_watchpoints')
+    assert cns.get('between_visit_watchpoints')
+    assert not any(sid in {'SRC-EVIQ-CODOX-PATIENT-4489', 'SRC-EVIQ-IVAC-PATIENT-4490'}
+                   for point in cns['between_visit_watchpoints'] for sid in point['sources'])

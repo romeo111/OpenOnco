@@ -148,6 +148,9 @@ dose_adjustments:
 sources:
 - SRC-EVIQ-BURKITT-CNS-CODOX-4492
 - SRC-EVIQ-BURKITT-CNS-IVAC-4493
+- SRC-EVIQ-CNS-CODOX-PATIENT-4492
+- SRC-EVIQ-CNS-IVAC-PATIENT-4493
+- SRC-EVIQ-MOUTH-PATIENT-3099
 last_reviewed: null
 notes: Explicit eviQ 4492 v1/4493 v2 proven-CNS reference, not a merged trial calendar or individualized
   prescription. IVAC rituximab days 3/7 are a committee adaptation from a trial excluding CNS disease;
@@ -162,5 +165,75 @@ notes_ua: Окремий довідковий протокол eviQ 4492 v1/4493
   Придатність, вік, стан імунної системи/ВІЛ, функція органів і токсичність потребують оцінки спеціаліста.
   Тверджень про ефективність чи відшкодування не наведено. Вінкристин НІКОЛИ не вводять інтратекально.
 ukrainian_review_status: pending_clinical_signoff
-draft_revision: 1
+draft_revision: 2
 review_status: pending_clinical_signoff
+between_visit_watchpoints:
+- trigger_ua: Виражена втома
+  action_ua: Повідомте лікаря або медсестру про виражену втому.
+  urgency: contact_clinic
+  sources:
+  - SRC-EVIQ-CNS-CODOX-PATIENT-4492
+- trigger_ua: Біль або виразки в роті без перелічених нижче ознак негайного звернення
+  action_ua: Повідомте лікаря або медсестру. Обирайте м’яку їжу та дбайливо доглядайте за ротом.
+  urgency: contact_clinic
+  sources:
+  - SRC-EVIQ-CNS-CODOX-PATIENT-4492
+- trigger_ua: Поколювання, оніміння або біль у кистях чи стопах
+  action_ua: Повідомте лікаря або медсестру, зокрема якщо симптоми заважають повсякденним діям.
+  urgency: contact_clinic
+  sources:
+  - SRC-EVIQ-CNS-CODOX-PATIENT-4492
+- trigger_ua: Зменшення кількості сечі або зміна її кольору
+  action_ua: Якнайшвидше повідомте лікаря або медсестру. Обсяг пиття узгодьте з лікувальною командою.
+  urgency: contact_clinic
+  sources:
+  - SRC-EVIQ-CNS-CODOX-PATIENT-4492
+- trigger_ua: Температура 38°C або вище; озноб, тремтіння чи погіршення самопочуття навіть без температури
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources: &id001
+  - SRC-EVIQ-CNS-CODOX-PATIENT-4492
+  - SRC-EVIQ-CNS-IVAC-PATIENT-4493
+- trigger_ua: Нова задишка або біль у грудях
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources: *id001
+- trigger_ua: Неконтрольоване блювання або діарея
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources: *id001
+- trigger_ua: Дуже сильний головний біль, який не полегшується знеболювальними
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources: *id001
+- trigger_ua: 'Ознаки алергічної реакції під час або після інфузії: висип, свербіж, утруднене дихання,
+    озноб, запаморочення або непритомність'
+  action_ua: Під час інфузії негайно повідомте медперсонал. Після виходу з клініки негайно зв’яжіться
+    з лікарем або медсестрою чи зверніться до відділення невідкладної допомоги.
+  urgency: contact_clinic_now
+  sources: *id001
+- trigger_ua: Нова сплутаність свідомості, сонливість, втрата рівноваги, двоїння в очах, галюцинації,
+    судоми, утруднена хода або повільне нечітке мовлення під час чи невдовзі після IVAC
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-CNS-IVAC-PATIENT-4493
+- trigger_ua: Не можете їсти чи пити; неконтрольований біль або кровотеча з рота; утруднене відкривання
+    рота чи ковтання; білі плями в роті або сильний кашель під час їжі чи пиття
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою. Якщо не можете зв’язатися з лікувальною командою,
+    зверніться до найближчого відділення невідкладної допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-MOUTH-PATIENT-3099
+- trigger_ua: Нові проблеми з мовленням чи зором, сплутаність свідомості, слабкість рук або ніг, порушення
+    рівноваги чи судоми незалежно від дня циклу
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-CNS-IVAC-PATIENT-4493
