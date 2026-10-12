@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="302ecbfea7b509c42b7e6b87842a13daf0916d10f1935a6df7797305930c7da5"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="672cb1562d7d80592d9ea0290be42f2e5f8e86420a193a33331a414f45c8d028"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -1398,7 +1398,14 @@ function renderForm(quest) {
   updateRunBtnEnabled();
 }
 
+const nsclcQuestionCopy = {"Confirmed NSCLC histology": "Bekræftet NSCLC-histologi", "Confirmed NSCLC stage": "Bekræftet NSCLC-stadium", "Molecular assessment confirms no actionable driver": "Molekylær undersøgelse bekræfter fravær af behandlingsrelevante driverforandringer", "Squamous NSCLC: selected taxane for clinician review": "Planocellulær NSCLC: valgt taxan til lægelig vurdering", "Adenocarcinoma": "Adenokarcinom", "Other confirmed non-squamous histology": "Anden bekræftet ikke-planocellulær histologi", "Squamous cell carcinoma": "Planocellulært karcinom", "Unknown / pending pathology": "Ukendt / patologisvar afventes", "Stage IV / metastatic": "Stadium IV / metastatisk", "Stage III": "Stadium III", "Unknown / pending staging": "Ukendt / stadieinddeling afventes", "Confirmed driver-negative": "Fravær af driverforandringer bekræftet", "Not confirmed / actionable driver / results pending": "Ikke bekræftet / behandlingsrelevant driverforandring / resultater afventes", "Not selected": "Ikke valgt", "Use the pathology report. Do not infer histology from PD-L1 or a drug preference.": "Brug patologisvaret. Udled ikke histologi fra PD-L1 eller det foretrukne lægemiddel.", "Do not infer metastatic stage from drug preference.": "Udled ikke metastatisk stadium fra det foretrukne lægemiddel.", "Missing molecular results do not establish driver-negative disease.": "Manglende molekylære resultater bekræfter ikke fravær af driverforandringer.", "Choose one taxane only. Relevant to the pembrolizumab/carboplatin squamous route; no default choice.": "Vælg kun ét taxan. Feltet gælder den planocellulære behandlingsvej med pembrolizumab/carboplatin; intet valg er forudindstillet."};
+function displayQuestion(q) {
+  if (!['findings.histology','findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(q.field) || !Object.hasOwn(nsclcQuestionCopy, q.label)) return q;
+  return { ...q, label: nsclcQuestionCopy[q.label], helper: nsclcQuestionCopy[q.helper] || q.helper,
+    options: (q.options || []).map(option => ({ ...option, label: nsclcQuestionCopy[option.label] || option.label })) };
+}
 function renderQuestion(q) {
+  q = displayQuestion(q);
   const wrap = document.createElement('div');
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
@@ -1932,7 +1939,7 @@ function updateImpactPanelLocal() {
       const value = mode === 'json' ? getByPath(jsonProfile, q.field) : answers[q.field];
       const present = questionnaireValuePresent(q, value) && (mode === 'json' || !numericInputErrors.has(q.field));
       if (present) filled++;
-      else if (q.impact === 'critical') missing.push({ label: q.label, group: group.title || '' });
+      else if (q.impact === 'critical') missing.push({ label: displayQuestion(q).label, group: group.title || '' });
     }
   }
   setProgress(filled, total);

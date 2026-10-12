@@ -1,10 +1,10 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 function fn(p,n){const m=p.match(new RegExp(`^function ${n}\\([^\\n]*\\{[\\s\\S]*?^\\}`,'m'));assert(m,n);return m[0].replace(/\r\n/g,'\n');}
 const root=fs.readFileSync('docs/try.html','utf8');
-const names=['getByPath','profileInputError','questionnaireValuePresent','updateImpactPanelLocal','setProgress','setReadinessCritical','updateImpactPanel'];
+const names=['getByPath','profileInputError','questionnaireValuePresent','displayQuestion','updateImpactPanelLocal','setProgress','setReadinessCritical','updateImpactPanel'];
 for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/','fi/']){
  const page=fs.readFileSync('docs/'+prefix+'try.html','utf8');
- const c=vm.createContext({profileInputCopy:JSON.parse(page.match(/^const profileInputCopy = (.*);$/m)[1]),
+ const c=vm.createContext({nsclcQuestionCopy:JSON.parse(page.match(/^const nsclcQuestionCopy = (.*);$/m)[1]),profileInputCopy:JSON.parse(page.match(/^const profileInputCopy = (.*);$/m)[1]),
   textarea:{value:''},progressText:{},progressPct:{},progressFill:{style:{}},readinessCriticalText:{dataset:{}},numericInputErrors:new Map(),
   QUESTIONNAIRES_MANIFEST:[{id:'QUEST-VIRTUAL'}],findQuestionnaireForProfile:p=>p.disease?.id==='DIS-VIRTUAL'?0:-1,setFiredRedflags(){}});
  vm.runInContext('let mode="json",answers={"demographics.age":61,"demographics.ecog":0,"findings.flag":false,"findings.anc":0};let activeQuest={id:"QUEST-VIRTUAL",groups:[{questions:['+

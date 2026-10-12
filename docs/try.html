@@ -1414,7 +1414,14 @@ function renderForm(quest) {
   updateRunBtnEnabled();
 }
 
+const nsclcQuestionCopy = {};
+function displayQuestion(q) {
+  if (!['findings.histology','findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(q.field) || !Object.hasOwn(nsclcQuestionCopy, q.label)) return q;
+  return { ...q, label: nsclcQuestionCopy[q.label], helper: nsclcQuestionCopy[q.helper] || q.helper,
+    options: (q.options || []).map(option => ({ ...option, label: nsclcQuestionCopy[option.label] || option.label })) };
+}
 function renderQuestion(q) {
+  q = displayQuestion(q);
   const wrap = document.createElement('div');
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
@@ -1948,7 +1955,7 @@ function updateImpactPanelLocal() {
       const value = mode === 'json' ? getByPath(jsonProfile, q.field) : answers[q.field];
       const present = questionnaireValuePresent(q, value) && (mode === 'json' || !numericInputErrors.has(q.field));
       if (present) filled++;
-      else if (q.impact === 'critical') missing.push({ label: q.label, group: group.title || '' });
+      else if (q.impact === 'critical') missing.push({ label: displayQuestion(q).label, group: group.title || '' });
     }
   }
   setProgress(filled, total);

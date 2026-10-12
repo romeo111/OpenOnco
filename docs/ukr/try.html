@@ -1414,7 +1414,14 @@ function renderForm(quest) {
   updateRunBtnEnabled();
 }
 
+const nsclcQuestionCopy = {"Confirmed NSCLC histology": "Підтверджена гістологія НМРЛ", "Confirmed NSCLC stage": "Підтверджена стадія НМРЛ", "Molecular assessment confirms no actionable driver": "Молекулярне дослідження підтверджує відсутність драйверних змін, на які можна спрямувати лікування", "Squamous NSCLC: selected taxane for clinician review": "Плоскоклітинний НМРЛ: обраний таксан для перевірки лікарем", "Adenocarcinoma": "Аденокарцинома", "Other confirmed non-squamous histology": "Інша підтверджена неплоскоклітинна гістологія", "Squamous cell carcinoma": "Плоскоклітинна карцинома", "Unknown / pending pathology": "Невідомо / очікується висновок патології", "Stage IV / metastatic": "Стадія IV / метастатична", "Stage III": "Стадія III", "Unknown / pending staging": "Невідомо / стадію ще визначають", "Confirmed driver-negative": "Відсутність драйверних змін підтверджена", "Not confirmed / actionable driver / results pending": "Не підтверджено / є драйверна зміна / очікуються результати", "Not selected": "Не обрано", "Use the pathology report. Do not infer histology from PD-L1 or a drug preference.": "Використовуйте висновок патології. Не визначайте гістологію за PD-L1 або бажаним препаратом.", "Do not infer metastatic stage from drug preference.": "Не визначайте метастатичну стадію за бажаним препаратом.", "Missing molecular results do not establish driver-negative disease.": "Відсутність результатів молекулярного дослідження не підтверджує відсутності драйверних змін.", "Choose one taxane only. Relevant to the pembrolizumab/carboplatin squamous route; no default choice.": "Оберіть лише один таксан. Це поле стосується плоскоклітинного маршруту пембролізумаб/карбоплатин; вибору за замовчуванням немає."};
+function displayQuestion(q) {
+  if (!['findings.histology','findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(q.field) || !Object.hasOwn(nsclcQuestionCopy, q.label)) return q;
+  return { ...q, label: nsclcQuestionCopy[q.label], helper: nsclcQuestionCopy[q.helper] || q.helper,
+    options: (q.options || []).map(option => ({ ...option, label: nsclcQuestionCopy[option.label] || option.label })) };
+}
 function renderQuestion(q) {
+  q = displayQuestion(q);
   const wrap = document.createElement('div');
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
@@ -1948,7 +1955,7 @@ function updateImpactPanelLocal() {
       const value = mode === 'json' ? getByPath(jsonProfile, q.field) : answers[q.field];
       const present = questionnaireValuePresent(q, value) && (mode === 'json' || !numericInputErrors.has(q.field));
       if (present) filled++;
-      else if (q.impact === 'critical') missing.push({ label: q.label, group: group.title || '' });
+      else if (q.impact === 'critical') missing.push({ label: displayQuestion(q).label, group: group.title || '' });
     }
   }
   setProgress(filled, total);

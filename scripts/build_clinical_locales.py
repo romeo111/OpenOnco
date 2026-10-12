@@ -185,6 +185,8 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
     parser.feed(source)
     page = ''.join(parser.parts)
     if path == "try.html":
+        from scripts.nsclc_question_copy import messages_for as nsclc_question_messages
+        page = re.sub(r'^const nsclcQuestionCopy = .*;$', lambda _: 'const nsclcQuestionCopy = ' + json.dumps(nsclc_question_messages(locale), ensure_ascii=False).replace('</', '<\\/') + ';', page, flags=re.M, count=1)
         from scripts.runtime_cache_copy import COPY
         page = re.sub(r"^const runtimeCacheCopy = .*;$", lambda _: "const runtimeCacheCopy = " + json.dumps(COPY[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
         from scripts.numeric_input_copy import COPY as numeric_copy

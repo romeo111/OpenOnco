@@ -4848,6 +4848,8 @@ def render_try(
     _nsclc_form = _histology_yaml.safe_load((KB_ROOT / "questionnaires" / "quest_nsclc_1l.yaml").read_text(encoding="utf-8"))
     _histology_field = next(question for group in _nsclc_form["groups"] for question in group["questions"] if question["field"] == "findings.histology")
     _histology_field_json = json.dumps(_histology_field, ensure_ascii=False).replace("</", "<\\/")
+    from scripts.nsclc_question_copy import messages_for as _nsclc_question_messages
+    _nsclc_question_copy_json = json.dumps(_nsclc_question_messages(target_lang), ensure_ascii=False).replace('</', '<\\/')
     _nsclc_required_questions_json = json.dumps([question for group in _nsclc_form['groups'] for question in group['questions'] if question['field'] in {'findings.histology', 'findings.stage', 'findings.driver_negative', 'findings.nsclc_taxane_choice'}], ensure_ascii=False).replace('</', '<\\/')
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
@@ -6123,7 +6125,14 @@ function renderForm(quest) {{
   updateRunBtnEnabled();
 }}
 
+const nsclcQuestionCopy = {_nsclc_question_copy_json};
+function displayQuestion(q) {{
+  if (!['findings.histology','findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(q.field) || !Object.hasOwn(nsclcQuestionCopy, q.label)) return q;
+  return {{ ...q, label: nsclcQuestionCopy[q.label], helper: nsclcQuestionCopy[q.helper] || q.helper,
+    options: (q.options || []).map(option => ({{ ...option, label: nsclcQuestionCopy[option.label] || option.label }})) }};
+}}
 function renderQuestion(q) {{
+  q = displayQuestion(q);
   const wrap = document.createElement('div');
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
@@ -6657,7 +6666,7 @@ function updateImpactPanelLocal() {{
       const value = mode === 'json' ? getByPath(jsonProfile, q.field) : answers[q.field];
       const present = questionnaireValuePresent(q, value) && (mode === 'json' || !numericInputErrors.has(q.field));
       if (present) filled++;
-      else if (q.impact === 'critical') missing.push({{ label: q.label, group: group.title || '' }});
+      else if (q.impact === 'critical') missing.push({{ label: displayQuestion(q).label, group: group.title || '' }});
     }}
   }}
   setProgress(filled, total);
