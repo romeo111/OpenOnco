@@ -3180,7 +3180,7 @@ def render_plan_html(
     so unsourced content cannot reach the patient. STRICT is the
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
-    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld")):
+    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld") or plan_result.plan.knowledge_base_state.get('planning_selection_withheld')):
         english = target_lang == 'en'
         title = 'Histology-specific selection required' if english else 'Потрібен вибір з урахуванням гістології'
         explanation = (
@@ -3205,6 +3205,9 @@ def render_plan_html(
                     'доведеного ураження ЦНС; інший або непідтверджений контекст потребує '
                     'окремого протоколу, перевіреного спеціалістом. Автоматичну заміну не обрано.'
                 )
+        if plan_result.plan.knowledge_base_state.get('planning_selection_withheld'):
+            title = 'Clinical reference withheld from planning' if english else 'Клінічний запис виключено з планування'
+            explanation = ('This reference has been withheld pending source and clinical review. No medicine plan or automatic substitute has been selected. Discuss an appropriate, independently verified route with your clinical team.' if english else 'Цей запис виключено з планування до перевірки джерел і клінічного перегляду. План препаратів та автоматичну заміну не обрано. Обговоріть із лікарем відповідний, окремо перевірений маршрут.')
         details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
             f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
         ) + '</ul>'

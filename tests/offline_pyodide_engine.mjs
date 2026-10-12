@@ -311,4 +311,34 @@ assert not conflicting_cns.plan.tracks and conflicting_cns.default_indication_id
 json.dumps({'variant':'eviq_proven_cns','scopeConflictWithheld':True,'clinicalApproval':False})
 `));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,environment:'Node WASM, not browser'}));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-PTCL-NOS'])).buffer,'zip');
+py.globals.set('_ptcl_json',fs.readFileSync('examples/patient_ptcl_cd30_negative.json','utf8'));
+const withdrawalState=JSON.parse(await py.runPythonAsync(`
+import copy
+import importlib
+assert apply_disease_module(KB,disease_id='DIS-PTCL-NOS')['ok']
+ordinary_ptcl=generate_plan(json.loads(_ptcl_json),kb_root=KB)
+assert ordinary_ptcl.plan.tracks
+assert all(t.indication_id!='IND-PTCL-1L-CHOEP-ALLOSCT' for t in ordinary_ptcl.plan.tracks)
+bundle_module=importlib.import_module('knowledge_base.validation.bundle')
+original_loader=bundle_module.load_packaged_content
+def forced_loader(*args,**kwargs):
+    loaded=copy.deepcopy(original_loader(*args,**kwargs))
+    alg=loaded.entities_by_id['ALGO-PTCL-1L']['data']
+    alg['output_indications']=['IND-PTCL-1L-CHOEP-ALLOSCT','IND-TCELL-1L-CHOEP']
+    alg['default_indication']='IND-PTCL-1L-CHOEP-ALLOSCT'
+    alg['decision_tree']=[{'step':1,'evaluate':{'any_of':[]},'if_true':{'result':'IND-PTCL-1L-CHOEP-ALLOSCT'},'if_false':{'result':'IND-PTCL-1L-CHOEP-ALLOSCT'}}]
+    return loaded
+try:
+    bundle_module.load_packaged_content=forced_loader
+    withdrawn=generate_plan(json.loads(_ptcl_json),kb_root=KB)
+    assert not withdrawn.plan.tracks and not withdrawn.plan.sequencing_tracks
+    assert withdrawn.default_indication_id is None
+    assert withdrawn.plan.knowledge_base_state['planning_selection_withheld']
+    assert 'Clinical reference withheld from planning' in render_plan_html(withdrawn,target_lang='en',mode='patient')
+finally:
+    bundle_module.load_packaged_content=original_loader
+json.dumps({'forcedHistoricalSelectionWithheld':True,'ordinaryRoutesPreserved':True,'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,environment:'Node WASM, not browser'}));

@@ -164,6 +164,8 @@ class BetweenVisitWatchpoint(Base):
 
 
 class Regimen(Base):
+    planning_status: Literal['active', 'withheld'] = 'active'
+    planning_status_reason: Optional[str] = None
     id: str
     name: str
     name_ua: Optional[str] = None

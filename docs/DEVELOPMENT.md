@@ -49,6 +49,12 @@ python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages
 
 The dry run lists additions and metadata changes. The command preserves all previously indexed URLs, even when their HTML is absent from a partial checkout, and reads only selected page heads to exclude redirects, noindex pages and canonical aliases. It rejects preserved pages before opening selected HTML, uses the normal deterministic compressed sitemap writer and reciprocal language links, and changes no HTML. It cannot establish actual search-engine indexing, translation accuracy or clinical approval.
 
+## Source-withheld planning records
+
+Indications and regimens can declare `planning_status: withheld` with a `planning_status_reason`. This is a source-content safety hold, independent of patient eligibility or clinical approval. An explicit unknown status also blocks planning. A selected/default withheld record suppresses treatment and sequencing without promoting another medicine; withheld alternatives and later-line references are omitted. Direct track materialization rejects held records. Wiki pages show the hold explicitly. An absent status preserves existing draft behavior and never implies clinical approval.
+
+Review the source conflict and record as a whole before reactivation. Do not replace it automatically with a new transplant recommendation. Run `python -m pytest tests/test_withheld_planning_records.py tests/test_ptcl_firstline_transplant_reference.py` and the ordinary routing checks before refreshing scoped archives and Wiki pages.
+
 ## Patient watchpoint translation drafts
 
 English patient contact instructions use saved pairs in `knowledge_base/engine/_patient_watchpoint_en.json`. A fingerprint binds each pair to its regimen ID, full source trigger/action, urgency, cycle-day window and source IDs. Changes invalidate both fragments together; unknown conditions and unmapped instructions retain the marked Ukrainian original. The clinician report and clinical records are unchanged. These drafts require clinical and language review.

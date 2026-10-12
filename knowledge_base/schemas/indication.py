@@ -10,7 +10,7 @@ without `phases:` continue to work unchanged.
 """
 
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator, model_validator
 
@@ -225,6 +225,8 @@ class IndicationPhase(Base):
 
 
 class Indication(Base):
+    planning_status: Literal['active', 'withheld'] = 'active'
+    planning_status_reason: Optional[str] = None
     id: str
     applicable_to: IndicationApplicability
 
