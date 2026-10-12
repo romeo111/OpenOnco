@@ -114,7 +114,7 @@ class LocalizedHTML(HTMLParser):
                 value = self.locale
             elif original:
                 pass
-            elif key in {'title', 'aria-label', 'placeholder', 'alt', 'data-step-label'} and value:
+            elif key in {'title', 'aria-label', 'placeholder', 'alt', 'data-step-label', 'data-empty-label'} and value:
                 value = self.catalog.get(normalize(value), value)
             elif tag == 'meta' and key == 'content' and original_attrs.get('name') == 'description':
                 value = self.catalog.get(normalize(value), value)
@@ -177,6 +177,9 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
     source = re.sub(r'<header class="top-bar site-header">.*?</header>', '', source, flags=re.S)
     if path == "try.html":
         from scripts.runtime_cache_copy import messages_for
+        catalog = {**catalog, **messages_for(locale)}
+    elif path == "ask.html":
+        from scripts.ask_page_copy import messages_for
         catalog = {**catalog, **messages_for(locale)}
     parser = LocalizedHTML(catalog, locale, path, available, style_assets)
     parser.feed(source)
