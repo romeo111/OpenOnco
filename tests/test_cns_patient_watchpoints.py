@@ -27,11 +27,13 @@ def test_actual_selected_cns_report_has_contact_actions_instead_of_empty_fallbac
     heading = ('Contact your doctor or nurse immediately' if language == 'en'
                else 'Негайно зв’яжіться з лікарем або медсестрою')
     urgent = next(group for group in section.select('.bv-urgency-group') if heading in group.get_text())
-    for symptom in ['Температура 38°C або вище', 'Нова задишка',
-                    'Дуже сильний головний біль', 'Нова сплутаність', 'Не можете їсти чи пити']:
+    symptoms = ['A temperature of 38°C or higher', 'New shortness of breath',
+                'Very severe headache', 'New confusion', 'Unable to eat or drink'] if language == 'en' else ['Температура 38°C або вище', 'Нова задишка',
+                    'Дуже сильний головний біль', 'Нова сплутаність', 'Не можете їсти чи пити']
+    for symptom in symptoms:
         assert symptom in urgent.get_text()
-    assert 'Якщо не можете зв’язатися' in urgent.get_text()
-    assert 'Після виходу з клініки' in urgent.get_text()
+    assert ('If you cannot reach' if language == 'en' else 'Якщо не можете зв’язатися') in urgent.get_text()
+    assert ('After leaving the clinic' if language == 'en' else 'Після виходу з клініки') in urgent.get_text()
 
 
 def test_each_symptom_uses_own_protocol_or_explicit_linked_mouth_source(result):

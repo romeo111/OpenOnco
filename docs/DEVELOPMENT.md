@@ -49,6 +49,12 @@ python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages
 
 The dry run lists additions and metadata changes. The command preserves all previously indexed URLs, even when their HTML is absent from a partial checkout, and reads only selected page heads to exclude redirects, noindex pages and canonical aliases. It rejects preserved pages before opening selected HTML, uses the normal deterministic compressed sitemap writer and reciprocal language links, and changes no HTML. It cannot establish actual search-engine indexing, translation accuracy or clinical approval.
 
+## Patient watchpoint translation drafts
+
+English patient contact instructions use saved pairs in `knowledge_base/engine/_patient_watchpoint_en.json`. A fingerprint binds each pair to its regimen ID, full source trigger/action, urgency, cycle-day window and source IDs. Changes invalidate both fragments together; unknown conditions and unmapped instructions retain the marked Ukrainian original. The clinician report and clinical records are unchanged. These drafts require clinical and language review.
+
+Translated spans remain protected from a second machine translation in other language editions. Update and review an entire symptom/action pair when its source changes, then run `python -m pytest tests/test_patient_watchpoint_translations.py`. Refresh affected patient pages, shared-reader source hashes and browser/API packages through the scoped release workflow. Keep the original Ukrainian report available and the partial-draft notice visible.
+
 ## Publish
 
 After deployment, check the eight main public pages in all eleven languages and the additional internal destinations linked from their headers:

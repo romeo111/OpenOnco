@@ -57,6 +57,7 @@ from ._patient_rationale import build_plan_signal_context_html as _build_plan_si
 from ._patient_rationale import _fired_rf_ids_from_trace as _patient_fired_rf_ids
 from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_note_translations import translate_patient_note
+from ._patient_watchpoint_translations import translate_watchpoint
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
@@ -4337,10 +4338,12 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
             heading = urgency_headings[urg]
             li_parts: list[str] = []
             for w in items:
-                original_attrs = ' lang="uk" data-original-source' if english else ''
+                translated = translate_watchpoint(regimen_id, w) if english else None
+                original_attrs = (' lang="en" data-original-source data-translation-status="draft_pending_clinical_and_language_review"'
+                                  if translated else ' lang="uk" data-original-source') if english else ''
                 window_attrs = ' lang="und" data-original-source' if english else ''
-                trigger = _h(w.get("trigger_ua") or "")
-                action = _h(w.get("action_ua") or "")
+                trigger = _h(translated[0] if translated else w.get("trigger_ua") or "")
+                action = _h(translated[1] if translated else w.get("action_ua") or "")
                 window = w.get("cycle_day_window") or ""
                 window_html = (
                     f' <span class="bv-window"{window_attrs}>({_h(window)})</span>'
@@ -4348,7 +4351,7 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
                 )
                 li_parts.append(
                     "<li>" +
-                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english else '') +
+                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english and not translated else '') +
                     f'<span class="bv-trigger"{original_attrs}>{trigger}</span>{window_html}'
                     f' — <span class="bv-action"{original_attrs}>{action}</span>'
                     "</li>"

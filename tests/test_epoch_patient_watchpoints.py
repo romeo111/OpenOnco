@@ -27,11 +27,13 @@ def test_actual_patient_output_places_breathing_and_fever_in_immediate_contact(r
                else 'Негайно зв’яжіться з лікарем або медсестрою')
     group = next(g for g in track.select('.bv-urgency-group') if heading in g.get_text())
     text = group.get_text(' ', strip=True)
-    for symptom in ['Температура 38°C або вище', 'Нова задишка',
+    symptoms = ['A temperature of 38°C or higher', 'New shortness of breath',
+                'Uncontrolled vomiting', 'Unable to eat or drink', 'New problems with speech'] if language == 'en' else ['Температура 38°C або вище', 'Нова задишка',
                     'Неконтрольоване блювання', 'Не можете їсти чи пити',
-                    'Нові проблеми з мовленням']:
+                    'Нові проблеми з мовленням']
+    for symptom in symptoms:
         assert symptom in text
-    assert 'Після виходу з клініки' in text
+    assert ('After leaving the clinic' if language == 'en' else 'Після виходу з клініки') in text
     assert 'Day 7-14' not in text and 'Day 1 of cycle 1' not in text
     assert 'того ж дня' not in text
     assert 'Лихоманка вище 38°C' not in track.get_text()

@@ -255,7 +255,7 @@ assert any('Температура 38°C або вище' in w['trigger_ua'] and
 assert any('Нова задишка' in w['trigger_ua'] and w['urgency']=='contact_clinic_now' for w in epoch_patient_points)
 epoch_patient_html=render_plan_html(epoch_result,target_lang='en',mode='patient')
 assert 'Contact your doctor or nurse immediately' in epoch_patient_html
-assert 'Неконтрольоване блювання' in epoch_patient_html
+assert 'Uncontrolled vomiting' in epoch_patient_html
 assert apply_disease_module(KB,disease_id='DIS-BURKITT')['ok']
 original_codox=generate_plan(json.loads(_codox_original_json),kb_root=KB)
 assert original_codox.default_indication_id is None and not original_codox.plan.tracks
@@ -273,8 +273,8 @@ assert any(w['trigger_ua']=='Температура 38°C або вище' and w
 assert len([w for w in codox_points if w['urgency']=='contact_clinic_now'])==3
 for lang,heading in [('en','Contact your doctor or nurse immediately'),('uk','Негайно зв’яжіться з лікарем або медсестрою')]:
     patient_codox=render_plan_html(codox_result,target_lang=lang,mode='patient')
-    assert heading in patient_codox and 'Не можете їсти чи пити' in patient_codox
-    assert 'Дуже сильний головний біль' in patient_codox
+    assert heading in patient_codox and ('Unable to eat or drink' if lang=='en' else 'Не можете їсти чи пити') in patient_codox
+    assert ('Very severe headache' if lang=='en' else 'Дуже сильний головний біль') in patient_codox
 for lang,needle in [('en','Assess neurological function before each ifosfamide dose'),('uk','Оцініть неврологічний стан перед кожною дозою іфосфаміду')]:
     codox_html=render_plan_html(codox_result,target_lang=lang)
     assert needle in codox_html and 'DRUG-MESNA' in codox_html
@@ -295,8 +295,8 @@ assert len(cns_points)==12
 assert all(set(w['sources']) <= {'SRC-EVIQ-CNS-CODOX-PATIENT-4492','SRC-EVIQ-CNS-IVAC-PATIENT-4493','SRC-EVIQ-MOUTH-PATIENT-3099'} for w in cns_points)
 for lang,heading in [('en','Contact your doctor or nurse immediately'),('uk','Негайно зв’яжіться з лікарем або медсестрою')]:
     cns_patient=render_plan_html(cns_result,target_lang=lang,mode='patient')
-    assert heading in cns_patient and 'Нова сплутаність' in cns_patient
-    assert 'Не можете їсти чи пити' in cns_patient
+    assert heading in cns_patient and ('New confusion' if lang=='en' else 'Нова сплутаність') in cns_patient
+    assert ('Unable to eat or drink' if lang=='en' else 'Не можете їсти чи пити') in cns_patient
 ca,cb=[p['components'] for p in cns_track.regimen_data['phases']]
 assert any(c['drug_id']=='DRUG-CYTARABINE' and c['route']=='IT' and 'days 7 and 9' in c['schedule'] for c in cb)
 assert any(c['drug_id']=='DRUG-RITUXIMAB' and 'days 1 and 11' in c['schedule'] for c in ca)

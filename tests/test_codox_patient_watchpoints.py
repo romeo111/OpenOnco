@@ -28,7 +28,7 @@ def test_contact_advice_is_not_reclassified_as_next_visit_or_hospital(result, la
     section = soup.select_one('.between-visits .bv-track[data-source-id="REG-CODOX-M-IVAC"]')
     assert section
     text = section.get_text(' ', strip=True)
-    assert 'Температура 38°C або вище' in text
+    assert ('A temperature of 38°C or higher' if language == 'en' else 'Температура 38°C або вище') in text
     assert 'Лихоманка вище 38°C' not in text
     assert 'Очікувано — кістковий мозок' not in text
     assert 'лежіть рівно' not in text
@@ -40,11 +40,11 @@ def test_contact_advice_is_not_reclassified_as_next_visit_or_hospital(result, la
                    if routine_heading in g.get_text())
     immediate = next(g for g in section.select('.bv-urgency-group')
                      if immediate_heading in g.get_text())
-    assert 'виражену втому' in routine.get_text()
-    assert 'Не можете їсти чи пити' in immediate.get_text()
-    assert 'Нова сплутаність' in immediate.get_text()
-    assert 'Дуже сильний головний біль' in immediate.get_text()
-    assert 'Якщо не можете зв’язатися' in immediate.get_text()
+    assert ('marked fatigue' if language == 'en' else 'виражену втому') in routine.get_text()
+    assert ('Unable to eat or drink' if language == 'en' else 'Не можете їсти чи пити') in immediate.get_text()
+    assert ('New confusion' if language == 'en' else 'Нова сплутаність') in immediate.get_text()
+    assert ('Very severe headache' if language == 'en' else 'Дуже сильний головний біль') in immediate.get_text()
+    assert ('If you cannot reach' if language == 'en' else 'Якщо не можете зв’язатися') in immediate.get_text()
 
 
 @pytest.mark.parametrize('urgency', ['contact_clinic', 'contact_clinic_now'])
