@@ -1,27 +1,39 @@
 id: RF-TCELL-CD30-POSITIVE
-definition: "T-cell lymphoma with CD30 expression ≥10% by IHC — qualifies for brentuximab vedotin-based regimen (CHP-Bv per ECHELON-2)"
-definition_ua: "T-клітинна лімфома з CD30 експресією ≥10% — кваліфікується на brentuximab vedotin-вмісний схема (CHP-Bv per ECHELON-2)"
-
+definition: Reported CD30 expression in T-cell lymphoma; a targeting signal requiring confirmed
+  pathology and histology-specific treatment review.
+definition_ua: Повідомлена експресія CD30 при T-клітинній лімфомі; ознака мішені, що потребує
+  підтвердження патології та перегляду лікування за гістологічним підтипом.
 trigger:
   type: biomarker
   any_of:
-    - {finding: "BIO-CD30-IHC", value: "positive"}
-    - {finding: "cd30_positive", value: true}
-
+  - finding: BIO-CD30-IHC
+    value: positive
+  - finding: cd30_positive
+    value: true
 clinical_direction: intensify
 category: high-risk-biology
 priority: 60
-relevant_diseases: [DIS-PTCL-NOS, DIS-ALCL, DIS-AITL]
-shifts_algorithm: [ALGO-PTCL-1L, ALGO-AITL-1L, ALGO-ALCL-1L, ALGO-MF-SEZARY-1L]
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
-last_reviewed: "2026-04-25"
-notes: >
-  ALCL is universally CD30+; PTCL NOS / AITL ~40-60%. Brentuximab
-  replaces vincristine in CHP backbone; ECHELON-2 showed superior
-  outcomes vs standard CHOP. Funding pathway flag — brentuximab not
-  НСЗУ-reimbursed.
-notes_ua: >
-  ALCL is universally CD30+; PTCL NOS / AITL ~40-60%. Brentuximab replaces вінкристин in CHP основа схеми; ECHELON-2 showed перевершує outcomes vs стандарт CHOP. Funding pathway flag — brentuximab not НСЗУ-відшкодовуваний.
+relevant_diseases:
+- DIS-PTCL-NOS
+- DIS-ALCL
+- DIS-AITL
+shifts_algorithm:
+- ALGO-PTCL-1L
+- ALGO-AITL-1L
+- ALGO-ALCL-1L
+- ALGO-MF-SEZARY-1L
+sources:
+- SRC-ECHELON-2-FIVE-YEAR-2022
+- SRC-ESMO-EHA-PTCL-2025
+- SRC-ADCETRIS-US-LABEL
+last_reviewed: null
+notes: CD30 expression alone does not establish treatment eligibility or universal BV-CHP preference.
+  ECHELON-2 compared with CHOP, not CHOEP. Pooled benefit must not be attributed to each histology.
+  Regulatory authorization and access require separate regional verification; no Ukrainian reimbursement
+  assertion is made here.
+notes_ua: Експресія CD30 сама по собі не встановлює відповідності лікуванню або універсальної
+  переваги BV-CHP. У ECHELON-2 порівнювали з CHOP, а не CHOEP. Загальну користь не можна приписувати
+  кожному підтипу. Дозвіл і доступність потребують окремої регіональної перевірки; твердження
+  про відшкодування в Україні тут не робиться.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_ua_10
-draft_revision: 2
+draft_revision: 3

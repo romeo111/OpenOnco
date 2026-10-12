@@ -1,5 +1,5 @@
 id: IND-TCELL-1L-CHP-BV
-plan_track: aggressive  # NCCN-preferred for CD30+; "aggressive" = engine slot, not preference order
+plan_track: aggressive  # engine slot; not a validated cross-histology preference
 
 applicable_to:
   disease_id: DIS-ALCL  # primary; PTCL NOS + AITL also use this if CD30+
@@ -18,15 +18,22 @@ recommended_regimen: REG-CHP-BV
 concurrent_therapy: []
 followed_by: []
 
-evidence_level: high
-strength_of_recommendation: strong
-nccn_category: "1"
+evidence_level: null
+strength_of_recommendation: null
+nccn_category: null
 
 expected_outcomes:
-  overall_response_rate: "~85%"
-  complete_response: "~70%"
-  progression_free_survival: "3-year PFS ~57% (CHP-Bv) vs ~44% (CHOP) in ECHELON-2 — substantial benefit in ALCL ALK-"
-  overall_survival_5y: "~70-85% (varies sharply by ALK status + IPI)"
+  progression_free_survival:
+    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year PFS: A+CHP 51.4% versus
+      CHOP 43.0%; predominantly systemic ALCL, not a PTCL-NOS/AITL estimate or individual
+      prognosis.'
+    source: SRC-ECHELON-2-FIVE-YEAR-2022
+    confidence_interval: '95% CI: A+CHP 42.8–59.4%; CHOP 35.8–50.0%'
+  overall_survival_5y:
+    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year OS: A+CHP 70.1% versus
+      CHOP 61.0%; not a subtype-specific estimate or individual prognosis.'
+    source: SRC-ECHELON-2-FIVE-YEAR-2022
+    confidence_interval: '95% CI: A+CHP 63.3–75.9%; CHOP 54.0–67.3%'
 
 hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-BORTEZOMIB-SEVERE-NEUROPATHY]
 red_flags_triggering_alternative: []
@@ -49,41 +56,54 @@ required_tests:
   - TEST-PREGNANCY
 desired_tests: []
 
-rationale: >
-  Standard 1L for systemic ALCL (universal CD30+) + CD30+ PTCL NOS +
-  CD30+ AITL per ECHELON-2 (Horwitz 2019). Brentuximab REPLACES
-  vincristine — avoids additive MMAE neuropathy. AutoSCT consolidation
-  recommended for ALCL ALK- + high-IPI PTCL NOS in fit younger.
+rationale: BV-CHP evidence and recommendations differ by histology. ESMO-EHA 2025 recommends BV-CHP
+  for systemic ALCL in the specified chemotherapy-eligible context; this cannot establish universal
+  PTCL-NOS/AITL preference. US labeling includes other CD30-expressing PTCL. The pooled ECHELON-2
+  results are not subtype-specific outcomes, and the trial compared with CHOP, not CHOEP. Subtype
+  and regional selection require separate review; transplantation is not an automatic consequence
+  of this reference.
+rationale_ua: Докази та рекомендації щодо BV-CHP відрізняються за гістологією. ESMO-EHA 2025 рекомендує
+  BV-CHP для системної ALCL у визначеному контексті придатності до хіміотерапії; це не встановлює
+  універсальної переваги для PTCL-NOS/AITL. Американська інструкція включає інші CD30-позитивні
+  PTCL. Загальні результати ECHELON-2 не є результатами окремих підтипів; порівняння проводили
+  з CHOP, а не CHOEP. Вибір за підтипом і регіоном потребує окремого перегляду; трансплантація
+  не є автоматичним наслідком цього довідкового запису.
 
-rationale_ua: >
-  Стандарт першої лінії для системної ALCL (CD30+ у всіх випадках) + CD30+ PTCL NOS +
-  CD30+ AITL за даними ECHELON-2 (Horwitz 2019). Брентуксимаб (brentuximab) ЗАМІНЮЄ
-  вінкристин у схемі CHP — уникає адитивної нейропатії MMAE. АутоТГСК-консолідація
-  рекомендована для ALCL ALK- та PTCL NOS з високим IPI у фізично збережених молодших
-  пацієнтів.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_ua_08
-draft_revision: 3
-sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}, {source_id: SRC-ECHELON-2-HORWITZ-2019, position: supports, relevant_quote_paraphrase: ECHELON-2 trial — see referenced publication for primary outcome data.}]
+draft_revision: 4
+sources:
+- source_id: SRC-ECHELON-2-FIVE-YEAR-2022
+  position: supports
+  relevant_quote_paraphrase: Exploratory pooled and histology-specific follow-up results; not
+    individual prognosis or a BV-CHP versus CHOEP comparison.
+- source_id: SRC-ADCETRIS-US-LABEL
+  position: supports
+  relevant_quote_paraphrase: 'Section 1.5: US adult CD30-expressing PTCL indication; no local
+    access or subgroup superiority claim.'
+- source_id: SRC-ESMO-EHA-PTCL-2025
+  position: supports
+  relevant_quote_paraphrase: Histology-specific recommendations distinguish systemic ALCL from
+    PTCL-NOS/TFHL.
+
 known_controversies: []
 
 do_not_do:
   - "НЕ комбінувати brentuximab з bleomycin — летальна пульмонарна токсичність."
-  - "НЕ призначати без CD30 IHC ≥10% confirmation — ECHELON-2 inclusion criterion."
+  - "Підтвердьте CD30. Поріг ≥10% був критерієм включення ECHELON-2, а не універсальним порогом дозволу; не визначайте регіон за мовою інтерфейсу."
   - "НЕ пропускати baseline LVEF ≥50% (anthracycline)."
   - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
   - "НЕ ігнорувати pre-existing neuropathy — Grade ≥2 baseline = absolute CI."
 
 do_not_do_en:
   - "Do NOT combine brentuximab with bleomycin — lethal pulmonary toxicity."
-  - "Do NOT prescribe without CD30 IHC ≥10% confirmation — ECHELON-2 inclusion criterion."
+  - "Confirm CD30. The ≥10% threshold was an ECHELON-2 enrollment criterion, not a universal label cutoff; do not infer region from interface language."
   - "Do NOT skip baseline LVEF ≥50% (anthracycline)."
   - "Do NOT skip HBV screening + entecavir prophylaxis."
   - "Do NOT ignore pre-existing neuropathy — Grade ≥2 baseline = absolute CI."
 time_critical: false
-last_reviewed: "2026-04-25"
+last_reviewed: null
 reviewer_signoffs: 0
-notes: STUB.
+notes: Evidence wording corrected; regimen choice, safety assertions and regional authorization still require separate review. Clinical and language signoff pending.
 
 profile_confirmation_note: >
   Planning requires the canonical biomarkers.BIO-CD30-IHC value positive;

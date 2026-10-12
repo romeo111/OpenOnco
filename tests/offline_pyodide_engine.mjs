@@ -183,9 +183,15 @@ for track in tcell_result.plan.tracks:
             assert 'Cycle 1' in during['checkpoints'][2]
             assert 'US label' in during['checkpoints'][2]
 assert set(seen_tcell)==set(expected_tcell)
+aitl_outcomes=tcell_result.plan.tracks[0].indication_data['expected_outcomes']
+assert 'AITL subgroup' in aitl_outcomes['progression_free_survival']['value']
+assert aitl_outcomes['progression_free_survival']['source']=='SRC-ECHELON-2-FIVE-YEAR-2022'
+assert '95% CI' in aitl_outcomes['progression_free_survival']['confidence_interval']
+assert tcell_result.plan.tracks[0].indication_data['nccn_category'] is None
 for lang in ['en','uk']:
     tcell_html=render_plan_html(tcell_result,target_lang=lang)
     assert 'MON-R-CHOP-REGIMEN' not in tcell_html
+    assert 'showed superior outcomes vs standard CHOP' not in tcell_html
     assert 'Confirm CD20+ DLBCL histology' not in tcell_html
     assert 'Підтвердити CD20+ DLBCL гістологію' not in tcell_html
 assert (KB/'sources/src_eviq_bv_chp_4038.yaml').is_file()
