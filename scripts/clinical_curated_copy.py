@@ -327,6 +327,7 @@ SHOWCASE_TITLES = {
 
 
 def messages_for(locale):
+    from scripts.offline_ui_copy import messages_for as offline_messages
     from scripts.privacy_copy import messages_for as privacy_messages
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
         import json
@@ -342,6 +343,7 @@ def messages_for(locale):
         catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
         catalog.update(STAGING_LABELS[locale])
         catalog.update(privacy_messages(locale))
+        catalog.update(offline_messages(locale))
         return catalog
     title = NSCLC[locale]
     status = {

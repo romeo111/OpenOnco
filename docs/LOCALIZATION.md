@@ -102,3 +102,10 @@ python -m scripts.build_site
 ```
 
 Review each medical translation against its linked English original. Translating prose never creates or upgrades a clinical sign-off.
+
+Browser storage status labels in Italian, Danish, Swedish, Norwegian Bokmål
+and Finnish use shared explicit display copy in `scripts/offline_ui_copy.py`.
+The partial-download message remains distinct from full offline readiness.
+JavaScript options, including `force-cache`, are not localized. Finnish uses
+`Välimuisti`, consistent with the terminology in the
+[University of Helsinki browser-cache instructions](https://helpdesk.it.helsinki.fi/ohjeet/tuki-ja-neuvonta/selaimen-valimuistin-tyhjennys).

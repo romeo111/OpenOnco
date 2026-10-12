@@ -13,6 +13,25 @@ from scripts.clinical_translation_checks import CRITICAL_CLAUSES, acceptable_dra
 from serverless import clinical_question as cq
 
 
+@pytest.mark.parametrize('locale', ['it', 'da', 'sv', 'nb', 'fi'])
+def test_offline_status_translation_preserves_browser_options_and_partial_failure(locale):
+    from scripts.site_translation_catalog import load_catalog
+
+    script = '<script>fetch("/bundle.zip", {cache: "force-cache"});</script>'
+    source = '<html lang="en"><head></head><body><main><dt>Cache</dt><dd id="cacheState">Cache unavailable</dd><p>Cached with some failed modules</p>' + script + '</main></body></html>'
+    catalog = load_catalog(locale)
+    output = localize_page(source, locale, 'try.html', set(), catalog)
+    assert script in output
+    assert 'id="cacheState"' in output
+    assert catalog['Cache unavailable'] != 'Cache unavailable'
+    assert catalog['Cached with some failed modules'] != catalog['All modules cached for offline use']
+    assert catalog['Cached with some failed modules'] in output
+    assert catalog['All modules cached for offline use'] not in output
+    if locale == 'fi':
+        assert '<dt>Välimuisti</dt>' in output
+        assert 'Välipala' not in output
+
+
 @pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr'])
 def test_original_source_blocks_preserve_text_attributes_and_links(locale):
     original = '<span lang="uk" data-original-source title="Original label"><b>Не перекладати ECOG &lt;0.5</b><a href="/cases/source.html" title="Original label">Original label</a></span>'

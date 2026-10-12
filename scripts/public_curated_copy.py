@@ -98,10 +98,12 @@ ADDITIONAL_COPY = {
 
 def messages_for(locale):
     from scripts.privacy_copy import messages_for as privacy_messages
+    from scripts.offline_ui_copy import messages_for as offline_messages
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
         index = ('it', 'da', 'sv', 'nb', 'fi').index(locale)
         return {**{source: values[index] for source, values in ADDITIONAL_COPY.items()},
                 **privacy_messages(locale),
+                **offline_messages(locale),
                 **{literal: literal for literal in TECHNICAL_LITERALS}}
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {
