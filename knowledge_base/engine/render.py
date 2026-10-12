@@ -3176,6 +3176,22 @@ def render_plan_html(
     so unsourced content cannot reach the patient. STRICT is the
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
+    if plan_result.plan and plan_result.plan.knowledge_base_state.get("histology_selection_withheld"):
+        english = target_lang == 'en'
+        title = 'Histology-specific selection required' if english else 'Потрібен вибір з урахуванням гістології'
+        explanation = (
+            'No medicine plan has been selected. The pathology result and the applicability '
+            'of the treatment route must be checked. No automatic substitute was selected.'
+            if english else
+            'План препаратів не обрано. Потрібно перевірити висновок патології та відповідність '
+            'лікувального маршруту гістології. Автоматичну заміну не обрано.'
+        )
+        details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
+            f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
+        ) + '</ul>'
+        return _doc_shell(title, '<div class="doc-header"><h1 class="doc-title">' + _h(title) + '</h1></div>'
+                          '<section class="clinical-safety"><p>' + _h(explanation) + '</p>' + details + '</section>'
+                          + _render_emergency_section(plan_result, target_lang=target_lang))
     if (mode or "").lower() == "patient":
         if target_lang == 'en':
             return render_patient_english_draft(plan_result, sibling_link=sibling_link, mdt=mdt)

@@ -25,6 +25,17 @@ groups:
   - title: "Demographics + baseline status"
     description: "Base fields. ECOG 4 → engine routes to palliative track."
     questions:
+      - field: "findings.histology"
+        label: "Confirmed NSCLC histology"
+        type: "enum"
+        impact: "critical"
+        options:
+          - {value: "adenocarcinoma", label: "Adenocarcinoma"}
+          - {value: "non-squamous", label: "Other confirmed non-squamous histology"}
+          - {value: "squamous", label: "Squamous cell carcinoma"}
+          - {value: "unknown", label: "Unknown / pending pathology"}
+        helper: "Use the pathology report. Do not infer histology from PD-L1 or a drug preference."
+
       - field: "patient_id"
         label: "Patient ID (synthetic)"
         type: "text"

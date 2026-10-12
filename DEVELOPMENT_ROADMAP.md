@@ -4,6 +4,16 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Positive NSCLC histology applicability and no automatic substitute (2026-10-12)
+
+Synthetic audit reproduced the same pemetrexed/non-squamous default for adenocarcinoma, squamous and missing histology. FDA pemetrexed labeling limits NSCLC use to non-squamous disease; KEYNOTE-407 uses the squamous taxane backbone. Source: https://www.accessdata.fda.gov/drugsatfda_docs/label/2025/214657s006lbl.pdf §1.1; primary trial https://www.nejm.org/doi/abs/10.1056/NEJMoa1810865. This finding takes priority over completing a dose comparison.
+
+Authored histology_allowed_values now requires explicit compatible findings.histology/disease.histology. Conflicting, missing, malformed, squamous or ambiguous values cannot confirm the non-squamous route. A blocked selected/default route withholds current/sequencing tracks and does not promote another candidate. Both report modes explain the withheld selection and preserve recorded emergency signals. Histology remains caller-provided data, not an independently verified pathology result. Other routes without authored histology requirements retain their behavior; wider applicability remains unverified.
+
+NSCLC questionnaire has a critical histology field with no default; old cached forms receive the same authored question without mutating cached input. All 11 public NSCLC examples were synchronized in both modes and 11 languages. Protected case prefixes remain excluded. Squamous KEYNOTE-407 is not yet a dedicated authored regimen/indication; no treatment substitute is invented. This missing route, BMA PD-L1 threshold prose, other histology-dependent regimens and extraction grounding remain open clinical work.
+
+Verification: 222 clinical/curated/render regressions, 35 package/layout/histology checks, all browser suites, 78 cached forms and actual Node WASM AML+NSCLC with zero network attempts passed. The additional emergency case passed in the final 15 histology tests. Core e5a79ac7cf5d, gzip c08dc10f7c7d; changed code members: histology.py, plan.py, render.py, schemas/indication.py. Only DIS-NSCLC disease ZIP changed, with exactly the indication and questionnaire YAMLs; other disease ZIPs unchanged. Proofs: `.tmp/nsclc-histology-reproduction.json`, `.tmp/histology-final-bundle-proof.json`, `.tmp/histology-offline-final-proof.txt`. No dosing values or clinical-review status were changed. Standard Pages/API delivery and production verification required.
+
 ### Dated primary-publication identity observations (2026-10-12)
 
 Selected KEYNOTE-189, KEYNOTE-407, FLAURA, FLAURA2 and CheckMate-067 source records were compared with official PubMed primary records and publisher metadata. Titles, DOI, PMID, publication year and recorded URL binding match. FLAURA's issue year is 2018 even though its electronic publication was in 2017. Search-result references to another article were not treated as the primary record; an official indexed record was used where direct PubMed returned a challenge.

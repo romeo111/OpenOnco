@@ -50,6 +50,7 @@ from knowledge_base.schemas import (
 from knowledge_base.validation.loader import load_content
 from ._actionability import find_matching_actionability
 from ._track_filter import is_track_excluded
+from .histology import histology_confirmed
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
@@ -1005,10 +1006,24 @@ def generate_plan(
     patient_biomarkers = patient.get("biomarkers") or {}
 
     _ACTIVE_TRACKS = {"standard", "aggressive"}
+    histology_selection_withheld = False
+
+    if current_default_id and not histology_confirmed(_resolve(entities, current_default_id) or {}, patient):
+        histology_selection_withheld = True
+        result.warnings.append(
+            f"Histology applicability is not confirmed for {current_default_id}. "
+            "No default treatment or automatic substitute is selected; "
+            "a verified histology-specific route is required."
+        )
+        current_candidate_ids = []
+        sequencing_candidate_ids = []
 
     tracks: list[PlanTrack] = []
     for ind_id in current_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if ind and not histology_confirmed(ind, patient):
+            result.warnings.append(f"track {ind_id} withheld: histology applicability is not confirmed")
+            continue
         if ind and is_track_excluded(ind, patient_biomarkers):
             result.warnings.append(
                 f"track {ind_id} dropped: patient biomarker profile "
@@ -1033,6 +1048,8 @@ def generate_plan(
     sequencing_tracks: list[PlanTrack] = []
     for ind_id in sequencing_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if ind and not histology_confirmed(ind, patient):
+            continue
         if ind and is_track_excluded(ind, patient_biomarkers):
             continue
         track_label = (ind or {}).get("plan_track") or ind_id
@@ -1053,6 +1070,7 @@ def generate_plan(
     # KB state snapshot (per CHARTER §10.2 — immutable audit)
     kb_state = {
         "loaded_entities": len(entities),
+        "histology_selection_withheld": histology_selection_withheld,
         "indications_used": [t.indication_id for t in tracks],
         "sequencing_indications": [t.indication_id for t in sequencing_tracks],
         "algorithm_version": algo.get("last_reviewed"),

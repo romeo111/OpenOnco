@@ -32,6 +32,30 @@ html
 assert(result.includes('VIRTUAL-OFFLINE-AML-001'));
 assert(result.includes('CHARTER'));
 assert(result.length>10000);
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-NSCLC'])).buffer,'zip');
+const nsclcExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='nsclc-pdl1-low-chemo-io');
+assert(nsclcExample, 'Synthetic NSCLC fixture missing');
+py.globals.set('_nsclc_json',JSON.stringify(nsclcExample.json));
+const histologyStates=JSON.parse(await py.runPythonAsync(`
+import copy
+from knowledge_base.engine import apply_disease_module
+assert apply_disease_module(KB, disease_id='DIS-NSCLC')['ok']
+base=json.loads(_nsclc_json)
+states=[]
+for histology in ['adenocarcinoma','squamous',None]:
+    profile=copy.deepcopy(base)
+    profile['patient_id']='VIRTUAL-OFFLINE-HISTOLOGY'
+    profile['findings']['histology']=histology
+    outcome=generate_plan(profile,kb_root=KB)
+    if histology == 'adenocarcinoma':
+        assert outcome.default_indication_id == 'IND-NSCLC-PDL1-LOW-NONSQ-MET-1L'
+    else:
+        assert outcome.default_indication_id is None
+        assert not outcome.plan.tracks and not outcome.plan.sequencing_tracks
+        assert outcome.plan.knowledge_base_state['histology_selection_withheld']
+    states.append({'histology':histology,'default':outcome.default_indication_id})
+json.dumps(states)
+`));
 assert.equal(networkAttempts,0);
 
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,environment:'Node WASM, not browser'}));

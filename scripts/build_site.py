@@ -4793,6 +4793,10 @@ def render_try(
     # form populates instantly. Full questionnaires.json (~640 KB) and
     # examples.json (~230 KB) are lazy-fetched only after the user selects
     # an option — saves ~870 KB on first paint.
+    import yaml as _histology_yaml
+    _nsclc_form = _histology_yaml.safe_load((KB_ROOT / "questionnaires" / "quest_nsclc_1l.yaml").read_text(encoding="utf-8"))
+    _histology_field = next(question for group in _nsclc_form["groups"] for question in group["questions"] if question["field"] == "findings.histology")
+    _histology_field_json = json.dumps(_histology_field, ensure_ascii=False).replace("</", "<\\/")
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
@@ -6003,6 +6007,12 @@ function normalizeQuestionnaire(quest) {{
   const groups = (quest.groups || []).map(group => group.title === screeningTitle
     ? {{ ...group, questions: (group.questions || []).filter(question => !authored.has(question.field)) }}
     : group);
+  if (quest.id === 'QUEST-NSCLC-1L-STUB' && !authored.has('findings.histology')) {{
+    const histologyQuestion = {_histology_field_json};
+    const index = groups.findIndex(group => group.title !== screeningTitle);
+    if (index >= 0) groups[index] = {{ ...groups[index], questions: [histologyQuestion, ...(groups[index].questions || [])] }};
+    else groups.unshift({{ title: 'Demographics + baseline status', questions: [histologyQuestion] }});
+  }}
   return {{ ...quest, groups }};
 }}
 
@@ -11294,7 +11304,7 @@ def build_one_case(case: CaseEntry, output_dir: Path,
             experimental_search_fn=search_trials,
             experimental_cache_root=CTGOV_CACHE,
         )
-        if result.plan is None or not result.plan.tracks:
+        if result.plan is None or (not result.plan.tracks and not result.plan.knowledge_base_state.get("histology_selection_withheld")):
             raise RuntimeError(f"Example {case.case_id} generated no treatment plan")
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
         html = render_plan_html(result, mdt=mdt, target_lang=target_lang)
