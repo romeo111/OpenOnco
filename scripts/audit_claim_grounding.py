@@ -89,6 +89,8 @@ class GroundingResult:
 class AuditMetrics:
     total_claims: int = 0
     claims_with_anchor: int = 0
+    claims_with_unresolved_sources: int = 0
+    unresolved_references: list[dict] = field(default_factory=list)
     by_entity_type: dict = field(default_factory=lambda: defaultdict(
         lambda: {"total": 0, "anchored": 0}
     ))
@@ -186,6 +188,7 @@ def run_audit(
     clear_load_cache()  # always start with a fresh load
     load_result = load_content(kb_root)
     claims = extract_claims(load_result.entities_by_id)
+    source_ids = {eid for eid, info in load_result.entities_by_id.items() if info.get('type') == 'sources'}
 
     # Apply --limit at entity granularity (not claim) so a single
     # entity's multiple claims are kept together.
@@ -216,14 +219,26 @@ def run_audit(
             source_titles = load_master_source_titles()
 
     for c in claims:
+        unresolved_sources = sorted(set(c.cited_sources) - source_ids)
         metrics.total_claims += 1
         bucket = metrics.by_entity_type[c.entity_type]
         bucket["total"] += 1
         if c.has_anchor:
             metrics.claims_with_anchor += 1
             bucket["anchored"] += 1
+        if unresolved_sources:
+            metrics.claims_with_unresolved_sources += 1
+            metrics.unresolved_references.append({'entity_id': c.entity_id, 'entity_type': c.entity_type,
+                'field': c.field, 'entity_path': c.entity_path, 'source_ids': unresolved_sources})
 
         if not enable_semantic:
+            continue
+        if unresolved_sources:
+            grounding_results.append(GroundingResult(
+                entity_type=c.entity_type, entity_id=c.entity_id, field=c.field,
+                skipped=True, skip_reason='Unresolved source IDs: ' + ', '.join(unresolved_sources),
+            ))
+            metrics.semantic_skipped += 1
             continue
         if not c.has_anchor:
             continue
@@ -349,6 +364,7 @@ def write_reports(
     # Stable sort: by entity_type then entity_id
     detached.sort(key=lambda c: (c.entity_type, c.entity_id, c.field))
     top_detached = detached[:50]
+    unresolved = metrics.unresolved_references
 
     ungrounded = [
         g for g in grounding_results
@@ -364,7 +380,9 @@ def write_reports(
     lines.append(
         "Audit of claim-bearing prose fields on Indication, Regimen, and "
         "BiomarkerActionability entities. Layer 1 (detection) checks whether "
-        "the parent entity cites ≥1 SRC-* anchor; Layer 2 (semantic, opt-in) "
+        "the citation context contains ≥1 resolving SRC-* anchor and reports "
+        "unresolved IDs separately; structured claims use only their own "
+        "source bindings. Layer 2 (semantic, opt-in) "
         "asks the Claude API whether each cited source plausibly supports "
         "the claim. Tracks Q4/Q5 of "
         "`docs/plans/kb_data_quality_plan_2026-04-29.md`; v1.0 target ≥90% "
@@ -380,6 +398,7 @@ def write_reports(
         f"{metrics.claims_with_anchor} | {metrics.total_claims} | "
         f"{_percent(metrics.claims_with_anchor, metrics.total_claims)} |"
     )
+    lines.append(f'| Fields citing unresolved source IDs | {metrics.claims_with_unresolved_sources} | {metrics.total_claims} | {_percent(metrics.claims_with_unresolved_sources, metrics.total_claims)} |')
     if semantic_enabled:
         denom = metrics.semantic_grounded + metrics.semantic_ungrounded
         lines.append(
@@ -388,7 +407,7 @@ def write_reports(
             f"{_percent(metrics.semantic_grounded, denom)} |"
         )
         lines.append(
-            f"| Semantic checks skipped (insufficient text/no key) | "
+            f"| Semantic checks skipped (unresolved references/insufficient text/no key) | "
             f"{metrics.semantic_skipped} | {metrics.semantic_ran} | "
             f"{_percent(metrics.semantic_skipped, metrics.semantic_ran)} |"
         )
@@ -409,9 +428,10 @@ def write_reports(
     if not detached:
         lines.append("_None — every claim-bearing field has at least one cited Source._")
     else:
-        lines.append("These entities make claim-bearing assertions but cite no "
-                     "resolving SRC-* anchor anywhere on the entity. Each is a "
-                     "candidate for a Q4 remediation chunk.")
+        lines.append("These fields have no resolving SRC-* anchor in their "
+                     "applicable citation context. A structured claim's references "
+                     "do not support unrelated legacy prose. Each field needs "
+                     "source review before adding a citation.")
         lines.append("")
         lines.append("| Entity | Field | Excerpt | Suggested action |")
         lines.append("|---|---|---|---|")
@@ -422,11 +442,20 @@ def write_reports(
                 f"add SRC-* anchor or downgrade to maintainer-review note |"
             )
     lines.append("")
+    lines.append(f'## Unresolved source references ({len(unresolved)} fields)')
+    lines.append('')
+    if unresolved:
+        lines.extend(['| Entity | Field | Unresolved IDs |', '|---|---|---|'])
+        for claim in unresolved:
+            lines.append(f"| `{claim['entity_id']}` | `{claim['field']}` | " + ', '.join(f'`{source}`' for source in claim['source_ids']) + ' |')
+    else:
+        lines.append('_No unresolved source IDs detected._')
+    lines.append('')
     if semantic_enabled:
         lines.append(f"## Grounding-fail claims (semantic mode) — {len(ungrounded)}")
         lines.append("")
         if not ungrounded:
-            lines.append("_None — all sampled anchors plausibly support their claims._")
+            lines.append('_No negative semantic results recorded. Skipped or unchecked claims have not been established as supported._')
         else:
             lines.append("| Entity | Field | Confidence | Reasoning |")
             lines.append("|---|---|---:|---|")
@@ -449,6 +478,7 @@ def write_reports(
         "metrics": {
             "total_claims": metrics.total_claims,
             "claims_with_anchor": metrics.claims_with_anchor,
+            "claims_with_unresolved_sources": metrics.claims_with_unresolved_sources,
             "anchor_coverage": (
                 metrics.claims_with_anchor / metrics.total_claims
                 if metrics.total_claims else None
@@ -476,6 +506,7 @@ def write_reports(
         "ungrounded": [
             asdict(g) for g in ungrounded[:200]
         ] if semantic_enabled else [],
+        "unresolved_sources": unresolved,
     }
     json_path.write_text(
         json.dumps(json_payload, indent=2, ensure_ascii=False),

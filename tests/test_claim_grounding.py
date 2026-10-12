@@ -245,6 +245,46 @@ def test_check_semantic_mocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
 
 # ---------- 5+6: cache behaviour ----------
 
+
+def test_mixed_resolving_and_missing_sources_are_reported_and_not_sent_to_model(tmp_path):
+    kb = tmp_path / 'kb'
+    _build_synthetic_kb(kb, with_anchor=True)
+    path = kb / 'regimens/reg_test.yaml'
+    data = yaml.safe_load(path.read_text(encoding='utf-8'))
+    data['sources'] = ['SRC-TEST', 'SRC-MISSING']
+    path.write_text(yaml.safe_dump(data), encoding='utf-8')
+    class Result:
+        detail = 'grounded=True conf=0.9 — synthetic test only'
+    call = MagicMock(return_value=Result())
+    metrics, claims, results = aud.run_audit(kb, enable_semantic=True, use_cache=False,
+        semantic_fn=call, source_titles={'SRC-TEST': 'Test guideline'})
+    regimen = next(claim for claim in claims if claim.entity_id == 'REG-TEST')
+    assert regimen.has_anchor  # Preserve the existing "at least one" metric.
+    assert metrics.unresolved_references[0]['source_ids'] == ['SRC-MISSING']
+    assert metrics.claims_with_unresolved_sources == 1
+    assert all(invocation.args[0].target_id != 'REG-TEST' for invocation in call.call_args_list)
+    skipped = next(result for result in results if result.entity_id == 'REG-TEST')
+    assert skipped.skipped and skipped.grounded is None
+    assert 'SRC-MISSING' in skipped.skip_reason
+    md, js = tmp_path / 'mixed.md', tmp_path / 'mixed.json'
+    aud.write_reports(metrics, claims, results, semantic_enabled=True, md_path=md, json_path=js)
+    payload = json.loads(js.read_text(encoding='utf-8'))
+    assert payload['unresolved_sources'][0]['source_ids'] == ['SRC-MISSING']
+    assert 'SRC-MISSING' in md.read_text(encoding='utf-8')
+    assert 'all sampled anchors plausibly support' not in md.read_text(encoding='utf-8')
+
+
+def test_no_semantic_checks_cannot_be_reported_as_supported(tmp_path):
+    kb = tmp_path / 'kb'
+    _build_synthetic_kb(kb, with_anchor=False)
+    call = MagicMock(side_effect=AssertionError('No detached claim should reach a model'))
+    metrics, claims, results = aud.run_audit(kb, enable_semantic=True, use_cache=False,
+        semantic_fn=call, source_titles={})
+    md, js = tmp_path / 'unchecked.md', tmp_path / 'unchecked.json'
+    aud.write_reports(metrics, claims, results, semantic_enabled=True, md_path=md, json_path=js)
+    call.assert_not_called()
+    assert 'unchecked claims have not been established as supported' in md.read_text(encoding='utf-8')
+
 def test_cache_skip_unchanged_claims(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A pre-existing cache entry prevents the API from being re-called."""
     kb = tmp_path / "kb"
