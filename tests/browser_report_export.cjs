@@ -2,13 +2,16 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('docs/try.html', 'utf8');
-const names = ['waitForFrameLoad', 'downloadHtml', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
+const names = ['waitForFrameLoad', 'downloadHtml', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
 const code = names.map(name => {
   const match = html.match(new RegExp(`^(?:async )?function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
   assert(match, name); return match[0];
 }).join('\n');
 const events = new Map(), timers = new Map(), errors = [];
 let nextTimer = 0, blob, filename, prints = 0;
+let failClick = false, removed = 0;
+const revoked = [];
+const body = { appendChild(anchor) { anchor.parentNode = this; }, removeChild(anchor) { anchor.parentNode = null; removed++; } };
 const button = () => ({ disabled: false });
 const frame = {
   srcdoc: '<html>Previous report</html>',
@@ -20,9 +23,9 @@ const frame = {
 const context = vm.createContext({
   resultFrame: frame, Blob, Date,
   setTimeout: fn => { const id = ++nextTimer; timers.set(id, fn); return id; },
-  clearTimeout: id => timers.delete(id), setError: error => errors.push(error),
-  URL: { createObjectURL: value => { blob = value; return 'blob:test'; }, revokeObjectURL() {} },
-  document: { body: { appendChild() {}, removeChild() {} }, createElement: () => ({ click() { filename = this.download; } }) },
+  clearTimeout: id => timers.delete(id), setError: error => { if (error) errors.push(error); },
+  URL: { createObjectURL: value => { blob = value; return 'blob:test'; }, revokeObjectURL: url => revoked.push(url) },
+  document: { documentElement: { lang: 'en' }, body, createElement: () => ({ click() { if (failClick) throw new Error('Download rejected'); filename = this.download; } }) },
   isInteractionLocked: () => false, setLockedTitle() {}, refreshModeButtonAvailability() {}, openPlanModal() {},
   runBtn: button(), viewPlanBtn: button(), pdfBtn: button(), modalPdfBtn: button(), modalHtmlBtn: button(),
   resetBtn: button(), formatBtn: button(), diseaseSelect: button(), exampleSelect: button(), modeFormBtn: button(), modeJsonBtn: button(), personalizeBtn: button(),
@@ -64,6 +67,33 @@ const run = value => vm.runInContext(value, context);
   run("currentResultMode='patient'; downloadHtml();");
   assert.match(filename, /^openonco-plan\.patient\.uk\./, 'Filename must reflect actual report language');
   assert.equal(await blob.text(), '<!DOCTYPE html>\n' + frame.contentDocument.documentElement.outerHTML);
+  const previousBlob = blob;
+  run('planDirty=true; downloadHtml(); downloadPdf();');
+  assert.equal(blob, previousBlob, 'Changed input must not export a stale report');
+  assert.equal(prints, 1);
+  run('planDirty=false;');
+  const displayedDocument = frame.contentDocument;
+  Object.defineProperty(frame, 'contentDocument', { configurable: true, get() { throw new Error('Blocked document'); } });
+  assert.doesNotThrow(() => run('downloadHtml()'));
+  assert.equal(errors.at(-1), 'Could not save the report. Try again or use PDF.');
+  assert.equal(blob, previousBlob);
+  Object.defineProperty(frame, 'contentDocument', { configurable: true, writable: true, value: null });
+  assert.doesNotThrow(() => run('downloadHtml()'));
+  assert.equal(blob, previousBlob, 'An unreadable display must never fall back to stale srcdoc');
+  frame.contentDocument = displayedDocument;
+  const createUrl = context.URL.createObjectURL;
+  context.URL.createObjectURL = () => { throw new Error('Storage unavailable'); };
+  assert.doesNotThrow(() => run('downloadHtml()'));
+  context.URL.createObjectURL = createUrl;
+  failClick = true;
+  const previouslyRemoved = removed;
+  assert.doesNotThrow(() => run('downloadHtml()'));
+  assert.equal(removed, previouslyRemoved + 1, 'Failed download must remove its temporary anchor');
+  timers.get(nextTimer)(); timers.delete(nextTimer);
+  assert.equal(revoked.at(-1), 'blob:test', 'Failed download must release its blob URL');
+  failClick = false;
+  assert.doesNotThrow(() => run('downloadHtml()'));
+  assert.match(filename, /^openonco-plan\.patient\.uk\./, 'Retry must remain available after export failure');
   const overlay = fs.readFileSync('scripts/clinical-localization.js', 'utf8');
   assert(!overlay.includes('reloadReport'), 'Overlay must delegate all reloads to the guarded builder');
   assert(overlay.includes("await switchResultLang('en')"));
@@ -83,8 +113,14 @@ const run = value => vm.runInContext(value, context);
   for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const page = fs.readFileSync(`docs/${locale}try.html`, 'utf8');
     assert(page.includes('const planFresh = reportReady && planSource !== null && !planDirty;'));
-    assert(page.includes('if (planSource == null || !reportReady) return;'));
+    assert(page.includes('if (planSource == null || !reportReady || planDirty) return;'));
     assert(page.includes('if (!planSource || !reportReady || isInteractionLocked()) return;'));
+  }
+  for (const locale of ['en', 'uk', 'es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi']) {
+    context.document.documentElement.lang = locale;
+    const message = run('reportExportError()');
+    assert(message.includes('PDF'));
+    if (locale !== 'en') assert.notEqual(message, 'Could not save the report. Try again or use PDF.');
   }
   console.log('Report export readiness, failure recovery, displayed language and eleven clients passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });

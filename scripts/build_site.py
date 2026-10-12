@@ -4671,6 +4671,7 @@ def render_try(
     questionnaires_manifest: list = None,
     examples_manifest: list = None,
 ) -> str:
+    from scripts.report_export_copy import ERRORS as report_export_errors
     # Pyodide assets live at site root — root-relative paths work for both
     # /try.html (EN, default) and /ukr/try.html (UA mirror). The Pyodide
     # engine bundle is a single shared copy.
@@ -5333,7 +5334,7 @@ function downloadPdf() {{
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
   if (uiBusy || generating) return;
-  if (planSource == null || !reportReady) return;
+  if (planSource == null || !reportReady || planDirty) return;
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
   const wasHidden = planModal && planModal.hidden;
@@ -5394,36 +5395,39 @@ html
   }});
 }}
 
+function reportExportError() {{
+  const messages = {json.dumps(report_export_errors, ensure_ascii=False)};
+  return messages[document.documentElement.lang] || messages.en;
+}}
+
 function downloadHtml() {{
   if (uiBusy || generating) return;
-  if (planSource == null || !reportReady) return;
-  const displayedDocument = resultFrame.contentDocument;
-  const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
-  const displayedLanguage = translatedDisplay || (displayedDocument && displayedDocument.documentElement.lang) || currentResultLang;
-  let html = displayedDocument
-    ? '<!DOCTYPE html>\\n' + displayedDocument.documentElement.outerHTML
-    : resultFrame.srcdoc;
-  if (!html) {{
-    try {{
-      html = '<!DOCTYPE html>\\n' + resultFrame.contentDocument.documentElement.outerHTML;
-    }} catch (e) {{
-      setError('Could not read the rendered document: ' + (e.message || e));
-      return;
-    }}
+  if (planSource == null || !reportReady || planDirty) return;
+  let url = null;
+  let a = null;
+  try {{
+    const displayedDocument = resultFrame.contentDocument;
+    if (!displayedDocument || !displayedDocument.documentElement) throw new Error('Report document unavailable');
+    const root = displayedDocument.documentElement;
+    const displayedLanguage = root.dataset.translationLocale || root.lang || currentResultLang;
+    const html = '<!DOCTYPE html>\\n' + root.outerHTML;
+    const blob = new Blob([html], {{ type: 'text/html;charset=utf-8' }});
+    url = URL.createObjectURL(blob);
+    a = document.createElement('a');
+    // Export the displayed report, with its actual audience and language.
+    const stamp = new Date().toISOString().slice(0, 10);
+    const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
+    a.href = url;
+    a.download = `openonco-plan${{modePart}}.${{displayedLanguage}}.${{stamp}}.html`;
+    document.body.appendChild(a);
+    a.click();
+    setError('');
+  }} catch (e) {{
+    setError(reportExportError());
+  }} finally {{
+    if (a && a.parentNode) a.parentNode.removeChild(a);
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 0);
   }}
-  const blob = new Blob([html], {{ type: 'text/html;charset=utf-8' }});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  // Filename encodes audience + lang so a doctor downloading both for the
-  // same patient gets distinct files: openonco-plan.<mode>.<lang>.html
-  const stamp = new Date().toISOString().slice(0, 10);
-  const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
-  a.href = url;
-  a.download = `openonco-plan${{modePart}}.${{displayedLanguage}}.${{stamp}}.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 0);
 }}
 
 async function switchResultLang(newLang) {{

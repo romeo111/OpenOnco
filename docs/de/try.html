@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Plan erstellen</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="Run the OpenOnco browser demo on synthetic oncology profiles with auditable, source-grounded output.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -124,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="c0c595f648012583be6220841a4f389cd00418d246744a9b02a1c137ff790692"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="303bd1a1b73ef68cdbf6e2f8c84c9ceba966134a30c46a50cf14fe18a5ce3cf8"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -777,7 +778,7 @@ function downloadPdf() {
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
   if (uiBusy || generating) return;
-  if (planSource == null || !reportReady) return;
+  if (planSource == null || !reportReady || planDirty) return;
   // Modal must be visible so iframe contentWindow is fully laid out and
   // print() picks up the right document.
   const wasHidden = planModal && planModal.hidden;
@@ -838,36 +839,39 @@ html
   });
 }
 
+function reportExportError() {
+  const messages = {"en": "Could not save the report. Try again or use PDF.", "uk": "Не вдалося зберегти звіт. Спробуйте ще раз або скористайтеся PDF.", "es": "No se pudo guardar el informe. Inténtelo de nuevo o use PDF.", "pt": "Não foi possível guardar o relatório. Tente novamente ou use PDF.", "de": "Der Bericht konnte nicht gespeichert werden. Versuchen Sie es erneut oder verwenden Sie PDF.", "fr": "Impossible d’enregistrer le rapport. Réessayez ou utilisez PDF.", "it": "Impossibile salvare il rapporto. Riprova o usa PDF.", "da": "Rapporten kunne ikke gemmes. Prøv igen, eller brug PDF.", "sv": "Rapporten kunde inte sparas. Försök igen eller använd PDF.", "nb": "Rapporten kunne ikke lagres. Prøv igjen eller bruk PDF.", "fi": "Raporttia ei voitu tallentaa. Yritä uudelleen tai käytä PDF-muotoa."};
+  return messages[document.documentElement.lang] || messages.en;
+}
+
 function downloadHtml() {
   if (uiBusy || generating) return;
-  if (planSource == null || !reportReady) return;
-  const displayedDocument = resultFrame.contentDocument;
-  const translatedDisplay = displayedDocument && displayedDocument.documentElement.dataset.translationLocale;
-  const displayedLanguage = translatedDisplay || (displayedDocument && displayedDocument.documentElement.lang) || currentResultLang;
-  let html = displayedDocument
-    ? '<!DOCTYPE html>\n' + displayedDocument.documentElement.outerHTML
-    : resultFrame.srcdoc;
-  if (!html) {
-    try {
-      html = '<!DOCTYPE html>\n' + resultFrame.contentDocument.documentElement.outerHTML;
-    } catch (e) {
-      setError('Could not read the rendered document: ' + (e.message || e));
-      return;
-    }
+  if (planSource == null || !reportReady || planDirty) return;
+  let url = null;
+  let a = null;
+  try {
+    const displayedDocument = resultFrame.contentDocument;
+    if (!displayedDocument || !displayedDocument.documentElement) throw new Error('Report document unavailable');
+    const root = displayedDocument.documentElement;
+    const displayedLanguage = root.dataset.translationLocale || root.lang || currentResultLang;
+    const html = '<!DOCTYPE html>\n' + root.outerHTML;
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    url = URL.createObjectURL(blob);
+    a = document.createElement('a');
+    // Export the displayed report, with its actual audience and language.
+    const stamp = new Date().toISOString().slice(0, 10);
+    const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
+    a.href = url;
+    a.download = `openonco-plan${modePart}.${displayedLanguage}.${stamp}.html`;
+    document.body.appendChild(a);
+    a.click();
+    setError('');
+  } catch (e) {
+    setError(reportExportError());
+  } finally {
+    if (a && a.parentNode) a.parentNode.removeChild(a);
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 0);
   }
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  // Filename encodes audience + lang so a doctor downloading both for the
-  // same patient gets distinct files: openonco-plan.<mode>.<lang>.html
-  const stamp = new Date().toISOString().slice(0, 10);
-  const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
-  a.href = url;
-  a.download = `openonco-plan${modePart}.${displayedLanguage}.${stamp}.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 async function switchResultLang(newLang) {
