@@ -6,7 +6,7 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ### HTTP JSON decoder failures (2026-10-12)
 
-Both Vercel HTTP entrypoints now return HTTP 400 for JSON decoder ValueError (including Python's integer digit limit) and RecursionError, before clinical processing, quota or provider calls. Existing size, UTF-8, top-level object and non-finite guards are retained. Real malformed JSON, a 10000-digit integer, and 6000 nested arrays are exercised through each HTTP handler; a valid nested object still reaches processing unchanged. 41 targeted HTTP/profile/language tests passed. No medical sources, treatment logic, catalogs or protected reports changed. Production verification remains part of delivery.
+Both Vercel HTTP entrypoints now return HTTP 400 for JSON decoder ValueError (including Python's integer digit limit) and RecursionError, before clinical processing, quota or provider calls. Existing size, UTF-8, top-level object and non-finite guards are retained. Real malformed JSON, a 10000-digit integer, and 6000 nested arrays are exercised through each HTTP handler; a valid nested object still reaches processing unchanged. 41 targeted HTTP/profile/language tests passed. No medical sources, treatment logic, catalogs or protected reports changed. Production accepted 6000 levels on a different Python runtime, so a shared string-aware scanner now enforces a maximum of 256 object/array nesting levels before decoding; quoted/escaped brackets do not count. 42 tests passed after this change. First production probe used a synthetic empty case, returned needs_clarification and consumed one anonymous question; no model call. Final production verification remains part of delivery.
 
 ### TAX 327 citation access (2026-10-12)
 

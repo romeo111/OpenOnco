@@ -55,3 +55,13 @@ def test_valid_nested_request_reaches_processing_unchanged(endpoint, monkeypatch
     responses, calls = post(endpoint, monkeypatch, '{"case_text":"","extra":{"values":[0,false,null]}}')
     assert responses == [(200, {'status': 'test'})]
     assert calls == [{'case_text': '', 'extra': {'values': [0, False, None]}}]
+
+
+def test_nesting_limit_ignores_brackets_and_escaped_quotes_in_strings():
+    import json
+    from serverless.request_json import decode_request_json, MAX_JSON_NESTING
+    original = {'text': '[{' * 6000 + '\\"' + ']}' * 6000}
+    assert decode_request_json(json.dumps(original)) == original
+    assert decode_request_json('[' * MAX_JSON_NESTING + '0' + ']' * MAX_JSON_NESTING)
+    with pytest.raises(ValueError, match='nesting'):
+        decode_request_json('[' * (MAX_JSON_NESTING + 1) + '0' + ']' * (MAX_JSON_NESTING + 1))

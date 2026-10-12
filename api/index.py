@@ -6,6 +6,7 @@ import json
 from http.server import BaseHTTPRequestHandler
 
 from serverless.clinical_question import MAX_REQUEST_BODY_BYTES, _cors_headers, handle_json_request
+from serverless.request_json import decode_request_json
 
 
 class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
@@ -36,7 +37,7 @@ class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
             self._send_json(400, _cors_headers(), {"status": "error", "message": "Request body must be UTF-8 JSON"})
             return
         try:
-            payload = json.loads(raw)
+            payload = decode_request_json(raw)
         except (ValueError, RecursionError):
             self._send_json(400, _cors_headers(), {"status": "error", "message": "Invalid JSON body"})
             return
