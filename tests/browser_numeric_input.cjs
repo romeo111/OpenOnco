@@ -6,7 +6,7 @@ function fn(page, name) {
   assert(m, name); return m[0].replace(/\r\n/g, '\n');
 }
 const names = ['parseNumericValue','numericValueError','numericInputError','validateNumericInputs','readValue',
-  'onAnswerChange','profileInputError','buildProfile','setMode','updateWorkflowControls','updateImpactPanelLocal'];
+  'questionnaireValuePresent','onAnswerChange','profileInputError','buildProfile','setMode','updateWorkflowControls','updateImpactPanelLocal'];
 const code = names.map(n=>fn(html,n)).join('\n');
 function input(field, type, value, min, max) {
   const error = { style: {}, hidden: true };
@@ -20,7 +20,7 @@ const b = input('findings.virtual_float','float','0.836','0','10');
 const summary = {}, textarea = { value: '{"patient_id":"VIRTUAL-OLD"}' }, calls = { drafts: [], missing: [] };
 const button = () => ({ disabled:false, classList:{ toggle(){} } });
 const copy = JSON.parse(html.match(/^const numericInputCopy = (.*);$/m)[1]);
-const context = vm.createContext({ console, profileInputCopy:JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]), numericInputCopy:copy, numericInputSummary:summary, numericInputErrors:new Map(),
+const context = vm.createContext({readinessCriticalText:null,findQuestionnaireForProfile:()=>-1,QUESTIONNAIRES_MANIFEST:[], console, profileInputCopy:JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]), numericInputCopy:copy, numericInputSummary:summary, numericInputErrors:new Map(),
   formPane:{ querySelectorAll:()=>[a,b] }, jsonPane:{}, textarea,
   isInteractionLocked:()=>false, setLockedTitle(){}, refreshModeButtonAvailability(){},
   markPlanDirty:()=>vm.runInContext('planDirty=true', context),
@@ -35,9 +35,9 @@ vm.runInContext(`let mode='form',planSource='generated',reportReady=true,planDir
 let formProfileBase=null,removedProfileFields=new Set();
 let answers={'findings.virtual_integer':61,'findings.virtual_float':0.836,'findings.virtual_boolean':false};
 const activeQuest={fixed_fields:{patient_id:'VIRTUAL-NUMERIC-001'},groups:[{questions:[
-{field:'findings.virtual_integer',label:'Integer',impact:'critical'},
-{field:'findings.virtual_float',label:'Float',impact:'optional'},
-{field:'findings.virtual_boolean',label:'Boolean',impact:'optional'}]}]};`+code,context);
+{field:'findings.virtual_integer',type:'integer',label:'Integer',impact:'critical'},
+{field:'findings.virtual_float',type:'float',label:'Float',impact:'optional'},
+{field:'findings.virtual_boolean',type:'boolean',label:'Boolean',impact:'optional'}]}]};`+code,context);
 const run=s=>vm.runInContext(s,context);
 for (const [value,type,expected] of [['0','integer',0],['-2','integer',-2],['1.0','integer',1],['2.5e1','integer',25],
   ['0.836','float',0.836],['1e-20','float',1e-20],['61.5','integer',undefined],['1.00000000000000001','integer',undefined],

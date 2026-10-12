@@ -94,3 +94,19 @@ REPORT_INVALID = {
 }
 for locale, message in REPORT_INVALID.items():
     COPY[locale]['reportInvalid'] = message
+
+READINESS = {
+'en': ('Readiness unknown: complete valid JSON and select the matching disease questionnaire.', 'Critical questionnaire fields entered; values still need review.'),
+'uk': ('Заповненість невідома: введіть коректний JSON і виберіть анкету відповідної хвороби.', 'Критичні поля анкети введено; значення ще потребують перевірки.'),
+'es': ('Completitud desconocida: introduzca JSON válido y seleccione el cuestionario de la enfermedad correspondiente.', 'Campos críticos del cuestionario introducidos; los valores aún requieren revisión.'),
+'pt': ('Preenchimento desconhecido: introduza JSON válido e selecione o questionário da doença correspondente.', 'Campos críticos do questionário preenchidos; os valores ainda precisam de revisão.'),
+'de': ('Vollständigkeit unbekannt: Geben Sie gültiges JSON ein und wählen Sie den passenden Krankheitsfragebogen.', 'Kritische Fragebogenfelder ausgefüllt; die Werte müssen noch geprüft werden.'),
+'fr': ('Complétude inconnue : saisissez un JSON valide et choisissez le questionnaire de la maladie correspondante.', 'Champs critiques du questionnaire renseignés ; les valeurs restent à vérifier.'),
+'it': ('Completezza sconosciuta: inserisci JSON valido e scegli il questionario della malattia corrispondente.', 'Campi critici del questionario compilati; i valori richiedono ancora verifica.'),
+'da': ('Udfyldningsgrad ukendt: Indtast gyldig JSON, og vælg spørgeskemaet for den rette sygdom.', 'Kritiske felter er udfyldt; værdierne skal stadig kontrolleres.'),
+'sv': ('Fullständighet okänd: Ange giltig JSON och välj frågeformuläret för rätt sjukdom.', 'Kritiska fält är ifyllda; värdena behöver fortfarande granskas.'),
+'nb': ('Utfyllingsgrad ukjent: Skriv inn gyldig JSON, og velg spørreskjemaet for riktig sykdom.', 'Kritiske felt er fylt ut; verdiene må fortsatt kontrolleres.'),
+'fi': ('Täyttöaste tuntematon: anna kelvollinen JSON ja valitse vastaavan sairauden kyselylomake.', 'Kriittiset kentät on täytetty; arvot on vielä tarkistettava.'),
+}
+for locale, messages in READINESS.items():
+    COPY[locale]['readinessUnknown'], COPY[locale]['readinessComplete'] = messages

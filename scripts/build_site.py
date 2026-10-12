@@ -6196,6 +6196,7 @@ function setMode(newMode, {{ syncFromForm = false, syncFromJson = false, persist
   if (formJson !== null) textarea.value = formJson;
   if (persist) saveDraft();
   updateRunBtnEnabled();
+  updateImpactPanelLocal();
 }}
 
 // ── Profile assembly + live preview ───────────────────────────────────────
@@ -6255,10 +6256,7 @@ async function runLivePreview() {{
     return;
   }}
   // Local-only progress before Pyodide ready
-  const total = (activeQuest.groups || []).reduce(
-    (acc, g) => acc + (g.questions || []).length, 0);
-  const filled = Object.keys(answers).length;
-  setProgress(filled, total);
+  updateImpactPanelLocal();
 
   // Call evaluator if engine ready
   if (!enginReady) return;
@@ -6471,11 +6469,37 @@ function renderWhatIfMarks(results) {{
 // Local-only readiness update — runs WITHOUT Pyodide so form interaction
 // stays snappy. It only keeps the essential pre-generation signal visible:
 // completion progress and missing critical fields.
+function questionnaireValuePresent(question, value) {{
+  if (value === undefined || value === null || value === '') return false;
+  if (question.type === 'integer' || question.type === 'float') {{
+    if (typeof value !== 'number' || !Number.isFinite(value) ||
+        (question.type === 'integer' && !Number.isSafeInteger(value))) return false;
+    if (question.range_min !== undefined && value < question.range_min) return false;
+    if (question.range_max !== undefined && value > question.range_max) return false;
+    return true;
+  }}
+  if (question.type === 'boolean') return typeof value === 'boolean';
+  if (question.type === 'enum') return (question.options || []).some(option => JSON.stringify(option.value) === JSON.stringify(value));
+  return typeof value === 'string' && value.trim() !== '';
+}}
+
 function updateImpactPanelLocal() {{
+  let jsonProfile = null;
+  if (mode === 'json') {{
+    try {{ jsonProfile = JSON.parse(textarea.value); }} catch (error) {{ /* unfinished drafts remain editable */ }}
+    const index = jsonProfile && !profileInputError(jsonProfile) ? findQuestionnaireForProfile(jsonProfile) : -1;
+    if (!activeQuest || index < 0 || QUESTIONNAIRES_MANIFEST[index].id !== activeQuest.id) {{
+      setProgress(0, 0);
+      if (readinessCriticalText) {{
+        readinessCriticalText.textContent = profileInputCopy.readinessUnknown;
+        readinessCriticalText.dataset.kind = 'idle';
+      }}
+      return;
+    }}
+  }}
   if (!activeQuest) {{
     setProgress(0, 0);
     setReadinessCritical([]);
-    setFiredRedflags([], '{target_lang}');
     return;
   }}
   let total = 0, filled = 0;
@@ -6483,12 +6507,10 @@ function updateImpactPanelLocal() {{
   for (const group of activeQuest.groups || []) {{
     for (const q of group.questions || []) {{
       total++;
-      const val = answers[q.field];
-      const isFilled = val !== undefined && val !== null && val !== '' && !numericInputErrors.has(q.field);
-      if (isFilled) filled++;
-      else if (q.impact === 'critical') {{
-        missing.push({{ label: q.label, group: group.title || '' }});
-      }}
+      const value = mode === 'json' ? getByPath(jsonProfile, q.field) : answers[q.field];
+      const present = questionnaireValuePresent(q, value) && (mode === 'json' || !numericInputErrors.has(q.field));
+      if (present) filled++;
+      else if (q.impact === 'critical') missing.push({{ label: q.label, group: group.title || '' }});
     }}
   }}
   setProgress(filled, total);
@@ -6510,7 +6532,7 @@ function setReadinessCritical(missing) {{
     return;
   }}
   if (!missing || !missing.length) {{
-    readinessCriticalText.textContent = '{"Critical fields filled ✓" if target_lang == "en" else "Критичні поля заповнені ✓"}';
+    readinessCriticalText.textContent = profileInputCopy.readinessComplete;
     readinessCriticalText.dataset.kind = 'ok';
     return;
   }}
@@ -6582,8 +6604,9 @@ function updateImpactPanel(result) {{
     updateImpactPanelLocal();
     return;
   }}
-  setProgress(result.filled_count, result.total_questions);
-  setReadinessCritical(result.missing_critical || []);
+  // Completion always reflects current input, not an earlier async evaluation.
+  updateImpactPanelLocal();
+  if (mode === 'json') return;
   setFiredRedflags(result.fired_redflags_detail || [], '{target_lang}');
 }}
 
@@ -7749,6 +7772,7 @@ textarea.addEventListener('input', () => {{
   markPlanDirty();
   saveDraft();
   updateRunBtnEnabled();
+  updateImpactPanelLocal();
   // No live preview from JSON — engine runs only on Generate click.
 }});
 

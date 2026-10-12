@@ -13,7 +13,7 @@ function fixture() {
   const textarea = { value: '{"patient_id":"VIRTUAL-OLD","demographics":{"ecog":3}}' };
   const calls = { saves: [], updates: 0 };
   const context = vm.createContext({
-    validateNumericInputs: () => true,
+    validateNumericInputs: () => true, updateImpactPanelLocal() {},
     profileInputCopy: JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]), setError() {}, fixed, answers, textarea,
     modeFormBtn: { classList: { toggle() {} } }, modeJsonBtn: { classList: { toggle() {} } },
     formPane: {}, jsonPane: {},
