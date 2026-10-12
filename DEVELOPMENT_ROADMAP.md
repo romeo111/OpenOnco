@@ -4,6 +4,14 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Static schedule prose recovery (2026-10-12)
+
+Read-only audit of the 380 retained-original catalog entries covered all nine locale trees, excluding protected case prefixes before reading. Each proposed recovery was matched to a unique original fragment on the corresponding English page. 318 pages / 543 fragments were confirmed (ES 51/69, PT 51/71, DE 114/213, FR 102/190); the five newer languages had no exact static matches. No ambiguous matches were found among this audited set.
+
+Recovered prose carries the existing original-text label and lang=en; title/option/SVG text remains plain. Exact patching avoids HTML reserialization. All 318 pages passed code-block and non-display attribute/link/ID preservation plus idempotence checks. Five parser regression tests cover entities, markup escaping, code/input protection, attribute-name boundaries, unquoted display labels and SVG validity; these tests are included in CI. Previous full CI 38247193587 succeeded. Proofs: `.tmp/static-schedule-audit.json`, `.tmp/static-schedule-repair-proof.json`. Medical source records, catalogs, engine routing and protected reports are unchanged.
+
+This verifies exact known fragments, not all static clinical translation semantics. Nested/split fragments, embedded executable literals, metadata descriptions, unsupported frequency expressions and clinical source validity remain open audit items. Standard commit/push/Pages delivery and public fragment verification are required.
+
 ### Explicit daily/weekly frequency preservation (2026-10-12)
 
 Synthetic evidence showed once-daily source text could pass with twice-daily IT/FR/DE translations. Build and dynamic display guards now compare each explicit once/twice/three-times occurrence with native count phrases in all nine clinical display languages. Missing, altered, added or reordered count phrases retain the complete original. Mixed daily/weekly text also retains its original until clause alignment can be verified. Plain daily/weekly labels remain supported without inventing a frequency; numeric input, engine data, doses, source records and published medical catalog payloads are unchanged.
