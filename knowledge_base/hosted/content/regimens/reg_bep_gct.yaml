@@ -54,12 +54,12 @@ monitoring:
   - "CBC with differential: day 1 of each cycle; CBC day 10-12 to assess nadir"
   - "Audiometry: before cycle 1 and after completing BEP — cisplatin ototoxicity (permanent high-frequency hearing loss)"
   - "CT CAP: after 2 cycles (interim) and after completing BEP — response assessment"
-  - "Avoidance of supplemental O₂: perioperative and post-BEP patients MUST limit FiO₂ <30% (bleomycin sensitizes to O₂ toxicity; can cause fatal pulmonary fibrosis with high FiO₂)"
+  - "Previous bleomycin exposure must be communicated to the anesthesia team. Pulmonary risk and oxygenation require individualized monitoring; this record must not impose an absolute FiO₂ ceiling that compromises adequate oxygenation."
 
 key_toxicities:
   - toxicity: "Bleomycin pulmonary toxicity"
     grade_3_4_incidence: "~3-5%"
-    management: "DLCO monitoring; discontinue if DLCO falls >25% or clinical pneumonitis; high-dose corticosteroids; AVOID high FiO₂ perioperatively — bleomycin potentiates O₂ toxicity"
+    management: "DLCO monitoring; discontinue if DLCO falls >25% or clinical pneumonitis; high-dose corticosteroids; perioperative oxygen and fluid management require individual anesthesia assessment; avoid unnecessary hyperoxia while maintaining adequate oxygenation"
   - toxicity: "Cisplatin nephrotoxicity"
     grade_3_4_incidence: "~10-15%"
     management: "Aggressive hydration; avoid NSAIDs/aminoglycosides; magnesium supplementation; long-term GFR reduction common (monitor post-treatment)"
@@ -79,13 +79,13 @@ key_toxicities:
 watchpoints_ua:
   - "УВАГА: BEP — ВИСОКА emetogenność (цисплатин); потрійна антиеметична терапія обов'язкова (5-HT3 + NK1 + дексаметазон)"
   - "УВАГА: Блеоміцинова легенева токсичність — моніторинг DLCO перед кожним циклом; при падінні >25% — ВІДМІНИТИ блеоміцин та продовжити EP"
-  - "КРИТИЧНО: НІКОЛИ не давати FiO₂ >30% пацієнтам після BEP — блеоміцин поєднується з O₂ токсичністю; описані фатальні ускладнення при хірургічних процедурах у OВ-ВК"
+  - "Повідомте анестезіологу про попереднє застосування блеоміцину. Легеневий ризик та оксигенація потребують індивідуальної оцінки й моніторингу; цей запис не встановлює абсолютну межу FiO₂, яка може призвести до недостатньої оксигенації."
   - "УВАГА: Маркери (АФП, бета-хГЛ, ЛДГ) ПЕРЕД кожним циклом — зростання маркерів під час BEP може вказувати на рефрактерність або фальш-підвищення; проконсультуватись з GCT-фахівцем"
   - "УВАГА: Активно гідратувати перед і після цисплатину (1L NaCl 0.9% до/після кожної дози); уникати НПЗЗ та аміноглікозидів — нефротоксичність"
   - "УВАГА: Аудіограма до початку та після завершення BEP — цисплатин-індукована ототоксичність часто незворотна (висока частота)"
   - "УВАГА: G-КСФ (пегфілграстим день 7 кожного циклу) — рекомендований первинна профілактика; GCT є потенційно курабельним захворюванням — підтримувати дозові інтенсивності"
 
-last_reviewed: "2026-05-04"
+last_reviewed: null
 review_status: pending_clinical_signoff
 drafted_by: claude_extraction
 notes_ua: >
@@ -96,9 +96,25 @@ notes_ua: >
   (IGCCC): 3 цикли; проміжний/поганий ризик: 4 цикли. G-КСФ первинна
   профілактика (пегфілграстим день 7) обов'язкова. Кумулятивна доза
   блеоміцину не повинна перевищувати 360-400 ОД (незворотній легеневий
-  фіброз). КРИТИЧНО: FiO2 строго <30% під час будь-яких хірургічних
-  процедур у пацієнтів після блеоміцину. Контроль DLCO перед циклами
+  фіброз). Після блеоміцину повідомте анестезіологу про легеневий ризик.
+  Киснева терапія потребує індивідуальної оцінки та достатньої оксигенації;
+  універсальної заборони FiO2 понад 30% цей запис не встановлює. Контроль DLCO перед циклами
   3 і 4; при падінні DLCO >25% перейти на EP. Аудіограма до і після BEP.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_12
 draft_revision: 2
+
+clinical_claims:
+- claim_id: bleomycin-perioperative-oxygen
+  text: Bleomycin exposure warrants perioperative pulmonary-risk assessment. Label
+    precautions favor lower oxygen concentrations, but observational evidence does
+    not establish a universal FiO2 ceiling. Anesthesia should balance pulmonary risk
+    with adequate oxygenation; a fixed limit must not cause inadequate oxygenation.
+  source_ids:
+  - SRC-BLEOMYCIN-US-LABEL
+  - SRC-AAKRE-BLEOMYCIN-PERIOPERATIVE-2014
+  - SRC-BLEOMYCIN-OXYGEN-MONITORING-1984
+  scope: Perioperative oxygen management after bleomycin only; no verification of
+    other BEP dosing or supportive-care statements.
+  source_locator: Bleomycin label pulmonary adverse reactions; Aakre 2014 Results/Discussion;
+    PMID 6200191 abstract.

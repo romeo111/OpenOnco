@@ -125,9 +125,9 @@ def _walk_source_ids(value: Any, out: set[str]) -> None:
 
 
 def _collect_cited_sources(entity_data: dict) -> list[str]:
-    """All SRC-* IDs cited anywhere on the entity, sorted+deduped."""
+    """Legacy citation context; structured claims keep their own bindings."""
     out: set[str] = set()
-    _walk_source_ids(entity_data, out)
+    _walk_source_ids({key: value for key, value in entity_data.items() if key != 'clinical_claims'}, out)
     return sorted(out)
 
 
