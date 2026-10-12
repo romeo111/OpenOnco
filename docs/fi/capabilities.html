@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Kykyt</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fi/capabilities.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/capabilities.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/capabilities.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/capabilities.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/capabilities.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/capabilities.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/capabilities.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/capabilities.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/capabilities.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/capabilities.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/capabilities.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/capabilities.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Kykyt">
+<meta property="og:description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<meta property="og:url" content="https://openonco.info/fi/capabilities.html">
+<meta property="og:locale" content="fi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Kykyt">
+<meta name="twitter:description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Kykyt","description":"OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.","url":"https://openonco.info/fi/capabilities.html","inLanguage":"fi","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fi/capabilities.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<style>
+  /* Tabs */
+  .cap-tabs {
+    display: flex; gap: 2px; flex-wrap: wrap;
+    border-bottom: 2px solid var(--bg-strong, #e5e7eb);
+    margin: 28px 0 0; position: sticky; top: 0;
+    background: white; z-index: 20; padding-top: 6px;
+  }
+  .cap-tab {
+    padding: 12px 18px; background: transparent; border: 0;
+    border-bottom: 3px solid transparent; cursor: pointer;
+    font: 500 14px/1 'Source Sans 3', system-ui, sans-serif;
+    color: var(--gray-600, #4b5563); transition: color .15s, border-color .15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cap-tab:hover { color: var(--gray-900, #111); }
+  .cap-tab.is-active {
+    color: var(--green-700, #15803d);
+    border-bottom-color: var(--green-700, #15803d);
+    font-weight: 600;
+  }
+  .cap-tab .cap-tab-num {
+    font: 600 11px/1 'JetBrains Mono', monospace;
+    background: var(--gray-100, #f3f4f6); color: var(--gray-600, #4b5563);
+    padding: 3px 6px; border-radius: 3px;
+  }
+  .cap-tab.is-active .cap-tab-num {
+    background: var(--green-50, #f0fdf4); color: var(--green-700, #15803d);
+  }
+  .cap-panel { display: none; padding-top: 24px; }
+  .cap-panel.is-active { display: block; animation: capFade .25s ease; }
+  @keyframes capFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+  /* Pipeline */
+  .pipeline {
+    margin: 24px 0 36px;
+    border-radius: 14px; overflow: hidden;
+    background: linear-gradient(135deg, #0f3729 0%, #134e3c 50%, #1a6e54 100%);
+    color: #ecfdf5; padding: 28px 28px 24px;
+    position: relative;
+  }
+  .pipeline::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 0%, rgba(94,234,212,0.18), transparent 50%);
+    pointer-events: none;
+  }
+  .pipeline > * { position: relative; }
+  .pipeline-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 8px; margin-bottom: 6px;
+  }
+  .pipeline-eyebrow {
+    font: 600 11px/1 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #5eead4;
+  }
+  .pipeline-version { font: 400 11px/1 'JetBrains Mono', monospace; color: #99f6e4; opacity: 0.7; }
+  .pipeline-title {
+    font: 700 24px/1.25 'Playfair Display', Georgia, serif;
+    color: white; margin: 0 0 4px;
+  }
+  .pipeline-title em { color: #5eead4; font-style: italic; font-weight: 700; }
+  .pipeline-sub {
+    font-size: 13.5px; color: #a7f3d0; margin: 0 0 22px; max-width: 720px; line-height: 1.55;
+  }
+  .pipeline-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 14px; align-items: stretch;
+  }
+  .pipeline-col {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(94,234,212,0.18);
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; flex-direction: column;
+  }
+  .pipeline-col.is-out { border-color: rgba(94,234,212,0.35); background: rgba(94,234,212,0.07); }
+  .pipeline-col-tag {
+    font: 600 10px/1 'JetBrains Mono', monospace;
+    color: #5eead4; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .pipeline-col-title { font-size: 13.5px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .pipeline-code {
+    font: 400 11.5px/1.55 'JetBrains Mono', monospace;
+    color: #d1fae5; white-space: pre; overflow-x: auto;
+    background: rgba(0,0,0,0.18); border-radius: 6px;
+    padding: 8px 10px; margin: 0; flex: 1;
+  }
+  .pipeline-code .pl-k { color: #fcd34d; }
+  .pipeline-code .pl-s { color: #a5f3fc; }
+  .pipeline-code .pl-c { color: #94a3b8; font-style: italic; }
+  .pipeline-stages { list-style: none; padding: 0; margin: 0; font-size: 12px; counter-reset: stage; }
+  .pipeline-stages li {
+    padding: 4px 0 4px 22px; color: #d1fae5; position: relative;
+    border-bottom: 1px dashed rgba(94,234,212,0.18);
+  }
+  .pipeline-stages li:last-child { border-bottom: 0; }
+  .pipeline-stages li::before {
+    content: counter(stage); counter-increment: stage;
+    position: absolute; left: 0; top: 4px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: rgba(94,234,212,0.18); color: #5eead4;
+    font: 700 10px/16px 'JetBrains Mono', monospace; text-align: center;
+  }
+  .pipeline-track {
+    border-left: 3px solid #5eead4; padding: 4px 0 4px 10px;
+    margin-bottom: 8px;
+  }
+  .pipeline-track.is-alt { border-left-color: #fcd34d; opacity: 0.92; }
+  .pipeline-track-label {
+    font: 600 9.5px/1 'JetBrains Mono', monospace; letter-spacing: 0.1em;
+    color: #5eead4; text-transform: uppercase; display: block; margin-bottom: 4px;
+  }
+  .pipeline-track.is-alt .pipeline-track-label { color: #fcd34d; }
+  .pipeline-track-body { font-size: 12.5px; color: white; font-weight: 500; line-height: 1.4; }
+  .pipeline-track-meta { font-size: 11px; color: #a7f3d0; margin-top: 2px; }
+  .pipeline-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: #5eead4; font-size: 22px; font-weight: 700;
+  }
+  .pipeline-foot {
+    margin-top: 14px; padding: 10px 14px;
+    background: rgba(0,0,0,0.22); border-radius: 8px;
+    font-size: 12px; color: #d1fae5; line-height: 1.5;
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .pipeline-foot span { display: inline-flex; align-items: center; gap: 6px; }
+  .pipeline-foot strong { color: white; font-weight: 600; }
+  .pipeline-foot .pip-dot { width: 6px; height: 6px; border-radius: 50%; background: #5eead4; display: inline-block; }
+
+  /* Key numbers */
+  .key-nums {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px; margin: 20px 0 32px;
+  }
+  .key-num {
+    background: white; border: 1px solid var(--gray-200, #e5e7eb);
+    border-top: 3px solid var(--teal, #14b8a6);
+    border-radius: 8px; padding: 14px 14px 12px;
+  }
+  .key-num-val {
+    font: 700 26px/1 'Playfair Display', Georgia, serif;
+    color: var(--gray-900, #111); margin-bottom: 4px;
+  }
+  .key-num-lbl {
+    font-size: 11.5px; color: var(--gray-600, #4b5563); line-height: 1.35;
+  }
+  .key-num.is-warn { border-top-color: var(--amber, #d97706); }
+  .key-num.is-warn .key-num-val { color: var(--amber, #d97706); }
+
+  /* Pillars */
+  .pillars {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px; margin: 24px 0 8px;
+  }
+  .pillar {
+    background: var(--gray-50, #f9fafb);
+    border-left: 3px solid var(--green-600, #16a34a);
+    border-radius: 0 8px 8px 0; padding: 12px 14px;
+  }
+  .pillar-title {
+    font-size: 13px; font-weight: 600; color: var(--gray-900, #111);
+    margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+  }
+  .pillar-title .pillar-ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--green-100, #dcfce7); color: var(--green-700, #15803d);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 700 11px/1 'JetBrains Mono', monospace;
+  }
+  .pillar-text { font-size: 12.5px; color: var(--gray-600, #4b5563); line-height: 1.5; }
+
+  /* Mobile */
+  @media (max-width: 880px) {
+    .pipeline-grid { grid-template-columns: 1fr; }
+    .pipeline-arrow { transform: rotate(90deg); padding: 4px 0; }
+    .cap-tabs { gap: 0; }
+    .cap-tab { padding: 10px 12px; font-size: 13px; }
+  }
+</style>
+<meta name="translation-review" content="pending_language_review"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fi/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">AVOIN ONKOLOGIA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html" class="active" aria-current="page">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Kieli"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg>FI <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Kieli"><a href="/capabilities.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/capabilities.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/capabilities.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/capabilities.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/capabilities.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/capabilities.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/capabilities.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/capabilities.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/capabilities.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/capabilities.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/capabilities.html" lang="fi" hreflang="fi" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/fi/try.html" class="btn-cta-top btn-cta-try"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Valikko"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/fi/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Valikko">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html" class="active" aria-current="page">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Työkalut</span>
+    <div class="top-cta-group">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Avoin lähdekoodi</span>
+  </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="info-page">
+    <h1>Kyky</h1>
+    <p class="lead">
+      Julistava sääntö moottori onkologian suosituksiin. JSON profiili...
+      <strong>Suunnitelma</strong> Kun kaksi vaihtoehtoista rataa (standardi + aggressiivinen) on pois päältä, jokainen korvausvaatimus lähteeseensä viittaavalla merkinnällä.
+    </p>
+
+    <div class="callout callout-hard">
+      <strong>Yksi ylläpitäjistä toimittaa päivityksiä automaattisella tarkastuksella ja lähteen jäljityksellä. Ulkoinen kliininen arviointi on valinnainen ja se kirjataan erikseen.</strong>
+      <p>Kliininen sisältö on informaation lähde; tekniset tarkastukset eivät ole hoidon hyväksyntää.</p>
+    </div>
+
+    <nav class="cap-tabs" role="tablist" aria-label="Pääluokat">
+      <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Yleiskatsaus</button>
+      <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Moottori</button>
+      <button class="cap-tab" role="tab" data-tab="data" aria-selected="false"><span class="cap-tab-num">03</span>Potilastiedot</button>
+      <button class="cap-tab" role="tab" data-tab="limits" aria-selected="false"><span class="cap-tab-num">04</span>Raja-arvot</button>
+      <button class="cap-tab" role="tab" data-tab="contribute" aria-selected="false"><span class="cap-tab-num">05</span>Osallistu</button>
+    </nav>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section class="cap-panel is-active" id="panel-overview" role="tabpanel">
+
+      <div class="pipeline" role="img" aria-label="OpenOnco – putki: JSON-profiili → moottori → Suunnittele kaksi kappaletta">
+        <div class="pipeline-head">
+          <span class="pipeline-eyebrow">OpenOnco · moottori kahdella sanalla</span>
+          <span class="pipeline-version">v0.1.4 · 2026-10-11 23:22 UTC</span>
+        </div>
+        <h2 class="pipeline-title">
+          Yksi JSON-profiili → <em>kaksi hoitosuunnitelmaa</em>Jokainen väite on mainittu.
+        </h2>
+        <p class="pipeline-sub">
+          Ei LLM:tä kliinisessä päätöksessä, ei palvelinta. Potilas JSON pysyy koneessa. Profiileittainen käsittely: 50-200 ms.
+        </p>
+
+        <div class="pipeline-grid">
+          <div class="pipeline-col">
+            <div class="pipeline-col-tag">Syöte</div>
+            <div class="pipeline-col-title">Profiili (FHIR/mCODE)</div>
+<pre class="pipeline-code"><span class="pl-c"># example: DLBCL</span>
+<span class="pl-k">disease</span>: DLBCL-NOS
+<span class="pl-k">line_of_therapy</span>: <span class="pl-s">1L</span>
+<span class="pl-k">biomarkers</span>:
+  CD79B_mut: <span class="pl-s">true</span>
+  MYC_rearr: <span class="pl-s">false</span>
+  COO: <span class="pl-s">ABC</span>
+<span class="pl-k">findings</span>:
+  ipi: <span class="pl-s">3</span>
+  ecog: <span class="pl-s">1</span>
+  ldh_ratio: <span class="pl-s">1.8</span></pre>
+          </div>
+
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+
+          <div class="pipeline-col">
+            <div class="pipeline-col-tag">Moottori · 6 vaihetta</div>
+            <div class="pipeline-col-title">Algorithm walk + RedFlags + CIViC</div>
+            <ol class="pipeline-stages">
+              <li>Ratkaise algoritmi</li>
+              <li>Litteät löydökset</li>
+              <li>Eval 671 RedFlags</li>
+              <li>Kävelypäätöspuu</li>
+              <li>Aineellista raitoja</li>
+              <li>Ratkaise hoito-ohjelmat</li>
+            </ol>
+          </div>
+
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+
+          <div class="pipeline-col is-out">
+            <div class="pipeline-col-tag">Tuloste</div>
+            <div class="pipeline-col-title">Suunnitelma ≥ 2 raidalla + jäljitys</div>
+            <div class="pipeline-track">
+              <span class="pipeline-track-label">Kappaleen A · oletus</span>
+              <div class="pipeline-track-body">R-CHOP × 6</div>
+              <div class="pipeline-track-meta">NCCN BCEL-D · ESMO 2024</div>
+            </div>
+            <div class="pipeline-track is-alt">
+              <span class="pipeline-track-label">Kappale B · vaihtoehto</span>
+              <div class="pipeline-track-body">Pola-R-CHP × 6</div>
+              <div class="pipeline-track-meta">POLARIX 2022 (CD79B+, ABC)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-foot">
+          <span><span class="pip-dot"></span> Askel kerrallaan -jälki</span>
+          <span><span class="pip-dot"></span> lähdeviittaus jokaiseen väitteeseen</span>
+          <span><span class="pip-dot"></span> AccessMatrix</span>
+          <span><span class="pip-dot"></span> Avoimet kysymykset</span>
+          <span><span class="pip-dot"></span> <strong>~200 ms</strong> profiilia kohti</span>
+        </div>
+      </div>
+
+      <div class="key-nums">
+        <div class="key-num"><div class="key-num-val">103</div><div class="key-num-lbl">KB:ssä sairauksia</div></div>
+        <div class="key-num"><div class="key-num-val">831</div><div class="key-num-lbl">käyttöaiheet (262 1L · 175 2L+)</div></div>
+        <div class="key-num"><div class="key-num-val">404</div><div class="key-num-lbl">Hoito-ohjelmat</div></div>
+        <div class="key-num"><div class="key-num-val">321</div><div class="key-num-lbl">huumeet (ATC/RxNorm)</div></div>
+        <div class="key-num"><div class="key-num-val">671</div><div class="key-num-lbl">punaiset liput</div></div>
+        <div class="key-num"><div class="key-num-val">542</div><div class="key-num-lbl">¡otka ovat jo maininneet</div></div>
+        <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">Kliininen osaaminen</div></div>
+        <div class="key-num"><div class="key-num-val">Solo</div><div class="key-num-lbl">Yksi ylläpitäjä</div></div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">01</span>Ei musta laatikko</div>
+          <div class="pillar-text">Every algorithm step in the trace. LLM doesn't make clinical decisions (CHARTER §8.3).</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">02</span>Jokainen väite, jossa on viittaus</div>
+          <div class="pillar-text">source_id + positio + muokattu lainaus + sivu/osa.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">03</span>Yksityisyys suunnittelun mukaan</div>
+          <div class="pillar-text">CLI / Python / Pythonin tuonti. Ei palvelinta. Potilas JSON ei koskaan poistu koneesta.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title"><span class="pillar-ic">04</span>Suunnitelma pysyy elossa</div>
+          <div class="pillar-text"><code>revise_plan()</code> Päivittää suositusta uusien biomerkkien tai havaintojen saapuessa.</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Mitä tietopohjassa on</h2>
+        <p class="info-text">Tämä on luettelo julkaistuista asiakirjoista, ei kliinisen täydellisyyden mitta. Taudin peitto ja varmistustila esitetään erikseen alla olevassa matriisissa.</p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card"><div class="num-big">103</div><div class="num-lbl">Taudit KB:ssä</div><p class="num-text">Sairaudet, joissa on oma jäsennelty rekisteri.</p></div>
+          <div class="num-card"><div class="num-big">16</div><div class="num-lbl">Klinikkataitoja</div><p class="num-text">MDT:n roolit olivat edustettuina reitityksessä.</p></div>
+          <div class="num-card"><div class="num-big">404</div><div class="num-lbl">Hoito-ohjelmat</div><p class="num-text">Strukturoidut hoito-ohjelmat, ei automaattiset lääkemääräykset.</p></div>
+          <div class="num-card"><div class="num-big">321</div><div class="num-lbl">Huumeet</div><p class="num-text">Huumetiedot, joissa on koneluettava konteksti.</p></div>
+          <div class="num-card"><div class="num-big">131</div><div class="num-lbl">Testit</div><p class="num-text">Diagnostiset ja molekyylitestit olivat edustettuina KB:ssä.</p></div>
+          <div class="num-card"><div class="num-big">24</div><div class="num-lbl">Työtehtävät</div><p class="num-text">Rakenteelliset työvälineet.</p></div>
+          <div class="num-card"><div class="num-big">671</div><div class="num-lbl">Punaiset liput</div><p class="num-text">Signaalit, jotka vaativat lääkäriltä toisen katseen.</p></div>
+          <div class="num-card"><div class="num-big">542</div><div class="num-lbl">Lähteet</div><p class="num-text">Kanteen yhteydessä olevat lähdetiedot.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Kattavuusmatriisi</h2>
+        <p class="info-text">
+          <a href="/fi/diseases.html"><code>/diseases.html</code></a> - tautitaulukko: biomerkkien ja lääkkeiden määrä / käyttöaiheet / punaiset liput, 1L+2L tarkastusmerkit, täytä% ja varmista%. Ryhmittymä lymfoidi + myeloidinen hematologia ja kiinteät kasvaimet.
+          <code>/disease_coverage.json</code>.
+          <a href="/fi/diseases.html"><strong>→ Näytä matriisia</strong></a>
+        </p>
+        <p class="info-text">
+          <a href="/fi/gallery.html"><code>/gallery.html</code></a> - 446 julkista esimerkkiä. Jokaisessa on täydellinen suunnitelma, diagnostinen lyhyt kuvaus tai molekyyliskenaario, jossa on lähdelinkkejä. Käyttäjän kohtaamassa kirjastossa ei näy sisäisiä kyselytunnin profiileja.
+          <a href="/fi/gallery.html"><strong>→ Näytä esimerkkejä</strong></a>
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB 2: ENGINE -->
+    <section class="cap-panel" id="panel-engine" role="tabpanel">
+
+      <div class="info-section">
+        <h2>6-vaiheinen pyynnön käsittely</h2>
+        <p class="info-text">
+          The clinician feeds the engine a JSON profile. The engine runs 6 sequential stages and returns a Plan with ≥2 tracks (CHARTER §15.2 C6 — alternative never hidden).
+        </p>
+        <div class="flow-strip">
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 1</div>
+            <div class="flow-title">Sairaus + algoritmin häviäminen</div>
+            <div class="flow-desc"><code>disease.id</code> + <code>line_of_therapy</code> + <code>disease_state</code> → Algoritmiyhteisö.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 2</div>
+            <div class="flow-title">Havainnot litistävät</div>
+            <div class="flow-desc">Yhdistää väestötiedot + biomerkkiaineet + löydökset yhdeksi tasasuhdanteeksi.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 3</div>
+            <div class="flow-title">RedFlag-arviointi</div>
+            <div class="flow-desc">671 rekombinanttia vertailuryhmänä (<code>any_of</code>/<code>all_of</code>/<code>none_of</code> kynnysten kanssa).</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 4</div>
+            <div class="flow-title">Algoritmikävely</div>
+            <div class="flow-desc">Decision tree step by step. Trace records fired_red_flags at each node.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 5</div>
+            <div class="flow-title">Kappaleet konkretisoituvat</div>
+            <div class="flow-desc">Käyttöaihe → seuraa (standardi / aggressiivinen / valvonta) biomerkkisuodattimella.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">Vaihe 6</div>
+            <div class="flow-title">Raidetta kohden laskettu ratkaisu</div>
+            <div class="flow-desc">Käyttöaihe → Regimen (vaiheineen) + Monitorointi + SupportiveCare + AccessMatrix.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>CiviC-toimintakyky</h2>
+        <p class="info-text">
+          Actionability data used to come from OncoKB — but their ToS blocked non-commercial public derivatives (conflict with CHARTER §2). We migrated to <strong>CIViC (CC0)</strong> Moottorissa lukee paikallinen yöllinen YaML-kuva (<code>knowledge_base/hosted/civic/&lt;date&gt;/</code>) – deterministinen + offline. Fuusiotietoinen sovittelija käsittelee sekä pistemutaatioita (BRAF V600E) että fuusioita (BCR: ABL1). Render: ESCAT-taso – ensisijainen näyttötaso CIViC-näytössä – yksityiskohtaisesti. Kuukausittainen päivittyvä CI avaa PR:n, jossa on eroavaisuuksia.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Monivaiheiset hoidot</h2>
+        <p class="info-text">
+          <code>Regimen.phases</code> on tilattu lista nimetyistä lohkoista (induktio → konsolidaatio → ylläpito), joissa jokaisessa on oma sykliaikataulunsa ja siirtymän laukaisija. Reaalimaailman protokollat (R-CHOP × 6 → huolto, AML 7+3 → HiDAC-konsolidointi, aksi-cel-infuusio).
+          <code>bridging_options</code> — bridging regimens between phases (for CAR-T). Legacy single-phase YAMLs auto-wrap into one-phase form via <code>auto_wrap_legacy_components()</code>.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Kiinnityssuoja – 3 kerrosta</h2>
+        <p class="info-text">
+          Kolmikerroksinen tarkastusjärjestelmä – kolme paikkaa, joissa saamme saaliiksi perusteettomia vaateita:
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Taso</th><th>Missä</th><th>Mitä?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>L1</strong> · Ladaaja</td>
+              <td>YAML-kuorma (Pydantic)</td>
+              <td>SRC-* referential integrity. Unknown SRC-ID → load fail.</td>
+            </tr>
+            <tr>
+              <td><strong>L2</strong> · Todentaja</td>
+              <td>Osallistuja PR (CI)</td>
+              <td>Kolmikerroksinen pohja: lähde on olemassa, fraasi maadoitettu, ankkuri lohkossa.</td>
+            </tr>
+            <tr>
+              <td><strong>L3</strong> · Render</td>
+              <td>HTML- ulostulo</td>
+              <td>Ei viittausta → varoitin (lenient) tai ohita solua (<code>strict_citation_guard=True</code>).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-section">
+        <h2>Kolme tapaa juosta</h2>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card">
+            <div class="num-big">CLI</div>
+            <div class="num-lbl">Paikallisesti</div>
+            <p class="num-text">
+              <code>python -m knowledge_base.engine.cli --patient profile.json --render plan.html</code>- Pois päältä.
+            </p>
+          </div>
+          <div class="num-card num-card--accent">
+            <div class="num-big">Pjodide</div>
+            <div class="num-lbl">Selaimessa (try.html)</div>
+            <p class="num-text">
+              Python WAM + mikropip + moottoripaketti (~2,4 MB). Ensin 8-15 s, sitten kuin paikallinen CLI. Palvelutyöntekijä offline-verkossa.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">Kirjasto</div>
+            <div class="num-lbl">Python-tuonti</div>
+            <p class="num-text">
+              <code>from knowledge_base.engine import generate_plan, revise_plan</code> — EHR / CSV / batch testing. Stateless, deterministic.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: DATA -->
+    <section class="cap-panel" id="panel-data" role="tabpanel">
+
+      <div class="info-section">
+        <h2>Mitä moottori lukee profiilista</h2>
+        <p class="info-text">
+          Vain strukturoidut kentät, joissa on selkeä semantiikka. Tuntemattomat kentätkin jätetään huomiotta – ei piilotettuja vaikutuksia.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Luokka</th><th>Kenttä</th><th>Miten sitä käytetään</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Tauti (saapumispaikka)</td>
+              <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code> · <code>disease_state</code></td>
+              <td>Määrittää, mikä algoritmi ajetaan</td>
+            </tr>
+            <tr>
+              <td>Diagnoositila</td>
+              <td><code>suspicion.lineage_hint</code> · <code>tissue_locations</code> · <code>presentation</code></td>
+              <td>Aktivoi DiagnosticPlanin Planin sijaan</td>
+            </tr>
+            <tr>
+              <td>Väestönkehitys</td>
+              <td><code>age</code> · <code>ecog</code> · <code>fit_for_transplant</code> · <code>decompensated_cirrhosis</code> · <code>pregnancy_status</code></td>
+              <td>suodatin päälle <code>Indication.applicable_to.demographic_constraints</code></td>
+            </tr>
+            <tr>
+              <td>Biomerkkiaineet</td>
+              <td>mitä tahansa <code>BIO-X</code> KB:stä: <code>BIO-CLL-HIGH-RISK-GENETICS</code>, <code>BIO-HCV-RNA</code>, …</td>
+              <td>laukaise RedFlags, suodatinmerkit, kartta CiviC:hen</td>
+            </tr>
+            <tr>
+              <td>Havainnot</td>
+              <td>Sadat strukturoidut kentät – <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>tp53_mutation</code>, …</td>
+              <td>RedFlagin laukaisimissa kynnykset</td>
+            </tr>
+            <tr>
+              <td>Ennakkotestit</td>
+              <td><code>prior_tests_completed: [TEST-IDs]</code></td>
+              <td>excludes already-completed tests from workup_steps</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-section">
+        <h2>Mikä moottori palaa – suunnitelma</h2>
+        <table class="kv-table">
+          <thead><tr><th>Kenttä</th><th>Sisällys</th></tr></thead>
+          <tbody>
+            <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first): indication + regimen (+ phases) + monitoring + supportive_care + contraindications</td></tr>
+            <tr><td><code>access_matrix</code></td><td>Raidetta kohti laskettu aggregaatti: rekisteröinnit, korvaus, kustannusluokat, <code>AccessPathway</code>. Viivytysvaroitus &gt; 180 päivää.</td></tr>
+            <tr><td><code>experimental_options</code></td><td>kolmas rata <code>enumerate_experimental_options()</code> Kysymyksiä ClinicalTrials.gov v2. 7 päivän TTL-välimuisti.</td></tr>
+            <tr><td><code>actionability_hits</code></td><td>CIViC matches with ESCAT-primary + variant, evidence rating, clinical significance, source citations</td></tr>
+            <tr><td><code>fda_compliance</code></td><td>FDA Criterion 4 fields: intended_use, patient_population_match, algorithm_summary, automation_bias_warning</td></tr>
+            <tr><td><code>trace</code></td><td>step-by-step walk_algorithm history: step / outcome / branch / fired_red_flags</td></tr>
+            <tr><td><code>warnings</code></td><td>schema/ref errors, time_critical disqualifications, missing data hints, citation-guard warnings</td></tr>
+            <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>saman potilaan suunnitelmien välissä versioketju</td></tr>
+          </tbody>
+        </table>
+        <p class="info-text">
+          Valinnainen käytössä: <strong>MDT-raportti</strong> — <code>orchestrate_mdt()</code> Lisää tarvittavat/suositellut/valinnaiset roolit 16 virtuaaliasiantuntijalta + avoimet kysymykset + lähtökaavio.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>Suunnitelman päivitykset – <code>revise_plan()</code></h2>
+        <p class="info-text">
+          Kolme laillista siirtymää + yksi kielletty. Edellinen suunnitelma ei muutu – syvä kopio palautetaan <code>superseded_by</code> Set. Per Charter § 10.2, vanhat versiot pysyvät voimassa loputtomiin.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>From</th><th>Muutos</th><th>Siirtymäkausi</th><th>Tulos</th></tr></thead>
+          <tbody>
+            <tr><td>DiagnosticPlan vN</td><td>epäily vain</td><td>diagnostiikka → diagoniikka</td><td>DiagnosticPlan v(N+1)</td></tr>
+            <tr><td>DiagnosticPlan vN</td><td>histologia varmistui</td><td>diagnostiikka → hoito <strong>(edistäminen)</strong></td><td>Suunnitelma v1</td></tr>
+            <tr><td>Suunnitelma vN</td><td>päivitys histologialla</td><td>hoito → hoito</td><td>Suunnitelma v (N+1)</td></tr>
+            <tr><td>Suunnitelma vN</td><td>histologia poistettu</td><td colspan="2"><span style="color:var(--red);font-weight:600;">ILAGAL – ValueError, CIRTER 15.2 C7 §</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-good">
+        <strong>Yksityisyys.</strong> Patient JSON never leaves the user's machine. No logs, no DB. Reproducibility:
+        <code>Plan.knowledge_base_state.algorithm_version</code> tallentaa KB-version → sama syöttö + sama KB = sama ulostulo.
+      </div>
+    </section>
+
+    <!-- TAB 4: LIMITS -->
+    <section class="cap-panel" id="panel-limits" role="tabpanel">
+
+      <div class="info-section">
+        <h2>Avoimet kysymykset – moottori kieltäytyy tekemästä päätöstä ilman dataa</h2>
+        <p class="info-text">
+          Äänettömän oletuksen sijaan moottori nimenomaisesti ilmoittaa, mitkä kentät puuttuvat ja mitkä testit tai raportit tarvitaan (MDT_ORCHESTRATOR_SPEC §3). Renderoitu Suunnitelmaan erillisenä osiona, ei koskaan piilotettuna.
+        </p>
+        <table class="kv-table">
+          <thead><tr><th>Koodi</th><th>Liitä</th><th>Moottorin lähettämät päästöt</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Q1</strong></td><td>Histologiaa ei vahvistettu</td><td>«Vain ICD-O-3-koodin kanssa tuotettu korjaussuunnitelma; vahvista ensisijainen histologia ennen hoitoa»</td></tr>
+            <tr><td><strong>Q2</strong></td><td>Vaihe puuttuu</td><td>Lugano/Ann Arbor -vaihe, jota tarvitaan luotettavan riskinjaon varmistamiseksi</td></tr>
+            <tr><td><strong>Q3</strong></td><td>Rakenteenohjauslauseke epätäydellinen</td><td>«Sytogeneettinen paneeli epätäydellinen; suuri riskitilanne arvioitu osittainen tieto»</td></tr>
+            <tr><td><strong>Q4</strong></td><td>Biomerkki puuttuu</td><td>«IGHV-mutaatiostatus + FISH del(17p) vaaditaan vahvistamaan 1L-suositus»</td></tr>
+            <tr><td><strong>Q5</strong></td><td>Suorituskyvyn tila puuttuu</td><td>«Ecog, jota tarvitaan elinsiirtojen tukikelpoisuuden arviointiin'; palaa konservatiiviseen oletukseen</td></tr>
+            <tr><td><strong>Q6</strong></td><td>Lääkettä ei korvata</td><td>«D-VRd: daratumumab not currently reimbursed; verify funding pathway»</td></tr>
+            <tr><td><strong>DQ1-4</strong></td><td>Diagnoositila: kudos / sukulinja / esitystapa / hypoteesit puuttuvat</td><td>lowers workup match confidence; lineage_hint + tissue dominate</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Miksi ei äänetöntä oletusta:</strong> CHARTER §15.2 C6 (anti automation-bias) — the engine cannot pretend to know when it doesn't.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Henkilökohtaisuudet – tarkoituksellinen</h2>
+        <p class="info-text">
+          «Personalization» in OpenOnco is rule-based selection from a fixed catalog, not AI-generation. Deliberate architectural choice (CHARTER §8.3).
+        </p>
+        <div class="gap-grid">
+          <div class="gap-card">
+            <div class="gap-tag">Raja 1</div>
+            <h3>Ei potilaskohtaista annoslaskentaa</h3>
+            <p>Regimen-myymälät <strong>vakioannos</strong> (bortezomib 1.3 mg/m²), not multiplied by patient BSA, not adjusted automatically for CrCl 30. By design — to avoid FDA device classification.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Kartassa 2</div>
+            <h3>Ei vasteeseen mukautettuja syklien</h3>
+            <p>Ryöstäjätapit <code>total_cycles: 6 + 2 maintenance</code>. Ei automaattisesti sovitettu vasteen avulla (PR vs. CR PET2:n jälkeen). <code>revise_plan</code>.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Kartassa 3</div>
+            <h3>Genomic matching limited to CIViC</h3>
+            <p>CiviC:n ulkopuolella (harvinainen, uusi versio) on varoitus "ei toimintatodisteita" ilman luovia tulkintoja.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Kartassa 4</div>
+            <h3>SupportiveCare identtinen eri kohorteissa</h3>
+            <p>PJP prophylaxis attached to D-VRd for everyone — the engine doesn't know alternatives (dapsone instead of bactrim). The clinician substitutes.</p>
+          </div>
+          <div class="gap-card">
+            <div class="gap-tag">Kartassa 5</div>
+            <h3>Ei kumulatiivisen myrkyllisyyden seurantaa</h3>
+            <p>2L plan for a patient who got bortezomib in 1L with grade 2 neuropathy — the profile doesn't carry <code>prior_treatment_history</code> strukturoituna kenttänä; lääkäri tulkitsee sen manuaalisesti.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>KIRJALLISUUSvaateet eivät muutu</h2>
+        <p class="info-text">
+          Periaatteelliset arkkitehtoniset päätökset, jotka mahdollistavat FDA:n / kliinisen turvallisuuden.
+        </p>
+        <div class="gap-grid">
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§8.3</div>
+            <h3>LLM doesn't decide clinically</h3>
+            <p>Vain LLM: pannulautanen, dokumentin luonnokset, uutto (ihmisten suorittamalla varmennus), käännös kliinisellä tarkistuksella. <strong>Not</strong>: hoito-ohjelman valinta, annokset, biomarkkerin tulkinta.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C7</div>
+            <h3>Ei histologiaa – ei suunnitelmaa</h3>
+            <p>Hoitosuunnitelma vain, jos <code>disease.id</code> Muussa tapauksessa DiagnosticPlan-tila on vahvistettu. <code>revise_plan</code> hoito → diagnostiikka on <strong>kielletty</strong>.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C5</div>
+            <h3>Ei aikakriittistä</h3>
+            <p>Ei tarkoitettu hätäonkologiaan (onkologisiin hätätilanteisiin). <code>time_critical: true</code> → ajokieltovaroitus.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§6.1</div>
+            <h3>Kaksiarvioijan yhdistäminen</h3>
+            <p>Yksi ylläpitäjistä toimittaa päivityksiä automaattisella tarkastuksella ja lähteen jäljityksellä. Ulkoinen kliininen arviointi on valinnainen ja se kirjataan erikseen.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§15.2 C6</div>
+            <h3>Automatisaation vastaiset hyökkäykset</h3>
+            <p>Always ≥2 tracks side-by-side. Alternative is never buried, never «click to expand». The clinician sees a choice, not a directive.</p>
+          </div>
+          <div class="gap-card gap-hard">
+            <div class="gap-tag">§9.3</div>
+            <h3>Potilastiedot eivät koskaan takaisinostovaiheessa</h3>
+            <p><code>patient_plans/</code> gitignored. Sivustolla näkyy vain synteettisiä esimerkkejä. Telemetria kielletty ilman nimenomaista suostumusta.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Älä koskaan luettele – mitä moottori ei koskaan tee</h2>
+        <div class="gap-grid">
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Piilota vaihtoehtoinen kappale</h3><p>Molemmat suositukset näkyvät aina. UI:lla ei ole "laajennusta nähdä vaihtoehtoista" mallia.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Luo merkintä LLM:n kautta</h3><p>Kaikki kuratoidusta KB:stä. Ei vastaavaa merkintää → varoitusta, ei «luovaa keksintöä».</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Muutetaan annosta</h3><p>Annokset tulevat NCCN/ESMO-standardista. Säätöjä tehdään vain erikseen. <code>dose_modification_rules</code>.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Tuomari "kumpi on parempi"</h3><p>The algorithm picks a default but doesn't claim it's superior. The clinician has full autonomy — automation_bias_warning.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Tulkkauskuvaus</h3><p>"Bulkyn tauti" saapuu jäsennellyksi kentäksi, ei kuva-analyysistä. Kuva-analyysi = laiteluokitus.</p></div>
+          <div class="gap-card gap-hard"><div class="gap-tag">Ei koskaan</div><h3>Kohoreiden täsmäytys</h3><p>«N potilaat valitsivat X:n M-prosentin tapauksista» - vaatii itsepintaisen potilasrekisterin ja yksityisyyden tarkastelun. Ei vielä.</p></div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Nykyinen kattavuus – STUB-tilanne ja aukot</h2>
+        <table class="kv-table">
+          <thead><tr><th>Luokka</th><th>State</th><th>Merkitys</th></tr></thead>
+          <tbody>
+            <tr><td>Sairaudet, joissa on täysi ketju</td><td>86 / 103</td><td>Loput on osittain mallinnettu</td></tr>
+            <tr><td>Käyttöaiheet 1L</td><td>262</td><td>Ensimmäinen rivi kaikille 103 taudille</td></tr>
+            <tr><td>Käyttöaiheet 2L+</td><td>175</td><td>34 heme + 21 kiinteää. Muut kiinteät 2L+ osittain.</td></tr>
+            <tr><td>Lasten onkologia</td><td>0</td><td>MVP:n soveltamisalan ulkopuolella – erillinen rata</td></tr>
+            <tr><td>Sädehoito</td><td>osittainen</td><td>RT monimuotoilmoitusten käyttö; ei mallinnettu itsenäiseksi kokonaisuudeksi</td></tr>
+            <tr><td>Leikkaus</td><td>ei mallinnettu</td><td>Leikkaus onkologian tms.</td></tr>
+            <tr><td>Formulatiiviset elävät rehut</td><td>staattinen lippu</td><td>Kovennettu hoitoihin, ei automaattiohjattu</td></tr>
+            <tr><td>Ulkoinen kliininen katsaus</td><td>Valinnainen</td><td>Äänitetty erikseen, ei kehitys- tai julkaisuporttia.</td></tr>
+            <tr><td>Elävän aukon kojelauta</td><td><a href="/fi/clinical-gaps.html">→ linkki</a></td><td>Rakentaminen (kirjautuminen, kiinteä 2L+, leikkaus, RT, tukihoito)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>Mitä STUB EI tarkoita:</strong> Strukturoitu data + algoritmi + lähteet ovat jo käytössä. STUB kuvaa sisällön kypsyyttä; kyseessä ei ole sooloprojektin julkaisuportti tai hoitojen hyväksyntä.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Klinikkalaisten työnkulku</h2>
+        <p class="info-text">
+          Moottori valmistautuu kasvaintauluun, se ei korvaa sellaista.
+          <strong>1)</strong> verifies sources (every claim cited, guard already dropped uncited cells) →
+          <strong>2)</strong> Sulje Open Questions (tilauskokeet, puhelut) <code>revise_plan</code>) →
+          <strong>3)</strong> Sopeutuu potilaan hoitoon (annokset, tukihoito, alueellinen saatavuus) →
+          <strong>4)</strong> Keskustelut kasvaintaululla (MDT lyhyt – jäsennelty agenda). Moottori: luonnosta. Klinikka: finaali.
+        </p>
+      </div>
+    </section>
+
+    <!-- TAB 5: CONTRIBUTE -->
+    <section class="cap-panel" id="panel-contribute" role="tabpanel">
+
+      <div class="info-section">
+        <h2>TaskTorrent – tarkista algoritmit tekoälysi poleteilla</h2>
+        <p class="info-text">
+          Yksi ylläpitäjistä toimittaa päivityksiä automaattisella tarkastuksella ja lähteen jäljityksellä. Ulkoinen kliininen arviointi on valinnainen ja se kirjataan erikseen.
+        </p>
+        <div class="num-grid num-grid--rich">
+          <div class="num-card num-card--accent">
+            <div class="num-big">1</div>
+            <div class="num-lbl">Mikä se on?</div>
+            <p class="num-text">
+              Ylläpitäjä julkaisee «chunk» - yhden itsenäisen tehtävän (noin 100k–300k kuponkia): «varmentaa BMA-todisteet DLBCL × 17 -yksiköille' tai «takaisintäyttölähdelisenssin 8 lähteelle'. Tekijä väittää, että tekoäly suorittaa, PR avaa.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">2</div>
+            <div class="num-lbl">Mitä tarvitset</div>
+            <p class="num-text">
+              Keinotekoinen tekoälytyökalu, jolla on rahallinen budjetti (Claude Code Pro+, Codex, Cursor, ChatGPT ja web). <code>gh</code> CLI. Python 3.10+ ~1-3 tuntia aikaasi. <strong>Kliinistä asiantuntemusta ei tarvita</strong> – käynnistät jäsennellyn luonnoksen; ylläpitäjä tarkistaa muutoksen; asiantuntijapalaute on vapaaehtoista.
+            </p>
+          </div>
+          <div class="num-card">
+            <div class="num-big">3</div>
+            <div class="num-lbl">8-rivinen saapasloukku</div>
+            <p class="num-text">
+              Kopioi 8-rivinen pikavihje
+              <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener"><code>CONTRIBUTOR_QUICKSTART.md</code></a>
+              Se löytää mahdollisen osan, väittää, hoitaa työtä, pyörittää varmentajaa, avaa PR:n.
+            </p>
+          </div>
+          <div class="num-card num-card--accent">
+            <div class="num-big">4</div>
+            <div class="num-lbl">Mitä PR:lle tapahtuu?</div>
+            <p class="num-text">
+              Ylläpitäjä tarkistaa lähteet, testit ja skeemat. Ulkoinen tarkastus on valinnainen. Yhdistä → sivuvaunulasku → ylöstulo isäntään KB → render. Nimeäminen tallennettu <code>_contribution_meta.yaml</code>.
+            </p>
+          </div>
+        </div>
+        <div class="cta-row" style="margin-top:24px;">
+          <a class="btn btn-primary" href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Osallistuja pikakäynnistys →</a>
+          <a class="btn btn-secondary" href="https://github.com/romeo111/OpenOnco/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Aktiiviset kappaleet →</a>
+        </div>
+        <div class="callout callout-good" style="margin-top:18px;">
+          <strong>Törmäys.</strong> Jokainen todennettu BMA on yksi toimintakelpoisuusvaade, jonka voimme tehdä «hyväksyttynä» «STUB:n» sijaan. Yksi Pro+-poleteilla varustettu osallistuja voi ajaa 10-20 BMA:ta läpi kirjautumisvalmistelujen – noin viikon ajan minkä tahansa muun mallin alla.
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Viimeaikainen toiminta</h2>
+        <p class="info-text">
+          Over the last 4 days TaskTorrent saw <strong>7 aaltoa</strong>, kymmeniä kappaleita, ~73 BMA-ehdokasta, 23 BMA:n luonnosta valmiina kliiniseen kuittaukseen, 53 lähdetupaa, 1,251 UA-kielikenttää. Viimeisimmät rakennepäivitykset:
+        </p>
+        <ul style="font-size:14px; line-height:1.65; color:var(--gray-700);">
+          <li><strong>CIViC pivot</strong> – moottori + 29 BIO + 399 BMA YAML:ää siirtyi pois OncoKB-skeemalta; kuukausittainen tilannekuva päivittää CI:tä.</li>
+          <li><strong>Monivaiheiset hoidot (PR1-3)</strong> — <code>Regimen.phases</code>, <code>bridging_options</code>, vaiheita-tietoinen render, taka-kompat auto-wrap.</li>
+          <li><strong>Lainausvahti L3</strong> - tarkista jokaisen BMA-solun aika.</li>
+          <li><strong>Kattavuusmatriisi</strong> — <a href="/fi/diseases.html">/diseases.html</a> Taudintorjuntaharjoitus.</li>
+          <li><strong>Galleriassa 446 julkista esimerkkiä</strong> — valmis suunnitelma, diagnostiset ohjeet ja molekyyliskenaariot tarkistettavaksi ja varmennettavaksi.</li>
+        </ul>
+      </div>
+    </section>
+
+  </section>
+
+  <footer class="page-foot">
+    Avoimen lähdekoodin · MIT-tyylin käyttö · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    No real patient data · CHARTER §9.3. Information tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+
+<script>
+  (function() {
+    var tabs = document.querySelectorAll('.cap-tab');
+    var panels = document.querySelectorAll('.cap-panel');
+
+    function activate(name) {
+      tabs.forEach(function(t) {
+        var on = t.dataset.tab === name;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      panels.forEach(function(p) {
+        p.classList.toggle('is-active', p.id === 'panel-' + name);
+      });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var name = tab.dataset.tab;
+        activate(name);
+        if (history.replaceState) {
+          history.replaceState(null, '', '#' + name);
+        }
+      });
+    });
+
+    var hash = (window.location.hash || '').replace('#', '');
+    if (hash && document.getElementById('panel-' + hash)) {
+      activate(hash);
+    }
+  })();
+</script>
+</body>
+</html>

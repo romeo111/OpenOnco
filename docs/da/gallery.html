@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Prøvesager</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/da/gallery.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/gallery.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/gallery.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/gallery.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/gallery.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/gallery.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/gallery.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/gallery.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/gallery.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/gallery.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/gallery.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/gallery.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/gallery.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Prøvesager">
+<meta property="og:description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
+<meta property="og:url" content="https://openonco.info/da/gallery.html">
+<meta property="og:locale" content="da">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Prøvesager">
+<meta name="twitter:description" content="Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Prøvesager","description":"Synthetic OpenOnco examples showing auditable oncology plan and diagnostic brief outputs.","url":"https://openonco.info/da/gallery.html","inLanguage":"da","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/da/gallery.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0a2e1a">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="37ba363c7c943ce1c2a1e8bb9495be7caf59294123daf11308f2e8fddb2e39b8"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/da/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ÅBEN ONKOLOGI</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/da/">Forside</a>
+    <a href="/da/capabilities.html">Funktioner</a><a href="/da/handbook.html">Håndbog</a><a href="/da/news.html">Nyheder</a>
+    <a href="/da/about.html">Om projektet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprog"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg>DA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprog"><a href="/gallery.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/gallery.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/gallery.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/gallery.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/gallery.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/gallery.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/gallery.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/gallery.html" lang="da" hreflang="da" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/gallery.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/gallery.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/gallery.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/da/try.html" class="btn-cta-top btn-cta-try"><span>Opret en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/da/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Opret en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Menu">
+    <a href="/da/">Forside</a>
+    <a href="/da/capabilities.html">Funktioner</a><a href="/da/handbook.html">Håndbog</a><a href="/da/news.html">Nyheder</a>
+    <a href="/da/about.html">Om projektet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/da/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/da/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tværfaglig konference</span></a>
+      <a href="/da/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebyggelse</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Værktøjer</span>
+    <div class="top-cta-group">
+      <a href="/da/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/da/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tværfaglig konference</span></a>
+      <a href="/da/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebyggelse</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Åben kildekode</span>
+  </div>
+  </div>
+</header>
+
+
+<main class="gallery"><aside class="translation-notice" role="note"><strong>Foreløbig oversættelse: klinisk gennemgang afventer.</strong> <a href="/gallery.html" lang="en" hreflang="en" data-original-source>Se den engelske original</a></aside>
+  <h1>Prøvetilfælde</h1>
+  <p class="lead">16 syntetiske patientprofiler køre gennem motoren, grupperet af sygdomme. Vælg en sygdom for at se sine eksempler - hvert klik åbner en fuld Plan eller Diagnostic Brief som en klinik ville se det på tumor-board. Hvis noget ser klinisk forkert — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&amp;labels=tester-feedback" target="_blank" rel="noopener">at åbne et spørgsmål</a>.</p>
+
+  <!-- Stage 1: disease grid (default visible) -->
+  <section id="diseaseStage" class="disease-stage">
+    <div class="disease-search-row">
+      <input type="search" id="diseaseSearch" class="disease-search" placeholder="Søg sygdom eller ICD-O-3..." autocomplete="off" aria-label="Søg sygdom eller ICD-O-3...">
+      <span class="disease-search-count" id="diseaseSearchCount">15</span>
+    </div>
+    <div class="disease-tile-grid" id="diseaseTileGrid">
+    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia "><span class="dt-label">Acute Myeloid Leukemia</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BCC" data-search="базально-клітинна карцинома (бкк) basal cell carcinoma "><span class="dt-label">Basal cell carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CERVICAL" data-search="карцинома шийки матки cervical carcinoma "><span class="dt-label">Cervical carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CHOLANGIOCARCINOMA" data-search="холангіокарцинома (рак жовчних проток) cholangiocarcinoma "><span class="dt-label">Cholangiocarcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CRC" data-search="колоректальний рак colorectal carcinoma "><span class="dt-label">Colorectal carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MELANOMA" data-search="шкірна меланома cutaneous melanoma "><span class="dt-label">Cutaneous melanoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ENDOMETRIAL" data-search="карцинома ендометрія endometrial carcinoma "><span class="dt-label">Endometrial carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GASTRIC" data-search="аденокарцинома шлунка / gej gastric and gastroesophageal junction adenocarcinoma "><span class="dt-label">Gastric and gastroesophageal junction adenocarcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-GIST" data-search="гастроінтестинальна стромальна пухлина (gist) gastrointestinal stromal tumor "><span class="dt-label">Gastrointestinal stromal tumor</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-IFS" data-search="інфантильна фібросаркома infantile fibrosarcoma "><span class="dt-label">Infantile fibrosarcoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BREAST" data-search="інвазивний рак молочної залози invasive breast cancer "><span class="dt-label">Invasive breast cancer</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NSCLC" data-search="недрібноклітинний рак легені non-small cell lung cancer "><span class="dt-label">Non-small cell lung cancer</span><span class="dt-count">2 eksempler</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-OVARIAN" data-search="карцинома яєчників (переважно high-grade серозна) ovarian carcinoma "><span class="dt-label">Ovarian carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-THYROID-PAPILLARY" data-search="папілярна карцинома щитовидної залози papillary thyroid carcinoma "><span class="dt-label">Papillary thyroid carcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PROSTATE" data-search="аденокарцинома передміхурової залози prostate adenocarcinoma "><span class="dt-label">Prostate adenocarcinoma</span><span class="dt-count">1 eksempel</span><span class="dt-quality">kureret først</span></button>
+    </div>
+    <p class="disease-empty" id="diseaseEmpty" hidden>No diseases match your search.</p>
+  </section>
+
+  <!-- Stage 2: case list for the selected disease (hidden by default) -->
+  <section id="caseStage" class="case-stage" hidden>
+    <button type="button" class="case-back-btn" id="caseBackBtn"> Alle sygdomme</button>
+    <div id="caseListContainer">
+    <section class="case-list" data-disease-id="DIS-AML" hidden>
+  <header class="case-list-header">
+    <h2>Acute Myeloid Leukemia</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-aml-flt3-itd-1l.html" data-default-order="13" data-name="AML - FLT3-ITD - heme actionability and risk">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>AML - FLT3-ITD - hæme aktionsdygtighed og risiko</h3>
+  <p>Nydiagnosticeret pasform AML med FLT3-ITD. Tilføjer et hæmatologi eksempel: BMA bevis forklarer målrettet induktion kontekst, mens risiko og transplantation diskuteres fortsat separate kliniske beslutninger.</p>
+  <div class="case-foot">patient_showcase_aml_flt3_itd_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-BCC" hidden>
+  <header class="case-list-header">
+    <h2>Basal cell carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-bcc-labcc-hhi-1l.html" data-default-order="14" data-name="BCC - locally advanced - hedgehog inhibitor 1L">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>BCC - locally advanced - hedgehog inhibitor 1L</h3>
+  <p>Lokalt avanceret BCC i Gorlin syndrom, hvor rektion og stråling ikke er passende, så planen bør gå til 1L SMO/Hedgehog hæmning i stedet for en form kun starter.</p>
+  <div class="case-foot">patient_showcase_bcc_labcc_hhi_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CERVICAL" hidden>
+  <header class="case-list-header">
+    <h2>Cervical carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/cervical-locally-advanced.html" data-default-order="15" data-name="Cervical · Locally Advanced (CCRT + Pembrolizumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Cervikal · Lokalt avanceret (CCRT + Pembrolizumab)</h3>
+  <p>Locally advanced cervical cancer (FIGO IIB-IVA) — engine selects cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).</p>
+  <div class="case-foot">patient_cervical_locally_advanced.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CHOLANGIOCARCINOMA" hidden>
+  <header class="case-list-header">
+    <h2>Cholangiocarcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-cholangio-idh1-r132-2l.html" data-default-order="7" data-name="Cholangiocarcinoma - IDH1 R132 - 2L molecular option">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Cholangiocarcinom - IDH1 R132 - 2L molekylær mulighed</h3>
+  <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">Intrahepatic cholangiocarcinoma with IDH1 R132C after gem/cis/durvalumab. Shows how ESCAT/CIViC context keeps a 2L molecular option visible when standard chemotherapy tracks are limited.</span></p>
+  <div class="case-foot">patient_showcase_cholangio_idh1_r132_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CRC" hidden>
+  <header class="case-list-header">
+    <h2>Colorectal carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-crc-braf-v600e-2l.html" data-default-order="1" data-name="mCRC - BRAF V600E - tumor-specific actionability">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>mCRC - BRAF V600E - tumor-specifik aktionsevne</h3>
+  <p>BRAF V600E after FOLFOX progression. Shows why a variant cannot be interpreted outside tumor context: CRC needs an EGFR-combination strategy, not simple BRAF monotherapy.</p>
+  <div class="case-foot">patient_showcase_crc_braf_v600e_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MELANOMA" hidden>
+  <header class="case-list-header">
+    <h2>Cutaneous melanoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-melanoma-braf-v600e-1l.html" data-default-order="6" data-name="Melanoma - BRAF V600E - targeted vs immunotherapy context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Melanoma - BRAF V600E - målrettet versus immunterapi kontekst</h3>
+  <p>Metastatisk melanom med BRAF V600E. Viser et klassisk ESCAT IA/ CIViC tilfælde, hvor aktionsevne forklarer BRAF/ MEK følsomhed, mens MDT stadig ser den kliniske sekvenseringssammenhæng med immunterapi.</p>
+  <div class="case-foot">patient_showcase_melanoma_braf_v600e_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ENDOMETRIAL" hidden>
+  <header class="case-list-header">
+    <h2>Endometrial carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-endometrial-dmmr-msh2-1l.html" data-default-order="10" data-name="Endometrial - dMMR/MSH2 - immunotherapy evidence">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Endometrial - dMMR/ MSH2 - immunterapi- bevis</h3>
+  <p>Avanceret endometriekræft med dMMR/MSI-H fra MSH2-tab. Viser tumor-specifikke og vævs-aggnostisk immunterapi beviser sammen uden at fladbetone det ind i en generisk MSI-mærke.</p>
+  <div class="case-foot">patient_showcase_endometrial_dmmr_msh2_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GASTRIC" hidden>
+  <header class="case-list-header">
+    <h2>Gastric and gastroesophageal junction adenocarcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-gastric-her2-amp-1l.html" data-default-order="8" data-name="Gastric/GEJ - HER2 amplification - IHC/ISH actionability">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Gastric/GEJ - HER2 amplification - IHC/ISH actionability</h3>
+  <p>Metastatisk mave/GEI adenokarcinom med HER2 IHC 3+. Viser hvordan aktionsdygtigheden forbinder IHK/ISH-beviser, 1L trastuzumab-baserede spor og senere T-DXd kontekst.</p>
+  <div class="case-foot">patient_showcase_gastric_her2_amp_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-GIST" hidden>
+  <header class="case-list-header">
+    <h2>Gastrointestinal stromal tumor</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-gist-kit-exon11-1l.html" data-default-order="12" data-name="GIST - KIT exon 11 - genotype sets TKI dose">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>GIST - KIT exon 11 - genotype sæt TKI dosis</h3>
+  <p>Metastatisk GIST med KIT exon 11 sletning. Viser hvorfor struktureret biomarkør kontekst spørgsmål: exon11 understøtter standard 1L imatinib dosering og bør ikke blandes med exon 9 eller PDGFRA D842V scenarier.</p>
+  <div class="case-foot">patient_showcase_gist_kit_exon11_1l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-IFS" hidden>
+  <header class="case-list-header">
+    <h2>Infantile fibrosarcoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-ifs-ntrk-fusion.html" data-default-order="5" data-name="Infantile fibrosarcoma - NTRK fusion - rare tumor target">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Infanteri fibrosarkom - NTRK fusion - sjælden tumor mål</h3>
+  <p>Sjælden tumor med ETV6-NTRK3 fusion. Viser, hvordan molekylær aktionsevne forhindrer en målbar ændring i at gå tabt i en diagnose, hvor konventionelle behandlinger ofte er sparsomme.</p>
+  <div class="case-foot">patient_showcase_ifs_ntrk_fusion.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-BREAST" hidden>
+  <header class="case-list-header">
+    <h2>Invasive breast cancer</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-breast-pik3ca-h1047r-2l.html" data-default-order="2" data-name="Breast HR+/HER2- - PIK3CA H1047R - post-CDK4/6i">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>HR+/HER2- - PIK3CA H1047R - post- CDK4/6i</h3>
+  <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">HR+/HER2- metastatic breast cancer after CDK4/6i with PIK3CA H1047R. Shows how the ESCAT/CIViC layer adds molecular context to 2L endocrine-targeted options while keeping clinical constraints visible.</span></p>
+  <div class="case-foot">patient_showcase_breast_pik3ca_h1047r_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-NSCLC" hidden>
+  <header class="case-list-header">
+    <h2>Non-small cell lung cancer</h2>
+    <span class="case-list-count">2 eksempler</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-nsclc-alk-fusion-1l.html" data-default-order="0" data-name="NSCLC - ALK fusion - ESCAT IA / CIViC evidence">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>NSCLC - ALK fusion - ESCAT IA / CIViC evidence</h3>
+  <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">Metastatic lung adenocarcinoma with ALK fusion and brain metastases. Demonstrates a strong ESCAT IA signal, CIViC evidence lanes, and the separation between MDT context and treatment-track selection.</span></p>
+  <div class="case-foot">patient_showcase_nsclc_alk_fusion_1l.json</div>
+</a>
+<a class="case-card" href="/da/cases/showcase-nsclc-egfr-t790m-2l.html" data-default-order="4" data-name="NSCLC - acquired EGFR T790M - resistance-aware review">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>NSCLC - erhvervet EGFR T790M - modstandsbevidst gennemgang</h3>
+  <p>EGFR-muteret NSCLC fremskridt efter første generation TKI med erhvervet T790M. Viser modstands-/aktionsevne beviser eksplicit for MDT anmeldelse i stedet for at begrave det i en generisk mutationsliste.</p>
+  <div class="case-foot">patient_showcase_nsclc_egfr_t790m_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-OVARIAN" hidden>
+  <header class="case-list-header">
+    <h2>Ovarian carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-ovarian-brca1-maintenance.html" data-default-order="3" data-name="Ovarian - germline BRCA1 - PARPi maintenance">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Ovarian - germalin BRCA1 - PARPi vedligeholdelse</h3>
+  <p>Platinumfølsomt tilbagevendende højgrads seroøs ovariekræft med bakterie BRCA1. Viser ESCAT IA, CIViC følsomhed/resistens beviser, og den praktiske kontekst for PARPi vedligeholdelse plus familie cascade test.</p>
+  <div class="case-foot">patient_showcase_ovarian_brca1_maintenance.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-THYROID-PAPILLARY" hidden>
+  <header class="case-list-header">
+    <h2>Papillary thyroid carcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-thyroid-ret-fusion-rai-refractory.html" data-default-order="11" data-name="Papillary thyroid - RET fusion - RAI-refractory target">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>Papillar skjoldbruskkirtel - RET fusion - RAI- ildfast mål</h3>
+  <p>RAI-refractory papillary thyroid carcinoma with RET fusion. Shows how actionability separates RET fusion in PTC from RET mutations in MTC and highlights selective RET-TKI context.</p>
+  <div class="case-foot">patient_showcase_thyroid_ret_fusion_rai_refractory.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PROSTATE" hidden>
+  <header class="case-list-header">
+    <h2>Prostate adenocarcinoma</h2>
+    <span class="case-list-count">1 eksempel</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/da/cases/showcase-prostate-brca2-germline-mcrpc.html" data-default-order="9" data-name="mCRPC - germline BRCA2 - PARP/HRR context">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Behandlingsplan</div>
+    <span class="case-quality quality-showcase">Kurvet udstillingsvindue</span>
+    <span class="case-json-only" title="Formularen er endnu ikke tilgængelig — åbner som JSON på Try-it">Kun JSON</span>
+  </div>
+  <h3>MCRPC - tysk BRCA2 - PARP/HRR-sammenhæng</h3>
+  <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">Metastatic castration-resistant prostate cancer with germline BRCA2 after NHA. Shows HRR/PARP actionability, family cascade testing context, and the distinction between BRCA2 and broader HRD labels.</span></p>
+  <div class="case-foot">patient_showcase_prostate_brca2_germline_mcrpc.json</div>
+</a>
+  </div>
+</section>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    OpenOnco — open-source · MIT-stil brug · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    · No real patient data · CHARTER §9.3
+  </footer>
+</main>
+
+<script>
+(function() {
+  var diseaseStage = document.getElementById("diseaseStage");
+  var caseStage = document.getElementById("caseStage");
+  var tileGrid = document.getElementById("diseaseTileGrid");
+  var tiles = Array.prototype.slice.call(tileGrid.querySelectorAll(".disease-tile"));
+  var search = document.getElementById("diseaseSearch");
+  var searchCount = document.getElementById("diseaseSearchCount");
+  var emptyMsg = document.getElementById("diseaseEmpty");
+  var backBtn = document.getElementById("caseBackBtn");
+  var listContainer = document.getElementById("caseListContainer");
+  var lists = Array.prototype.slice.call(listContainer.querySelectorAll(".case-list"));
+
+  function showDiseaseStage() {
+    caseStage.hidden = true;
+    diseaseStage.hidden = false;
+    lists.forEach(function(l) { l.hidden = true; });
+    if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+    // Restore scroll to top of stage so user sees the search bar.
+    diseaseStage.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
+  function showDiseaseCases(diseaseId) {
+    var found = false;
+    lists.forEach(function(l) {
+      var match = l.dataset.diseaseId === diseaseId;
+      l.hidden = !match;
+      if (match) found = true;
+    });
+    if (!found) return;
+    diseaseStage.hidden = true;
+    caseStage.hidden = false;
+    if (history.replaceState) history.replaceState(null, "", "#" + encodeURIComponent(diseaseId));
+    caseStage.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
+  function applySearch() {
+    var q = (search.value || "").trim().toLowerCase();
+    var visible = 0;
+    tiles.forEach(function(t) {
+      var blob = t.dataset.search || "";
+      var match = !q || blob.indexOf(q) !== -1;
+      t.style.display = match ? "" : "none";
+      if (match) visible++;
+    });
+    searchCount.textContent = visible;
+    emptyMsg.hidden = visible !== 0;
+  }
+
+  tiles.forEach(function(t) {
+    t.addEventListener("click", function() {
+      showDiseaseCases(t.dataset.diseaseId);
+    });
+  });
+  backBtn.addEventListener("click", showDiseaseStage);
+  search.addEventListener("input", applySearch);
+
+  // Deep-link support: gallery.html#DIS-DLBCL-NOS opens that disease.
+  function applyHash() {
+    var h = window.location.hash.replace(/^#/, "");
+    if (!h) { showDiseaseStage(); return; }
+    try { h = decodeURIComponent(h); } catch (e) {}
+    showDiseaseCases(h);
+  }
+  window.addEventListener("hashchange", applyHash);
+  applyHash();
+})();
+</script>
+<script src="/clinical-localization.8b9bc4102bf3.js" data-locale="da" data-catalog="/da/clinical-ui-translations.7593712d959e.json" defer></script></body>
+</html>

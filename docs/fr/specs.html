@@ -20,7 +20,7 @@
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -45,7 +45,7 @@
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -94,6 +94,11 @@
 <link rel="alternate" hreflang="pt" href="https://openonco.info/pt/specs.html">
 <link rel="alternate" hreflang="de" href="https://openonco.info/de/specs.html">
 <link rel="alternate" hreflang="fr" href="https://openonco.info/fr/specs.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/specs.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/specs.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/specs.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/specs.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/specs.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/specs.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
@@ -131,7 +136,7 @@
     <div class="top-right">
     <details class="language-menu lang-switch">
       <summary aria-label="Langue"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg>FR <span aria-hidden="true">⌄</span></summary>
-      <nav aria-label="Langue"><a href="/specs.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/specs.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/specs.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/specs.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/specs.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/specs.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+      <nav aria-label="Langue"><a href="/specs.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/specs.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/specs.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/specs.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/specs.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/specs.html" lang="fr" hreflang="fr" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/specs.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/specs.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/specs.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/specs.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/specs.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
     </details>
     <a href="/fr/try.html" class="btn-cta-top btn-cta-try"><span>Créer un plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
     <details class="mobile-menu">
@@ -186,7 +191,7 @@
             <code class="spec-id">CHARTER.md</code>
           </div>
           <h3>Charte et gouvernance</h3>
-          <p>Gouvernance du projet, portée (ce qu'elle fait et ce qu'il ne fait pas explicitement), positionnement non-dispositif du CDS de la FDA (§15 avec contraintes C1-C7), règle de deux examinateurs pour le contenu clinique (§6.1), vie privée des données patientes (§9.3), patrons prompts interdits pour les LLM (§8.3 — Les LLM ne prennent pas de décisions cliniques).</p>
+          <p>Project governance, scope (what it does and what it explicitly does not), FDA non-device CDS positioning (§15 with constraints C1-C7), the solo-maintainer workflow for source-traceable content (§6.1), patient-data privacy (§9.3), forbidden prompt patterns for LLMs (§8.3 — LLMs do not make clinical decisions).</p>
           <div class="spec-card-foot">
             <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/CHARTER.md" target="_blank" rel="noopener">Lire sur GitHub →</a>
             <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/CHARTER.md" target="_blank" rel="noopener" class="spec-raw">Démarrage brut</a>
@@ -333,7 +338,7 @@
     <div class="info-section">
       <h2>Comment nous mettons à jour les spécifications</h2>
       <p class="info-text">
-        Tout changement dans <code>specs/</code> or <code>knowledge_base/hosted/content/</code> qui affectent les recommandations cliniques nécessitent une <strong>fusion de deux examinateurs</strong> (CHARTER §6.1) — deux des trois approbations cliniques de co-leader. C'est la règle difficile qui interdit la qualité du contenu clinique. Les spécifications techniques (schémas, moteur, ingestion) peuvent fusionner avec un seul évaluateur pour maintenir le développement en mouvement, mais le contenu clinique a toujours besoin d'une double approbation.
+        Projet individuel. Une personne responsable publie les mises à jour avec des contrôles automatisés et des sources traçables. La relecture clinique externe est facultative et consignée séparément.
       </p>
       <p class="info-text">
         Toutes les spécifications sont écrites Ukrainien-Premier (l'interface et les examinateurs cliniques sont UA), mais les termes techniques et les noms de licence restent en ligne en anglais. <code>v0.1 (draft)</code> dans l'en-tête et est bossée sur mineur/majeur selon les changements de rupture.
@@ -356,9 +361,9 @@
             <td><code>patient_plans/</code> et tout patient HTML sont gitignoré. Tous les exemples sont synthétiques.</td>
           </tr>
           <tr>
-            <td><strong>Deux-réviseurs fusion</strong></td>
+            <td><strong>Solo maintainer delivery</strong></td>
             <td><code>CHARTER.md §6.1</code></td>
-            <td>Contenu clinique nécessite 2 de 3 approbations cliniques co-leader; sinon l'indication reste STUB.</td>
+            <td>The maintainer verifies sources and tests; external clinical review is optional.</td>
           </tr>
           <tr>
             <td><strong>No LLM clinical judgment</strong></td>

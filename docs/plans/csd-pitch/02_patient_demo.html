@@ -20,7 +20,7 @@
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -45,7 +45,7 @@
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -93,6 +93,11 @@
 <link rel="alternate" hreflang="pt" href="https://openonco.info/pt/plans/csd-pitch/02_patient_demo.html">
 <link rel="alternate" hreflang="de" href="https://openonco.info/de/plans/csd-pitch/02_patient_demo.html">
 <link rel="alternate" hreflang="fr" href="https://openonco.info/fr/plans/csd-pitch/02_patient_demo.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/plans/csd-pitch/02_patient_demo.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/plans/csd-pitch/02_patient_demo.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/plans/csd-pitch/02_patient_demo.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/plans/csd-pitch/02_patient_demo.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/plans/csd-pitch/02_patient_demo.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/plans/csd-pitch/02_patient_demo.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">

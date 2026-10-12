@@ -46,4 +46,4 @@ def render_shared_reader(source: str, locale: str, path: str, title: str, *, run
 
 def write_reader_assets(output_dir: Path, locale: str) -> None:
     (output_dir / locale / 'shared-header.fragment').write_text(render_top_bar('', locale), encoding='utf-8')
-    (output_dir / 'shared-clinical-reader.js').write_text(Path(__file__).with_name('shared-clinical-reader.js').read_text(encoding='utf-8'), encoding='utf-8')
+    (output_dir / 'shared-clinical-reader.js').write_text(Path(__file__).with_name('shared-clinical-reader.js').read_text(encoding='utf-8'), encoding='utf-8', newline='\n')

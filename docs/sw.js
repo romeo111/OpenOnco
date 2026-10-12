@@ -7,7 +7,7 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l4-634cfa0ff1c9';
+const CACHE_NAME = 'openonco-bundle-l4-f3c7b3ecec54';
 const CORE_STREAM_VERSION = 'adaf1ec8ce7b';
 const PRECACHE = [
   '/manifest.webmanifest',
@@ -119,8 +119,9 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname === '/openonco-engine-index.json') return networkFirstBundleIndex(event);
 
   // SWR for the small interactive shell (HTML + CSS).
-  if (url.pathname === '/clinical-localization.js' ||
-      /^\/(es|pt|de|fr)\/(clinical-(ui-)?translations|kb_search_index)\.json$/.test(url.pathname) ||
+  if (/^\/clinical-localization(?:\.[a-f0-9]{12})?\.js$/.test(url.pathname) ||
+      /^\/(es|pt|de|fr|it|da|sv|nb|fi)\/(clinical-(ui-)?translations(?:\.[a-f0-9]{12})?|kb_search_index)\.json$/.test(url.pathname) ||
+      url.pathname.endsWith('/shared-header.fragment') || url.pathname === '/shared-site-header.js' || url.pathname === '/shared-clinical-reader.js' ||
       SWR_PATHS.indexOf(url.pathname) !== -1 ||
       SWR_PREFIXES.some((p) => url.pathname.startsWith(p))) {
     return staleWhileRevalidate(event);

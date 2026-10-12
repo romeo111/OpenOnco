@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Spesifikaatiot</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco specifications and implementation notes for auditable oncology decision-support.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco specifications and implementation notes for auditable oncology decision-support.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fi/specs.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/specs.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/specs.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/specs.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/specs.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/specs.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/specs.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/specs.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/specs.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/specs.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/specs.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/specs.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/specs.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Spesifikaatiot">
+<meta property="og:description" content="OpenOnco specifications and implementation notes for auditable oncology decision-support.">
+<meta property="og:url" content="https://openonco.info/fi/specs.html">
+<meta property="og:locale" content="fi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Spesifikaatiot">
+<meta name="twitter:description" content="OpenOnco specifications and implementation notes for auditable oncology decision-support.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Spesifikaatiot","description":"OpenOnco specifications and implementation notes for auditable oncology decision-support.","url":"https://openonco.info/fi/specs.html","inLanguage":"fi","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fi/specs.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<meta name="translation-review" content="pending_language_review"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fi/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">AVOIN ONKOLOGIA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Kieli"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg>FI <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Kieli"><a href="/specs.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/specs.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/specs.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/specs.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/specs.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/specs.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/specs.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/specs.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/specs.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/specs.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/specs.html" lang="fi" hreflang="fi" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/fi/try.html" class="btn-cta-top btn-cta-try"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Valikko"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/fi/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Valikko">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Työkalut</span>
+    <div class="top-cta-group">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Avoin lähdekoodi</span>
+  </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="info-page">
+    <h1>Eritelmät</h1>
+    <p class="lead">
+      OpenOnco on ensimmäinen spesifikaatioprojekti, jonka jokainen arkkitehtoninen, kliininen ja hallintoon liittyvä yksityiskohta on merkitty markdown-asiakirjaan alla. <code>specs/</code> that is versioned and open to public review. 10 active specifications cover everything from FDA non-device CDS positioning to the shape of every YAML entity in the KB. The full text lives at <a href="https://github.com/romeo111/OpenOnco/tree/master/specs" target="_blank" rel="noopener">github.com/romeo111/OpenOnco/spekts</a>.
+    </p>
+
+    <div class="callout">
+      <strong>Totuushierarkian lähde</strong> (CLAUDE.Md:ltä): kun spesifikaatiot ovat ristiriidassa, sitova määräys on <strong>1.</strong> Charter.md → <strong>2.</strong> muut <code>specs/*.md</code> → <strong>3.</strong> CLAUDE.md → <strong>4.</strong> LUEME.Md. Kaikki alla <code>legacy/</code> ei ole arvovaltainen.
+    </div>
+
+    <div class="info-section">
+      <h2>Aktiiviset vaatimukset (10)</h2>
+      <div class="spec-grid">
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--red)">Hallinnointi</span>
+            <code class="spec-id">CHARTER.md</code>
+          </div>
+          <h3>Peruskirja ja hallintotapa</h3>
+          <p>Project governance, scope (what it does and what it explicitly does not), FDA non-device CDS positioning (§15 with constraints C1-C7), the solo-maintainer workflow for source-traceable content (§6.1), patient-data privacy (§9.3), forbidden prompt patterns for LLMs (§8.3 — LLMs do not make clinical decisions).</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/CHARTER.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/CHARTER.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Kliiniset tutkimukset</span>
+            <code class="spec-id">CLINICAL_CONTENT_STANDARDS.md</code>
+          </div>
+          <h3>Kliinistä sisältöä koskevat vaatimukset</h3>
+          <p>Clinical content standards: citation format (source_id + position + paraphrase + page), evidence-level taxonomy (Tier 1-6), reviewer sign-off workflow, STUB → reviewed transition criteria. Every claim in an Indication / Regimen / RedFlag links to a Source entity.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/CLINICAL_CONTENT_STANDARDS.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/CLINICAL_CONTENT_STANDARDS.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--teal)">Tiedot</span>
+            <code class="spec-id">DATA_STANDARDS.md</code>
+          </div>
+          <h3>Tietostandardit – potilasmalli</h3>
+          <p>Patient profile data model. FHIR R4/R5 + mCODE alignment on the roadmap. Code systems: LOINC + ICD-10/O-3 + RxNorm + CTCAE v5.0. No SNOMED CT and no MedDRA in the MVP (license gates). Profile fields and semantic interoperability.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/DATA_STANDARDS.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/DATA_STANDARDS.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-600)">Schema</span>
+            <code class="spec-id">KNOWLEDGE_SCHEMA_SPECIFICATION.md</code>
+          </div>
+          <h3>Tietohermoston erittely</h3>
+          <p>Pydantic schemas for every KB entity — Disease / Indication / Regimen / Algorithm / Biomarker / Drug / Test / Workup / RedFlag / Contraindication / MonitoringSchedule / SupportiveCare / Source. Defines fields, validators, referential-integrity rules, and the migration roadmap to PostgreSQL.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Lähteet</span>
+            <code class="spec-id">SOURCE_INGESTION_SPEC.md</code>
+          </div>
+          <h3>Lähdesyöminen ja lisenssit</h3>
+          <p>Miten syömme lähteitä: hosting-matriisi (viittaus vs. isäntä vs yhdistelmä) H1-H5-perustelulla, lisenssien luokitteluporteilla, lisälähdeluettelolla (kohta 8), isännöidyllä lähdeluettelolla (20 kohta) ja SourceClient-protokollalla live-API-rajapintoja varten.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/SOURCE_INGESTION_SPEC.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/SOURCE_INGESTION_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--amber)">Testit</span>
+            <code class="spec-id">REFERENCE_CASE_SPECIFICATION.md</code>
+          </div>
+          <h3>Viitetapaus – "Patient Zero"</h3>
+          <p>Synteettinen HCV-MZL-viitetapaus P0-hyväksymistestinä. Määrittelee kaikki potilasprofiilin vaatimukset (perustiedot 2 §), kriittiset rakenteelliset väitteet Plan render -lähtöön (kohta 1.3) ja virstanpylväät M1-M6 kattavuuden laajentamiseksi.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/REFERENCE_CASE_SPECIFICATION.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/REFERENCE_CASE_SPECIFICATION.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Moottori</span>
+            <code class="spec-id">MDT_ORCHESTRATOR_SPEC.md</code>
+          </div>
+          <h3>MDT Orkesteri + päätöstodistus</h3>
+          <p>Orchestrate_mdt-säännöt (R1-R9 hoitoon, D1-D6 diagnostiikkaan), roolin aktivointilogiikka (vaaditaan / suositellaan / annetaan valinnaisia), Open Questions -mekanismi (Q1-Q6 + DQ1-DQ4 – moottori kieltäytyy päättämästä ilman vaadittuja tietoja) ja päätös-todentamiskaavio tilintarkastusluokan selitykseksi.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/MDT_ORCHESTRATOR_SPEC.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/MDT_ORCHESTRATOR_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Moottori</span>
+            <code class="spec-id">DIAGNOSTIC_MDT_SPEC.md</code>
+          </div>
+          <h3>Diagnostinen vaihe MDT (ennen biopsiaa)</h3>
+          <p>Pre-biopsy mode: when histology is not yet available the engine emits a DiagnosticPlan with a workup brief instead of a treatment Plan. CHARTER §15.2 C7 hard rule. DiagnosticWorkup + DiagnosticPlan schemas, generate_diagnostic_brief(), polymorphic orchestrate_mdt with DQ1-DQ4 rules.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/DIAGNOSTIC_MDT_SPEC.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/DIAGNOSTIC_MDT_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Kliiniset tutkimukset</span>
+            <code class="spec-id">WORKUP_METHODOLOGY_SPEC.md</code>
+          </div>
+          <h3>Työtutkimusmetodit</h3>
+          <p>Miten rakennamme perustutkimuksen kaikille onkologia-alueille. Lähdehierarkia (Tier 1: NCCN/ESMO/EHA/BSH/WHO/ASH), Test/Workup-täyttötarkistukset, 7-vaiheinen prosessi, jolla kattavuus ulotetaan uudelle alueelle, mallinvastaiset.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/WORKUP_METHODOLOGY_SPEC.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/WORKUP_METHODOLOGY_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Moottori</span>
+            <code class="spec-id">SKILL_ARCHITECTURE_SPEC.md</code>
+          </div>
+          <h3>Osaamislähtöinen arkkitehtuuri (MDT Roolit taidoina)</h3>
+          <p>Formalises MDT roles (haematologist / pathologist / radiologist / etc.) as clinically-verified skills — each skill carries version, sources, last_reviewed, clinical_lead. Sizing horizon (~12-15 MVP → 50-60 comprehensive), 8-domain layout, 5-phase refactor plan.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/SKILL_ARCHITECTURE_SPEC.md" target="_blank" rel="noopener">Lue GitHubista →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/SKILL_ARCHITECTURE_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raakamarkki na</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Sääntelylähde (PDF)</h2>
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <span class="spec-tag" style="background:var(--gray-700)">Säädöksen PDF</span>
+          <code class="spec-id">Guidance-Clinical-Decision-Software_5.pdf</code>
+        </div>
+        <h3>FDA:n kliinisen päätöksen tukiohjelmistojen ohjeistus</h3>
+        <p>
+          FDA:n virallinen ohjeistus, joka koskee luottoriskinvaihtosopimusten luokittelua muihin kuin laitteisiin 520 artiklan 1 kohdan E alakohdan mukaisesti. <code>specs/</code> as a PDF. CHARTER §15 cites concrete criteria 1-4 from this document to justify OpenOnco's non-device positioning.
+        </p>
+        <div class="spec-card-foot">
+          <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/Guidance-Clinical-Decision-Software_5.pdf" target="_blank" rel="noopener">Katso PDF-tiedosto GitHubista →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Miten päivitämme spesifikaatiot</h2>
+      <p class="info-text">
+        Yksi ylläpitäjistä toimittaa päivityksiä automaattisella tarkastuksella ja lähteen jäljityksellä. Ulkoinen kliininen arviointi on valinnainen ja se kirjataan erikseen.
+      </p>
+      <p class="info-text">
+        Kaikki tiedot on kirjoitettu ukrainalaisesti (rajapinta ja kliiniset arvioijat ovat UA), mutta tekniset termit ja lisenssinimet pysyvät englanninkielisinä. Versiointi on kautta git: every spec cards <code>v0.1 (draft)</code> Otsikkoon ja se on törmätty pieniin/suuriin, riippuen murroksesta.
+      </p>
+    </div>
+
+    <div class="info-section">
+      <h2>Noudattaminen + yksityisyys (nopea näkymä)</h2>
+      <table class="kv-table">
+        <thead><tr><th>Takaus</th><th>Eritelmä</th><th>Mitä se tarkoittaa</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>FDA:n muut kuin laitteet</strong></td>
+            <td><code>CHARTER.md §15</code></td>
+            <td>OpenOnco on suunniteltu 520 §:n 1 momentin E kohdan ulosvetäytymiseen – ei lääkinnälliseen laitteeseen. Rajoitukset C1-C7 ovat kovan paineen alla.</td>
+          </tr>
+          <tr>
+            <td><strong>Ei potilastietoja</strong></td>
+            <td><code>CHARTER.md §9.3</code></td>
+            <td><code>patient_plans/</code> Kaikki potilasHTML-tuotteet ovat synteettisiä.</td>
+          </tr>
+          <tr>
+            <td><strong>Yksinhuoltajan toimitus</strong></td>
+            <td><code>CHARTER.md §6.1</code></td>
+            <td>Ylläpitäjä tarkistaa lähteet ja testit, ulkoinen kliininen arviointi on valinnainen.</td>
+          </tr>
+          <tr>
+            <td><strong>Ei LLM:n kliinistä arviointia</strong></td>
+            <td><code>CHARTER.md §8.3</code></td>
+            <td>LLMs do not pick regimens, do not generate doses, and do not interpret biomarkers for therapy selection.</td>
+          </tr>
+          <tr>
+            <td><strong>Ei hoitoa ilman histologiaa</strong></td>
+            <td><code>CHARTER.md §15.2 C7</code></td>
+            <td>Moottori kieltäytyy laatimasta hoitosuunnitelmaa ilman <code>disease.id</code> or <code>icd_o_3_morphology</code> – vain diagnostinen suunnitelma.</td>
+          </tr>
+          <tr>
+            <td><strong>Automatisaation vastaiset hyökkäykset</strong></td>
+            <td><code>CHARTER.md §15.2 C6</code></td>
+            <td>≥ 2 vaihtoehtoista rataa näytetään aina vierekkäin; vaihtoehto ei koskaan ole piilossa.</td>
+          </tr>
+          <tr>
+            <td><strong>Lähdekoodin oletus = viite</strong></td>
+            <td><code>SOURCE_INGESTION_SPEC.md §1.4</code></td>
+            <td>We do not duplicate external databases; hosting requires explicit H1-H5 justification.</td>
+          </tr>
+          <tr>
+            <td><strong>Free public resource → non-commercial</strong></td>
+            <td><code>CHARTER.md §2</code></td>
+            <td>Monet lisenssit (ESMO CC-BY-NC-ND, OncoKB-akateeminen, ATC) ovat riippuvaisia tästä. Maksava taso käynnistäisi lisenssitarkastuksen.</td>
+          </tr>
+          <tr>
+            <td><strong>IP-pohjainen kieli automaattisesti valittuna</strong></td>
+            <td><code>client-side, opt-out</code></td>
+            <td>Näyttääkseen rajapinnan omalla kielelläsi selaimesi etsii maasi Internetistä kolmannen osapuolen palvelun kautta (<a href="https://www.geojs.io/" target="_blank" rel="noopener">GeoJS</a>, <a href="https://ipapi.co/" target="_blank" rel="noopener">ipapi.co</a> as fallback). Only your IP is sent, with no referrer; we run no server and keep no logs of our own. The detected country and your manual EN/UA choice are stored only in your browser (localStorage) and the manual switch always overrides the IP guess. Ukrainian is shown only for Ukrainian IP addresses; English everywhere else. By using the site you consent to this country lookup — to avoid it, pick a language manually and your choice is remembered.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Avoimen lähdekoodin · MIT-tyylin käyttö · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Neuvontaväline klinikkalaisille, ei lääkinnällinen laite (Säädöksen 15 § + §11).
+  </footer>
+</main>
+</body>
+</html>

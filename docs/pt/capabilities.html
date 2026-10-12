@@ -20,7 +20,7 @@
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -45,7 +45,7 @@
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -93,6 +93,11 @@
 <link rel="alternate" hreflang="pt" href="https://openonco.info/pt/capabilities.html">
 <link rel="alternate" hreflang="de" href="https://openonco.info/de/capabilities.html">
 <link rel="alternate" hreflang="fr" href="https://openonco.info/fr/capabilities.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/capabilities.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/capabilities.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/capabilities.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/capabilities.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/capabilities.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/capabilities.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="website">
@@ -309,7 +314,7 @@
     <div class="top-right">
     <details class="language-menu lang-switch">
       <summary aria-label="Idioma"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg>PT <span aria-hidden="true">⌄</span></summary>
-      <nav aria-label="Idioma"><a href="/capabilities.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/capabilities.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/capabilities.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/capabilities.html" lang="pt" hreflang="pt" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/capabilities.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/capabilities.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
+      <nav aria-label="Idioma"><a href="/capabilities.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/capabilities.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/capabilities.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/capabilities.html" lang="pt" hreflang="pt" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/capabilities.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/capabilities.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/capabilities.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/capabilities.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/capabilities.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/capabilities.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/capabilities.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
     </details>
     <a href="/pt/try.html" class="btn-cta-top btn-cta-try"><span>Criar um plano</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
     <details class="mobile-menu">
@@ -352,9 +357,8 @@
     </p>
 
     <div class="callout callout-hard">
-      <strong>Status STUB em todo o conteúdo clínico.</strong>
-      Dupla assinatura: <strong>15/1063</strong>
-      (CARTER §6.1 requer duas aprovações Clínicas Co-Lead). Este é um plano proposto: dados estruturados + algoritmo + fontes estão em vigor, mas sem dupla assinatura. Ferramenta de suporte à decisão, não um dispositivo médico. <code>2026-10-11 20:47 UTC</code>.
+      <strong>Projeto individual. Uma pessoa responsável publica as atualizações com verificações automáticas e rastreabilidade das fontes. A revisão clínica externa é opcional e registada separadamente.</strong>
+      <p>O conteúdo clínico é informativo; as verificações técnicas não constituem uma aprovação do tratamento.</p>
     </div>
 
     <nav class="cap-tabs" role="tablist" aria-label="Secções">
@@ -371,7 +375,7 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: perfil JSON → motor → Plano com duas faixas">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">Motor OpenOnco · em duas palavras</span>
-          <span class="pipeline-version">v0.1.4 · 2026-10-11 20:47 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-10-11 23:22 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Um perfil JSON → <em>dois planos de tratamento</em>, todas as alegações citadas.
@@ -447,7 +451,7 @@
         <div class="key-num"><div class="key-num-val">671</div><div class="key-num-lbl">Sinais vermelhos</div></div>
         <div class="key-num"><div class="key-num-val">542</div><div class="key-num-lbl">Fontes citadas</div></div>
         <div class="key-num"><div class="key-num-val">16</div><div class="key-num-lbl">Aptidões do clínico (MDT)</div></div>
-        <div class="key-num is-warn"><div class="key-num-val">15/1063</div><div class="key-num-lbl">com dupla assinatura</div></div>
+        <div class="key-num"><div class="key-num-val">Solo</div><div class="key-num-lbl">One maintainer</div></div>
       </div>
 
       <div class="pillars">
@@ -780,7 +784,7 @@
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
             <h3>- Dois revisores fundem-se.</h3>
-            <p>Qualquer alteração do conteúdo clínico necessita de 2 de 3 aprovaçãos Clínicas Co-Lead. Sem isso — STUB.</p>
+            <p>Projeto individual. Uma pessoa responsável publica as atualizações com verificações automáticas e rastreabilidade das fontes. A revisão clínica externa é opcional e registada separadamente.</p>
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§15.2 C6</div>
@@ -819,12 +823,13 @@
             <tr><td>Radioterapia</td><td>parcial</td><td>RT em Indicações multimodais; não modelado como entidade independente</td></tr>
             <tr><td>Cirurgia</td><td>não modelados</td><td>Indicações cirúrgicas oncológicas ausentes</td></tr>
             <tr><td>Alimentação viva de fórmulas</td><td>bandeira estática</td><td>Codificados com o regime; não auto-refrescados</td></tr>
-            <tr><td>Dupla assinatura do avaliador</td><td><strong>15/1063</strong></td><td>métrica de escote primário — plano de capacidade: 1063 → ≥85% verificado</td></tr>
+            <tr><td>External clinical review</td><td>Opcional</td><td>Recorded separately; not a development or publication gate.</td></tr>
             <tr><td>Painel de abertura ao vivo</td><td><a href="/pt/clinical-gaps.html">→ ligação</a></td><td>Auditoria gerada pela construção (sign-off, sólido 2L+, cirurgia, RT, cuidados de suporte)</td></tr>
           </tbody>
         </table>
         <div class="callout">
-          <strong>O que o STUB NÃO significa:</strong> structured data + algorithm + sources are already in place. What STUB means: didn't pass Clinical Co-Lead dual sign-off. «Proposed plan», not «approved plan».
+          <strong>O que o STUB NÃO significa:</strong> structured data + algorithm + sources are already in place.
+          STUB describes content maturity; it is not a solo-project release gate or treatment approval.
         </div>
       </div>
 
@@ -846,7 +851,7 @@
       <div class="info-section">
         <h2>TaskTorrent — verifique algoritmos com os símbolos da sua IA</h2>
         <p class="info-text">
-          O maior desvio — <strong>15/1063</strong> dual-reviewer sign-off. The bottleneck doesn't dissolve with new code — it dissolves through contributors with AI tools who pick up structured chunks of work.
+          Projeto individual. Uma pessoa responsável publica as atualizações com verificações automáticas e rastreabilidade das fontes. A revisão clínica externa é opcional e registada separadamente.
         </p>
         <div class="num-grid num-grid--rich">
           <div class="num-card num-card--accent">
@@ -860,7 +865,8 @@
             <div class="num-big">2</div>
             <div class="num-lbl">O que você precisa</div>
             <p class="num-text">
-              Uma ferramenta de IA com um orçamento token (Claude Código Pro+, Codex, Cursor, ChatGPT com web). GitHub + <code>gh</code> CLI. Python 3.10+. ~1-3 horas do seu tempo. <strong>Não é necessário conhecimento clínico</strong> — desencadear a redação estruturada; os co-líderes clínicos assinarem.
+              Uma ferramenta de IA com um orçamento token (Claude Código Pro+, Codex, Cursor, ChatGPT com web). GitHub + <code>gh</code> CLI. Python 3.10+. ~1-3 horas do seu tempo. <strong>Não é necessário conhecimento clínico</strong> —
+              you trigger structured drafting; the the maintainer verifies the change; expert feedback is optional.
             </p>
           </div>
           <div class="num-card">
@@ -876,7 +882,8 @@
             <div class="num-big">4</div>
             <div class="num-lbl">O que acontece com a RP</div>
             <p class="num-text">
-              O mantenedor verifica a parte mecânica (validador, esquema). Um Co-Lead Clínico faz uma revisão amostral da parte semântica (CHARTER §6.1). Merge → aterragem de sidecar → upserte em KB hospedado → render. A atribuição gravada em <code>_contribution_meta.yaml</code>.
+              The maintainer checks sources, tests and schemas. External review is optional. Merge → sidecar landing → upsert into
+              hosted KB → render. Attribution recorded in <code>_contribution_meta.yaml</code>.
             </p>
           </div>
         </div>

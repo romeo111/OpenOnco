@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Sjekk for risiko og tidlig oppdagelse</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/prevent.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/prevent.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/prevent.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/prevent.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Sjekk for risiko og tidlig oppdagelse">
+<meta property="og:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<meta property="og:url" content="https://openonco.info/prevent.html">
+<meta property="og:locale" content="nb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Sjekk for risiko og tidlig oppdagelse">
+<meta name="twitter:description" content="OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Sjekk for risiko og tidlig oppdagelse","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/prevent.html","inLanguage":"nb","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/prevent.html"}}</script>
+<!-- openonco-seo:end -->
+<meta name="description" content="En kreftrisiko, familiehistorie, screening og sjekk for tidlige tegn som bare nettleser, som gjør forbrukernes innsats til en klinik-lesbar OpenOnco-profil.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://openonco.info/prevent.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/prevent.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/prevent.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/prevent.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#14532d">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<link rel="stylesheet" href="/clinical-styles/660dae28ac34297bce1d9d4aa2186e6ff2559a97dd98e73ec07a198c6261d891.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="346a1e6bfa03b49927c9c74b394af2586df6740c519857ac5c44e92e49d0606f"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/nb/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ÅPEN ONKOLOGI</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/nb/">Hjem</a>
+    <a href="/nb/capabilities.html">Funksjoner</a><a href="/nb/handbook.html">Håndbok</a><a href="/nb/news.html">Nyheter</a>
+    <a href="/nb/about.html">Om prosjektet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Språk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg>NO <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Språk"><a href="/prevent.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/prevent.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/prevent.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/prevent.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/prevent.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/prevent.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/prevent.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/prevent.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/prevent.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/prevent.html" lang="nb" hreflang="nb" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/prevent.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/nb/try.html" class="btn-cta-top btn-cta-try"><span>Lag en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Meny"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/nb/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Lag en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Meny">
+    <a href="/nb/">Hjem</a>
+    <a href="/nb/capabilities.html">Funksjoner</a><a href="/nb/handbook.html">Håndbok</a><a href="/nb/news.html">Nyheter</a>
+    <a href="/nb/about.html">Om prosjektet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/nb/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/nb/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tverrfaglig møte</span></a>
+      <a href="/nb/prevent.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebygging</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Verktøy</span>
+    <div class="top-cta-group">
+      <a href="/nb/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/nb/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tverrfaglig møte</span></a>
+      <a href="/nb/prevent.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebygging</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Åpen kildekode</span>
+  </div>
+  </div>
+</header>
+
+<main class="risk-page consumer-risk-assessment"><aside class="translation-notice" role="note"><strong>Foreløpig oversettelse: klinisk gjennomgang gjenstår.</strong> <a href="/prevent.html" lang="en" hreflang="en" data-original-source>Se den engelske originalen</a></aside>
+  <section class="risk-hero">
+    <div>
+      <p class="risk-kicker">For bekymret personer, ikke bare onkologer</p>
+      <h1>Kontrollrisiko, familiehistorie, gjennomsøking og tidlig varsling.</h1>
+      <p class="lead">Svar på noen strukturerte spørsmål. OpenOnco vil ikke diagnostisere kreft, det vil prioritere hva det skal diskuteres med en lege, hvilke rutineundersøkelser som kan være påkrevet, og om familiehistorien antyder genetisk rådgivning.</p>
+    </div>
+    <div class="risk-safety">
+      <div class="risk-safety-note"><strong>Dette er ikke en diagnose og ikke en erstatning for en kliniker.</strong></div>
+      <div class="risk-privacy">Bare nettleser. Ikke oppgi navn, telefonnummer, adresser eller identifikatorer.</div>
+    </div>
+  </section>
+
+  <section class="risk-market">
+    <h2>Hvilke vellykkede produkter lærte oss</h2>
+    <p>Omutformingen låner delene som fungerer i produkter for kreftforebygging med høy vekst: enkelt inntak, klare risikofelter, familiehistorier, navigering til neste handling og ærlighet som nye tester utfyller rutinemessig gjennomsøking.</p>
+    <div class="risk-source-grid">
+      <a class="risk-source-card" href="https://www.color.com/" target="_blank" rel="noopener">
+        <strong>Fargehelse</strong>
+        <span>Integrert behandling av virtuell kreft: tidlig påvisning, personlig veiledning, klinisk oppfølging.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.canceriq.com/" target="_blank" rel="noopener">
+        <strong>CancerIQ</strong>
+        <span>Risikovurdering, genetisk kartlegging og pasientnavigasjon som én arbeidsgang i helsesystemet.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.freenome.com/" target="_blank" rel="noopener">
+        <strong>Frinome</strong>
+        <span>Early detection framed as multimodal signals rather than one magic test.</span>
+      </a>
+      <a class="risk-source-card" href="https://grail.com/galleri-test/the-science/mced/" target="_blank" rel="noopener">
+        <strong>GRAIL Galleri</strong>
+        <span>MCED-posisjonen er tilsetningsstoff: den erstatter ikke rutinemessig anbefalt screening.</span>
+      </a>
+      <a class="risk-source-card" href="https://prenuvo.com/" target="_blank" rel="noopener">
+        <strong>Prenuvo</strong>
+        <span>Forbrukeren ønsker proaktiv kontroll, visuell resultat og et neste trinn.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="risk-tool">
+    <div class="risk-panel">
+      <h2>Sjekken din</h2>
+      <div class="quick-scenarios" aria-label="Raske eksempler">
+        <button type="button" data-scenario="brca">Ung BRCA-lignende familiehistorie</button>
+        <button type="button" data-scenario="smoker">Røyker som kan brukes som LDCT</button>
+        <button type="button" data-scenario="fit">Positiv FIT / blod i avføringen</button>
+      </div>
+      <form id="riskForm" class="risk-form">
+        <fieldset class="risk-fieldset">
+          <legend>1. Om deg</legend>
+          <div class="risk-grid-3">
+            <label class="risk-label">Alder <input name="age" type="number" min="0" max="120" inputmode="numeric"></label>
+            <label class="risk-label">Kjønn
+              <select name="sex">
+                <option value="female">Kvinne</option>
+                <option value="male">Mann</option>
+                <option value="other">Andre / foretrekker ikke å si</option>
+              </select>
+            </label>
+            <label class="risk-label">BMI <input name="bmi" type="number" min="10" max="80" step="0.1" inputmode="decimal"></label>
+          </div>
+          <div class="risk-grid-3" style="margin-top:12px">
+            <label class="risk-label">Røyking
+              <select name="smoking">
+                <option value="never">Aldri</option>
+                <option value="current">Gjeldende røykeapparat</option>
+                <option value="former">Tidligere røykere</option>
+              </select>
+            </label>
+            <label class="risk-label">Pakkeår <input name="pack_years" type="number" min="0" max="200" step="1" inputmode="numeric"></label>
+            <label class="risk-label">År siden avslutning <input name="quit_years" type="number" min="0" max="80" step="1" inputmode="numeric"></label>
+          </div>
+          <div class="risk-grid-3" style="margin-top:12px">
+            <label class="risk-label">Alkoholsterke drikker/uke <input name="alcohol" type="number" min="0" max="100" step="1" inputmode="numeric"></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>2. Hva bekymrer deg akkurat nå</legend>
+          <p class="hint">Velg vedvarende, uforklarlige eller nye funn.</p>
+          <div class="risk-check-grid">
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_breast_lump">
+            <span>Ny brystklump, brystvorteblod, fordypning i huden eller BI-RADS</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_blood_stool">
+            <span>Blod i avføring, positiv FIT eller uforklarlig anemi med jernmangel</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_cough">
+            <span>Cough, blood in sputum, chest pain, or hoarseness lasting more than 3 weeks</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_weight_loss">
+            <span>Uforklarlig vekttap, nattsvitt, vedvarende feber eller forstørrede lymfeknuter</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_hematuria">
+            <span>Synlig blod i urin eller vedvarende urinsymptomer</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_postmeno_bleed">
+            <span>Blødning etter overgangsalderen eller unormal uterusblødning</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_neuro">
+            <span>Ny anfall, fokal svakhet, alvorlig vedvarende hodepine eller nevrologisk endring</span>
+          </label>
+          <label class="risk-check">
+            <input type="checkbox" name="symptom_skin">
+            <span>Changing mole, non-healing lesion, or bleeding skin spot</span>
+          </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>3. Gjennomsøkingsstatus</legend>
+          <p class="hint">Tilnærmet er nok. Dette erstatter ikke lokale visningsregler.</p>
+          <div class="risk-grid-2">
+            <label class="risk-label">Siste mammogram
+              <select name="last_mammo">
+                <option value="recent">Oppdatert / nylig brukt</option>
+                <option value="due">Forfall eller usikker</option>
+                <option value="never">Aldri</option>
+                <option value="na">Ikke relevant</option>
+              </select>
+            </label>
+            <label class="risk-label">Siste tyktarmssurfing
+              <select name="last_colon">
+                <option value="recent">Oppdatert / nylig brukt</option>
+                <option value="due">Forfall eller usikker</option>
+                <option value="never">Aldri</option>
+                <option value="na">Ikke relevant</option>
+              </select>
+            </label>
+            <label class="risk-label">Siste legs elvemål
+              <select name="last_cervical">
+                <option value="recent">Oppdatert / nylig brukt</option>
+                <option value="due">Forfall eller usikker</option>
+                <option value="never">Aldri</option>
+                <option value="na">Ikke relevant</option>
+              </select>
+            </label>
+            <label class="risk-label">Siste lavdose CT lungeskjerm
+              <select name="last_ldct">
+                <option value="recent">Oppdatert / nylig brukt</option>
+                <option value="due">Forfall eller usikker</option>
+                <option value="never">Aldri</option>
+                <option value="na">Ikke relevant</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>4. Familiehistorie/ stamtavle</legend>
+          <div id="familyCancerRows" class="family-table"></div>
+          <button id="addRelativeBtn" type="button" class="btn btn-secondary">Legg til relativ</button>
+          <div id="pedigreeMap" class="pedigree-map" aria-live="polite"></div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>5. Risikofaktorer og engasjementer</legend>
+          <div class="risk-check-grid">
+            <label class="risk-check"><input type="checkbox" name="known_family_mutation"><span>BRCA / Lynch / APC / TP53 / annen kjent sykdomsframkallende variant i familien</span></label>
+            <label class="risk-check"><input type="checkbox" name="ashkenazi"><span>Askenazi Jødisk forfedre med bryst/eggefamiliehistorie</span></label>
+            <label class="risk-check"><input type="checkbox" name="hbv"><span>HBsAg positiv / kronisk HBV</span></label>
+            <label class="risk-check"><input type="checkbox" name="hcv"><span>HCV RNA positiv / kronisk HCV</span></label>
+            <label class="risk-check"><input type="checkbox" name="hpv"><span>HPV med vedvarende høy risiko</span></label>
+            <label class="risk-check"><input type="checkbox" name="hpylori"><span>Positiv H. pyloriprøve</span></label>
+            <label class="risk-check"><input type="checkbox" name="hiv"><span>HIV eller langtidsimmunisering</span></label>
+            <label class="risk-check"><input type="checkbox" name="prior_radiation"><span>Forutgående behandling med bryst-/pelvisk stråling eller barnekreft</span></label>
+            <label class="risk-check"><input type="checkbox" name="radon"><span>Hjemmeradon ≥4 pCi/L eller høy eksponering for radon</span></label>
+            <label class="risk-check"><input type="checkbox" name="asbestos"><span>Asbest, benzen, aromatiske aminer, diesel eller ioniseringsstråling, eksponering</span></label>
+            <label class="risk-check"><input type="checkbox" name="barrett"><span>Barrett spiserør / lang GERD- historie</span></label>
+            <label class="risk-check"><input type="checkbox" name="ibd_psc"><span>Langvarig IBD, PSC, kronisk pankreatitis eller cirrose</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="risk-fieldset">
+          <legend>6. Eksisterende diagnosedata</legend>
+          <div class="risk-grid-3">
+            <label class="risk-label">FIT / avføringsblod
+              <select name="fit_result">
+                <option value="">—</option>
+                <option value="positive">positiv</option>
+                <option value="negative">negativ</option>
+              </select>
+            </label>
+            <label class="risk-label">Mammografi / US
+              <select name="breast_imaging">
+                <option value="">—</option>
+                <option value="birads45">BI-RADS 4/5</option>
+                <option value="benign">Godartede / BI-RADS 1-2</option>
+              </select>
+            </label>
+            <label class="risk-label">Bilderapport
+              <select name="imaging_result">
+                <option value="">—</option>
+                <option value="suspicious">mistenkelig masse / node / lesjoner</option>
+                <option value="incidental">tilfeldig funn som venter på oppfølging</option>
+                <option value="normal">normal</option>
+              </select>
+            </label>
+            <label class="risk-label">Hemoglobin g/l <input name="hemoglobin" type="number" min="20" max="220" step="1"></label>
+            <label class="risk-label">WBC ×109/L <input name="wbc" type="number" min="0" max="300" step="0.1"></label>
+            <label class="risk-label">Blodplater × 109/l <input name="platelets" type="number" min="0" max="1500" step="1"></label>
+          </div>
+        </fieldset>
+
+        <div class="risk-actions">
+          <button class="btn btn-primary" type="submit">Bygge min risikorute</button>
+          <button id="resetRiskBtn" class="btn btn-secondary" type="button">Nullstill</button>
+        </div>
+      </form>
+    </div>
+
+    <aside class="risk-panel risk-result" aria-live="polite">
+      <h2>Risikovei</h2>
+      <div id="resultEmpty" class="handoff-box">Fyll ut skjemaet og klikk "Bygg min risikorute".</div>
+      <div id="resultWrap" hidden>
+        <div class="risk-score-card">
+          <div id="riskLevel" class="risk-level low">Grunnveivei</div>
+          <p id="resultSummary"></p>
+          <div class="risk-meter" aria-hidden="true"><div id="riskMeterFill" class="risk-meter-fill"></div></div>
+        </div>
+        <h3>Neste steg</h3>
+        <div id="nextSteps" class="result-list"></div>
+        <h3>Hvorfor denne ruten</h3>
+        <div id="riskLanes" class="result-list"></div>
+        <h3>Avhentingsprofil for klinikker</h3>
+        <div id="handoffText" class="handoff-box"></div>
+        <pre id="profileJson" class="profile-box"></pre>
+        <div class="risk-actions">
+          <button id="copyJsonBtn" class="btn btn-secondary" type="button">Kopier JSON</button>
+          <button id="downloadJsonBtn" class="btn btn-secondary" type="button">Last ned JSON</button>
+          <a id="openTryBtn" class="btn btn-primary" href="/nb/try.html">Åpne i planbygger</a>
+          <button id="printRiskBtn" class="btn btn-secondary" type="button">Skriv ut</button>
+        </div>
+        <p id="copyStatus" class="small" role="status"></p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="risk-sources">
+    <h2>Bevisankringer</h2>
+    <h3>Retningslinjer for ruting</h3>
+    <div class="risk-source-grid">
+      <a class="risk-source-card" href="https://www.cdc.gov/cancer/risk-factors/family-health-history.html" target="_blank" rel="noopener">
+        <strong>CDC- familiehistorie</strong>
+        <span>Familiehistorien bidrar til å avgjøre hvilke kartleggingsforsøk som kan være nødvendige, når det skal startes, og om det er hensiktsmessig med genetisk rådgivning/-prøving.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.cancer.gov/about-cancer/causes-prevention/genetics/genetic-testing-fact-sheet" target="_blank" rel="noopener">
+        <strong>NIC-genforsøk</strong>
+        <span>Det anbefales vanligvis å gi genetisk rådgivning før det blir undersøkt med arvelig kreftrisiko.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/breast-cancer-screening1" target="_blank" rel="noopener">
+        <strong>USPSTF- bryst</strong>
+        <span>En mammografi over to år for kvinner i alderen 40 74 år.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/colorectal-cancer-screening" target="_blank" rel="noopener">
+        <strong>USPSTF-fargerektal</strong>
+        <span>Screen adults aged 45 to 75 for colorectal cancer.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening" target="_blank" rel="noopener">
+        <strong>USPSTF lunge</strong>
+        <span>Annual LDCT for adults aged 50 to 80 with at least 20 pack-years who smoke or quit within 15 years.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/cervical-cancer-screening" target="_blank" rel="noopener">
+        <strong>USPSTF-livmoderhalen</strong>
+        <span>Cervikal screening fra 21 til 65 med cytologi og/eller HPV-strategier etter alder.</span>
+      </a>
+    </div>
+    <h3>Markedsmønstrene er gjennomgått</h3>
+    <div class="risk-source-grid">
+      <a class="risk-source-card" href="https://www.color.com/" target="_blank" rel="noopener">
+        <strong>Fargehelse</strong>
+        <span>Integrert behandling av virtuell kreft: tidlig påvisning, personlig veiledning, klinisk oppfølging.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.canceriq.com/" target="_blank" rel="noopener">
+        <strong>CancerIQ</strong>
+        <span>Risikovurdering, genetisk kartlegging og pasientnavigasjon som én arbeidsgang i helsesystemet.</span>
+      </a>
+      <a class="risk-source-card" href="https://www.freenome.com/" target="_blank" rel="noopener">
+        <strong>Frinome</strong>
+        <span>Early detection framed as multimodal signals rather than one magic test.</span>
+      </a>
+      <a class="risk-source-card" href="https://grail.com/galleri-test/the-science/mced/" target="_blank" rel="noopener">
+        <strong>GRAIL Galleri</strong>
+        <span>MCED-posisjonen er tilsetningsstoff: den erstatter ikke rutinemessig anbefalt screening.</span>
+      </a>
+      <a class="risk-source-card" href="https://prenuvo.com/" target="_blank" rel="noopener">
+        <strong>Prenuvo</strong>
+        <span>Forbrukeren ønsker proaktiv kontroll, visuell resultat og et neste trinn.</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<script>
+(function() {
+  const COPY = {"page_title": "Risk & early detection check", "meta_description": "A browser-only cancer risk, family-history, screening and early-signal checker that turns consumer inputs into a clinician-readable OpenOnco profile.", "kicker": "For worried people, not only oncologists", "h1": "Check risk, family history, screenings, and early warning signs.", "lead": "Answer a few structured questions. OpenOnco will not diagnose cancer; it will prioritize what to discuss with a doctor, which routine screenings may be due, and whether family history suggests genetic counseling.", "privacy": "Browser-only. Do not enter names, phone numbers, addresses, or identifiers.", "not_diagnosis": "This is not a diagnosis and not a replacement for a clinician.", "market_title": "What successful products taught us", "market_lead": "The redesign borrows the parts that work in high-growth cancer-prevention products: simple intake, clear risk lanes, family-history capture, navigation to the next action, and honesty that new tests complement routine screening.", "form_title": "Your check", "quick_title": "Quick examples", "quick_brca": "Young BRCA-like family history", "quick_smoker": "Smoker eligible for LDCT", "quick_fit": "Positive FIT / blood in stool", "about_you": "1. About you", "what_worries": "2. What worries you right now", "screening": "3. Screening status", "family": "4. Family history / pedigree", "exposures": "5. Risk factors and exposures", "diagnostic_data": "6. Existing diagnostic data", "age": "Age", "sex": "Sex", "sex_female": "Female", "sex_male": "Male", "sex_other": "Other / prefer not to say", "bmi": "BMI", "smoking": "Smoking", "smoke_never": "Never", "smoke_current": "Current smoker", "smoke_former": "Former smoker", "pack_years": "Pack-years", "quit_years": "Years since quitting", "alcohol": "Alcohol drinks / week", "symptom_note": "Select persistent, unexplained, or new findings.", "screen_note": "Approximate is enough. This does not replace local screening rules.", "last_mammo": "Last mammogram", "last_colon": "Last colon cancer screening", "last_cervical": "Last cervical screening", "last_ldct": "Last low-dose CT lung screen", "screen_recent": "Up to date / recent", "screen_due": "Due or unsure", "screen_never": "Never", "screen_na": "Not applicable", "add_relative": "Add relative", "run": "Build my risk route", "reset": "Clear", "result_title": "Risk route", "result_empty": "Complete the form and click “Build my risk route”.", "next_steps": "Next steps", "lanes": "Why this route", "profile": "Clinician handoff profile", "copy_json": "Copy JSON", "download_json": "Download JSON", "open_builder": "Open in Plan Builder", "print": "Print", "relation": "Relation", "relation_first": "1st degree", "relation_second": "2nd degree", "relation_third": "More distant", "family_cancer": "Cancer", "family_age_dx": "Age dx", "family_side": "Side", "maternal": "maternal", "paternal": "paternal", "unknown": "unknown", "remove": "Remove", "cancer_blank": "—", "cancer_breast": "breast", "cancer_ovarian": "ovarian / tubal / peritoneal", "cancer_colon": "colorectal", "cancer_endometrial": "endometrial", "cancer_pancreatic": "pancreatic", "cancer_prostate": "metastatic/high-risk prostate", "cancer_male_breast": "male breast", "cancer_sarcoma_brain_adrenal": "sarcoma/brain/adrenal childhood", "cancer_other": "other", "exposure_known_mutation": "BRCA / Lynch / APC / TP53 / other known pathogenic variant in family", "exposure_ashkenazi": "Ashkenazi Jewish ancestry with breast/ovarian family history", "exposure_hbv": "HBsAg positive / chronic HBV", "exposure_hcv": "HCV RNA positive / chronic HCV", "exposure_hpv": "Persistent high-risk HPV", "exposure_hpylori": "Positive H. pylori test", "exposure_hiv": "HIV or long-term immunosuppression", "exposure_radiation": "Prior chest/pelvic radiation or childhood cancer treatment", "exposure_radon": "Home radon ≥4 pCi/L or high radon exposure", "exposure_occupation": "Asbestos, benzene, aromatic amines, diesel or ionizing-radiation work exposure", "exposure_barrett": "Barrett esophagus / long GERD history", "exposure_ibd_psc": "Long-standing IBD, PSC, chronic pancreatitis or cirrhosis", "fit_stool": "FIT / stool blood", "fit_positive": "positive", "fit_negative": "negative", "mammography_us": "Mammography / US", "birads45": "BI-RADS 4/5", "benign_birads": "benign / BI-RADS 1-2", "imaging_report": "Imaging report", "suspicious_imaging": "suspicious mass / nodule / lesion", "incidental_finding": "incidental finding awaiting follow-up", "normal": "normal", "hemoglobin": "Hemoglobin g/L", "wbc": "WBC ×10⁹/L", "platelets": "Platelets ×10⁹/L", "sources_title": "Evidence anchors", "source_guidelines": "Guidelines used for routing", "source_market": "Market patterns reviewed", "urgent_label": "Urgent clinical review", "high_label": "Elevated risk", "routine_label": "Routine prevention", "low_label": "Baseline route", "urgent_summary": "One or more current symptoms or abnormal tests need clinician review soon. The tool cannot tell whether this is cancer; the next step is diagnostic workup.", "high_summary": "Family history, exposures, or overdue screening suggest an above-routine prevention route.", "routine_summary": "No emergency signal was entered, but at least one routine screening or prevention item is due.", "low_summary": "No high-priority signal was entered. Keep routine screening current and update this check if facts change.", "doctor_now": "Book a clinician visit promptly; seek emergency care for severe bleeding, chest symptoms, neurologic deficits, or rapidly worsening condition.", "genetics": "Ask for genetic counseling or hereditary cancer risk assessment.", "screening_due": "Update age-appropriate screening with your primary-care clinician.", "prevention": "Work on modifiable risks and exposure mitigation.", "data_gap": "Bring missing dates/results to the visit; unknowns can change the route.", "no_signals": "No major signal selected yet.", "copied": "Copied.", "copy_failed": "Copy failed in this browser.", "download_name": "openonco-risk-profile.json", "handoff_family_entries": "Family-history entries", "handoff_take_json": "Take this JSON to a clinician if you want an OpenOnco prevention or diagnostic brief."};
+  const SYMPTOMS = [{"name": "symptom_breast_lump", "label": "New breast lump, nipple blood, skin dimpling, or BI-RADS concern", "action": "Diagnostic breast imaging / breast clinic"}, {"name": "symptom_blood_stool", "label": "Blood in stool, positive FIT, or unexplained iron-deficiency anemia", "action": "Colonoscopy pathway"}, {"name": "symptom_cough", "label": "Cough, blood in sputum, chest pain, or hoarseness lasting more than 3 weeks", "action": "Chest imaging / lung evaluation"}, {"name": "symptom_weight_loss", "label": "Unexplained weight loss, night sweats, persistent fever, or enlarged lymph nodes", "action": "Primary-care or hematology workup"}, {"name": "symptom_hematuria", "label": "Visible blood in urine or persistent urinary symptoms", "action": "Urinalysis and urology review"}, {"name": "symptom_postmeno_bleed", "label": "Bleeding after menopause or abnormal uterine bleeding", "action": "Gynecology review"}, {"name": "symptom_neuro", "label": "New seizure, focal weakness, severe persistent headache, or neurologic change", "action": "Urgent neurologic evaluation"}, {"name": "symptom_skin", "label": "Changing mole, non-healing lesion, or bleeding skin spot", "action": "Dermatology / biopsy consideration"}];
+  const TRY_HREF = "/try.html";
+  const form = document.getElementById('riskForm');
+  const familyRows = document.getElementById('familyCancerRows');
+  const addRelativeBtn = document.getElementById('addRelativeBtn');
+  const pedigreeMap = document.getElementById('pedigreeMap');
+  const resultEmpty = document.getElementById('resultEmpty');
+  const resultWrap = document.getElementById('resultWrap');
+  const riskLevel = document.getElementById('riskLevel');
+  const riskMeterFill = document.getElementById('riskMeterFill');
+  const resultSummary = document.getElementById('resultSummary');
+  const nextSteps = document.getElementById('nextSteps');
+  const riskLanes = document.getElementById('riskLanes');
+  const handoffText = document.getElementById('handoffText');
+  const profileJson = document.getElementById('profileJson');
+  const copyJsonBtn = document.getElementById('copyJsonBtn');
+  const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+  const openTryBtn = document.getElementById('openTryBtn');
+  const printRiskBtn = document.getElementById('printRiskBtn');
+  const resetRiskBtn = document.getElementById('resetRiskBtn');
+  const copyStatus = document.getElementById('copyStatus');
+  let lastProfile = null;
+
+  function t(name) {
+    const el = form.elements[name];
+    return el ? String(el.value || '').trim() : '';
+  }
+  function n(name) {
+    const raw = t(name);
+    if (!raw) return null;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : null;
+  }
+  function checked(name) {
+    const el = form.elements[name];
+    return !!(el && el.checked);
+  }
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function itemHtml(title, body) {
+    return '<div class="result-item"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body) + '</span></div>';
+  }
+  function optionHtml(value, label, selected) {
+    return '<option value="' + escapeHtml(value) + '"' + (selected ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
+  }
+
+  function addFamilyRow(data) {
+    const row = document.createElement('div');
+    row.className = 'family-row';
+    row.innerHTML = [
+      '<label>' + escapeHtml(COPY.relation) + '<select name="family_relation">' +
+        optionHtml('first', COPY.relation_first, data && data.relation === 'first') +
+        optionHtml('second', COPY.relation_second, data && data.relation === 'second') +
+        optionHtml('third', COPY.relation_third, data && data.relation === 'third') +
+      '</select></label>',
+      '<label>' + escapeHtml(COPY.family_cancer) + '<select name="family_cancer">' +
+        optionHtml('', COPY.cancer_blank, !data || !data.cancer) +
+        optionHtml('breast', COPY.cancer_breast, data && data.cancer === 'breast') +
+        optionHtml('ovarian', COPY.cancer_ovarian, data && data.cancer === 'ovarian') +
+        optionHtml('colon', COPY.cancer_colon, data && data.cancer === 'colon') +
+        optionHtml('endometrial', COPY.cancer_endometrial, data && data.cancer === 'endometrial') +
+        optionHtml('pancreatic', COPY.cancer_pancreatic, data && data.cancer === 'pancreatic') +
+        optionHtml('prostate', COPY.cancer_prostate, data && data.cancer === 'prostate') +
+        optionHtml('male_breast', COPY.cancer_male_breast, data && data.cancer === 'male_breast') +
+        optionHtml('sarcoma_brain_adrenal', COPY.cancer_sarcoma_brain_adrenal, data && data.cancer === 'sarcoma_brain_adrenal') +
+        optionHtml('other', COPY.cancer_other, data && data.cancer === 'other') +
+      '</select></label>',
+      '<label>' + escapeHtml(COPY.family_age_dx) + '<input name="family_age" type="number" min="0" max="120" value="' + escapeHtml(data && data.age || '') + '"></label>',
+      '<label>' + escapeHtml(COPY.family_side) + '<select name="family_side">' +
+        optionHtml('maternal', COPY.maternal, data && data.side === 'maternal') +
+        optionHtml('paternal', COPY.paternal, data && data.side === 'paternal') +
+        optionHtml('unknown', COPY.unknown, !data || data.side === 'unknown') +
+      '</select></label>',
+      '<button class="family-remove" type="button" aria-label="' + escapeHtml(COPY.remove) + '">×</button>'
+    ].join('');
+    row.querySelector('.family-remove').addEventListener('click', function() {
+      row.remove();
+      updatePedigree();
+    });
+    row.querySelectorAll('select,input').forEach(function(el) {
+      el.addEventListener('input', updatePedigree);
+      el.addEventListener('change', updatePedigree);
+    });
+    familyRows.appendChild(row);
+    updatePedigree();
+  }
+
+  function readFamily() {
+    return Array.prototype.slice.call(familyRows.querySelectorAll('.family-row')).map(function(row) {
+      const rel = row.querySelector('[name="family_relation"]').value;
+      const cancer = row.querySelector('[name="family_cancer"]').value;
+      const ageRaw = row.querySelector('[name="family_age"]').value;
+      const age = ageRaw ? Number(ageRaw) : null;
+      const side = row.querySelector('[name="family_side"]').value;
+      return { relation: rel, cancer, age: Number.isFinite(age) ? age : null, side };
+    }).filter(function(x) { return x.cancer; });
+  }
+
+  function updatePedigree() {
+    const relatives = readFamily();
+    pedigreeMap.innerHTML = relatives.length ? relatives.map(function(r) {
+      const age = r.age == null ? '?' : r.age;
+      return '<span class="pedigree-chip">' + escapeHtml(r.relation + ' · ' + r.cancer + ' · dx ' + age + ' · ' + r.side) + '</span>';
+    }).join('') : '<span class="pedigree-chip">' + escapeHtml(COPY.no_signals) + '</span>';
+  }
+
+  function addSignal(signals, lane, weight, title, body, action) {
+    signals.push({ lane, weight, title, body, action });
+  }
+
+  function calculate() {
+    const age = n('age');
+    const sex = t('sex');
+    const bmi = n('bmi');
+    const smoking = t('smoking');
+    const packYears = n('pack_years') || 0;
+    const quitYears = n('quit_years');
+    const alcohol = n('alcohol') || 0;
+    const relatives = readFamily();
+    const signals = [];
+    const findings = { no_current_confirmed_cancer: true };
+    const biomarkers = {};
+    const screening = {
+      mammogram: t('last_mammo'),
+      colorectal: t('last_colon'),
+      cervical: t('last_cervical'),
+      lung_ldct: t('last_ldct')
+    };
+
+    SYMPTOMS.forEach(function(def) {
+      if (checked(def.name)) {
+        findings[def.name] = true;
+        addSignal(signals, 'urgent', 35, def.label, def.action, COPY.doctor_now);
+      }
+    });
+
+    if (t('fit_result') === 'positive') {
+      findings.positive_fit_or_fobt = true;
+      addSignal(signals, 'urgent', 38, 'Positive FIT / stool blood', 'Colonoscopy pathway should be discussed promptly.', COPY.doctor_now);
+    }
+    if (t('breast_imaging') === 'birads45') {
+      findings.birads_score = 5;
+      addSignal(signals, 'urgent', 42, 'BI-RADS 4/5', 'Needs diagnostic breast pathway and tissue confirmation if appropriate.', COPY.doctor_now);
+    }
+    if (t('imaging_result') === 'suspicious') {
+      findings.suspicious_imaging_report = true;
+      addSignal(signals, 'urgent', 35, 'Suspicious imaging finding', 'Bring the report and images to a clinician for diagnostic routing.', COPY.doctor_now);
+    }
+    const hb = n('hemoglobin');
+    const wbc = n('wbc');
+    const plt = n('platelets');
+    if (hb !== null && hb < 100) {
+      findings.hemoglobin_low_g_l = hb;
+      addSignal(signals, 'urgent', 24, 'Low hemoglobin', 'Unexplained anemia needs clinical evaluation and source search.', COPY.doctor_now);
+    }
+    if (wbc !== null && wbc > 30) {
+      findings.wbc_high_x10e9_l = wbc;
+      addSignal(signals, 'urgent', 28, 'High WBC', 'Marked leukocytosis needs prompt hematology/primary-care review.', COPY.doctor_now);
+    }
+    if (plt !== null && plt < 100) {
+      findings.platelets_low_x10e9_l = plt;
+      addSignal(signals, 'urgent', 24, 'Low platelets', 'Unexplained thrombocytopenia needs clinical review.', COPY.doctor_now);
+    }
+
+    let earlyFamily = 0;
+    let lynchSpectrum = 0;
+    let hbocSpectrum = 0;
+    relatives.forEach(function(r) {
+      if (r.age !== null && r.age < 50) earlyFamily += 1;
+      if (['colon', 'endometrial'].includes(r.cancer)) lynchSpectrum += 1;
+      if (['breast', 'ovarian', 'pancreatic', 'prostate', 'male_breast'].includes(r.cancer)) hbocSpectrum += 1;
+      if (r.relation === 'first' && r.age !== null && r.age < 50) {
+        addSignal(signals, 'genetic', 26, 'First-degree relative with early cancer', 'Early diagnosis in a close relative can justify hereditary-risk review.', COPY.genetics);
+      }
+      if (['ovarian', 'pancreatic', 'male_breast'].includes(r.cancer)) {
+        addSignal(signals, 'genetic', 24, 'Hereditary-pattern cancer in family', 'Ovarian, pancreatic, or male breast cancer is a genetic-counseling trigger.', COPY.genetics);
+      }
+    });
+    if (checked('known_family_mutation')) {
+      findings.known_pathogenic_variant_in_family = true;
+      addSignal(signals, 'genetic', 42, 'Known pathogenic variant in family', 'A cascade-testing discussion is appropriate.', COPY.genetics);
+    }
+    if (checked('ashkenazi') && hbocSpectrum > 0) {
+      findings.family_ashkenazi_jewish_ancestry_with_breast_or_ovarian = true;
+      addSignal(signals, 'genetic', 24, 'Ancestry plus HBOC-spectrum family history', 'Discuss BRCA1/2-oriented risk assessment.', COPY.genetics);
+    }
+    if (hbocSpectrum >= 2 || earlyFamily >= 2) {
+      findings.family_breast_cancer_under_50 = relatives.some(r => r.cancer === 'breast' && r.age !== null && r.age < 50);
+      findings.family_ovarian_cancer_any_age = relatives.some(r => r.cancer === 'ovarian');
+      addSignal(signals, 'genetic', 28, 'Multiple cancer events in family', 'A structured three-generation pedigree should be reviewed.', COPY.genetics);
+    }
+    if (lynchSpectrum >= 2) {
+      findings.family_amsterdam_ii_criteria_met = lynchSpectrum >= 3 || earlyFamily >= 1;
+      findings.family_first_degree_lynch_spectrum_under_50 = relatives.some(r => r.relation === 'first' && ['colon', 'endometrial'].includes(r.cancer) && r.age !== null && r.age < 50);
+      addSignal(signals, 'genetic', 30, 'Lynch-spectrum family pattern', 'Ask about genetic counseling and colonoscopy timing.', COPY.genetics);
+    }
+
+    if (sex === 'female' && age !== null && age >= 40 && age <= 74 && ['due', 'never'].includes(screening.mammogram)) {
+      addSignal(signals, 'screening', 18, 'Breast screening may be due', 'USPSTF: biennial mammography from 40 to 74 for average-risk women.', COPY.screening_due);
+    }
+    if (age !== null && age >= 45 && age <= 75 && ['due', 'never'].includes(screening.colorectal)) {
+      addSignal(signals, 'screening', 20, 'Colorectal screening may be due', 'USPSTF: screen adults 45 to 75.', COPY.screening_due);
+    }
+    if (sex === 'female' && age !== null && age >= 21 && age <= 65 && ['due', 'never'].includes(screening.cervical)) {
+      addSignal(signals, 'screening', 16, 'Cervical screening may be due', 'Cytology/HPV strategy depends on age and local availability.', COPY.screening_due);
+    }
+    if (age !== null && age >= 50 && age <= 80 && packYears >= 20 && (smoking === 'current' || (smoking === 'former' && (quitYears === null || quitYears <= 15)))) {
+      findings.tobacco_pack_years_ge_20 = true;
+      if (smoking === 'current') findings.tobacco_status_current_smoker = true;
+      if (['due', 'never'].includes(screening.lung_ldct)) {
+        addSignal(signals, 'screening', 24, 'LDCT lung screening eligibility', 'USPSTF: annual LDCT for eligible 50-80 year-old current/former smokers.', COPY.screening_due);
+      }
+    }
+    if (sex === 'male' && age !== null && age >= 50 && age <= 69) {
+      addSignal(signals, 'screening', 8, 'PSA is a shared-decision topic', 'Ask your clinician whether PSA screening fits your values and risk.', COPY.screening_due);
+    }
+
+    if (smoking === 'current') addSignal(signals, 'prevention', 22, 'Current smoking', 'Stopping tobacco is the highest-yield cancer prevention step.', COPY.prevention);
+    if (bmi !== null && bmi >= 30) addSignal(signals, 'prevention', 12, 'BMI in obesity range', 'Weight, activity, metabolic risk and screening adherence should be addressed.', COPY.prevention);
+    if (alcohol >= 14) addSignal(signals, 'prevention', 14, 'High alcohol intake', 'Alcohol reduction lowers several cancer risks.', COPY.prevention);
+    if (checked('hbv')) {
+      findings.hbsag = 'positive';
+      biomarkers['BIO-HBV-HBSAG'] = 'positive';
+      addSignal(signals, 'prevention', 24, 'Chronic HBV', 'Discuss antiviral eligibility and HCC surveillance.', COPY.prevention);
+    }
+    if (checked('hcv')) {
+      findings.hcv_rna_positive = true;
+      biomarkers['BIO-HCV-RNA'] = 'detectable';
+      addSignal(signals, 'prevention', 24, 'Chronic HCV', 'Discuss curative antiviral therapy and liver-risk assessment.', COPY.prevention);
+    }
+    if (checked('hpv')) {
+      findings.hpv_high_risk_status = 'positive';
+      addSignal(signals, 'prevention', 20, 'Persistent high-risk HPV', 'Keep cervical/anal screening and vaccination discussion current.', COPY.prevention);
+    }
+    if (checked('hpylori')) {
+      findings.h_pylori_status = 'positive';
+      addSignal(signals, 'prevention', 18, 'H. pylori positive', 'Discuss eradication and confirmation of cure.', COPY.prevention);
+    }
+    if (checked('hiv')) {
+      findings.hiv_status = 'positive_or_immunosuppressed';
+      addSignal(signals, 'prevention', 20, 'HIV or immunosuppression', 'Cancer screening cadence may need adjustment.', COPY.prevention);
+    }
+    if (checked('prior_radiation')) {
+      findings.prior_chest_or_pelvic_radiation = true;
+      addSignal(signals, 'prevention', 20, 'Prior radiation exposure', 'Survivorship screening can start earlier than routine population screening.', COPY.prevention);
+    }
+    if (checked('radon')) {
+      findings.residential_radon_exposure_ge_4_pci_per_l = true;
+      if (packYears >= 20) findings.residential_radon_exposure_documented_high_with_smoking_hx = true;
+      addSignal(signals, 'prevention', 18, 'Radon exposure', 'Mitigate the source and review lung-risk context.', COPY.prevention);
+    }
+    if (checked('asbestos')) {
+      findings.occupational_carcinogen_exposure = true;
+      addSignal(signals, 'prevention', 18, 'Occupational carcinogen exposure', 'Document the exposure and ask about targeted surveillance.', COPY.prevention);
+    }
+    if (checked('barrett')) {
+      findings.barrett_esophagus = true;
+      addSignal(signals, 'prevention', 18, 'Barrett / chronic reflux risk', 'Review EGD surveillance and symptom control.', COPY.prevention);
+    }
+    if (checked('ibd_psc')) {
+      findings.ibd_psc_pancreatitis_or_cirrhosis = true;
+      addSignal(signals, 'prevention', 20, 'Chronic inflammatory or liver/pancreas risk', 'Specialized surveillance may be needed.', COPY.prevention);
+    }
+
+    ['age', 'last_mammo', 'last_colon', 'last_cervical'].forEach(function(name) {
+      if (!t(name)) addSignal(signals, 'gap', 4, 'Missing ' + name, 'Unknown data can change screening timing.', COPY.data_gap);
+    });
+
+    const urgent = signals.some(s => s.lane === 'urgent');
+    const highRisk = signals.some(s => s.lane === 'genetic') || signals.filter(s => s.lane === 'prevention').length >= 2;
+    const routine = signals.some(s => s.lane === 'screening' || s.lane === 'prevention');
+    const rawScore = signals.reduce((sum, s) => sum + s.weight, 0);
+    const score = Math.max(0, Math.min(100, rawScore));
+    let level = 'low';
+    let label = COPY.low_label;
+    let summary = COPY.low_summary;
+    if (urgent) {
+      level = 'urgent';
+      label = COPY.urgent_label;
+      summary = COPY.urgent_summary;
+    } else if (highRisk || score >= 45) {
+      level = 'high';
+      label = COPY.high_label;
+      summary = COPY.high_summary;
+    } else if (routine || score >= 18) {
+      level = 'routine';
+      label = COPY.routine_label;
+      summary = COPY.routine_summary;
+    }
+
+    const profile = {
+      patient_id: 'OPENONCO-RISK-' + new Date().toISOString().slice(0, 10),
+      triage_context: {
+        purpose: 'consumer_prevention_and_early_detection_check',
+        non_diagnostic: true,
+        generated_at: new Date().toISOString(),
+        route_level: level,
+        route_score: score
+      },
+      demographics: {
+        age: age,
+        sex: sex,
+        bmi: bmi,
+        ecog: 0
+      },
+      history: {
+        smoking_status: smoking,
+        pack_years: packYears || null,
+        years_since_quit: quitYears,
+        alcohol_drinks_per_week: alcohol || null,
+        family_history: relatives,
+        screening_history: screening
+      },
+      biomarkers: biomarkers,
+      findings: findings,
+      openonco_handoff: signals.map(function(s) {
+        return { lane: s.lane, signal: s.title, rationale: s.body, suggested_action: s.action };
+      })
+    };
+    return { level, label, summary, score, signals, profile };
+  }
+
+  function render(result) {
+    lastProfile = result.profile;
+    resultEmpty.hidden = true;
+    resultWrap.hidden = false;
+    riskLevel.className = 'risk-level ' + result.level;
+    riskLevel.textContent = result.label;
+    resultSummary.textContent = result.summary;
+    riskMeterFill.style.setProperty('--risk-score', result.score + '%');
+    const steps = [];
+    if (result.signals.some(s => s.lane === 'urgent')) steps.push(['1', COPY.doctor_now]);
+    if (result.signals.some(s => s.lane === 'genetic')) steps.push(['2', COPY.genetics]);
+    if (result.signals.some(s => s.lane === 'screening')) steps.push(['3', COPY.screening_due]);
+    if (result.signals.some(s => s.lane === 'prevention')) steps.push(['4', COPY.prevention]);
+    if (!steps.length) steps.push(['1', COPY.low_summary]);
+    nextSteps.innerHTML = steps.map(function(step) { return itemHtml(step[0], step[1]); }).join('');
+
+    const byLane = {};
+    result.signals.forEach(function(s) {
+      if (!byLane[s.lane]) byLane[s.lane] = [];
+      byLane[s.lane].push(s.title + ' — ' + s.body);
+    });
+    const laneOrder = ['urgent', 'genetic', 'screening', 'prevention', 'gap'];
+    riskLanes.innerHTML = laneOrder.filter(function(lane) { return byLane[lane] && byLane[lane].length; }).map(function(lane) {
+      return itemHtml(lane, byLane[lane].slice(0, 5).join(' | '));
+    }).join('') || itemHtml('baseline', COPY.no_signals);
+
+    const familyCount = (result.profile.history.family_history || []).length;
+    handoffText.textContent = [
+      result.label + ': ' + result.summary,
+      COPY.handoff_family_entries + ': ' + familyCount + '.',
+      COPY.handoff_take_json
+    ].join(' ');
+    profileJson.textContent = JSON.stringify(result.profile, null, 2);
+    updateTryLink(result.profile);
+  }
+
+  async function profileToToken(profile) {
+    if (!('CompressionStream' in window)) return '';
+    const json = JSON.stringify(profile);
+    const stream = new Blob([json], { type: 'application/json' }).stream().pipeThrough(new CompressionStream('gzip'));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  async function updateTryLink(profile) {
+    openTryBtn.href = TRY_HREF;
+    try {
+      const token = await profileToToken(profile);
+      if (token) openTryBtn.href = TRY_HREF + '#p=' + token;
+    } catch (err) {
+      console.warn('profile token failed', err);
+    }
+  }
+
+  function applyScenario(name) {
+    form.reset();
+    familyRows.innerHTML = '';
+    if (name === 'brca') {
+      form.elements.age.value = '32';
+      form.elements.sex.value = 'female';
+      form.elements.last_mammo.value = 'due';
+      form.elements.last_colon.value = 'na';
+      form.elements.last_cervical.value = 'recent';
+      form.elements.known_family_mutation.checked = false;
+      form.elements.ashkenazi.checked = true;
+      addFamilyRow({ relation: 'first', cancer: 'breast', age: 38, side: 'maternal' });
+      addFamilyRow({ relation: 'second', cancer: 'ovarian', age: 52, side: 'maternal' });
+    } else if (name === 'smoker') {
+      form.elements.age.value = '57';
+      form.elements.sex.value = 'male';
+      form.elements.smoking.value = 'current';
+      form.elements.pack_years.value = '30';
+      form.elements.last_ldct.value = 'never';
+      addFamilyRow({});
+    } else if (name === 'fit') {
+      form.elements.age.value = '48';
+      form.elements.sex.value = 'female';
+      form.elements.last_colon.value = 'never';
+      form.elements.fit_result.value = 'positive';
+      form.elements.symptom_blood_stool.checked = true;
+      addFamilyRow({});
+    }
+    updatePedigree();
+    render(calculate());
+  }
+
+  form.addEventListener('submit', function(ev) {
+    ev.preventDefault();
+    render(calculate());
+  });
+  addRelativeBtn.addEventListener('click', function() { addFamilyRow({}); });
+  resetRiskBtn.addEventListener('click', function() {
+    form.reset();
+    familyRows.innerHTML = '';
+    addFamilyRow({});
+    resultWrap.hidden = true;
+    resultEmpty.hidden = false;
+    profileJson.textContent = '';
+    copyStatus.textContent = '';
+  });
+  document.querySelectorAll('[data-scenario]').forEach(function(btn) {
+    btn.addEventListener('click', function() { applyScenario(btn.dataset.scenario); });
+  });
+  copyJsonBtn.addEventListener('click', async function() {
+    if (!lastProfile) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(lastProfile, null, 2));
+      copyStatus.textContent = COPY.copied;
+    } catch (err) {
+      copyStatus.textContent = COPY.copy_failed;
+    }
+  });
+  downloadJsonBtn.addEventListener('click', function() {
+    if (!lastProfile) return;
+    const blob = new Blob([JSON.stringify(lastProfile, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = COPY.download_name;
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
+  });
+  printRiskBtn.addEventListener('click', function() { window.print(); });
+  addFamilyRow({});
+})();
+</script>
+<script src="/clinical-localization.8b9bc4102bf3.js" data-locale="nb" data-catalog="/nb/clinical-ui-translations.9dcc46d63d4b.json" defer></script></body>
+</html>

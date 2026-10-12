@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Onco Wiki - OpenOnco</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="Onco Wiki: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Onco Wiki: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/fi/kb.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/kb.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/kb.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/kb.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/kb.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/kb.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/kb.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/kb.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/kb.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/kb.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/kb.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Onco Wiki - OpenOnco">
+<meta property="og:description" content="Onco Wiki: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<meta property="og:url" content="https://openonco.info/fi/kb.html">
+<meta property="og:locale" content="fi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Onco Wiki - OpenOnco">
+<meta name="twitter:description" content="Onco Wiki: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Onco Wiki - OpenOnco","description":"Onco Wiki: source-linked OpenOnco Onco Wiki facts for oncology decision-support and AI retrieval.","url":"https://openonco.info/fi/kb.html","inLanguage":"fi","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fi/kb.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css?v=layout-20261011">
+  <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="bb8b8962e578b148f41ea04c724fff0dc3c4c66cf7bdaaf9f5cca65c2d7d10fb"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/fi/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">AVOIN ONKOLOGIA</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Kieli"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg>FI <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Kieli"><a href="/kb.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/kb.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/kb.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/kb.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/kb.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/kb.html" lang="fi" hreflang="fi" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/fi/try.html" class="btn-cta-top btn-cta-try"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Valikko"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/fi/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Luo suunnitelma</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Valikko">
+    <a href="/fi/">Etusivu</a>
+    <a href="/fi/capabilities.html">Toiminnot</a><a href="/fi/handbook.html">Käsikirja</a><a href="/fi/news.html">Uutiset</a>
+    <a href="/fi/about.html">Tietoa hankkeesta</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Työkalut</span>
+    <div class="top-cta-group">
+      <a href="/fi/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/fi/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Moniammatillinen kokous</span></a>
+      <a href="/fi/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Ehkäisy</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Avoin lähdekoodi</span>
+  </div>
+  </div>
+</header>
+
+  <main class="kb-page"><aside class="translation-notice" role="note"><strong>Alustava käännös: kliininen tarkistus on kesken.</strong> <a href="/kb.html" lang="en" hreflang="en" data-original-source>Näytä englanninkielinen alkuperäisteksti</a></aside>
+  <p><a href="/participate.html">Osallistu: kehittäjät, kliiniset arvioijat ja kumppanit</a></p>
+  <section class="kb-hero">
+    <h1>Onco Wiki</h1>
+    <div class="kb-search-panel" role="search" aria-label="Etsi Onco Wiki">
+      <label class="kb-search-label" for="kbSearch">Etsi Onco Wiki</label>
+      <p id="kbSearchHint" class="kb-search-hint">Etsi sairaus, lääke tai biomerkki nimeltä, synonyymillä tai tunnisteella.</p>
+      <div class="kb-search-row">
+        <div class="kb-search-field">
+          <svg class="kb-search-icon" viewbox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+          <input id="kbSearch" class="kb-search" type="search" autocomplete="off" aria-describedby="kbSearchHint" placeholder="Try NSCLC, rituximab, EGFR L858R, SRC-CIVIC, RF-NSCLC...">
+        </div>
+        <button id="kbSearchBtn" class="kb-search-btn" type="button">Etsi</button>
+      </div>
+      <div class="kb-filter-row">
+        <button type="button" data-kind-key="">Kaikki</button>
+      <button type="button" data-kind-key="diseases">Sairaudet</button>
+      <button type="button" data-kind-key="drugs">Huumeet</button>
+      <button type="button" data-kind-key="biomarkers">Biomerkkiaineet</button>
+      <button type="button" data-kind-key="redflags">Punaiset liput</button>
+      <button type="button" data-kind-key="biomarker_actionability">Toimintakyky</button>
+      <button type="button" data-kind-key="indications">Käyttöaiheet</button>
+      <button type="button" data-kind-key="regimens">Regimens</button>
+      </div>
+    </div>
+    <p class="kb-lead">Etsi tauteja, käyttöaiheita, hoitoja, lääkkeitä, biomarkkereita, punaisia lippuja ja biomarkkerin toimintakykyä. Tulokset saadaan suoraan YaML-tietopohjasta ja tautikattavuusmatriisista, ja lähdetunnisteet ja käänteiset viittaukset paljastetaan tarkastusta varten.</p>
+    <div class="kb-info-box" role="note">
+      <strong>Lähteen maadoittama selain.</strong>
+      Tämä sivu on luotu sisäänkirjautuvista YAML-yksiköistä, ei vapaatekstisistä LLM-vastauksista. Avaa yhteisö nähdäksesi lähdetunnisteet, statuksen, tiedoston alkuperän ja sen, missä sitä käytetään.
+    </div>
+    <div class="kb-counts"><div class="kb-count"><span>103</span>Sairaudet</div><div class="kb-count"><span>321</span>Huumeet</div><div class="kb-count"><span>257</span>Biomerkkiaineet</div><div class="kb-count"><span>715</span>Punaiset liput</div><div class="kb-count"><span>475</span>Toimintakyky</div><div class="kb-count"><span>831</span>Käyttöaiheet</div><div class="kb-count"><span>404</span>Regimens</div></div>
+  </section>
+  <section>
+    <div id="kbResults" class="kb-results"></div>
+    <div id="kbPagination" class="kb-pagination" aria-label="Tulossivut"></div>
+  </section>
+
+  <section class="kb-faq">
+    <h2>Klinikkalääkärin FAQ</h2>
+    <details><summary>Määrääkö OpenOnco hoitoa?</summary><p>Ei. Moottori lähettää lähdeviestejä MDT-keskusteluun ja vaatii aina klinikan vahvistuksen.</p></details>
+    <details><summary>Mitä punainen lippu tekee?</summary><p>Punainen lippu on rakenteellista logiikkaa, joka voi tehostaa, poistaa eskalaattia, estää tai ohjata algoritmihaaraa. Sen sivulla näkyy laukaisevan logiikan, sairauden laajuus, lähdetunnisteet ja käänteiset viittaukset.</p></details>
+    <details><summary>Miksi lähdetunnukset näytetään ohjetekstin kopioinnin sijaan?</summary><p>OpenOnco references sources while respecting source licensing. The source ID points to the KB source record and should be checked against the original guideline or database.</p></details>
+    <details><summary>Mitä uudelleenarvioitu tai STUB tarkoittaa?</summary><p>Kliininen sisältö pysyy alustavana, kunnes se täyttää hankkeen hyväksymissäännöt. Tilalinja paljastaa ilmoitetut tarkistuspäivät ja uudelleentarkastelun vaatimat liput YaML:ltä.</p></details>
+    <details><summary>Voidaanko tätä käyttää todellisiin potilastietoihin?</summary><p>Julkisella paikalla on synteettisiä tai tunnistettavia esimerkkejä. Älä liitä PMI:tä julkiseen työkaluun.</p></details>
+  </section>
+
+</main>
+<script>
+// KB index is fetched async from /kb_search_index.json instead of inlined
+// (~2 MB of inline JSON would block the initial paint of this page).
+// Until the fetch resolves, renderResults() shows a loading state.
+let KB_ENTRIES = [];
+let KB_LOADED = false;
+const KB_INDEX_URL = "/fi/kb_search_index.json";
+const KB_COPY = {"no_matches": "No matching Onco Wiki entries.", "loading": "Loading Onco Wiki index…", "load_error": "Could not load the Onco Wiki index. Please reload the page.", "used_by": "used by", "page": "Page", "of": "of", "results": "results", "previous": "Previous", "next": "Next"};
+const PAGE_SIZE = 50;
+const searchInput = document.getElementById('kbSearch');
+const searchButton = document.getElementById('kbSearchBtn');
+const results = document.getElementById('kbResults');
+const pagination = document.getElementById('kbPagination');
+const filterButtons = Array.from(document.querySelectorAll('[data-kind-key]'));
+let activeKindKey = '';
+let currentPage = 1;
+
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function scoreEntry(entry, terms) {
+  let score = 0;
+  for (const term of terms) {
+    if (!entry.search_text.includes(term)) return -1;
+    if (entry.id.toLowerCase().includes(term)) score += 8;
+    if (entry.title.toLowerCase().includes(term)) score += 6;
+    if (entry.kind.toLowerCase().includes(term)) score += 2;
+    score += 1;
+  }
+  return score;
+}
+
+function renderResults() {
+  if (!KB_LOADED) {
+    results.innerHTML = `<p class="kb-muted">${escapeHtml(KB_COPY.loading)}</p>`;
+    pagination.innerHTML = '';
+    return;
+  }
+  const q = (searchInput.value || '').trim().toLowerCase();
+  const terms = q.split(/\s+/).filter(Boolean);
+  const ranked = KB_ENTRIES
+    .filter(e => !activeKindKey || e.kind_key === activeKindKey)
+    .map(e => [scoreEntry(e, terms), e])
+    .filter(pair => terms.length === 0 ? true : pair[0] >= 0)
+    .sort((a, b) => b[0] - a[0] || a[1].title.localeCompare(b[1].title))
+    .map(pair => pair[1]);
+  if (!ranked.length) {
+    results.innerHTML = `<p class="kb-muted">${escapeHtml(KB_COPY.no_matches)}</p>`;
+    pagination.innerHTML = '';
+    return;
+  }
+  const totalPages = Math.ceil(ranked.length / PAGE_SIZE);
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageEntries = ranked.slice(start, start + PAGE_SIZE);
+  results.innerHTML = pageEntries.map(e => `
+    <a class="kb-result" href="${e.url}">
+      <span class="kb-kind">${escapeHtml(e.kind)}</span>
+      <strong>${escapeHtml(e.title)}</strong>
+      <code>${escapeHtml(e.id)}</code>
+      <small>${escapeHtml(e.subtitle)} | ${escapeHtml(KB_COPY.used_by)} ${e.used_by_count}</small>
+    </a>
+  `).join('');
+  pagination.innerHTML = totalPages > 1 ? `
+    <button type="button" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>${escapeHtml(KB_COPY.previous)}</button>
+    <span>${escapeHtml(KB_COPY.page)} ${currentPage} ${escapeHtml(KB_COPY.of)} ${totalPages} · ${ranked.length} ${escapeHtml(KB_COPY.results)}</span>
+    <button type="button" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>${escapeHtml(KB_COPY.next)}</button>
+  ` : '';
+}
+
+filterButtons.forEach(btn => btn.addEventListener('click', () => {
+  activeKindKey = btn.dataset.kindKey || '';
+  currentPage = 1;
+  filterButtons.forEach(b => b.classList.toggle('active', b === btn));
+  renderResults();
+}));
+searchInput.addEventListener('input', () => {
+  currentPage = 1;
+  renderResults();
+});
+searchInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    currentPage = 1;
+    renderResults();
+    results.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+});
+searchButton.addEventListener('click', () => {
+  currentPage = 1;
+  renderResults();
+  results.scrollIntoView({ block: 'start', behavior: 'smooth' });
+});
+pagination.addEventListener('click', event => {
+  const btn = event.target.closest('[data-page]');
+  if (!btn) return;
+  currentPage += btn.dataset.page === 'next' ? 1 : -1;
+  renderResults();
+  results.scrollIntoView({ block: 'start', behavior: 'smooth' });
+});
+filterButtons[0].classList.add('active');
+renderResults();  // initial loading state — KB_LOADED is false until fetch resolves
+// Default cache mode: respect HTTP Cache-Control so the daily-site-refresh
+// CI job's regenerated index is picked up on revalidation. Forcing
+// 'force-cache' here would pin visitors to stale KB data.
+fetch(KB_INDEX_URL)
+  .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+  .then(payload => {
+    KB_ENTRIES = (payload && payload.entries) || [];
+    KB_LOADED = true;
+    renderResults();
+  })
+  .catch(() => {
+    results.innerHTML = `<p class="kb-muted">${escapeHtml(KB_COPY.load_error)}</p>`;
+    pagination.innerHTML = '';
+  });
+</script>
+
+<script src="/clinical-localization.8b9bc4102bf3.js" data-locale="fi" data-catalog="/fi/clinical-ui-translations.6b5179b19ee7.json" defer></script></body>
+</html>

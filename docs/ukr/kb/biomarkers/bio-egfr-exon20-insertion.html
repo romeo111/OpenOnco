@@ -20,7 +20,7 @@
     // Bots: leave both language trees crawlable — no auto-redirect.
     if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
     var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
     if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
     var pageLang=UARE.test(path)?'uk':'en';
     // Track first real interaction so a slow async lookup never discards typed
@@ -45,7 +45,7 @@
     function want(cc){return cc==='UA'?'uk':'en';}
     // 1) explicit choice wins
     var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr)$/.test(pref||''))return;
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
     if(pref==='uk'||pref==='en'){go(pref);return;}
     // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
     var cc=null;
@@ -94,6 +94,11 @@
 <link rel="alternate" hreflang="pt" href="https://openonco.info/pt/kb/biomarkers/bio-egfr-exon20-insertion.html">
 <link rel="alternate" hreflang="de" href="https://openonco.info/de/kb/biomarkers/bio-egfr-exon20-insertion.html">
 <link rel="alternate" hreflang="fr" href="https://openonco.info/fr/kb/biomarkers/bio-egfr-exon20-insertion.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/kb/biomarkers/bio-egfr-exon20-insertion.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/kb/biomarkers/bio-egfr-exon20-insertion.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/kb/biomarkers/bio-egfr-exon20-insertion.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/kb/biomarkers/bio-egfr-exon20-insertion.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/kb/biomarkers/bio-egfr-exon20-insertion.html">
 <link rel="alternate" hreflang="x-default" href="https://openonco.info/kb/biomarkers/bio-egfr-exon20-insertion.html">
 <meta property="og:site_name" content="OpenOnco">
 <meta property="og:type" content="article">
@@ -179,56 +184,7 @@
 </style>
 </head>
 <body>
-  <header class="top-bar site-header">
-  <link rel="stylesheet" href="/header.css?v=layout-20261011">
-  <div class="header-shell">
-  <div class="header-main">
-    <div class="brand-line">
-      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
-        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
-        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
-      </a>
-    </div>
-    <nav class="top-nav">
-    <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
-    <a href="/ukr/about.html">Про проєкт</a>
-    </nav>
-    <div class="top-right">
-    <details class="language-menu lang-switch">
-      <summary aria-label="Мова"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg>UA <span aria-hidden="true">⌄</span></summary>
-      <nav aria-label="Мова"><a href="/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="uk" hreflang="uk" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/kb/biomarkers/bio-egfr-exon20-insertion.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a></nav>
-    </details>
-    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
-    <details class="mobile-menu">
-      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
-      <div class="mobile-menu-panel">
-        <a href="/ukr/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
-        <nav aria-label="Меню">
-    <a href="/ukr/">Головна</a>
-    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html">Новини</a>
-    <a href="/ukr/about.html">Про проєкт</a>
-    </nav>
-        <div class="mobile-tools">
-      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
-      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
-      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
-    </div>
-      </div>
-    </details>
-    </div>
-  </div>
-  <div class="header-tools">
-    <span class="header-tools-label">Інструменти</span>
-    <div class="top-cta-group">
-      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
-      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
-      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
-    </div>
-    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
-  </div>
-  </div>
-</header>
+  <!-- shared-site-header:start --><div data-shared-site-header data-locale="uk" data-page="kb/biomarkers/bio-egfr-exon20-insertion.html" data-active="kb" data-missing="[]"><nav aria-label="OpenOnco"><a href="/ukr/">OpenOnco</a> · <a href="/ukr/kb.html">Onco Wiki</a> · <a href="/ukr/try.html">Plan Builder</a></nav></div><link rel="stylesheet" href="/header.css?v=layout-20261011"><script src="/shared-site-header.js" defer></script><!-- shared-site-header:end -->
   <main class="kb-page kb-entity">
   <p class="kb-breadcrumb"><a href="/ukr/kb.html">Onco Wiki</a> / Біомаркер</p>
   <h1>EGFR Exon 20 insertion</h1>

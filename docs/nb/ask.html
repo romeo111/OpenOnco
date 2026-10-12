@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Tumor-brettspørsmål</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco question intake for oncology decision-support feedback and structured clinical questions.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco question intake for oncology decision-support feedback and structured clinical questions.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/nb/ask.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/ask.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/ask.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/ask.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/ask.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/ask.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/ask.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/ask.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/ask.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/ask.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/ask.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/ask.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/ask.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco · Tumor-brettspørsmål">
+<meta property="og:description" content="OpenOnco question intake for oncology decision-support feedback and structured clinical questions.">
+<meta property="og:url" content="https://openonco.info/nb/ask.html">
+<meta property="og:locale" content="nb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Tumor-brettspørsmål">
+<meta name="twitter:description" content="OpenOnco question intake for oncology decision-support feedback and structured clinical questions.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · Tumor-brettspørsmål","description":"OpenOnco question intake for oncology decision-support feedback and structured clinical questions.","url":"https://openonco.info/nb/ask.html","inLanguage":"nb","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/nb/ask.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<link rel="stylesheet" href="/clinical-styles/d484372672667adac97abd18a1e8efd2fd37637b7b2e9b2036e4c49321daedf1.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="05436e63be0e97bf5988b3775832e5d4bfde5f24dbd5f023274972e94b7e524e"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/nb/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ÅPEN ONKOLOGI</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/nb/">Hjem</a>
+    <a href="/nb/capabilities.html">Funksjoner</a><a href="/nb/handbook.html">Håndbok</a><a href="/nb/news.html">Nyheter</a>
+    <a href="/nb/about.html">Om prosjektet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Språk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg>NO <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Språk"><a href="/ask.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/ask.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/ask.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/ask.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/ask.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/ask.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/ask.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/ask.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/ask.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/ask.html" lang="nb" hreflang="nb" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/ask.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/nb/try.html" class="btn-cta-top btn-cta-try"><span>Lag en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Meny"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/nb/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Lag en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Meny">
+    <a href="/nb/">Hjem</a>
+    <a href="/nb/capabilities.html">Funksjoner</a><a href="/nb/handbook.html">Håndbok</a><a href="/nb/news.html">Nyheter</a>
+    <a href="/nb/about.html">Om prosjektet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/nb/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/nb/ask.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tverrfaglig møte</span></a>
+      <a href="/nb/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebygging</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Verktøy</span>
+    <div class="top-cta-group">
+      <a href="/nb/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/nb/ask.html" class="btn-cta-top btn-cta-secondary" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tverrfaglig møte</span></a>
+      <a href="/nb/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebygging</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Åpen kildekode</span>
+  </div>
+  </div>
+</header>
+
+
+<main class="try-page"><aside class="translation-notice" role="note"><strong>Foreløpig oversettelse: klinisk gjennomgang gjenstår.</strong> <a href="/ask.html" lang="en" hreflang="en" data-original-source>Se den engelske originalen</a></aside>
+  <div class="ask-hero">
+    <div>
+      <p class="ask-kicker">OpenOnco AI kladd</p>
+      <h1>Tumor- brettspørsmål</h1>
+      <p class="lead">Lim inn en onkologisk vignette i naturlig språk. ChatGPT strukturerer saken, OpenOnco sjekker den mot regelmotoren, og siden returnerer et svar, rimelige alternativer eller avklarer spørsmål.</p>
+      <p class="ask-muted">Ikke lim inn virkelige identifiserbare pasientdata. Dette er et utkast til svulsttavle, ikke en selvstendig legeråd.</p>
+      <p class="ask-muted ask-patient-note">For både klinikere og pasienter: hvis din egen onkolog ga deg en plan, bruk denne siden til å forstå den på et klart språk og forberede spørsmålene til neste besøk. Den vurderer ikke om planen din er riktig og erstatter ikke onkologisten din.</p>
+      <p class="ask-patient-safety">Dette erstatter ikke din egen leg. Start aldri, stopp eller endre behandling på denne siden – diskutere det alltid med din behandling av onkolog.</p>
+    </div>
+    <div class="ask-hero-meter" aria-label="Brukte spørsmål">
+      <div class="ask-stat"><strong>3</strong><span>spørsmål om fritekst per nettleser</span></div>
+      <div class="ask-stat"><strong>30-90 sekunder</strong><span>Typisk ventetid</span></div>
+    </div>
+  </div>
+
+  <div class="ask-grid">
+    <section class="ask-panel">
+      <label class="qt-label ask-endpoint">
+        API- endepunkt
+        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+      </label>
+      <label class="qt-label" style="margin-top:12px">
+        Klinisk situasjon
+        <textarea id="caseText" spellcheck="true" placeholder="62 år gammel pasient med metastasert magekreft, HER2-negativ, MSS, PD-L1 CPS 25."></textarea>
+      </label>
+      <p class="ask-deid-note"><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevart for kontroll">Before pasting, remove your name, date of birth and any ID numbers — the text is sent to our server to be analysed. Paste only the parts you have questions about, not the whole document. If you cannot remove your identifying details, don't paste — bring the plan to your visit instead.</span></p>
+      <div class="ask-quota">
+        <span>Brukte spørsmål</span>
+        <strong><span id="quotaUsed">0</span> / 3</strong>
+      </div>
+      <div class="ask-actions">
+        <button id="askBtn" class="btn">Svar med OpenOnco</button>
+        <button id="clearAskBtn" class="btn btn-secondary">Nullstill</button>
+      </div>
+      <div id="askProgress" class="ask-progress" aria-live="polite">
+        <div class="ask-progress-head">
+          <strong id="progressLabel">Klar til et klinisk spørsmål</strong>
+          <span id="progressEta">Vanligvis 30-90 sekunder</span>
+        </div>
+        <div class="ask-progress-track" aria-hidden="true">
+          <div id="progressFill" class="ask-progress-fill"></div>
+        </div>
+        <ol class="ask-progress-steps">
+          <li id="progressStep1" class="is-active">Strutsing</li>
+          <li id="progressStep2">Passer OpenOnco- algoritmer</li>
+          <li id="progressStep3">Kontroll av biomarkører og valg</li>
+          <li id="progressStep4">Skriver svar</li>
+        </ol>
+      </div>
+      <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
+    </section>
+    <section class="ask-panel">
+      <h2 style="margin-top:0">Eksempel på spørsmål</h2>
+      <div id="askExamples" class="ask-examples"></div>
+      <div id="planGeneratorLinkWrap" class="ask-plan-link">
+        <p>Fant god KB- treff. Den strukturerte profilen kan åpnes i generatoren for nettleserplaner.</p>
+        <a id="planGeneratorLink" class="btn" href="/nb/try.html">Åpne i plangenerator</a>
+      </div>
+      <div id="askResult" class="ask-result"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function() {
+  const ASK_EXAMPLES = [{"title": "Patient · understand my plan", "text": "My oncologist gave me a written treatment plan for bowel cancer that begins with chemotherapy before surgery. In plain language, what is each part of the plan meant to do, and why might it be given in this order? Please help me turn this into clear questions to ask my own oncologist — do not tell me to start, stop, or change anything."}, {"title": "Patient · questions before my visit", "text": "I have breast cancer and my oncologist has recommended hormone tablets after surgery. I don't fully understand why. Can you help me write down plain-language questions to bring to my next appointment, so I can ask my oncologist about the reasons, how long I would take it, and what to watch for? Please don't advise me to change my treatment."}, {"title": "Gastric 1L", "text": "62-year-old patient with metastatic gastric cancer and diffuse peritoneal carcinomatosis. Histology: poorly differentiated adenocarcinoma with signet-ring cells, MSS, HER2-negative, PD-L1 CPS 25. What is the optimal first-line treatment?"}, {"title": "GBM supportive", "text": "30-year-old man with a 2 cm contrast-enhancing left parietal glioblastoma, ECOG 1, no comorbidities and no seizures. Which option is NOT part of initial management: resection, radiotherapy, steroids, temozolomide, or prophylactic anti-epileptic therapy?"}, {"title": "CUP poor PS", "text": "74-year-old woman with painful hepatomegaly, multiple liver metastases, poorly differentiated adenocarcinoma and no primary site on PET. WHO PS is 3. What is the most appropriate strategy?"}, {"title": "mCRC first line", "text": "52-year-old man with metastatic right-sided colon cancer, unresectable liver, lung and peritoneal metastases. KRAS p.G12C, NRAS/BRAF wild type, MSS, HER2-negative. What systemic first-line therapy is most appropriate?"}, {"title": "NSCLC confusion", "text": "68-year-old patient with metastatic squamous NSCLC involving liver, adrenals and pleura. New disorientation and aggressive behaviour; brain MRI shows no metastases. What is the most likely cause?"}, {"title": "Pharmacogenomics", "text": "Patient is planned for fluoropyrimidine-based chemotherapy for gastrointestinal cancer. Which pharmacogenomic test is recommended before treatment to reduce severe toxicity risk?"}, {"title": "Breast HR+/HER2-", "text": "61-year-old postmenopausal woman with metastatic ER-positive, HER2-negative breast cancer, bone and liver metastases, no visceral crisis, ECOG 1. What is the preferred first-line systemic treatment?"}, {"title": "Ovarian maintenance", "text": "58-year-old woman with stage IIIC high-grade serous ovarian cancer after debulking surgery and response to platinum-taxane chemotherapy. BRCA1 pathogenic variant detected. What maintenance treatment should be discussed?"}, {"title": "Pancreatic 1L", "text": "66-year-old patient with metastatic pancreatic adenocarcinoma, liver metastases, ECOG 1, bilirubin normal and no major comorbidities. What first-line systemic therapy options are reasonable?"}];
+  const MAX_QUESTIONS = 3;
+  const USER_KEY = 'openonco-ask-user-id-v1';
+  const COUNT_KEY = 'openonco-ask-count-v1';
+  const DEFAULT_ENDPOINT = '/api/clinical-question';
+  const PUBLIC_ENDPOINT = 'https://openonco-vercel-api.vercel.app/api/clinical-question';
+  const endpointInput = document.getElementById('endpointInput');
+  const caseText = document.getElementById('caseText');
+  const askBtn = document.getElementById('askBtn');
+  const clearBtn = document.getElementById('clearAskBtn');
+  const status = document.getElementById('askStatus');
+  const result = document.getElementById('askResult');
+  const quotaUsed = document.getElementById('quotaUsed');
+  const examplesRoot = document.getElementById('askExamples');
+  const planLinkWrap = document.getElementById('planGeneratorLinkWrap');
+  const planLink = document.getElementById('planGeneratorLink');
+  const progressBox = document.getElementById('askProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const progressEta = document.getElementById('progressEta');
+  const progressSteps = [
+    document.getElementById('progressStep1'),
+    document.getElementById('progressStep2'),
+    document.getElementById('progressStep3'),
+    document.getElementById('progressStep4')
+  ];
+  const PROGRESS_COPY = [
+    { at: 0, label: 'Structuring case' },
+    { at: 34, label: 'Matching OpenOnco algorithms' },
+    { at: 64, label: 'Checking biomarkers and options' },
+    { at: 86, label: 'Writing answer' }
+  ];
+  let progressTimer = null;
+  let progressStartedAt = 0;
+  const configured = window.OPENONCO_CLINICAL_QUESTION_ENDPOINT;
+  const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  const isFilePage = window.location.protocol === 'file:';
+  function defaultEndpointCandidates() {
+    if (configured) return [configured];
+    if (isFilePage) return [PUBLIC_ENDPOINT];
+    if (isLocalHost) return [DEFAULT_ENDPOINT];
+    return [DEFAULT_ENDPOINT, PUBLIC_ENDPOINT];
+  }
+  endpointInput.value = defaultEndpointCandidates()[0];
+
+  function getUserId() {
+    let id = localStorage.getItem(USER_KEY);
+    if (!id) {
+      const browserCrypto = window.crypto || window.msCrypto;
+      const suffix = (browserCrypto && browserCrypto.randomUUID) ? browserCrypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+      id = 'ask-' + suffix;
+      localStorage.setItem(USER_KEY, id);
+    }
+    return id;
+  }
+
+  function getCount() {
+    const n = Number(localStorage.getItem(COUNT_KEY) || '0');
+    return Number.isFinite(n) && n > 0 ? Math.min(n, MAX_QUESTIONS) : 0;
+  }
+
+  function setCount(n) {
+    localStorage.setItem(COUNT_KEY, String(Math.min(Math.max(n, 0), MAX_QUESTIONS)));
+    updateQuota();
+  }
+
+  function updateQuota() {
+    const used = getCount();
+    quotaUsed.textContent = String(used);
+    askBtn.disabled = used >= MAX_QUESTIONS;
+    if (used >= MAX_QUESTIONS) status.textContent = 'You have used all 3 free-text questions in this browser.';
+  }
+
+  function setProgress(percent, label, eta, activeIndex) {
+    const pct = Math.max(0, Math.min(100, Math.round(percent)));
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = label;
+    progressEta.textContent = eta;
+    progressSteps.forEach((step, idx) => {
+      step.classList.toggle('is-active', idx === activeIndex);
+      step.classList.toggle('is-done', idx < activeIndex || pct >= 100);
+    });
+  }
+
+  function resetProgress() {
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(0, 'Ready for a clinical question', 'Usually 30-90 sec', 0);
+  }
+
+  function startProgress() {
+    resetProgress();
+    progressBox.classList.add('is-running');
+    progressStartedAt = Date.now();
+    const durationMs = 90000;
+    const tick = () => {
+      const elapsed = Date.now() - progressStartedAt;
+      const pct = Math.min(92, 8 + (elapsed / durationMs) * 84);
+      let activeIndex = 0;
+      PROGRESS_COPY.forEach((step, idx) => {
+        if (pct >= step.at) activeIndex = idx;
+      });
+      const remainingSec = Math.max(10, Math.ceil((durationMs - elapsed) / 1000));
+      setProgress(pct, PROGRESS_COPY[activeIndex].label, 'approx. ' + remainingSec + ' s', activeIndex);
+    };
+    tick();
+    progressTimer = window.setInterval(tick, 900);
+  }
+
+  function finishProgress(ok) {
+    if (progressTimer) window.clearInterval(progressTimer);
+    progressTimer = null;
+    progressBox.classList.remove('is-running');
+    setProgress(ok ? 100 : 0, ok ? 'Answer is ready' : 'Request stopped', ok ? 'Done' : 'Check the message below', ok ? 3 : 0);
+  }
+
+  function renderExamples() {
+    examplesRoot.innerHTML = '';
+    ASK_EXAMPLES.forEach((ex) => {
+      const row = document.createElement('div');
+      row.className = 'ask-example';
+      const body = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'ask-example-title';
+      title.textContent = ex.title;
+      const text = document.createElement('div');
+      text.className = 'ask-example-text';
+      text.textContent = ex.text;
+      body.appendChild(title);
+      body.appendChild(text);
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-secondary';
+      btn.type = 'button';
+      btn.textContent = 'Use';
+      btn.addEventListener('click', () => {
+        caseText.value = ex.text;
+        caseText.focus();
+      });
+      row.appendChild(body);
+      row.appendChild(btn);
+      examplesRoot.appendChild(row);
+    });
+  }
+
+  function renderPayload(payload) {
+    const labels = {
+      en: ['Options:', 'Rationale:', 'Clarifying questions:', 'Engine limitations:'],
+      uk: ['Варіанти:', 'Обґрунтування:', 'Уточнювальні запитання:', 'Обмеження рушія:'],
+      es: ['Opciones:', 'Justificación:', 'Preguntas aclaratorias:', 'Limitaciones del motor:'],
+      pt: ['Opções:', 'Fundamentação:', 'Perguntas de esclarecimento:', 'Limitações do motor:'],
+      de: ['Optionen:', 'Begründung:', 'Rückfragen:', 'Einschränkungen der Engine:'],
+      fr: ['Options :', 'Justification :', 'Questions de clarification :', 'Limites du moteur :']
+    };
+    const headings = labels[document.documentElement.lang] || labels.en;
+    const lines = [];
+    if (payload.direct_answer) lines.push(payload.direct_answer);
+    if (payload.selected_options && payload.selected_options.length) {
+      lines.push('');
+      lines.push(headings[0]);
+      payload.selected_options.forEach(o => lines.push('- ' + (o.label ? o.label + '. ' : '') + o.text));
+    }
+    if (payload.rationale && payload.rationale.length) {
+      lines.push('');
+      lines.push(headings[1]);
+      payload.rationale.forEach(x => lines.push('- ' + x));
+    }
+    if (payload.clarifying_questions && payload.clarifying_questions.length) {
+      lines.push('');
+      lines.push(headings[2]);
+      payload.clarifying_questions.forEach(x => lines.push('- ' + x));
+    }
+    if (payload.engine_limitations && payload.engine_limitations.length) {
+      lines.push('');
+      lines.push(headings[3]);
+      payload.engine_limitations.forEach(x => lines.push('- ' + x));
+    }
+    if (payload.safety_note) {
+      lines.push('');
+      lines.push(payload.safety_note);
+    }
+    return lines.join('\n') || JSON.stringify(payload, null, 2);
+  }
+
+  function canOpenInPlanGenerator(payload) {
+    return !!(
+      payload &&
+      payload.status === 'answered' &&
+      payload.patient_profile &&
+      payload.engine_summary &&
+      payload.engine_summary.ok === true &&
+      payload.engine_summary.mode === 'treatment'
+    );
+  }
+
+  async function profileToHash(profile) {
+    const json = JSON.stringify(profile);
+    if (!('CompressionStream' in window)) throw new Error('CompressionStream unavailable');
+    const stream = new Blob([json], { type: 'application/json' }).stream().pipeThrough(new CompressionStream('gzip'));
+    const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    let binary = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  async function updatePlanGeneratorLink(payload) {
+    planLinkWrap.classList.remove('is-visible');
+    planLink.removeAttribute('href');
+    if (!canOpenInPlanGenerator(payload)) return;
+    try {
+      const token = await profileToHash(payload.patient_profile);
+      planLink.href = 'try.html#p=' + token;
+      planLinkWrap.classList.add('is-visible');
+    } catch (err) {
+      console.warn('Plan-generator link failed:', err);
+      status.textContent = 'Plan-generator link could not be created in this browser.';
+    }
+  }
+
+  async function readJsonResponse(resp, endpoint) {
+    const contentType = (resp.headers.get('content-type') || '').toLowerCase();
+    const text = await resp.text();
+    if (!contentType.includes('application/json')) {
+      const err = new Error('The clinical-question API did not return JSON. This public site is static unless a server adapter is deployed; use the browser plan generator or enter a working API endpoint. Endpoint: ' + endpoint + '. HTTP ' + resp.status + '.');
+      err.retryable = true;
+      throw err;
+    }
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch (err) {
+      throw new Error('Invalid JSON response from the clinical-question API: ' + err.message);
+    }
+  }
+
+  function endpointCandidatesForRequest() {
+    const entered = endpointInput.value.trim();
+    const defaults = defaultEndpointCandidates();
+    const candidates = entered ? [entered] : defaults.slice();
+    defaults.forEach((endpoint) => {
+      if (endpoint && !candidates.includes(endpoint)) candidates.push(endpoint);
+    });
+    return candidates;
+  }
+
+  async function postClinicalQuestion(body) {
+    const candidates = endpointCandidatesForRequest();
+    const errors = [];
+    for (const endpoint of candidates) {
+      try {
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const payload = await readJsonResponse(resp, endpoint);
+        if (!resp.ok) {
+          const err = new Error(payload.message || ('HTTP ' + resp.status));
+          err.status = resp.status;
+          throw err;
+        }
+        if (endpointInput.value.trim() !== endpoint) endpointInput.value = endpoint;
+        return payload;
+      } catch (err) {
+        errors.push(endpoint + ': ' + err.message);
+        if (err.status && err.status !== 404) throw err;
+      }
+    }
+    throw new Error(errors.join(' | ') || 'No clinical-question endpoint available');
+  }
+
+  askBtn.addEventListener('click', async () => {
+    if (getCount() >= MAX_QUESTIONS) {
+      status.textContent = 'You have used all 3 free-text questions in this browser.';
+      return;
+    }
+    const text = caseText.value.trim();
+    if (!text) {
+      status.textContent = 'Paste a clinical situation first.';
+      return;
+    }
+    askBtn.disabled = true;
+    status.textContent = 'Analyzing the case. This usually takes under 90 seconds.';
+    result.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+    startProgress();
+    try {
+      const payload = await postClinicalQuestion({ case_text: text, locale: document.documentElement.lang || 'uk', user_id: getUserId() });
+      if (typeof payload.questions_used === 'number') setCount(payload.questions_used);
+      else setCount(getCount() + 1);
+      result.textContent = renderPayload(payload);
+      await updatePlanGeneratorLink(payload);
+      status.textContent = payload.status || 'ok';
+      finishProgress(true);
+    } catch (err) {
+      status.textContent = 'Request failed: ' + err.message;
+      result.textContent = '';
+      planLinkWrap.classList.remove('is-visible');
+      finishProgress(false);
+    } finally {
+      updateQuota();
+    }
+  });
+  clearBtn.addEventListener('click', () => {
+    caseText.value = '';
+    result.textContent = '';
+    status.textContent = '';
+    planLinkWrap.classList.remove('is-visible');
+    resetProgress();
+  });
+  renderExamples();
+  (function prefillFromUrl() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const preset = params.get('case') || params.get('q');
+      if (preset) {
+        caseText.value = preset;
+        caseText.focus();
+      }
+    } catch (e) { /* ignore malformed query */ }
+  })();
+  getUserId();
+  updateQuota();
+  resetProgress();
+})();
+</script>
+<script src="/clinical-localization.8b9bc4102bf3.js" data-locale="nb" data-catalog="/nb/clinical-ui-translations.9dcc46d63d4b.json" defer></script></body>
+</html>

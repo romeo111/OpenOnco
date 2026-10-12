@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenOnco håndbog - OpenOnco håndbog</title>
+
+<!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/da/handbook.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/handbook.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/handbook.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/handbook.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/handbook.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/handbook.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco håndbog - OpenOnco håndbog">
+<meta property="og:description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta property="og:url" content="https://openonco.info/da/handbook.html">
+<meta property="og:locale" content="da">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco håndbog - OpenOnco håndbog">
+<meta name="twitter:description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco håndbog - OpenOnco håndbog","description":"OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.","url":"https://openonco.info/da/handbook.html","inLanguage":"da","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/da/handbook.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=layout-20261011">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="0dacf692cf61a1a4982307c60882f906d9024c018cc4a966789d10af9eb7464c"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/da/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ÅBEN ONKOLOGI</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/da/">Forside</a>
+    <a href="/da/capabilities.html">Funktioner</a><a href="/da/handbook.html" class="active" aria-current="page">Håndbog</a><a href="/da/news.html">Nyheder</a>
+    <a href="/da/about.html">Om projektet</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprog"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg>DA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprog"><a href="/handbook.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/handbook.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/handbook.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/handbook.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/handbook.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/handbook.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/handbook.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/handbook.html" lang="da" hreflang="da" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/handbook.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/handbook.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/handbook.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/da/try.html" class="btn-cta-top btn-cta-try"><span>Opret en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menu"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/da/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Opret en plan</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Menu">
+    <a href="/da/">Forside</a>
+    <a href="/da/capabilities.html">Funktioner</a><a href="/da/handbook.html" class="active" aria-current="page">Håndbog</a><a href="/da/news.html">Nyheder</a>
+    <a href="/da/about.html">Om projektet</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/da/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/da/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tværfaglig konference</span></a>
+      <a href="/da/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebyggelse</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Værktøjer</span>
+    <div class="top-cta-group">
+      <a href="/da/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/da/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tværfaglig konference</span></a>
+      <a href="/da/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Forebyggelse</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Åben kildekode</span>
+  </div>
+  </div>
+</header>
+
+  <main class="hb-wrap"><aside class="translation-notice" role="note"><strong>Foreløbig oversættelse: klinisk gennemgang afventer.</strong> <a href="/handbook.html" lang="en" hreflang="en" data-original-source>Se den engelske original</a></aside>
+
+    <section class="hb-hero">
+      <div class="hb-kicker">OpenOnco håndbog</div>
+      <h1>Kilde-grundlagt onkologi læring kapitler</h1>
+      <p class="hb-lead">Uddannelseskapitler genereret fra indcheckede OpenOnco YAML enheder, kilde-ID'er, syntetiske tilfælde og review metadata. Dette er ikke officielt ESMO indhold og giver ikke CME kredit.</p>
+      <p><a href="/review/dlbcl-1l/index.html">DLBCL første- linje klinik review pakke</a>: syntetiske scenarier, faktiske output, kilde oprindelse og eksportable feedback. Klinisk gennemgang er under behandling.</p>
+    </section>
+    <section class="hb-controls" aria-label="Filtrer og søge kapitler">
+      <label class="hb-control hb-control--search">
+        <span>Søg</span>
+        <input type="search" id="hb-search" placeholder="Titel, objektivt, kilde-ID..." autocomplete="off">
+      </label>
+      <label class="hb-control">
+        <span>Sygdom</span>
+        <select id="hb-filter-disease">
+          <option value="">Alle sygdomme</option>
+          <option value="DIS-BREAST">Invasive breast cancer</option><option value="DIS-CRC">Colorectal carcinoma</option><option value="DIS-DLBCL-NOS">Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</option><option value="DIS-MELANOMA">Cutaneous melanoma</option><option value="DIS-MM">Multiple Myeloma</option><option value="DIS-NSCLC">Non-small cell lung cancer</option><option value="DIS-OVARIAN">Ovarian carcinoma</option><option value="DIS-PROSTATE">Prostate adenocarcinoma</option>
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Emne- mærke</span>
+        <select id="hb-filter-tag">
+          <option value="">Alle mærker</option>
+          <option value="biomarkers">biomarkører</option><option value="braf-targeted">Braf-target</option><option value="breast-cancer">brystkræft</option><option value="colorectal-cancer">kolorektalkræft</option><option value="endocrine-cdk46">endokrine-cdk46</option><option value="first-line">Første linje</option><option value="her2-positive">Her2-positiv</option><option value="hrd">nd</option><option value="immunotherapy">immunterapi</option><option value="lymphoma">lymfom</option><option value="maintenance">vedligeholdelse</option><option value="mcrpc">mcrpc</option><option value="melanoma">melanom</option><option value="metastatic">metastas</option><option value="multiple-myeloma">flermyeloma</option><option value="nsclc">nsclc</option><option value="ovarian-cancer">ovariekræft</option><option value="parp-inhibitor">parp- hæmmer</option><option value="prostate-cancer">prostatakræft</option><option value="risk-stratification">risikostratificering</option><option value="sequencing">sekvensering</option><option value="supportive-care">støttebehandling</option><option value="treatment-selection">behandlingsvalg</option>
+        </select>
+      </label>
+      <label class="hb-control">
+        <span>Revisionsstatus</span>
+        <select id="hb-filter-status">
+          <option value="">Alle status</option>
+          <option value="draft">udkast</option>
+        </select>
+      </label>
+      <p class="hb-result-count" id="hb-result-count" aria-live="polite"></p>
+      <p class="hb-empty" id="hb-empty" hidden>No chapters match the current filters.</p>
+    </section>
+    <section class="hb-grid" id="hb-grid">
+
+            <article class="hb-card" data-id="HB-OVARIAN-MAINTENANCE-1L" data-diseases="DIS-OVARIAN" data-tags="ovarian-cancer|first-line|maintenance|parp-inhibitor|hrd|biomarkers" data-status="draft" data-search="advanced ovarian cancer: hrd/brca first-line maintenance reasoning
+ hb-ovarian-maintenance-1l
+ identify the histology, germline/tumor brca, hrd status, and platinum-response inputs needed before first-line ovarian-cancer maintenance selection.
+ explain why platinum-based induction is the universal first-line backbone and how brca / hrd status route the maintenance choice between olaparib, niraparib, bevacizumab, and observation.
+ recognize parallel obligations — surgical-debulking quality, infection screening, vte risk, and prior-parp exposure — that change the maintenance plan without changing the cytotoxic backbone.
+ high-grade serous histology, germline + tumor brca1/2, and hrd assay status are required before any first-line maintenance plan.
+ carboplatin + paclitaxel is the universal cytotoxic backbone; the maintenance decision sits on top of the platinum response.
+ brca-mutant disease routes to olaparib maintenance (solo-1) as the canonical first option; hrd-positive non-brca disease pulls niraparib / olaparib combinations into the conversation.
+ suboptimal debulking, prior parp-inhibitor exposure, and active platinum resistance change the conversation more than hrd score alone.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-ovarian-2025
+ src-esmo-ovarian-2024
+ src-solo1-moore-2018
+ src-prima-gonzalez-martin-2019
+ dis-ovarian
+ ovarian carcinoma
+ ovarian-cancer
+ first-line
+ maintenance
+ parp-inhibitor
+ hrd
+ biomarkers advanced ovarian cancer: hrd/brca first-line maintenance reasoning hb-ovarian-maintenance-1l identify the histology, germline/tumor brca, hrd status, and platinum-response inputs needed before first-line ovarian-cancer maintenance selection. explain why platinum-based induction is the universal first-line backbone and how brca / hrd status route the maintenance choice between olaparib, niraparib, bevacizumab, and observation. recognize parallel obligations — surgical-debulking quality, infection screening, vte risk, and prior-parp exposure — that change the maintenance plan without changing the cytotoxic backbone. high-grade serous histology, germline + tumor brca1/2, and hrd assay status are required before any first-line maintenance plan. carboplatin + paclitaxel is the universal cytotoxic backbone; the maintenance decision sits on top of the platinum response. brca-mutant disease routes to olaparib maintenance (solo-1) as the canonical first option; hrd-positive non-brca disease pulls niraparib / olaparib combinations into the conversation. suboptimal debulking, prior parp-inhibitor exposure, and active platinum resistance change the conversation more than hrd score alone. this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. src-nccn-ovarian-2025 src-esmo-ovarian-2024 src-solo1-moore-2018 src-prima-gonzalez-martin-2019 dis-ovarian ovarian carcinoma ovarian-cancer first-line maintenance parp-inhibitor hrd biomarkers">
+              <h2><a href="/da/handbook/hb-ovarian-maintenance-1l.html">Avanceret ovariekræft: HRD/BRCA første-line vedligeholdelse ræsonnation</a></h2>
+              <p>Identificér histologi, kimline/tumor BRCA, HRD-status og platina-response, som er nødvendige før første linjes valg af vedligeholdelses- og kræft. Forklar hvorfor platinbaseret induktion er den universelle første linje rygrad og hvordan BRCA / HRd status rute </p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Ovarian carcinoma</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">ovariekræft</span><span class="hb-tag">Første linje</span><span class="hb-tag">vedligeholdelse</span><span class="hb-tag">parp- hæmmer</span><span class="hb-tag">nd</span><span class="hb-tag">biomarkører</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-DLBCL-1L" data-diseases="DIS-DLBCL-NOS" data-tags="lymphoma|first-line|biomarkers|treatment-selection" data-status="draft" data-search="diffuse large b-cell lymphoma: first-line reasoning
+ hb-dlbcl-1l
+ identify the minimum diagnostic and biomarker inputs needed before first-line dlbcl treatment selection.
+ explain how ipi risk, fitness, organ function, and biology influence r-chop versus pola-r-chp reasoning.
+ recognize red flags that do not switch the regimen but must change supportive care or mdt discussion.
+ confirmed histology and cd20 positivity are required before first-line treatment planning.
+ ipi and fitness gates drive the first-line algorithm in openonco.
+ r-chop remains the standard track; pola-r-chp is modeled as the intensified track for higher-risk disease when accessible.
+ hbv, hcv, hiv, cardiac function, pregnancy, and cns-risk checks sit beside regimen selection and must not be skipped.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-bcell-2025
+ src-esmo-dlbcl-2024
+ src-esmo-lymphoma-2025
+ src-polarix-tilly-2022
+ dis-dlbcl-nos
+ diffuse large b-cell lymphoma, not otherwise specified
+ lymphoma
+ first-line
+ biomarkers
+ treatment-selection diffus store b-celle lymfom: første-linjes resonnement hb-dlbcl-1l identificere minimum diagnostiske og biomarkør indgange, der er nødvendige før første-line dlbcl behandling valg. forklare, hvordan ipi risiko, fitness, organfunktion, og biologi indflydelse r-chop versus pola-r-chp resonnering. genkende røde flag, der ikke skifte regimet, men skal ændre støttende pleje eller mdt diskussion. bekræftet histologi og cd20 positivitet er påkrævet før første linje behandling planlægning. ipi og fitness porte drive den første-line algoritme i openonco. r- cop forbliver standard bane; pola-r-chp er modelleret som den intensiverede bane for højere risiko sygdom, når tilgængelig. hbv, hcv, Hiv, hjerte funktion, graviditet, og cns-risiko kontrol sidde ved siden af regime valg og må ikke overse. Dette kapitel er en openoncon-tilladt læringshjælp, ikke officielt esmo indhold eller en cme-kredit aktivitet. src- nccn- bcell- 2025 srk- esmo- dlbcl- 2024 srC- esem- lymphoma-2025 sc- polarix- tilly-2022 dis- ddlbcl - nos diffus stort b- cellelymfom, ikke specificeret på anden måde lymfom første- linje biomarkører behandlingsvalg">
+              <h2><a href="/da/handbook/hb-dlbcl-1l.html">Diffus store B-celle lymfom: første- linjes ræsonnement</a></h2>
+              <p>Identificer de mindste diagnostiske og biomarkør inputs, der er nødvendige før første-line DLBCL behandlingsvalg.; Forklar hvordan IPI risiko, fitness, organfunktion og biologi indflydelse R-CHOP versus Pola-R-CHP resonnement.; Genkende røde flag, der ikke skifter regim</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Diffuse Large B-Cell Lymphoma, Not Otherwise Specified</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">lymfom</span><span class="hb-tag">Første linje</span><span class="hb-tag">biomarkører</span><span class="hb-tag">behandlingsvalg</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-BREAST-HER2-POS-MET-1L" data-diseases="DIS-BREAST" data-tags="breast-cancer|metastatic|first-line|her2-positive|biomarkers" data-status="draft" data-search="her2+ metastatic breast cancer: first-line reasoning
+ hb-breast-her2-pos-met-1l
+ identify the her2-ihc/fish workup, organ-function baseline, and er/pr co-status needed before her2+ metastatic first-line treatment selection.
+ explain why docetaxel + trastuzumab + pertuzumab (thp) remains the standard first-line backbone in the openonco model and where t-dxd, t-dm1, and tucatinib fit downstream.
+ recognize parallel obligations — baseline lvef, brain mri when cns symptoms are present, and germline brca testing — that do not change the first-line regimen but change the safety plan.
+ her2 amplification confirmed by ihc 3+ or ish-positive is required before the first-line plan; the her2-low band still belongs in the hr+ chapter.
+ docetaxel + trastuzumab + pertuzumab (thp) is the standard first-line backbone; trastuzumab + pertuzumab maintenance continues after chemotherapy completion.
+ trastuzumab deruxtecan (t-dxd) is modeled as the canonical 2l option after thp progression (destiny-breast03).
+ active cns metastases and germline brca status are parallel obligations that do not shift the 1l backbone but bring tucatinib- and parp-inhibitor reasoning into the longer arc.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-breast-2025
+ src-esmo-breast-metastatic-2024
+ src-cleopatra-swain-2015
+ src-destiny-breast03-cortes-2022
+ src-her2climb-murthy-2019
+ src-olympiad-robson-2017
+ dis-breast
+ invasive breast cancer
+ breast-cancer
+ metastatic
+ first-line
+ her2-positive
+ biomarkers her2+ metastatic breast cancer: first-line reasoning hb-breast-her2-pos-met-1l identify the her2-ihc/fish workup, organ-function baseline, and er/pr co-status needed before her2+ metastatic first-line treatment selection. explain why docetaxel + trastuzumab + pertuzumab (thp) remains the standard first-line backbone in the openonco model and where t-dxd, t-dm1, and tucatinib fit downstream. recognize parallel obligations — baseline lvef, brain mri when cns symptoms are present, and germline brca testing — that do not change the first-line regimen but change the safety plan. her2 amplification confirmed by ihc 3+ or ish-positive is required before the first-line plan; the her2-low band still belongs in the hr+ chapter. docetaxel + trastuzumab + pertuzumab (thp) is the standard first-line backbone; trastuzumab + pertuzumab maintenance continues after chemotherapy completion. trastuzumab deruxtecan (t-dxd) is modeled as the canonical 2l option after thp progression (destiny-breast03). active cns metastases and germline brca status are parallel obligations that do not shift the 1l backbone but bring tucatinib- and parp-inhibitor reasoning into the longer arc. this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. src-nccn-breast-2025 src-esmo-breast-metastatic-2024 src-cleopatra-swain-2015 src-destiny-breast03-cortes-2022 src-her2climb-murthy-2019 src-olympiad-robson-2017 dis-breast invasive breast cancer breast-cancer metastatic first-line her2-positive biomarkers">
+              <h2><a href="/da/handbook/hb-breast-her2-pos-met-1l.html">HER2+ metastatisk brystkræft: første linje- resonnement</a></h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">Identify the HER2-IHC/FISH workup, organ-function baseline, and ER/PR co-status needed before HER2+ metastatic first-line treatment selection.; Explain why docetaxel + trastuzumab + pertuzumab (THP) remains the standard first-line backbone in the OpenOnco mode</span></p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Invasive breast cancer</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">brystkræft</span><span class="hb-tag">metastas</span><span class="hb-tag">Første linje</span><span class="hb-tag">Her2-positiv</span><span class="hb-tag">biomarkører</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-BREAST-HR-POS-HER2-NEG-1L" data-diseases="DIS-BREAST" data-tags="breast-cancer|metastatic|first-line|biomarkers|endocrine-cdk46" data-status="draft" data-search="hr+/her2- metastatic breast cancer: first-line reasoning
+ hb-breast-hr-pos-her2-neg-1l
+ prioritize er/pr, her2 (including her2-low), germline brca, pik3ca, esr1, and akt1 status before first-line hr+/her2- metastatic breast cancer treatment selection.
+ explain why an aromatase inhibitor plus a cdk4/6 inhibitor is the standard first-line backbone, and recognize where prior cdk4/6i exposure or visceral crisis changes the conversation.
+ recognize red flags that do not switch the first-line regimen but change parallel obligations (cardiac baseline, contraception, cns-mets workup, supportive care).
+ histology + er/pr + her2 (with her2-low captured) + germline brca testing are required before first-line treatment planning.
+ aromatase inhibitor + cdk4/6 inhibitor is the standard first-line backbone for endocrine-sensitive disease in openonco&#x27;s first-line model.
+ inavolisib + palbociclib + fulvestrant is modeled as the intensified track when pik3ca co-alteration is present and access permits.
+ visceral crisis, leptomeningeal disease, and active cns mets are parallel obligations — they shape supportive care and mdt discussion even when the systemic regimen is unchanged.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-breast-2025
+ src-esmo-breast-metastatic-2024
+ src-monaleesa-2-hortobagyi-2016
+ src-monarch-3-goetz-2017
+ src-paloma-2-finn-2016
+ src-solar1-andre-2019
+ src-emerald-bidard-2022
+ src-capitello291-turner-2023
+ src-olympiad-robson-2017
+ dis-breast
+ invasive breast cancer
+ breast-cancer
+ metastatic
+ first-line
+ biomarkers
+ endocrine-cdk46 hr+/her2- metastatic breast cancer: first-line reasoning hb-breast-hr-pos-her2-neg-1l prioritize er/pr, her2 (including her2-low), germline brca, pik3ca, esr1, and akt1 status before first-line hr+/her2- metastatic breast cancer treatment selection. explain why an aromatase inhibitor plus a cdk4/6 inhibitor is the standard first-line backbone, and recognize where prior cdk4/6i exposure or visceral crisis changes the conversation. recognize red flags that do not switch the first-line regimen but change parallel obligations (cardiac baseline, contraception, cns-mets workup, supportive care). histology + er/pr + her2 (with her2-low captured) + germline brca testing are required before first-line treatment planning. aromatase inhibitor + cdk4/6 inhibitor is the standard first-line backbone for endocrine-sensitive disease in openonco&#x27;s first-line model. inavolisib + palbociclib + fulvestrant is modeled as the intensified track when pik3ca co-alteration is present and access permits. visceral crisis, leptomeningeal disease, and active cns mets are parallel obligations — they shape supportive care and mdt discussion even when the systemic regimen is unchanged. this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. src-nccn-breast-2025 src-esmo-breast-metastatic-2024 src-monaleesa-2-hortobagyi-2016 src-monarch-3-goetz-2017 src-paloma-2-finn-2016 src-solar1-andre-2019 src-emerald-bidard-2022 src-capitello291-turner-2023 src-olympiad-robson-2017 dis-breast invasive breast cancer breast-cancer metastatic first-line biomarkers endocrine-cdk46">
+              <h2><a href="/da/handbook/hb-breast-hr-pos-her2-neg-1l.html">HR+/HER2-metastatisk brystkræft: første-line- resonnement</a></h2>
+              <p>Prioriter ER/PR, HER2 (herunder HER2-low), kimelin BRCA, PIK3CA, ESR1 og AKT1 før første linjes HR+/HER2-metastatisk brystkræftbehandling. Forklar hvorfor en aromatasehæmmer plus en CDK4/6- hæmmer er den standard første linje- rygradsrad.</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Invasive breast cancer</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">brystkræft</span><span class="hb-tag">metastas</span><span class="hb-tag">Første linje</span><span class="hb-tag">biomarkører</span><span class="hb-tag">endokrine-cdk46</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-PROSTATE-MCRPC-1L" data-diseases="DIS-PROSTATE" data-tags="prostate-cancer|mcrpc|biomarkers|sequencing|parp-inhibitor" data-status="draft" data-search="metastatic castration-resistant prostate cancer: biomarker and sequencing reasoning
+ hb-prostate-mcrpc-1l
+ identify the germline / somatic hrr panel, prior-line history, and disease-burden inputs needed before mcrpc first-line treatment selection.
+ explain why arpi continuation reasoning, brca/hrr routing to a parp inhibitor, and lu-177-psma / cabazitaxel options sit on a sequencing arc rather than a single 1l decision.
+ recognize emergency red flags — cord compression, marrow failure, transformation — that change the treatment timeline without changing the biomarker map.
+ castration resistance is defined by biochemical or radiographic progression on adequate testosterone suppression — prior arpi use shapes every downstream choice.
+ germline and tumor hrr panel (brca1, brca2, atm, chek2, cdk12, palb2) is treated as a treatment-defining test, not an optional add-on.
+ arpi-naive mcrpc routes to abiraterone or enzalutamide; arpi-resistant disease pulls parp-inhibitor (brca-/hrr-driven) and lu-177-psma reasoning into the conversation.
+ docetaxel and cabazitaxel remain treatment-defining for chemotherapy-fit patients across lines; card established cabazitaxel after prior docetaxel + arpi progression.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-prostate-2025
+ src-esmo-prostate-2024
+ src-profound-debono-2020
+ src-chaarted-sweeney-2015
+ src-latitude-fizazi-2017
+ src-arasens-smith-2022
+ src-card-de-bono-2019
+ src-alsympca-parker-2013
+ dis-prostate
+ prostate adenocarcinoma
+ prostate-cancer
+ mcrpc
+ biomarkers
+ sequencing
+ parp-inhibitor metastatic castration-resistant prostate cancer: biomarker and sequencing reasoning hb-prostate-mcrpc-1l identify the germline / somatic hrr panel, prior-line history, and disease-burden inputs needed before mcrpc first-line treatment selection. explain why arpi continuation reasoning, brca/hrr routing to a parp inhibitor, and lu-177-psma / cabazitaxel options sit on a sequencing arc rather than a single 1l decision. recognize emergency red flags — cord compression, marrow failure, transformation — that change the treatment timeline without changing the biomarker map. castration resistance is defined by biochemical or radiographic progression on adequate testosterone suppression — prior arpi use shapes every downstream choice. germline and tumor hrr panel (brca1, brca2, atm, chek2, cdk12, palb2) is treated as a treatment-defining test, not an optional add-on. arpi-naive mcrpc routes to abiraterone or enzalutamide; arpi-resistant disease pulls parp-inhibitor (brca-/hrr-driven) and lu-177-psma reasoning into the conversation. docetaxel and cabazitaxel remain treatment-defining for chemotherapy-fit patients across lines; card established cabazitaxel after prior docetaxel + arpi progression. this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. src-nccn-prostate-2025 src-esmo-prostate-2024 src-profound-debono-2020 src-chaarted-sweeney-2015 src-latitude-fizazi-2017 src-arasens-smith-2022 src-card-de-bono-2019 src-alsympca-parker-2013 dis-prostate prostate adenocarcinoma prostate-cancer mcrpc biomarkers sequencing parp-inhibitor">
+              <h2><a href="/da/handbook/hb-prostate-mcrpc-1l.html">Metastatisk kastrationsresistent prostatakræft: biomarkør og sekvenserings resume</a></h2>
+              <p>Identificér det kimline / somatiske HR panel, præline historie, og sygdomsbyrden inputs behov før mCRPC første-line behandling valg.; Forklar hvorfor ARPI fortsættende ræsonnement, BRCA/HRR routing til en PARP inhibitor, og Lu-177-PSMA / cabazitaxel muligheder s</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Prostate adenocarcinoma</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">prostatakræft</span><span class="hb-tag">mcrpc</span><span class="hb-tag">biomarkører</span><span class="hb-tag">sekvensering</span><span class="hb-tag">parp- hæmmer</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-CRC-METASTATIC-1L" data-diseases="DIS-CRC" data-tags="colorectal-cancer|metastatic|first-line|biomarkers" data-status="draft" data-search="metastatic colorectal cancer: first-line biomarker reasoning
+ hb-crc-metastatic-1l
+ prioritize msi/mmr, ras, braf, her2, sidedness, and oligometastatic status before first-line mcrc treatment selection.
+ explain why msi-h/dmmr disease takes precedence over routine chemotherapy backbones.
+ recognize when ras wild-type left-sided disease and braf v600e disease push the learner toward different systemic strategies.
+ mcrc first-line reasoning starts with resectability/oligometastatic status and molecular classification.
+ msi-h/dmmr is treatment-defining and can route to pembrolizumab monotherapy in the openonco model.
+ extended ras status and primary tumor sidedness gate egfr-antibody eligibility.
+ braf v600e is a poor-prognosis signal; fit patients may need intensified chemotherapy reasoning.
+ the chapter is openonco-authored educational content, not official esmo or cme material.
+ src-nccn-colon-2025
+ src-esmo-crc-2024
+ src-esmo-colon-2024
+ src-keynote-177-andre-2020
+ dis-crc
+ colorectal carcinoma
+ colorectal-cancer
+ metastatic
+ first-line
+ biomarkers metastatisk kolorektal kræft: første-line biomarkør resonnement hb-crc-metastastatisk-1l prioritere msi/mmr, ras, braf, her2, sidedness, og oligometastatisk status før første-linje mcrc behandling valg. forklare, hvorfor msisi-h / dmmr sygdom tager forrang frem for rutinemæssige kemoterapi rygrader. genkende, når ras vilde-type venstre side sygdom og braf v600e sygdom skubber læreren hen imod forskellige systemiske strategier. mcrc første-line resonans begynder med resektabilitet / oligometastastatisk status og molekylær klassificering. msi-h / dmmr er behandling-definering og kan lede til pembrolizumab monoterapi i openonco modellen. udvidet ras status og primær tumor sidedness gate egfr-antibody berettigelse. braf v600e er et dårligt-prognose signal; egnet patienter kan brug forstærket kemoterapi reson. kapitlet er openoncon-tilladt undervisningsindhold, ikke officielt esmo eller cme materiale. src-nccn-kolon-2025 srk-esmo-crc-2024 srl-esmotkolon 2024 sc-keynote-177-andre-2020 dis-crC kolorektal carcinom cancer cancercancermetatiske biomarkører på første linje">
+              <h2><a href="/da/handbook/hb-crc-metastatic-1l.html">Metastatisk kolorektalkræft: første-line biomarkør argumentation</a></h2>
+              <p>Prioriter MSI/MMR, RAS, BRAF, HER2, sidedness, og oligometastastatisk status før første-line mCRC behandlingsvalg. Forklar hvorfor MSI-H/dMMR sygdom har forrang foran rutinemæssige kemoterapi rygrader.</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Colorectal carcinoma</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">kolorektalkræft</span><span class="hb-tag">metastas</span><span class="hb-tag">Første linje</span><span class="hb-tag">biomarkører</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-MELANOMA-METASTATIC-1L" data-diseases="DIS-MELANOMA" data-tags="melanoma|metastatic|first-line|biomarkers|immunotherapy|braf-targeted" data-status="draft" data-search="metastatic melanoma: braf / io first-line reasoning
+ hb-melanoma-metastatic-1l
+ identify the braf v600 status, performance status, organ function, and disease-burden inputs needed before metastatic melanoma first-line treatment selection.
+ explain why dual checkpoint inhibition (nivolumab + ipilimumab) is the standard immunotherapy backbone, when single-agent anti-pd-1 is preferred, and where braf-targeted combinations fit.
+ recognize parallel obligations — autoimmune history, brain mri for active cns disease, infection / hepatitis screening — that do not change the canonical io call but change the safety plan.
+ braf v600e/k testing is required before the first-line plan because it routes patients between io and targeted strategies.
+ nivolumab + ipilimumab is the canonical io backbone for fit patients without contraindications; relatlimab + nivolumab is an alternative dual checkpoint combination.
+ encorafenib + binimetinib (or dabrafenib + trametinib) is the canonical braf-targeted track for v600-mutant disease — typically used when io is contraindicated or rapid response is needed.
+ active brain metastases, autoimmune disease, organ-failure-grade comorbidities, and pregnancy status are parallel obligations that shape the safety plan even when the systemic regimen is unchanged.
+ this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity.
+ src-nccn-melanoma-2025
+ src-esmo-melanoma-2024
+ src-checkmate-067-larkin-2019
+ src-keynote-006-robert-2015
+ src-columbus-dummett-2018
+ src-combi-d-long-2014
+ src-combi-v-robert-2015
+ src-relativity-047-tawbi-2022
+ dis-melanoma
+ cutaneous melanoma
+ melanoma
+ metastatic
+ first-line
+ biomarkers
+ immunotherapy
+ braf-targeted metastatic melanoma: braf / io first-line reasoning hb-melanoma-metastatic-1l identify the braf v600 status, performance status, organ function, and disease-burden inputs needed before metastatic melanoma first-line treatment selection. explain why dual checkpoint inhibition (nivolumab + ipilimumab) is the standard immunotherapy backbone, when single-agent anti-pd-1 is preferred, and where braf-targeted combinations fit. recognize parallel obligations — autoimmune history, brain mri for active cns disease, infection / hepatitis screening — that do not change the canonical io call but change the safety plan. braf v600e/k testing is required before the first-line plan because it routes patients between io and targeted strategies. nivolumab + ipilimumab is the canonical io backbone for fit patients without contraindications; relatlimab + nivolumab is an alternative dual checkpoint combination. encorafenib + binimetinib (or dabrafenib + trametinib) is the canonical braf-targeted track for v600-mutant disease — typically used when io is contraindicated or rapid response is needed. active brain metastases, autoimmune disease, organ-failure-grade comorbidities, and pregnancy status are parallel obligations that shape the safety plan even when the systemic regimen is unchanged. this chapter is an openonco-authored learning aid, not official esmo content or a cme-credit activity. src-nccn-melanoma-2025 src-esmo-melanoma-2024 src-checkmate-067-larkin-2019 src-keynote-006-robert-2015 src-columbus-dummett-2018 src-combi-d-long-2014 src-combi-v-robert-2015 src-relativity-047-tawbi-2022 dis-melanoma cutaneous melanoma melanoma metastatic first-line biomarkers immunotherapy braf-targeted">
+              <h2><a href="/da/handbook/hb-melanoma-metastatic-1l.html">Metastatisk melanom: BRAF / IO første-line argumentation</a></h2>
+              <p><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltekst bevaret til kontrol">Identify the BRAF V600 status, performance status, organ function, and disease-burden inputs needed before metastatic melanoma first-line treatment selection.; Explain why dual checkpoint inhibition (nivolumab + ipilimumab) is the standard immunotherapy backbo</span></p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Cutaneous melanoma</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">melanom</span><span class="hb-tag">metastas</span><span class="hb-tag">Første linje</span><span class="hb-tag">biomarkører</span><span class="hb-tag">immunterapi</span><span class="hb-tag">Braf-target</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-NSCLC-METASTATIC-1L" data-diseases="DIS-NSCLC" data-tags="nsclc|metastatic|first-line|biomarkers" data-status="draft" data-search="metastatic nsclc: driver-first treatment reasoning
+ hb-nsclc-metastatic-1l
+ explain why metastatic nsclc first-line reasoning starts with actionable driver testing before pd-l1-only decisions.
+ distinguish egfr, alk, ros1, met exon 14, ret, braf v600e, and ntrk driver branches from driver-negative immunotherapy branches.
+ recognize pd-l1 tps as a treatment-stratifying marker only after actionable drivers are excluded or addressed.
+ comprehensive molecular testing is the central first-line gate in metastatic nsclc.
+ actionable drivers route to targeted therapy branches before pd-l1 immunotherapy branches.
+ pd-l1 tps still matters, but mainly in the driver-negative pathway.
+ brain metastases, frailty, organ dysfunction, and urgent complications remain parallel mdt concerns.
+ the chapter is openonco-authored educational content, not official esmo or cme material.
+ src-nccn-nsclc-2025
+ src-esmo-nsclc-metastatic-2024
+ src-flaura-soria-2018
+ src-keynote-024-reck-2016
+ src-keynote-189-gandhi-2018
+ dis-nsclc
+ non-small cell lung cancer
+ nsclc
+ metastatic
+ first-line
+ biomarkers metastaserende nsclc: driver-første behandling ræsonnement hb-nsclk-metastastisk-1l forklare hvorfor metastaSant nslcc første-line resonnement starter med handlingsdygtige drivertest før pd-l1-only beslutninger. skelne egfr, alg, ros1, met exon 14, ret, braf v600e, og ntrk driver grene fra driver-negativ immunterapi grene. anerkende pd - l1 tps som en behandlingsstratificerende markør kun efter at fungerende førere er udelukket eller rettet. omfattende molekylær test er den centrale første-line port i metastatisk nsclc. handlingsdygtige drivere rute til målrettet terapi grene før pd-l1 immunterapi grene. pd - l1 tps stadig betydning, men hovedsageligt i den chauffør-negative vej. hjernemetastaser, skrøbelighed, organ dysfunktion, og presserende komplikationer forbliver parallelt - betænkeligheder. kapitlet er openonco-tilladt undervisningsindhold, ikke officielt esmo eller cme materiale. src-nccn-nsclc-2025 srk-esmo-nclc-metastastatisk-2024 srv-flaura-soria-2018 srl-keynote-024-reck-2016 srC-keytone-189-gandhi-2018 dis-nc non-small cell lungekræft nsclC metastaserende første-line biomarkører">
+              <h2><a href="/da/handbook/hb-nsclc-metastatic-1l.html">Metastatisk NSCLC: Forberedende skema for første behandling</a></h2>
+              <p>Forklar hvorfor metastatisk NSCLC første linje resonnement starter med handlingsdygtige driver test før PD-L1- kun beslutninger.; Distinguish EGFR, ALK, ROS1, MET exon 14, RET, BRAF V600E og NTRK driver grene fra driver-negative immunterapi grene.</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Non-small cell lung cancer</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">nsclc</span><span class="hb-tag">metastas</span><span class="hb-tag">Første linje</span><span class="hb-tag">biomarkører</span>
+              </div>
+            </article>
+
+            <article class="hb-card" data-id="HB-MM-1L" data-diseases="DIS-MM" data-tags="multiple-myeloma|first-line|risk-stratification|supportive-care" data-status="draft" data-search="multiple myeloma: first-line risk and fitness reasoning
+ hb-mm-1l
+ use cytogenetic risk, iss/r-iss features, renal function, frailty, and transplant eligibility as separate first-line mm reasoning axes.
+ explain why vrd and d-vrd appear as standard and alternative first-line tracks in the openonco model.
+ recognize myeloma emergencies and supportive-care obligations that run beside induction selection.
+ first-line mm reasoning is risk-stratified rather than purely stage-driven.
+ high-risk cytogenetics and aggressive biology route toward d-vrd in the openonco model.
+ frailty and renal dysfunction often affect dosing and safety planning rather than simply changing the disease indication.
+ bone disease, hypercalcemia, renal impairment, infection risk, and cord compression are core safety checks.
+ the chapter is openonco-authored educational content, not official esmo or cme material.
+ src-nccn-mm-2025
+ src-esmo-mm-2023
+ src-perseus-sonneveld-2024
+ src-griffin-voorhees-2020
+ dis-mm
+ multiple myeloma
+ multiple-myeloma
+ first-line
+ risk-stratification
+ supportive-care Multiple myelom: første-line risiko og fitness ræsonnement hb-mm-1l brug cytogenetisk risiko, ers/r-iss funktioner, nyrefunktion, skrøbelighed og transplantation berettigelse som separate første-linje mm ræssion akser. forklare, hvorfor vrd og d-vrd vises som standard og alternative første-linie spor i openonco modellen. genkende myelom nødsituationer og støttende pleje forpligtelser, der kører ved siden af induktion valg. første-linjen mm ræsonment er risikostrat i stedet for rent fase-drevne. høj risiko cytogenetik og aggressiv biologi vej mod d-vrd i openonco modellen. skrøbelighed og nyrefunktion påvirker ofte dosering og sikkerhedsplanlægning snarere end blot at ændre sygdom indikation. knoglesygdom, hypercalcæmi, nedsat nyrefunktion, infektionsrisiko, og snor kompression er kernesikkerhedskontrol. kapitlet er openonconco-tilladt undervisningsindhold, ikke officielt esmo eller cme materiale. src-nccn-mm-2025 srk-esmo-mm-2023 srC-perseus-sondel-2024 srl-griffin-voorhees-2020 di-mm multipelt myelom multiple-myeloma første-line risikostratifikation understøttende behandling">
+              <h2><a href="/da/handbook/hb-mm-1l.html">Multipelt myelom: første- linjes risiko og fitness ræsonnation</a></h2>
+              <p>Brug cytogenetisk risiko, ISS/R-ISS funktioner, nyrefunktion, skrøbelighed og transplantations berettigelse som separate første- linje MM ræsonnement akser. Forklar hvorfor VRd og D-VRd vises som standard og alternative første-line spor i OpenOnco modellen.</p>
+              <div class="hb-meta">
+                <span class="hb-badge hb-badge--draft">udkast</span>
+                <span class="hb-badge">3 spørgsmål</span>
+                <span class="hb-badge">Multiple Myeloma</span>
+              </div>
+              <div class="hb-tag-row">
+                <span class="hb-tag">flermyeloma</span><span class="hb-tag">Første linje</span><span class="hb-tag">risikostratificering</span><span class="hb-tag">støttebehandling</span>
+              </div>
+            </article>
+
+    </section>
+    <script>
+      (function() {
+        var cards = Array.prototype.slice.call(document.querySelectorAll('#hb-grid .hb-card'));
+        var total = cards.length;
+        var search = document.getElementById('hb-search');
+        var disease = document.getElementById('hb-filter-disease');
+        var tag = document.getElementById('hb-filter-tag');
+        var status = document.getElementById('hb-filter-status');
+        var count = document.getElementById('hb-result-count');
+        var empty = document.getElementById('hb-empty');
+        if (!search || !disease || !tag || !status) { return; }
+        function listFor(card, name) {
+          var v = card.getAttribute('data-' + name) || '';
+          return v ? v.split('|') : [];
+        }
+        function apply() {
+          var q = (search.value || '').trim().toLowerCase();
+          var d = disease.value;
+          var t = tag.value;
+          var s = status.value;
+          var visible = 0;
+          cards.forEach(function(card) {
+            var diseases = listFor(card, 'diseases');
+            var tags = listFor(card, 'tags');
+            var blob = card.getAttribute('data-search') || '';
+            var show = true;
+            if (q && blob.indexOf(q) === -1) { show = false; }
+            if (show && d && diseases.indexOf(d) === -1) { show = false; }
+            if (show && t && tags.indexOf(t) === -1) { show = false; }
+            if (show && s && card.getAttribute('data-status') !== s) { show = false; }
+            card.hidden = !show;
+            if (show) { visible += 1; }
+          });
+          count.textContent = visible + ' of ' + total + ' chapter' + (total === 1 ? '' : 's');
+          empty.hidden = visible !== 0;
+        }
+        [search, disease, tag, status].forEach(function(el) {
+          el.addEventListener('input', apply);
+          el.addEventListener('change', apply);
+        });
+        apply();
+      })();
+    </script>
+
+  </main>
+<script src="/clinical-localization.8b9bc4102bf3.js" data-locale="da" data-catalog="/da/clinical-ui-translations.7593712d959e.json" defer></script></body>
+</html>
