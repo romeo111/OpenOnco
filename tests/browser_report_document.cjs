@@ -9,7 +9,7 @@ async function check(page){
  const context=vm.createContext({resultFrame:frame,profileInputCopy:JSON.parse(page.match(/^const profileInputCopy = (.*);$/m)[1]),
   setTimeout:f=>{timers.set(++id,f);return id;},clearTimeout:i=>timers.delete(i),setError:e=>error=e,
   isInteractionLocked:()=>false,validateNumericInputs:()=>true,setLockedTitle(){},refreshModeButtonAvailability(){},highlightLangButtons(){},
-  planModal:{hidden:true},textarea:{value:'{"patient_id":"VIRTUAL-REPORT-CHECK"}'},activeQuest:null,
+  document:{activeElement:null},planModalReturnFocus:null,planModalClose:{focus(){}},planModal:{hidden:true},textarea:{value:'{"patient_id":"VIRTUAL-REPORT-CHECK"}'},activeQuest:null,
   runBtn:button(),viewPlanBtn:button(),pdfBtn:button(),modalPdfBtn:button(),modalHtmlBtn:button(),
   resetBtn:button(),formatBtn:button(),diseaseSelect:button(),exampleSelect:button(),modeFormBtn:button(),modeJsonBtn:button(),personalizeBtn:button(),
   withUiLock:async(a,b,c,action)=>action()});

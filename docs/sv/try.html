@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="e0fa37f211f40a659be2f0125ce29de5253ab7e2a86ae874e57b19c2d65c889b"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="c92f9127efb6b84e134708eb7dbe9cdb46e500169934c87ebefed1a673eea785"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -603,6 +603,7 @@ let reportReady = false;
 let planDirty = false;
 let activeExampleCaseId = null;
 let activeExampleSelection = '';
+let planModalReturnFocus = null;
 let activeExampleHasPatient = false;
 
 const workflowStatusAnnouncement = document.getElementById('workflowStatusAnnouncement');
@@ -797,13 +798,22 @@ function refreshModeButtonAvailability() {
 function openPlanModal(options = {}) {
   if (!planModal || !reportReady) return;
   if (!options.force && (isInteractionLocked() || planSource === null)) return;
+  if (planModal.hidden) planModalReturnFocus = options.currentTarget || document.activeElement;
   planModal.hidden = false;
   highlightLangButtons();
+  if (!planModalClose.disabled) planModalClose.focus();
 }
 function closePlanModal(options = {}) {
   if (!planModal) return;
   if (!options.force && isInteractionLocked()) return;
+  const wasOpen = !planModal.hidden;
   planModal.hidden = true;
+  if (!wasOpen) return;
+  const previous = planModalReturnFocus;
+  planModalReturnFocus = null;
+  if (previous && previous.isConnected && !previous.disabled && !previous.closest('[inert]')) previous.focus();
+  else if (!viewPlanBtn.disabled) viewPlanBtn.focus();
+  else if (!runBtn.disabled) runBtn.focus();
 }
 
 function downloadPdf() {
@@ -1021,6 +1031,13 @@ function waitForFrameLoad(timeoutMs = 12000) {
     };
     const loaded = () => {
       const error = loadedReportError();
+      if (!error) {
+        const doc = resultFrame.contentDocument;
+        if (doc && doc.addEventListener) {
+          doc.removeEventListener('keydown', handlePlanModalKeys);
+          doc.addEventListener('keydown', handlePlanModalKeys);
+        }
+      }
       finish(error ? new Error(error) : null);
     };
     const failed = () => finish(new Error('Report failed to load. Please try again.'));
@@ -1080,13 +1097,43 @@ planModalClose.addEventListener('click', closePlanModal);
 planModal.addEventListener('click', (ev) => {
   if (ev.target === planModal) closePlanModal();
 });
-document.addEventListener('keydown', (ev) => {
-  if ((generating || uiBusy) && ev.key === 'Escape') {
-    ev.preventDefault();
+function planModalFocusableElements() {
+  return Array.from(planModal.querySelectorAll('button, a[href], input, select, textarea, iframe, [tabindex]'))
+    .filter(element => !element.disabled && element.tabIndex >= 0 && element.getClientRects().length);
+}
+
+function containPlanModalFocus() {
+  if (planModal.hidden || isInteractionLocked() || planModal.contains(document.activeElement)) return;
+  planModalClose.focus();
+}
+
+function handlePlanModalKeys(event) {
+  if (event.defaultPrevented) return;
+  if (isInteractionLocked()) {
+    if (event.key === 'Escape') event.preventDefault();
     return;
   }
-  if (ev.key === 'Escape' && !planModal.hidden) closePlanModal();
-});
+  if (planModal.hidden) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    closePlanModal();
+    return;
+  }
+  // Native tabbing handles the report's own controls. Root focus containment
+  // catches departure from the iframe, without flattening its document order.
+  if (event.key !== 'Tab' || event.target.ownerDocument !== document) return;
+  const elements = planModalFocusableElements();
+  if (!elements.length) return;
+  const first = elements[0], last = elements[elements.length - 1];
+  const active = document.activeElement;
+  if ((event.shiftKey && active === first) || (!event.shiftKey && active === last) || !planModal.contains(active)) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  }
+}
+
+document.addEventListener('keydown', handlePlanModalKeys);
+document.addEventListener('focusin', containPlanModalFocus);
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
 langEnBtn.addEventListener('click', () => switchResultLang('en'));
 modeClinicianBtn.addEventListener('click', () => switchResultMode('clinician'));
