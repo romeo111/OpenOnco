@@ -16,7 +16,7 @@ components:
       - trigger: "Clinical bleomycin pneumonitis (dyspnea, dry cough, new infiltrates)"
         action: "Permanently discontinue bleomycin; systemic corticosteroids"
       - trigger: "CrCl <50 mL/min"
-        action: "Consider EP instead of BEP (bleomycin renally cleared)"
+        action: "Kidney impairment requires specialist assessment of bleomycin clearance and pulmonary risk. Do not automatically switch to EP: EP still contains cisplatin and requires its own kidney-function assessment."
   - drug_id: DRUG-ETOPOSIDE
     dose: "100 mg/m²/day IV over 60 min"
     route: IV
@@ -31,9 +31,9 @@ components:
     hydration: "1L NS over 2h pre-cisplatin; 1L NS over 2h post-cisplatin; encourage oral fluid intake"
     dose_modifications:
       - trigger: "Creatinine clearance 30-60 mL/min"
-        action: "Reduce cisplatin to 15 mg/m²/day (days 1-5); enhanced hydration"
+        action: "Seek review by a specialist testicular-cancer centre before deciding on cisplatin dosing or treatment timing. Kidney impairment does not establish a universal 15 mg/m²/day rule; an individualized plan may require nephrology input."
       - trigger: "CrCl <30 mL/min"
-        action: "Switch to carboplatin AUC 5 (less nephrotoxic; slightly less effective — expert recommendation)"
+        action: "Severe kidney impairment requires specialist assessment before treatment. Do not automatically substitute carboplatin AUC 5 for cisplatin or presume equivalent curative efficacy; regimen selection and dosing must be individualized."
       - trigger: "Cisplatin-induced peripheral neuropathy Grade 3"
         action: "Switch to EP or reduce cisplatin; consult"
 
@@ -142,3 +142,27 @@ clinical_claims:
     of other BEP claims.
   source_locator: 'British Journal of Cancer best-practice guideline: role of PFTs
     and symptom monitoring sections.'
+
+- claim_id: bep-kidney-specialist-assessment
+  text: BEP dose delays or reductions considered for kidney dysfunction require review
+    by an experienced testicular-cancer centre because efficacy may be compromised.
+    No universal cisplatin dose-reduction table or automatic switch to EP is established
+    by this record.
+  source_ids:
+  - SRC-EVIQ-TESTICULAR-BEP-320
+  scope: Specialist review of kidney-related BEP dosing decisions only; no individualized
+    dose prescription or blanket validation of other dose modifications.
+  source_locator: 'eviQ 320 v9 Dose modifications: note on delays/reductions and renal
+    dysfunction.'
+- claim_id: metastatic-nonseminoma-carboplatin-not-equivalent
+  text: In the 1997 MRC/EORTC randomized study of good-risk metastatic nonseminomatous
+    germ-cell cancer, the tested carboplatin-based CEB regimen was inferior to the
+    tested cisplatin-based BEP regimen. This does not establish an alternative regimen
+    for severe kidney impairment.
+  source_ids:
+  - SRC-HORWICH-BEP-CEB-1997
+  scope: Comparative efficacy in the trial population and tested schedules only; not
+    all germ-cell tumours, carboplatin indications or patients with severe kidney
+    impairment.
+  source_locator: 'PMID 9164194 / DOI 10.1200/JCO.1997.15.5.1844: abstract Results
+    and Conclusion.'

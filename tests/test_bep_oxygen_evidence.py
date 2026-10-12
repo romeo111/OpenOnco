@@ -88,3 +88,26 @@ def test_scoped_claim_terms_are_searchable_without_becoming_record_wide_sources(
     assert 'symptoms only' in row['search_text']
     assert 'src-test' in row['search_text']
     assert row['sources'] == []
+
+
+def test_bep_kidney_actions_do_not_prescribe_unverified_reduction_or_substitution():
+    import subprocess
+    reg_path = 'knowledge_base/hosted/content/regimens/reg_bep_gct.yaml'
+    current = yaml.safe_load((ROOT / reg_path).read_text(encoding='utf-8'))
+    before = yaml.safe_load(subprocess.check_output(['git', 'show', 'HEAD:' + reg_path], cwd=ROOT))
+    for old, new in zip(before['components'], current['components']):
+        for field in ('drug_id', 'dose', 'route', 'schedule'):
+            assert new[field] == old[field]
+    assert current['cycle_length_days'] == before['cycle_length_days']
+    assert current['total_planned_cycles'] == before['total_planned_cycles']
+    renal_bleomycin = current['components'][0]['dose_modifications'][2]['action']
+    cisplatin_rules = current['components'][2]['dose_modifications']
+    assert 'EP still contains cisplatin' in renal_bleomycin
+    assert 'universal 15 mg/m²/day rule' in cisplatin_rules[0]['action']
+    assert 'Do not automatically substitute' in cisplatin_rules[1]['action']
+    assert 'slightly less effective' not in cisplatin_rules[1]['action']
+    assert current['last_reviewed'] is None
+    assert current['review_status'] == 'pending_clinical_signoff'
+    claims = {claim['claim_id']: claim for claim in current['clinical_claims']}
+    assert claims['bep-kidney-specialist-assessment']['source_ids'] == ['SRC-EVIQ-TESTICULAR-BEP-320']
+    assert 'severe kidney impairment' in claims['metastatic-nonseminoma-carboplatin-not-equivalent']['scope']

@@ -81,6 +81,10 @@ assert bep_result.default_indication_id == 'IND-GCT-METASTATIC-1L-BEP'
 reg=yaml.safe_load((KB/'regimens/reg_bep_gct.yaml').read_text())
 assert 'not universally required' in reg['premedication'][2]
 assert 'HRCT' in reg['monitoring'][0]
+assert 'EP still contains cisplatin' in reg['components'][0]['dose_modifications'][2]['action']
+assert 'universal 15 mg/m²/day rule' in reg['components'][2]['dose_modifications'][0]['action']
+assert 'Do not automatically substitute' in reg['components'][2]['dose_modifications'][1]['action']
+assert (KB/'sources/src_horwich_bep_ceb_1997.yaml').is_file()
 assert 'not an automatic permanent-discontinuation' in reg['components'][0]['dose_modifications'][0]['action']
 assert reg['review_status'] == 'pending_clinical_signoff'
 assert reg['last_reviewed'] is None
