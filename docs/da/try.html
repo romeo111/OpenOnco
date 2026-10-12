@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="a95b99df0c0d7d30d3957232c583f7cafff6a7a80d2cae081a69219482976312"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="c54190350c394a6ea9f344d7e10015cd78ed5e0eb1e9e97ad0ecb734b15e241b"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -469,6 +469,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Indtast et gyldigt tal.", "integer": "Indtast et helt tal.", "range": "Brug en værdi inden for disse grænser:", "summary": "Ret de markerede talfelter, før du genererer planen eller åbner JSON.", "sync": "Indtast dette tal igen for at bekræfte det."};
 const numericInputErrors = new Map();
+const profileInputCopy = {"json": "Indtast gyldig JSON.", "object": "Profilen skal være et JSON-objekt.", "finite": "Profilen indeholder et ikke-endeligt tal.", "section": "Dette profilafsnit skal være et objekt eller null:"};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -698,7 +699,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Browser');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '894440195fdf'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '43785f5a60c1'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1466,9 +1467,29 @@ function setMode(newMode, { syncFromForm = false } = {}) {
 }
 
 // ── Profile assembly + live preview ───────────────────────────────────────
+function profileInputError(profile) {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return profileInputCopy.object;
+  for (const name of ['disease','demographics','findings','biomarkers','clinician_confirmations']) {
+    const section = profile[name];
+    if (section !== undefined && section !== null && (typeof section !== 'object' || Array.isArray(section))) return profileInputCopy.section + ' ' + name;
+  }
+  const pending = [profile];
+  while (pending.length) {
+    const value = pending.pop();
+    if (typeof value === 'number' && !Number.isFinite(value)) return profileInputCopy.finite;
+    if (value && typeof value === 'object') pending.push(...Object.values(value));
+  }
+  return '';
+}
+
 function buildProfile() {
   if (mode === 'json') {
-    try { return JSON.parse(textarea.value); } catch { return null; }
+    try {
+      const profile = JSON.parse(textarea.value);
+      const error = profileInputError(profile);
+      if (error) { setError(error); return null; }
+      return profile;
+    } catch { setError(profileInputCopy.json); return null; }
   }
   if (!activeQuest || !validateNumericInputs()) return null;
   // Deep-merge fixed_fields + expand dotted-path answers
@@ -2266,7 +2287,7 @@ async function runEngine() {
   setError(null);
   const profile = buildProfile();
   if (!profile) {
-    setError('Could not assemble a profile (form / JSON empty).');
+    if (mode !== 'json') setError('Could not assemble a profile (form / JSON empty).');
     return;
   }
 

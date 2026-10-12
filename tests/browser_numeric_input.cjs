@@ -6,7 +6,7 @@ function fn(page, name) {
   assert(m, name); return m[0].replace(/\r\n/g, '\n');
 }
 const names = ['parseNumericValue','numericValueError','numericInputError','validateNumericInputs','readValue',
-  'onAnswerChange','buildProfile','setMode','updateWorkflowControls','updateImpactPanelLocal'];
+  'onAnswerChange','profileInputError','buildProfile','setMode','updateWorkflowControls','updateImpactPanelLocal'];
 const code = names.map(n=>fn(html,n)).join('\n');
 function input(field, type, value, min, max) {
   const error = { style: {}, hidden: true };
@@ -20,7 +20,7 @@ const b = input('findings.virtual_float','float','0.836','0','10');
 const summary = {}, textarea = { value: '{"patient_id":"VIRTUAL-OLD"}' }, calls = { drafts: [], missing: [] };
 const button = () => ({ disabled:false, classList:{ toggle(){} } });
 const copy = JSON.parse(html.match(/^const numericInputCopy = (.*);$/m)[1]);
-const context = vm.createContext({ console, numericInputCopy:copy, numericInputSummary:summary, numericInputErrors:new Map(),
+const context = vm.createContext({ console, profileInputCopy:JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]), numericInputCopy:copy, numericInputSummary:summary, numericInputErrors:new Map(),
   formPane:{ querySelectorAll:()=>[a,b] }, jsonPane:{}, textarea,
   isInteractionLocked:()=>false, setLockedTitle(){}, refreshModeButtonAvailability(){},
   markPlanDirty:()=>vm.runInContext('planDirty=true', context),

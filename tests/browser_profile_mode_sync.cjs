@@ -5,7 +5,7 @@ function fn(page, name) {
   const match = page.match(new RegExp(`^function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
   assert(match, name); return match[0].replace(/\r\n/g, '\n');
 }
-const code = fn(html, 'setMode') + '\n' + fn(html, 'buildProfile');
+const code = fn(html, 'profileInputError') + '\n' + fn(html, 'setMode') + '\n' + fn(html, 'buildProfile');
 function fixture() {
   const fixed = { disease: { id: 'DIS-VIRTUAL' }, metadata: { synthetic: true } };
   const answers = { patient_id: 'VIRTUAL-MODE-001', 'demographics.ecog': 0,
@@ -13,7 +13,8 @@ function fixture() {
   const textarea = { value: '{"patient_id":"VIRTUAL-OLD","demographics":{"ecog":3}}' };
   const calls = { saves: [], updates: 0 };
   const context = vm.createContext({
-    validateNumericInputs: () => true, fixed, answers, textarea,
+    validateNumericInputs: () => true,
+    profileInputCopy: JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]), setError() {}, fixed, answers, textarea,
     modeFormBtn: { classList: { toggle() {} } }, modeJsonBtn: { classList: { toggle() {} } },
     formPane: {}, jsonPane: {},
     saveDraft: () => calls.saves.push(textarea.value), updateRunBtnEnabled: () => calls.updates++,

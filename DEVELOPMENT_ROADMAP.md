@@ -366,3 +366,26 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   valid-looking default controls from bypassing invalid stored values. The
   follow-up keeps clinical source data and engine rules unchanged; actual
   repeated-browser-reload confirmation remains pending at this commit.
+
+- 2026-10-12: Actual browser confirmed 8f16c4431e restores invalid 61.5 and
+  blocks generation; valid correction, 0.836 precision, zero and false survive
+  JSON transfer and another reload. This also closes the incorrect-wrapper
+  restore defect for declared controls; unknown-field reconstruction remains open.
+- 2026-10-12: Added direct JSON/engine/API structural boundaries: reject top-level
+  non-objects, non-object declared map sections, nested non-finite numeric values
+  and Python container cycles before routing/KB work. API invalid-body rejection
+  precedes quota/provider work; normalized model JSON is checked before engine
+  generation. Browser error copy is native in all 11 editions and retains the
+  specific error rather than replacing it with a generic assembly failure.
+  This adds no clinical ranges, treatment rules or normalization; null, zero,
+  false and finite decimal data are unchanged. Input/API tests passed (146),
+  render/reference/localization tests (161), language/layout tests (28), shipped
+  JSON/mode/numeric/cache/export tests and critical lint passed. Node WASM
+  synthetic AML generation still passes with fetch/TCP disabled. All 2061
+  clinical core members are byte-identical; new gzip core is 2,623,757 bytes.
+  Existing API package/dry run verified 4336 public source paths / 4339 upload
+  files with no env values, caches or project metadata. Actual production
+  rejection after Pages/API delivery remains pending at this commit. Full
+  clinical schema/semantic validation (including numeric strings and JSON
+  precision), clinical translation review, browser offline/PDF proof and
+  unsupported safe-default claims remain open.

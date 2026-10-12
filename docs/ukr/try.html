@@ -485,6 +485,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Введіть коректне число.", "integer": "Введіть ціле число.", "range": "Введіть значення в цих межах:", "summary": "Виправте виділені числові поля перед генерацією або відкриттям JSON.", "sync": "Введіть це число повторно, щоб підтвердити його."};
 const numericInputErrors = new Map();
+const profileInputCopy = {"json": "Введіть коректний JSON.", "object": "Профіль має бути JSON-об’єктом.", "finite": "Профіль містить нескінченне або нечислове значення.", "section": "Цей розділ профілю має бути об’єктом або null:"};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -714,7 +715,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Браузер');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '894440195fdf'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '43785f5a60c1'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1482,9 +1483,29 @@ function setMode(newMode, { syncFromForm = false } = {}) {
 }
 
 // ── Profile assembly + live preview ───────────────────────────────────────
+function profileInputError(profile) {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return profileInputCopy.object;
+  for (const name of ['disease','demographics','findings','biomarkers','clinician_confirmations']) {
+    const section = profile[name];
+    if (section !== undefined && section !== null && (typeof section !== 'object' || Array.isArray(section))) return profileInputCopy.section + ' ' + name;
+  }
+  const pending = [profile];
+  while (pending.length) {
+    const value = pending.pop();
+    if (typeof value === 'number' && !Number.isFinite(value)) return profileInputCopy.finite;
+    if (value && typeof value === 'object') pending.push(...Object.values(value));
+  }
+  return '';
+}
+
 function buildProfile() {
   if (mode === 'json') {
-    try { return JSON.parse(textarea.value); } catch { return null; }
+    try {
+      const profile = JSON.parse(textarea.value);
+      const error = profileInputError(profile);
+      if (error) { setError(error); return null; }
+      return profile;
+    } catch { setError(profileInputCopy.json); return null; }
   }
   if (!activeQuest || !validateNumericInputs()) return null;
   // Deep-merge fixed_fields + expand dotted-path answers
@@ -2282,7 +2303,7 @@ async function runEngine() {
   setError(null);
   const profile = buildProfile();
   if (!profile) {
-    setError('Не вдалося зібрати профіль (форма / JSON порожні).');
+    if (mode !== 'json') setError('Не вдалося зібрати профіль (форма / JSON порожні).');
     return;
   }
 

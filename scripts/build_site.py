@@ -4775,6 +4775,8 @@ def render_try(
     from scripts.report_export_copy import ERRORS as report_export_errors
     from scripts.runtime_cache_copy import COPY as runtime_copy
     from scripts.numeric_input_copy import COPY as numeric_copy
+    from scripts.profile_input_copy import COPY as profile_copy
+    profile_labels = profile_copy[target_lang]
     numeric_labels = numeric_copy[target_lang]
     runtime_labels = runtime_copy[target_lang]
     runtime_manifest = json.loads(Path(__file__).with_name("pyodide-runtime-manifest.json").read_text(encoding="utf-8"))
@@ -5134,6 +5136,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {json.dumps(numeric_labels, ensure_ascii=False)};
 const numericInputErrors = new Map();
+const profileInputCopy = {json.dumps(profile_labels, ensure_ascii=False)};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -6131,9 +6134,29 @@ function setMode(newMode, {{ syncFromForm = false }} = {{}}) {{
 }}
 
 // ── Profile assembly + live preview ───────────────────────────────────────
+function profileInputError(profile) {{
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return profileInputCopy.object;
+  for (const name of ['disease','demographics','findings','biomarkers','clinician_confirmations']) {{
+    const section = profile[name];
+    if (section !== undefined && section !== null && (typeof section !== 'object' || Array.isArray(section))) return profileInputCopy.section + ' ' + name;
+  }}
+  const pending = [profile];
+  while (pending.length) {{
+    const value = pending.pop();
+    if (typeof value === 'number' && !Number.isFinite(value)) return profileInputCopy.finite;
+    if (value && typeof value === 'object') pending.push(...Object.values(value));
+  }}
+  return '';
+}}
+
 function buildProfile() {{
   if (mode === 'json') {{
-    try {{ return JSON.parse(textarea.value); }} catch {{ return null; }}
+    try {{
+      const profile = JSON.parse(textarea.value);
+      const error = profileInputError(profile);
+      if (error) {{ setError(error); return null; }}
+      return profile;
+    }} catch {{ setError(profileInputCopy.json); return null; }}
   }}
   if (!activeQuest || !validateNumericInputs()) return null;
   // Deep-merge fixed_fields + expand dotted-path answers
@@ -6931,7 +6954,7 @@ async function runEngine() {{
   setError(null);
   const profile = buildProfile();
   if (!profile) {{
-    setError('{"Could not assemble a profile (form / JSON empty)." if target_lang == "en" else "Не вдалося зібрати профіль (форма / JSON порожні)."}');
+    if (mode !== 'json') setError('{"Could not assemble a profile (form / JSON empty)." if target_lang == "en" else "Не вдалося зібрати профіль (форма / JSON порожні)."}');
     return;
   }}
 

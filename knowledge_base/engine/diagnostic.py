@@ -15,6 +15,8 @@ Hard rules (CHARTER §15.2 C7):
 
 from __future__ import annotations
 
+from .profile_input import validate_patient_profile
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -69,6 +71,9 @@ def is_diagnostic_profile(patient: dict) -> bool:
     a `disease.suspicion` block is present AND no confirmed diagnosis
     fields (`disease.id` or `disease.icd_o_3_morphology`) are set."""
 
+    if patient is None:
+        return False
+    validate_patient_profile(patient)
     disease = (patient or {}).get("disease") or {}
     has_confirmed = bool(disease.get("id") or disease.get("icd_o_3_morphology"))
     has_suspicion = bool(disease.get("suspicion"))
@@ -76,6 +81,9 @@ def is_diagnostic_profile(patient: dict) -> bool:
 
 
 def is_treatment_profile(patient: dict) -> bool:
+    if patient is None:
+        return False
+    validate_patient_profile(patient)
     disease = (patient or {}).get("disease") or {}
     return bool(disease.get("id") or disease.get("icd_o_3_morphology"))
 
@@ -231,6 +239,7 @@ def generate_diagnostic_brief(
     generate_plan() for those.
     """
 
+    validate_patient_profile(patient)
     if is_treatment_profile(patient):
         raise ValueError(
             "Patient profile has confirmed diagnosis (disease.id / "

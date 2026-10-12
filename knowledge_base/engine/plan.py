@@ -30,6 +30,8 @@ Patient profile shape (dict; MVP — we will move to FHIR/mCODE later):
 
 from __future__ import annotations
 
+from .profile_input import validate_patient_profile
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import json
@@ -871,6 +873,8 @@ def generate_plan(
     browser can't reach api.clinicaltrials.gov but the bundled cache
     can serve hits).
     """
+
+    validate_patient_profile(patient)
 
     result = PlanResult(
         patient_id=patient.get("patient_id"),

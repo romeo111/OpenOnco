@@ -18,6 +18,8 @@ as new diseases land in the KB.
 
 from __future__ import annotations
 
+from .profile_input import validate_patient_profile
+
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional
@@ -1690,6 +1692,8 @@ def orchestrate_mdt(
     `plan_result.default_indication_id` being unchanged after this call
     (asserted in tests).
     """
+
+    validate_patient_profile(patient)
 
     # Lazy import to avoid a circular dependency at module-load time
     from .diagnostic import DiagnosticPlanResult

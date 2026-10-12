@@ -40,6 +40,7 @@ from knowledge_base.engine import (
     orchestrate_mdt,
 )
 from knowledge_base.validation.loader import load_content
+from knowledge_base.engine.profile_input import validate_json_object, validate_patient_profile
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -937,6 +938,7 @@ def _safe_json_object(text: str) -> dict[str, Any]:
         raise ValueError(f"patient_profile_json is not valid JSON: {exc}") from exc
     if not isinstance(data, dict):
         raise ValueError("patient_profile_json must decode to an object")
+    validate_patient_profile(data)
     return data
 
 
@@ -1516,6 +1518,12 @@ def handle_json_request(
         return _finalize_json_request(400, _cors_headers(), {
             "status": "error",
             "message": "JSON request body must be an object.",
+        }, body={}, request_meta=request_meta)
+    try:
+        validate_json_object(body)
+    except ValueError:
+        return _finalize_json_request(400, _cors_headers(), {
+            "status": "error", "message": "JSON request contains invalid numeric data.",
         }, body={}, request_meta=request_meta)
     locale = str(body.get("locale") or "uk")
     principal = _quota_principal(request_meta)
