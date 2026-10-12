@@ -42,6 +42,14 @@ The default path inventory comes from committed `docs/` filenames plus the manif
 
 ## Publish
 
+After deployment, check the eight main public pages in all eleven languages and the additional internal destinations linked from their headers:
+
+```bash
+python -m scripts.check_live_navigation --report .tmp/live-navigation.json
+```
+
+Use `--base-url http://localhost:8000/` for a locally served preview. The check uses bounded, read-only GET requests, verifies shared headers, language order and flags, document language, canonical links and main landmarks, and fails on broken navigation destinations. Redirects cannot leave the selected website origin. It does not submit cases, call the clinical API, execute JavaScript or prove visual layout, accessibility with assistive technology, or clinical correctness. Create the report directory before running.
+
 GitHub Pages serves branch **`master`**, directory **`/docs`**, at **https://openonco.info/**. Push reviewed generated output and its source changes to the deployment branch through the repository's authorized delivery flow. The standard **pages build and deployment** run must succeed; inspect the live pages afterward. The [Daily Site Refresh](../.github/workflows/daily-site-refresh.yml) rebuilds from current KB content and commits changed output.
 
 The optional question API is a separate deployment; updating GitHub Pages does not configure its secrets or deploy that backend. Keep all credentials outside Git and use synthetic fixtures in demos, screenshots and review packets.
