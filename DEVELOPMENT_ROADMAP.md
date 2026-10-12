@@ -291,3 +291,19 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   browser offline proof. Added reproducible inventory download/audit and offline
   WASM generation to CI; language/layout checks passed (28 tests). Real browser
   offline reopening/generation and PDF proof remain open.
+
+- 2026-10-12: Actual published browser generated the synthetic VIRTUAL-AML-001
+  report without loading errors after the pinned runtime retention release.
+  Added a separate Engine files status row for all 11 editions: read-only worker
+  inspection verifies retained bytes against size/SHA-256, while preparation
+  reports actual persistence (not merely successful online fetching). Missing,
+  corrupted or inaccessible files cannot indicate readiness. Active-controller,
+  inventory-version, request-ID and integer-count guards reject spoofed, stale
+  or malformed statuses; no supplied text, URL, DOM or profile is returned.
+  Native runtime status copy is scoped separately from clinical catalogs.
+  Language/layout suite passed (28 tests), real-byte worker regressions cover
+  empty/corrupt/storage-denied status and no-download inspection, all existing
+  loading/export/form/cache/version Node suites and critical lint passed.
+  Actual new status indication after deployment remains pending at this commit.
+  Browser automation has no advertised network-emulation capability; full
+  browser offline reopening/generation and PDF printing remain unproven.

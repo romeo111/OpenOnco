@@ -13,6 +13,7 @@ assert.deepEqual(actualInventory, Object.fromEntries(Object.entries(manifest.ass
 const code = original.replace(/^const PYODIDE_RUNTIME_ASSETS = .*;$/m, 'const PYODIDE_RUNTIME_ASSETS = ' + JSON.stringify(inventory) + ';');
 function fixture() {
   const stored = new Map(), handlers = {}, state = { offline: false, corrupt: false, openFails: false, putFails: false, failedUrl: null, httpCache: false, badHttpCache: false };
+  const replies = [];
   const calls = { fetches: [], puts: [], active: 0, peak: 0 };
   const context = vm.createContext({ URL, Request, Response, Uint8Array, crypto: webcrypto, console: { warn() {} },
     self: { location: { origin: 'https://openonco.info' }, addEventListener(name, fn) { (handlers[name] ||= []).push(fn); } },
@@ -41,10 +42,10 @@ function fixture() {
   }
   function message(source, data = { type: 'CACHE_ENGINE_RUNTIME' }) {
     let result;
-    for (const fn of handlers.message) fn({ source: { url: source }, data, waitUntil(p) { result = p; } });
+    for (const fn of handlers.message) fn({ source: { url: source, postMessage: data => replies.push(data) }, data, waitUntil(p) { result = p; } });
     return result;
   }
-  return { state, stored, calls, request, message, run };
+  return { state, stored, calls, replies, request, message, run };
 }
 (async () => {
   const urls = Object.keys(assets);
@@ -102,26 +103,65 @@ function fixture() {
   assert.equal(f.calls.fetches.length, 11, 'Retry fetches only incomplete runtime files');
   for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const html = fs.readFileSync('docs/' + prefix + 'try.html', 'utf8');
+    const labels = JSON.parse(html.match(/^const runtimeCacheCopy = (.*);$/m)[1]);
+    assert(html.includes('<dt>' + labels.label + '</dt>'));
+    assert(html.includes('aria-live="polite">' + labels.unchecked + '</dd>'));
+    if (prefix) assert.notEqual(labels.ready, 'Files saved', 'Native runtime status must be available in every localized edition');
+    const receiver = html.match(/^function receiveRuntimeCacheStatus\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g, '\n');
+    const originalReceiver = fs.readFileSync('docs/try.html', 'utf8').match(/^function receiveRuntimeCacheStatus\([^\n]*\{[\s\S]*?^\}/m)[0].replace(/\r\n/g, '\n');
+    assert.equal(receiver, originalReceiver, 'All eleven editions must use the same trusted-worker and count validation');
     assert(html.includes('async function retainEngineRuntime()'));
-    assert(html.includes("postMessage({ type: 'CACHE_ENGINE_RUNTIME' })"));
+    assert(html.includes("postMessage({ type: 'CACHE_ENGINE_RUNTIME', requestId: ++runtimeCacheRequestId })"));
     assert(html.includes('retainEngineRuntime().catch(() => {});'));
   }
   const page = fs.readFileSync('docs/try.html', 'utf8');
-  const clientCode = page.slice(page.indexOf('async function retainEngineRuntime()'), page.indexOf('function scheduleOfflineCacheWarmup()'));
+  const clientCode = page.slice(page.indexOf('async function checkRuntimeCacheStatus()'), page.indexOf('function scheduleOfflineCacheWarmup()'));
   const posts = [], clientEvents = {};
-  let active = { postMessage: data => posts.push(data) };
-  const serviceWorker = { get ready() { return Promise.resolve({ active }); },
+  let active = { scriptURL: 'https://openonco.info/sw.js', postMessage: data => posts.push(data) };
+  const serviceWorker = { get controller() { return active; }, get ready() { return Promise.resolve({ active }); },
     addEventListener: (name, fn) => { clientEvents[name] = fn; } };
-  const client = vm.createContext({ navigator: { serviceWorker }, console: { warn() {} } });
+  const stateEl = {};
+  const cacheVersion = JSON.parse(page.match(/^const runtimeCacheVersion = (.*);$/m)[1]);
+  const copy = JSON.parse(page.match(/^const runtimeCacheCopy = (.*);$/m)[1]);
+  const client = vm.createContext({ URL, location: { origin: 'https://openonco.info' }, runtimeCacheStateEl: stateEl, runtimeCacheCopy: copy, runtimeCacheFileCount: 10, runtimeCacheVersion: cacheVersion, runtimeCacheRequestId: 0, setText: (el, value) => { el.textContent = value; }, navigator: { serviceWorker }, console: { warn() {} } });
   vm.runInContext('let enginReady=false,planSource=null;' + clientCode, client);
-  clientEvents.controllerchange(); await Promise.resolve();
-  assert.equal(posts.length, 0, 'Do not prepare runtime before generation');
+  clientEvents.controllerchange();
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  assert(posts.every(data => data.type === 'CHECK_ENGINE_RUNTIME'), 'Only inspect retained bytes before generation');
+  posts.length = 0;
   vm.runInContext('enginReady=true;planSource="generated";', client);
   await vm.runInContext('retainEngineRuntime()', client);
-  active = { postMessage: data => posts.push(data) };
+  active = { scriptURL: 'https://openonco.info/sw.js', postMessage: data => posts.push(data) };
   clientEvents.controllerchange();
   for (let i = 0; i < 5; i++) await Promise.resolve();
   assert.equal(posts.length, 2, 'Worker upgrades retry retention after generation');
-  assert(posts.every(data => Object.keys(data).length === 1 && data.type === 'CACHE_ENGINE_RUNTIME'));
+  assert(posts.every(data => Object.keys(data).length === 2 && Number.isSafeInteger(data.requestId) && data.type === 'CACHE_ENGINE_RUNTIME'));
+  const trusted = active;
+  clientEvents.message({ source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', cache: cacheVersion, requestId: client.runtimeCacheRequestId, completed: 9, total: 10 } });
+  assert.equal(stateEl.textContent, copy.partial + ' (9 / 10)');
+  clientEvents.message({ source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', cache: cacheVersion, requestId: client.runtimeCacheRequestId, completed: 10, total: 10 } });
+  assert.equal(stateEl.textContent, copy.ready + ' (10 / 10)');
+  for (const event of [
+    { source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', requestId: client.runtimeCacheRequestId - 1, completed: 0, total: 10 } },
+    { source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', cache: 'old-inventory', completed: 0, total: 10 } },
+    { source: { scriptURL: 'https://openonco.info/sw.js' }, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', completed: 0, total: 10 } },
+    { source: { scriptURL: 'https://third-party.example/sw.js' }, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', completed: 0, total: 10 } },
+    { source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', completed: 11, total: 10 } },
+    { source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', completed: '10', total: 10 } },
+    { source: trusted, data: { type: 'ENGINE_RUNTIME_CACHE_STATUS', completed: 10, total: 11 } },
+  ]) { if (!event.data.cache) event.data.cache = cacheVersion; if (event.data.requestId === undefined) event.data.requestId = client.runtimeCacheRequestId; clientEvents.message(event); assert.equal(stateEl.textContent, copy.ready + ' (10 / 10)'); }
+  f = fixture();
+  await f.message('https://openonco.info/try.html', { type: 'CHECK_ENGINE_RUNTIME' });
+  assert.equal(f.calls.fetches.length, 0, 'Status checks must not download runtime');
+  assert.equal(f.replies.at(-1).completed, 0);
+  await f.message('https://openonco.info/try.html');
+  assert.equal(f.replies.at(-1).completed, 10);
+  f.stored.set(urls[0], new Response('corrupt'));
+  await f.message('https://openonco.info/try.html', { type: 'CHECK_ENGINE_RUNTIME' });
+  assert.equal(f.replies.at(-1).completed, 9, 'Corrupt retained bytes cannot produce a ready indication');
+  assert.equal(f.calls.fetches.length, 10);
+  f.state.openFails = true;
+  await f.message('https://openonco.info/try.html', { type: 'CHECK_ENGINE_RUNTIME' });
+  assert.equal(f.replies.at(-1).completed, 0, 'Storage denial cannot produce a ready indication');
   console.log('Pinned runtime: all 10 assets offline, integrity failure rejection/recovery, storage tolerance, strict URL/method/privacy scope, bounded cold-visit preparation and retry; eleven clients guarded');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -127,3 +127,13 @@ operation. The complete pydantic/pyyaml dependency closure totals 20,815,756
 bytes and adds no hosted binary assets. CI verifies the worker's offline and
 failure behavior and runs a synthetic Node WASM plan with fetch/TCP disabled.
 Full offline browser reopening/generation and PDF printing remain unproven.
+
+Runtime retention status (2026-10-12): the separate Engine files row displays
+worker-verified retained-file counts, distinct from clinical-module retention.
+Startup inspection performs no downloads. Responses must come from the active
+controller and match the pinned inventory, current request ID and valid integer
+counts; stale/foreign/malformed responses cannot indicate readiness. Missing,
+corrupt or unreadable retained files count as incomplete. Native copy for all
+11 languages is scoped in `scripts/runtime_cache_copy.py`, without changing
+clinical catalogs or engine inputs. This status proves retained runtime files
+at inspection time, not complete browser offline generation or printing.

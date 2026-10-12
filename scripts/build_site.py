@@ -4773,6 +4773,12 @@ def render_try(
     examples_manifest: list = None,
 ) -> str:
     from scripts.report_export_copy import ERRORS as report_export_errors
+    from scripts.runtime_cache_copy import COPY as runtime_copy
+    runtime_labels = runtime_copy[target_lang]
+    runtime_manifest = json.loads(Path(__file__).with_name("pyodide-runtime-manifest.json").read_text(encoding="utf-8"))
+    runtime_count = len(runtime_manifest["assets"])
+    runtime_assets = {runtime_manifest["base_url"] + name: asset for name, asset in runtime_manifest["assets"].items()}
+    runtime_cache_version = "openonco-runtime-" + hashlib.sha256(json.dumps(runtime_assets, sort_keys=True).encode()).hexdigest()[:12]
     # Pyodide assets live at site root — root-relative paths work for both
     # /try.html (EN, default) and /ukr/try.html (UA mirror). The Pyodide
     # engine bundle is a single shared copy.
@@ -5001,6 +5007,7 @@ def render_try(
           <div><dt>{'Cache' if target_lang == 'en' else 'Кеш'}</dt><dd id="cacheState">{'Checking…' if target_lang == 'en' else 'Перевіряю…'}</dd></div>
           <div><dt>{'Offline' if target_lang == 'en' else 'Offline'}</dt><dd id="offlineState">{'Network required for first launch' if target_lang == 'en' else 'Мережа потрібна для першого запуску'}</dd></div>
           <div><dt>{'Modules' if target_lang == 'en' else 'Модулі'}</dt><dd id="offlineModulesState">{'Waiting for index' if target_lang == 'en' else 'Чекаю індекс'}</dd></div>
+          <div><dt>{runtime_labels["label"]}</dt><dd id="runtimeCacheState" aria-live="polite">{runtime_labels["unchecked"]}</dd></div>
         </dl>
         <div class="offline-cache-progress" id="offlineCacheProgress">
           <div class="offline-cache-bar" id="offlineCacheBar" role="progressbar" aria-label="{'Offline module cache progress' if target_lang == 'en' else 'Прогрес офлайн-кешу модулів'}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -5139,6 +5146,11 @@ const cacheStateEl = document.getElementById('cacheState');
 const offlineStateEl = document.getElementById('offlineState');
 const pwaInstallStateEl = document.getElementById('pwaInstallState');
 const offlineModulesStateEl = document.getElementById('offlineModulesState');
+const runtimeCacheStateEl = document.getElementById('runtimeCacheState');
+const runtimeCacheCopy = {json.dumps(runtime_labels, ensure_ascii=False)};
+const runtimeCacheFileCount = {runtime_count};
+const runtimeCacheVersion = {json.dumps(runtime_cache_version)};
+let runtimeCacheRequestId = 0;
 const offlineCacheBarEl = document.getElementById('offlineCacheBar');
 const offlineCacheFillEl = document.getElementById('offlineCacheFill');
 const offlineCacheTextEl = document.getElementById('offlineCacheText');
@@ -6514,20 +6526,48 @@ async function cacheAllBundlesForOffline() {{
   }}
 }}
 
+async function checkRuntimeCacheStatus() {{
+  if (!('serviceWorker' in navigator)) return;
+  try {{
+    const registration = await navigator.serviceWorker.ready;
+    if (registration.active) {{
+      setText(runtimeCacheStateEl, runtimeCacheCopy.checking);
+      registration.active.postMessage({{ type: 'CHECK_ENGINE_RUNTIME', requestId: ++runtimeCacheRequestId }});
+    }}
+  }} catch (_) {{ setText(runtimeCacheStateEl, runtimeCacheCopy.unchecked); }}
+}}
+
+function receiveRuntimeCacheStatus(event) {{
+  if (!event.source || event.source !== navigator.serviceWorker.controller ||
+      event.source.scriptURL !== new URL('/sw.js', location.origin).href) return;
+  const data = event.data;
+  if (!data || data.type !== 'ENGINE_RUNTIME_CACHE_STATUS' || data.requestId !== runtimeCacheRequestId || data.cache !== runtimeCacheVersion || data.total !== runtimeCacheFileCount ||
+      !Number.isInteger(data.completed) || data.completed < 0 || data.completed > data.total) return;
+  setText(runtimeCacheStateEl, (data.completed === data.total ? runtimeCacheCopy.ready : runtimeCacheCopy.partial) +
+    ' (' + data.completed + ' / ' + data.total + ')');
+}}
+
 async function retainEngineRuntime() {{
   if (!('serviceWorker' in navigator)) return;
   try {{
     const registration = await navigator.serviceWorker.ready;
-    if (registration.active) registration.active.postMessage({{ type: 'CACHE_ENGINE_RUNTIME' }});
+    if (registration.active) {{
+      setText(runtimeCacheStateEl, runtimeCacheCopy.checking);
+      registration.active.postMessage({{ type: 'CACHE_ENGINE_RUNTIME', requestId: ++runtimeCacheRequestId }});
+    }}
   }} catch (error) {{
+    setText(runtimeCacheStateEl, runtimeCacheCopy.unchecked);
     console.warn('[OpenOnco] runtime retention unavailable:', error);
   }}
 }}
 
 if ('serviceWorker' in navigator) {{
+  navigator.serviceWorker.addEventListener('message', receiveRuntimeCacheStatus);
   navigator.serviceWorker.addEventListener('controllerchange', () => {{
     if (enginReady && planSource === 'generated') retainEngineRuntime().catch(() => {{}});
+    else checkRuntimeCacheStatus().catch(() => {{}});
   }});
+  checkRuntimeCacheStatus().catch(() => {{}});
 }}
 
 function scheduleOfflineCacheWarmup() {{

@@ -175,9 +175,15 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
     # The final discovery pass will create canonical/hreflang/JSON-LD for this URL.
     source = re.sub(r'<!-- openonco-seo:start -->.*?<!-- openonco-seo:end -->', '', source, flags=re.S)
     source = re.sub(r'<header class="top-bar site-header">.*?</header>', '', source, flags=re.S)
+    if path == "try.html":
+        from scripts.runtime_cache_copy import messages_for
+        catalog = {**catalog, **messages_for(locale)}
     parser = LocalizedHTML(catalog, locale, path, available, style_assets)
     parser.feed(source)
     page = ''.join(parser.parts)
+    if path == "try.html":
+        from scripts.runtime_cache_copy import COPY
+        page = re.sub(r"^const runtimeCacheCopy = .*;$", lambda _: "const runtimeCacheCopy = " + json.dumps(COPY[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
     active = path.split('/')[0].removesuffix('.html')
     active = {'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
     page = re.sub(r'(<body\b[^>]*>)', lambda m: m.group() + render_top_bar(active, locale, page_path=path), page, count=1)

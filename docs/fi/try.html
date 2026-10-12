@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="fc6d40ca87a94098aa7c622f3734592e1951a7f61a177eee6be77f5877fcffdf"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="ec2c28a4e74277c119038382c254316965207143d1ecd4ac0a9729acff72df78"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -353,6 +353,7 @@
           <div><dt>Välimuisti</dt><dd id="cacheState">Tarkistan...</dd></div>
           <div><dt>Offline</dt><dd id="offlineState">Verkkoa tarvitaan ensimmäisen käynnistyskerran aikana</dd></div>
           <div><dt>Moduulit</dt><dd id="offlineModulesState">Odotetaan indeksiä</dd></div>
+          <div><dt>Ohjelmatiedostot</dt><dd id="runtimeCacheState" aria-live="polite">Ei tarkistettu</dd></div>
         </dl>
         <div class="offline-cache-progress" id="offlineCacheProgress">
           <div class="offline-cache-bar" id="offlineCacheBar" role="progressbar" aria-label="Moduulin offline-välimuistin eteneminen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -482,6 +483,11 @@ const cacheStateEl = document.getElementById('cacheState');
 const offlineStateEl = document.getElementById('offlineState');
 const pwaInstallStateEl = document.getElementById('pwaInstallState');
 const offlineModulesStateEl = document.getElementById('offlineModulesState');
+const runtimeCacheStateEl = document.getElementById('runtimeCacheState');
+const runtimeCacheCopy = {"label": "Ohjelmatiedostot", "unchecked": "Ei tarkistettu", "checking": "Tarkistetaan tallennettuja tiedostoja…", "ready": "Tiedostot tallennettu", "partial": "Tiedostoja puuttuu"};
+const runtimeCacheFileCount = 10;
+const runtimeCacheVersion = "openonco-runtime-42c5cc37cb67";
+let runtimeCacheRequestId = 0;
 const offlineCacheBarEl = document.getElementById('offlineCacheBar');
 const offlineCacheFillEl = document.getElementById('offlineCacheFill');
 const offlineCacheTextEl = document.getElementById('offlineCacheText');
@@ -1857,20 +1863,48 @@ async function cacheAllBundlesForOffline() {
   }
 }
 
+async function checkRuntimeCacheStatus() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    if (registration.active) {
+      setText(runtimeCacheStateEl, runtimeCacheCopy.checking);
+      registration.active.postMessage({ type: 'CHECK_ENGINE_RUNTIME', requestId: ++runtimeCacheRequestId });
+    }
+  } catch (_) { setText(runtimeCacheStateEl, runtimeCacheCopy.unchecked); }
+}
+
+function receiveRuntimeCacheStatus(event) {
+  if (!event.source || event.source !== navigator.serviceWorker.controller ||
+      event.source.scriptURL !== new URL('/sw.js', location.origin).href) return;
+  const data = event.data;
+  if (!data || data.type !== 'ENGINE_RUNTIME_CACHE_STATUS' || data.requestId !== runtimeCacheRequestId || data.cache !== runtimeCacheVersion || data.total !== runtimeCacheFileCount ||
+      !Number.isInteger(data.completed) || data.completed < 0 || data.completed > data.total) return;
+  setText(runtimeCacheStateEl, (data.completed === data.total ? runtimeCacheCopy.ready : runtimeCacheCopy.partial) +
+    ' (' + data.completed + ' / ' + data.total + ')');
+}
+
 async function retainEngineRuntime() {
   if (!('serviceWorker' in navigator)) return;
   try {
     const registration = await navigator.serviceWorker.ready;
-    if (registration.active) registration.active.postMessage({ type: 'CACHE_ENGINE_RUNTIME' });
+    if (registration.active) {
+      setText(runtimeCacheStateEl, runtimeCacheCopy.checking);
+      registration.active.postMessage({ type: 'CACHE_ENGINE_RUNTIME', requestId: ++runtimeCacheRequestId });
+    }
   } catch (error) {
+    setText(runtimeCacheStateEl, runtimeCacheCopy.unchecked);
     console.warn('[OpenOnco] runtime retention unavailable:', error);
   }
 }
 
 if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', receiveRuntimeCacheStatus);
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (enginReady && planSource === 'generated') retainEngineRuntime().catch(() => {});
+    else checkRuntimeCacheStatus().catch(() => {});
   });
+  checkRuntimeCacheStatus().catch(() => {});
 }
 
 function scheduleOfflineCacheWarmup() {

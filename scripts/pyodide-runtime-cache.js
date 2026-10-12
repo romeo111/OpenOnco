@@ -62,13 +62,31 @@ function preparePyodideRuntime() {
 }
 
 self.addEventListener('message', event => {
-  if (!event.data || event.data.type !== 'CACHE_ENGINE_RUNTIME') return;
+  if (!event.data || !['CACHE_ENGINE_RUNTIME', 'CHECK_ENGINE_RUNTIME'].includes(event.data.type)) return;
   try {
     const source = new URL(event.source.url);
     if (source.origin !== self.location.origin || !PLAN_PAGE_PATHS.includes(source.pathname)) return;
   } catch (_) { return; }
   // Always use the fixed inventory; ignore supplied URLs, DOM or clinical input.
-  event.waitUntil(preparePyodideRuntime().catch(error => {
-    console.warn('[OpenOnco] runtime retention incomplete:', error);
-  }));
+  event.waitUntil((async () => {
+    if (event.data.type === 'CACHE_ENGINE_RUNTIME') {
+      await preparePyodideRuntime().catch(error => {
+        console.warn('[OpenOnco] runtime retention incomplete:', error);
+      });
+    }
+    const cache = await caches.open(PYODIDE_RUNTIME_CACHE).catch(() => null);
+    let completed = 0;
+    if (cache) {
+      for (const [url, asset] of Object.entries(PYODIDE_RUNTIME_ASSETS)) {
+        try {
+          const response = await cache.match(url);
+          await verifiedRuntimeResponse(response, asset);
+          completed++;
+        } catch (_) { /* Missing/corrupt/unreadable files must not count as retained. */ }
+      }
+    }
+    if (event.source && typeof event.source.postMessage === 'function') {
+      event.source.postMessage({ type: 'ENGINE_RUNTIME_CACHE_STATUS', requestId: Number.isSafeInteger(event.data.requestId) ? event.data.requestId : null, cache: PYODIDE_RUNTIME_CACHE, completed, total: Object.keys(PYODIDE_RUNTIME_ASSETS).length });
+    }
+  })());
 });
