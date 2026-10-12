@@ -162,4 +162,36 @@ json.dumps({'regimens':seen,'explicitNivoTrackMonitoring':nivo_track.monitoring_
 `));
 assert.equal(networkAttempts,0);
 
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,environment:'Node WASM, not browser'}));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-AITL'])).buffer,'zip');
+const tcellExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='aitl-cd30-positive');
+assert(tcellExample, 'Synthetic AITL fixture missing');
+py.globals.set('_tcell_json',JSON.stringify(tcellExample.json));
+const tcellState=JSON.parse(await py.runPythonAsync(`
+assert apply_disease_module(KB,disease_id='DIS-AITL')['ok']
+tcell_result=generate_plan(json.loads(_tcell_json),kb_root=KB)
+expected_tcell={'REG-CHP-BV':'MON-CHP-BV-REGIMEN','REG-CHOEP':'MON-CHOEP-REGIMEN'}
+seen_tcell=[]
+for track in tcell_result.plan.tracks:
+    regimen=(track.regimen_data or {}).get('id')
+    if regimen in expected_tcell:
+        assert track.monitoring_data['id']==expected_tcell[regimen]
+        assert track.monitoring_data['linked_to_regimen']==regimen
+        seen_tcell.append(regimen)
+        if regimen=='REG-CHP-BV':
+            assert 'SUP-GCSF-NEUTROPENIA' in track.regimen_data['mandatory_supportive_care']
+            during=track.monitoring_data['phases'][1]
+            assert 'Cycle 1' in during['checkpoints'][2]
+            assert 'US label' in during['checkpoints'][2]
+assert set(seen_tcell)==set(expected_tcell)
+for lang in ['en','uk']:
+    tcell_html=render_plan_html(tcell_result,target_lang=lang)
+    assert 'MON-R-CHOP-REGIMEN' not in tcell_html
+    assert 'Confirm CD20+ DLBCL histology' not in tcell_html
+    assert 'Підтвердити CD20+ DLBCL гістологію' not in tcell_html
+assert (KB/'sources/src_eviq_bv_chp_4038.yaml').is_file()
+assert (KB/'sources/src_eviq_choep21_630.yaml').is_file()
+assert (KB/'sources/src_adcetris_us_label.yaml').is_file()
+json.dumps({'regimens':seen_tcell,'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,environment:'Node WASM, not browser'}));

@@ -1,110 +1,129 @@
 id: REG-CHOEP
-name: "CHOEP (cyclophosphamide + doxorubicin + vincristine + etoposide + prednisone),
-  6 cycles"
-name_ua: "CHOEP (циклофосфамід + доксорубіцин + вінкристин + етопозид + преднізон),
-  6 циклів"
-alternate_names: ["CHOEP", "CHOP-E"]
-
+name: CHOEP (cyclophosphamide + doxorubicin + vincristine + etoposide + prednisone),
+  6 cycles
+name_ua: CHOEP (циклофосфамід + доксорубіцин + вінкристин + етопозид + преднізон),
+  6 циклів
+alternate_names:
+- CHOEP
+- CHOP-E
 components:
-- {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "750 mg/m²", schedule: "IV day 1 each 21-day
-    cycle", route: IV}
-- {drug_id: DRUG-DOXORUBICIN, dose: "50 mg/m²", schedule: "IV day 1 each cycle", 
-    route: IV}
-- {drug_id: DRUG-VINCRISTINE, dose: "1.4 mg/m² (cap 2 mg)", schedule: "IV day 1 each
-    cycle", route: IV}
-- {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 1-3 each cycle",
-  route: IV}
-- {drug_id: DRUG-PREDNISONE, dose: "100 mg", schedule: "PO days 1-5 each cycle", 
-    route: PO}
-
+- drug_id: DRUG-CYCLOPHOSPHAMIDE
+  dose: 750 mg/m²
+  schedule: IV day 1 each 21-day cycle
+  route: IV
+- drug_id: DRUG-DOXORUBICIN
+  dose: 50 mg/m²
+  schedule: IV day 1 each cycle
+  route: IV
+- drug_id: DRUG-VINCRISTINE
+  dose: 1.4 mg/m² (cap 2 mg)
+  schedule: IV day 1 each cycle
+  route: IV
+- drug_id: DRUG-ETOPOSIDE
+  dose: 100 mg/m²
+  schedule: IV days 1-3 each cycle
+  route: IV
+- drug_id: DRUG-PREDNISONE
+  dose: 100 mg
+  schedule: PO days 1-5 each cycle
+  route: PO
 cycle_length_days: 21
-total_cycles: "6 (consider autoSCT consolidation in fit younger)"
+total_cycles: 6 (consider autoSCT consolidation in fit younger)
 toxicity_profile: moderate-high
-
-premedication: ["Antiemetic premedications", "TLS prophylaxis cycle 1"]
+premedication:
+- Antiemetic premedications
+- TLS prophylaxis cycle 1
 mandatory_supportive_care:
 - SUP-PJP-PROPHYLAXIS
 - SUP-ANTIEMETIC-PREMED
 - SUP-GCSF-NEUTROPENIA
-monitoring_schedule_id: MON-R-CHOP-REGIMEN
-
+monitoring_schedule_id: MON-CHOEP-REGIMEN
 dose_adjustments:
-- {condition: "Age >60 OR cardiac issues", modification: "CHOP without etoposide;
-    less toxicity but lower efficacy"}
-- {condition: "Grade ≥2 peripheral neuropathy", modification: "Reduce vincristine;
-    consider non-vincristine regimen"}
-
-ukraine_availability: {all_components_registered: true, 
-    all_components_reimbursed: true}
-sources: [SRC-NCCN-BCELL-2025]
-
-# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
-# CHOEP for PTCL/AITL 1L (CD30-negative). Same as CHOP plus etoposide
-# (more cytopenia, more myelodysplasia long-term risk). STUB pending
-# §6.1 signoff.
+- condition: Age >60 OR cardiac issues
+  modification: CHOP without etoposide; less toxicity but lower efficacy
+- condition: Grade ≥2 peripheral neuropathy
+  modification: Reduce vincristine; consider non-vincristine regimen
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+sources:
+- SRC-NCCN-BCELL-2025
 between_visit_watchpoints:
-- trigger_ua: "Помірна втома після інфузії"
-  action_ua: "Очікувано — більше відпочивайте у дні 1-3"
+- trigger_ua: Помірна втома після інфузії
+  action_ua: Очікувано — більше відпочивайте у дні 1-3
   urgency: log_at_next_visit
-  cycle_day_window: "Day 1-3"
+  cycle_day_window: Day 1-3
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Випадання волосся (на 2-3 тижні)"
-  action_ua: "Очікувано — повертається після курсу"
+- trigger_ua: Випадання волосся (на 2-3 тижні)
+  action_ua: Очікувано — повертається після курсу
   urgency: log_at_next_visit
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Помірна нудота"
-  action_ua: "Приймайте призначені протиблювотні; занотовуйте інтенсивність"
+- trigger_ua: Помірна нудота
+  action_ua: Приймайте призначені протиблювотні; занотовуйте інтенсивність
   urgency: log_at_next_visit
-  cycle_day_window: "Day 1-3"
+  cycle_day_window: Day 1-3
   sources:
   - SRC-CTCAE-V5
-- trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
-  action_ua: "Подзвоніть у клініку того ж дня — CHOEP дає глибшу нейтропенію, ніж
-    CHOP"
+- trigger_ua: Лихоманка вище 38°C — особливо на 7-14 день циклу
+  action_ua: Подзвоніть у клініку того ж дня — CHOEP дає глибшу нейтропенію, ніж CHOP
   urgency: call_clinic_same_day
-  cycle_day_window: "Day 7-14"
+  cycle_day_window: Day 7-14
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Сильне поколювання, заважає тримати дрібні предмети"
-  action_ua: "Подзвоніть у клініку того ж дня — вінкристинова нейропатія потребує
-    корекції дози"
+- trigger_ua: Сильне поколювання, заважає тримати дрібні предмети
+  action_ua: Подзвоніть у клініку того ж дня — вінкристинова нейропатія потребує корекції
+    дози
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Незвичні синці, кровотеча ясен або носа"
-  action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+- trigger_ua: Незвичні синці, кровотеча ясен або носа
+  action_ua: Подзвоніть у клініку того ж дня — потрібен контроль показників крові
   urgency: call_clinic_same_day
   sources:
   - SRC-CTCAE-V5
-- trigger_ua: "Нова задишка, прискорене серцебиття, набряки ніг"
-  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
+- trigger_ua: Нова задишка, прискорене серцебиття, набряки ніг
+  action_ua: Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Озноб + лихоманка + сплутаність свідомості"
-  action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису на тлі нейтропенії"
+- trigger_ua: Озноб + лихоманка + сплутаність свідомості
+  action_ua: Звертайтесь у лікарню негайно — ознаки сепсису на тлі нейтропенії
   urgency: er_now
   sources:
   - SRC-CTCAE-V5
+last_reviewed: null
+notes: 'Used for fit younger PTCL NOS / AITL when CD30 negative or brentuximab not
+  accessible. CHOEP (with etoposide) showed improvement over CHOP in younger T-cell
+  patients per Nordic data. 6 cycles + autoSCT consolidation in fit transplant-eligible
+  — practice standard for PTCL/AITL despite limited RCT evidence.
 
-last_reviewed: "2026-04-25"
-notes: >
-  Used for fit younger PTCL NOS / AITL when CD30 negative or brentuximab
-  not accessible. CHOEP (with etoposide) showed improvement over CHOP
-  in younger T-cell patients per Nordic data. 6 cycles + autoSCT
-  consolidation in fit transplant-eligible — practice standard for
-  PTCL/AITL despite limited RCT evidence.
-notes_ua: >
-  Застосовується у молодих пацієнтів у задовільному стані з PTCL NOS / AITL при
-  CD30-негативному статусі або відсутності доступу до брентуксимабу. CHOEP (з
+  '
+notes_ua: 'Застосовується у молодих пацієнтів у задовільному стані з PTCL NOS / AITL
+  при CD30-негативному статусі або відсутності доступу до брентуксимабу. CHOEP (з
   етопозидом) продемонстрував перевагу над CHOP у молодших пацієнтів з Т-клітинними
-  захворюваннями за даними скандинавських досліджень. 6 циклів + консолідація
-  аутоТГСК у придатних до трансплантації пацієнтів — практичний стандарт для
-  PTCL/AITL, незважаючи на обмежену доказову базу РКД.
+  захворюваннями за даними скандинавських досліджень. 6 циклів + консолідація аутоТГСК
+  у придатних до трансплантації пацієнтів — практичний стандарт для PTCL/AITL, незважаючи
+  на обмежену доказову базу РКД.
+
+  '
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_11
 draft_revision: 2
+review_status: pending_clinical_signoff
+clinical_claims:
+- claim_id: tcell-regimen-specific-monitoring
+  text: CHOEP21 monitoring follows its own 21-day regimen and drug-specific toxicity
+    assessment. It must not inherit CD20-positive DLBCL, double-hit, IPI, CNS-IPI
+    or anti-CD20-specific checkpoints from R-CHOP. Neuropathy assessment concerns
+    vincristine; etoposide administrations occur on days 1-3. Count-based delay and
+    growth-factor decisions require CHOEP-specific clinical review.
+  source_ids:
+  - SRC-EVIQ-CHOEP21-630
+  scope: Regimen-specific monitoring only; not whole-record dosing, efficacy, eligibility,
+    transplant or clinical approval.
+  source_locator: eviQ 630 Treatment schedule, Clinical information, Dose modifications/Haematological
+    toxicity and Pre-treatment assessment.

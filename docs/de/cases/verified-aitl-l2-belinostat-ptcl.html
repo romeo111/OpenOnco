@@ -36,14 +36,796 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"Behandlungsplan — Angioimmunoblastisches T-Zell-Lymphom","description":"OpenOnco is an open, auditable oncology decision-support knowledge base and browser demo for clinicians, laboratories, investors, and patients.","url":"https://openonco.info/de/cases/verified-aitl-l2-belinostat-ptcl.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/cases/verified-aitl-l2-belinostat-ptcl.html"}}</script>
 <!-- openonco-seo:end -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/clinical-styles/46a80e9314fb5c473de882c0ea142f68dae9776b1b58da99a3e32678c03e5fc7.css">
+<style>
+:root {
+    --green-900: #0a2e1a; --green-800: #0d3f24; --green-700: #14532d;
+    --green-600: #166534; --green-500: #16a34a; --green-400: #22c55e;
+    --green-300: #4ade80; --green-200: #86efac; --green-100: #dcfce7;
+    --green-50: #f0fdf4; --teal: #0d9488; --teal-dark: #115e59;
+    --red-alert: #dc2626; --red-bg: #fef2f2;
+    --amber-alert: #d97706; --amber-bg: #fffbeb;
+    --blue-bg: #eff6ff; --blue-700: #1d4ed8;
+    --purple-bg: #faf5ff; --purple-700: #7e22ce;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+    font-family: var(--font-body); color: var(--gray-900);
+    background: var(--gray-50); line-height: 1.55;
+}
+.page {
+    max-width: 920px; margin: 0 auto; padding: 32px 48px;
+    background: white; min-height: 100vh;
+    box-shadow: 0 0 24px rgba(0,0,0,.04);
+}
+@media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 16mm; max-width: 100%; }
+    @page { size: A4; margin: 12mm; }
+    .no-print { display: none; }
+    section { page-break-inside: avoid; }
+}
+
+/* Header */
+.doc-header {
+    border-bottom: 2px solid var(--green-700);
+    padding-bottom: 18px; margin-bottom: 24px;
+}
+.doc-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--green-700); margin-bottom: 8px;
+}
+.doc-title {
+    font-family: var(--font-display); font-size: 32px; line-height: 1.15;
+    color: var(--green-900); margin-bottom: 6px;
+}
+.doc-sub {
+    font-size: 14px; color: var(--gray-500);
+    font-family: var(--font-mono);
+}
+
+/* Patient strip */
+.patient-strip {
+    background: var(--green-50); border-left: 4px solid var(--green-600);
+    padding: 14px 18px; margin-bottom: 22px; border-radius: 4px;
+}
+.patient-strip .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
+}
+.patient-strip .value { font-size: 15px; color: var(--gray-900); }
+.patient-meta-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px 16px; margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(20, 83, 45, .16);
+}
+.patient-meta-item { min-width: 0; }
+.patient-meta-item .meta-label {
+    display: block; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .6px; text-transform: uppercase; color: var(--green-700);
+    margin-bottom: 2px;
+}
+.patient-meta-item .meta-value {
+    display: block; font-size: 14px; color: var(--gray-900);
+    overflow-wrap: anywhere;
+}
+
+/* Banner — diagnostic phase */
+.banner {
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 22px;
+    border-left: 4px solid; font-size: 14px; line-height: 1.55;
+}
+.banner--diagnostic {
+    background: var(--amber-bg); border-color: var(--amber-alert);
+    color: #92400e;
+}
+.banner--diagnostic strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.banner--info {
+    background: var(--green-50); border-color: var(--green-500);
+    color: var(--green-800);
+}
+.banner--alert {
+    background: var(--red-bg); border-color: var(--red-alert);
+    color: #991b1b;
+}
+
+/* Sections */
+section { margin-bottom: 28px; }
+h2 {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
+    color: var(--green-800); margin-bottom: 12px;
+}
+.section-sub {
+    font-size: 13px; color: var(--gray-500); margin-bottom: 14px;
+    font-family: var(--font-mono);
+}
+h3 {
+    font-size: 14px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 18px 0 10px; color: var(--gray-700);
+}
+
+/* Tracks (treatment plan) */
+.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.track {
+    border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;
+    background: white;
+}
+.track--default { border-left: 4px solid var(--green-600); }
+.track--alternative { border-left: 4px solid var(--gray-500); }
+.track--surveillance { border-left: 4px solid var(--teal); }
+.track--palliative { border-left: 4px solid var(--purple-700); }
+.track-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+}
+.track-name { font-family: var(--font-display); font-size: 18px; }
+.track-default-badge {
+    background: var(--green-100); color: var(--green-700);
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); text-transform: uppercase;
+}
+.track dl { font-size: 13px; }
+.track dt { font-weight: 700; color: var(--gray-700); margin-top: 8px; }
+.track dd { color: var(--gray-700); margin-left: 0; }
+.track ul { font-size: 13px; padding-left: 18px; }
+
+/* Tables — workup steps, etc. */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+    background: var(--green-700); color: white; padding: 8px 10px;
+    text-align: left; font-size: 11px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:nth-child(even) td { background: var(--gray-50); }
+
+/* Badges */
+.badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; font-family: var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge--required { background: var(--red-bg); color: #b91c1c; }
+.badge--recommended { background: var(--blue-bg); color: var(--blue-700); }
+.badge--optional { background: var(--gray-100); color: var(--gray-700); }
+.badge--blocking { background: var(--red-bg); color: #b91c1c; }
+.badge--default { background: var(--green-100); color: var(--green-700); }
+.badge--lab { background: var(--blue-bg); color: var(--blue-700); }
+.badge--imaging { background: var(--purple-bg); color: var(--purple-700); }
+.badge--histology { background: var(--amber-bg); color: #92400e; }
+.badge--consult { background: var(--gray-100); color: var(--gray-700); }
+.badge--other { background: var(--gray-100); color: var(--gray-700); }
+
+/* Per-test "Where to order" cell — pre-treatment investigations */
+.lab-avail-cell { font-size: 12px; line-height: 1.5; }
+.lab-chip {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    background: var(--blue-bg); color: var(--blue-700);
+    font-family: var(--font-mono); font-size: 11px;
+    text-decoration: none; white-space: nowrap;
+}
+a.lab-chip:hover { text-decoration: underline; }
+
+/* Lists */
+.role-list { list-style: none; padding: 0; }
+.role-list li {
+    padding: 10px 0; border-bottom: 1px dashed var(--gray-200);
+}
+.role-list li:last-child { border-bottom: none; }
+.role-list .role-name { font-weight: 600; color: var(--gray-900); }
+.role-list .role-reason {
+    font-size: 13px; color: var(--gray-700); margin-top: 4px;
+}
+.role-list .role-questions {
+    font-size: 12px; color: var(--gray-500); margin-top: 4px;
+    font-family: var(--font-mono);
+}
+
+.q-list { list-style: none; padding: 0; }
+.q-list li {
+    padding: 12px 14px; margin-bottom: 8px;
+    border-radius: 6px; background: var(--gray-50);
+    border-left: 3px solid var(--gray-200);
+}
+.q-list li.blocking {
+    border-left-color: var(--red-alert); background: var(--red-bg);
+}
+.q-list--featured {
+    margin: 8px 0 18px;
+}
+.q-list--featured li {
+    background: #fff;
+    border: 1px solid var(--green-200);
+    border-left: 4px solid var(--green-600);
+    box-shadow: 0 4px 14px rgba(6, 78, 59, 0.06);
+}
+.q-list--featured li.blocking {
+    border-color: var(--red-alert);
+    border-left-color: var(--red-alert);
+}
+.q-list--featured .q-text {
+    font-size: 15px;
+    font-weight: 600;
+}
+.q-list .q-id {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--gray-500); margin-bottom: 4px;
+}
+.q-list .q-text { font-size: 14px; color: var(--gray-900); margin-bottom: 4px; }
+.q-list .q-rationale { font-size: 12px; color: var(--gray-700); font-style: italic; }
+.q-list .q-owner {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--green-700); margin-top: 4px;
+}
+
+/* MDT block */
+.mdt {
+    background: var(--green-50); border-radius: 10px; padding: 18px;
+    margin-top: 14px;
+}
+
+/* Steps timeline (workup) */
+.steps { padding-left: 0; list-style: none; }
+.steps li {
+    padding: 10px 0 10px 36px; position: relative;
+    border-bottom: 1px solid var(--gray-100);
+}
+.steps li:last-child { border-bottom: none; }
+.steps .step-num {
+    position: absolute; left: 0; top: 12px; width: 24px; height: 24px;
+    background: var(--green-600); color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--font-mono);
+}
+.steps .step-name { font-weight: 600; color: var(--gray-900); }
+.steps .step-rationale { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* Sources */
+.sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.sources li { padding: 4px 0; }
+
+/* Etiological driver — featured card for etiologically_driven archetype */
+.etiology-card {
+    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
+    border-left: 4px solid var(--teal); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.etiology-card .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+.etiology-card .archetype {
+    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
+    margin-bottom: 8px;
+}
+.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
+.etiology-card ul li { padding: 3px 0; }
+
+/* PRO/CONTRA — two-column grid for red flags */
+.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
+.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
+.pc-col h3 { color: var(--gray-900); margin-top: 0; }
+.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
+.pc-col li { padding: 4px 0; }
+.pc-col .rf-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    display: block; margin-top: 2px;
+}
+a.rf-id, .rf-id-link {
+    color: inherit; text-decoration: none;
+}
+a.rf-id:hover, .rf-id-link:hover {
+    text-decoration: underline; color: var(--gray-700);
+}
+.pc-col .rf-note {
+    font-size: 12px; color: var(--gray-600); line-height: 1.5;
+    margin-top: 4px; padding-left: 8px; border-left: 2px solid var(--gray-200);
+}
+.pc-col .rf-src-row { display: block; margin-top: 3px; }
+.pc-col .rf-src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-right: 4px;
+    display: inline-block;
+}
+/* Severity hint via ::marker — no extra layout cost. Critical pops red,
+   minor dims, major (default) keeps the inherited bullet color. */
+.pc-col li[data-severity="critical"]::marker { color: var(--red-alert); font-weight: 800; }
+.pc-col li[data-severity="minor"]::marker    { color: var(--gray-400); }
+
+/* Branch-explanation — actually-fired RFs from the engine trace, with
+   the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
+   above (which lists possible triggers in the abstract). */
+.branch-explanation { margin: 18px 0; }
+.branch-explanation .branch-step {
+    background: var(--green-bg, #ecfdf5); border-left: 4px solid var(--green-700, #047857);
+    padding: 10px 14px; border-radius: 6px; margin-bottom: 10px;
+}
+.branch-explanation .branch-step-head {
+    font-size: 13px; color: var(--gray-700); margin-bottom: 6px; font-weight: 600;
+}
+.branch-explanation .branch-step ul {
+    margin: 0; padding-left: 20px; font-size: 13px; color: var(--gray-700);
+}
+.branch-explanation .branch-step li { padding: 3px 0; line-height: 1.5; }
+.branch-explanation .rf-winner-tag {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.5px;
+    background: var(--green-700, #047857); color: white;
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px; vertical-align: 1px;
+}
+.branch-explanation .src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+}
+
+/* Do-not — strongly framed prohibitive list */
+.do-not {
+    background: var(--red-bg); border-left: 4px solid var(--red-alert);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
+}
+.do-not .track-name {
+    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
+    margin-bottom: 8px;
+}
+.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
+.do-not li { padding: 3px 0; }
+
+/* Timeline — horizontal phase strip */
+.timeline {
+    display: flex; gap: 4px; margin-top: 8px;
+    overflow-x: auto; padding-bottom: 8px;
+}
+.tl-phase {
+    flex: 1; min-width: 120px;
+    background: var(--green-100); border-radius: 6px;
+    padding: 10px 12px; border-top: 3px solid var(--green-600);
+}
+.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
+.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
+.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
+.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
+.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
+.tl-phase .name {
+    font-weight: 700; font-size: 12px; color: var(--gray-900);
+    margin-bottom: 4px;
+}
+.tl-phase .window {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+}
+
+/* Footer */
+.doc-footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 11px; color: var(--gray-500); line-height: 1.6;
+}
+.fda-disclosure {
+    background: var(--gray-50); padding: 14px; border-radius: 6px;
+    margin-bottom: 14px; font-size: 12px; color: var(--gray-700);
+}
+.fda-disclosure strong { color: var(--gray-900); }
+.version-chain {
+    font-family: var(--font-mono); font-size: 11px;
+    background: var(--gray-100); padding: 8px 12px; border-radius: 4px;
+    margin-bottom: 10px;
+}
+.medical-disclaimer {
+    font-style: italic; color: var(--gray-700); font-size: 11px;
+    border-left: 2px solid var(--gray-200); padding-left: 12px;
+}
+
+/* Skill catalog block */
+.skill-catalog {
+    margin-top: 18px;
+    border-top: 1px dashed var(--green-200);
+    padding-top: 10px;
+}
+.skill-catalog summary {
+    cursor: pointer;
+    color: var(--gray-700);
+    font-size: 13px;
+    font-weight: 600;
+}
+.skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.skill-catalog th {
+    text-align: left; padding: 6px 8px; background: var(--gray-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--gray-700);
+}
+.skill-catalog td {
+    padding: 6px 8px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.skill-catalog tr.activated td:first-child::before {
+    content: "✓ "; color: var(--green-600); font-weight: 700;
+}
+.skill-catalog tr.dormant { color: var(--gray-500); }
+.skill-catalog tr.dormant td:first-child::before {
+    content: "○ "; color: var(--gray-500);
+}
+.skill-catalog .ver {
+    font-family: var(--font-mono); color: var(--gray-700);
+}
+
+/* Access Matrix (ua-ingestion plan §4) */
+.access-matrix { margin-top: 32px; padding: 20px; background: var(--green-50);
+    border: 1px solid var(--green-200); border-radius: 6px;
+}
+.access-matrix details { width: 100%; }
+.access-matrix summary {
+    cursor: pointer; list-style: none; display: flex; flex-direction: column;
+    gap: 4px; padding: 4px 0;
+}
+.access-matrix summary::-webkit-details-marker { display: none; }
+.access-matrix summary::before {
+    content: "▶ "; color: var(--green-700); font-size: 12px; margin-right: 4px;
+}
+.access-matrix details[open] summary::before { content: "▼ "; }
+.access-matrix summary h2 {
+    display: inline; font-family: var(--font-display); font-size: 22px;
+    color: var(--green-900); margin: 0;
+}
+.access-matrix .section-sub { font-size: 12px; color: var(--gray-700); }
+.access-matrix-table {
+    width: 100%; border-collapse: collapse; margin-top: 14px;
+    font-size: 12.5px; background: white;
+}
+.access-matrix-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--green-700);
+    border-bottom: 1px solid var(--green-200);
+}
+.access-matrix-table td {
+    padding: 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.access-matrix-table tr:last-child td { border-bottom: none; }
+.access-matrix-table .track-cell { width: 32%; }
+.access-matrix-table .regimen-name {
+    font-size: 11.5px; color: var(--gray-700); margin-top: 3px;
+}
+.access-matrix-table .regimen-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .cost-cell { width: 22%; font-variant-numeric: tabular-nums; }
+.access-matrix-table .cost-row { line-height: 1.5; }
+.access-matrix-table .cost-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    margin-right: 4px;
+}
+.access-matrix-table .cost-trial {
+    color: var(--green-700); font-style: italic;
+}
+.access-matrix-table .cost-unknown {
+    color: var(--amber-alert); font-style: italic;
+}
+.access-matrix-table .pathway-cell { width: 22%; font-size: 11.5px; }
+.access-matrix-table .pathway-cell .alt-paths {
+    font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .badge--ok { background: var(--green-100); color: var(--green-700); }
+.access-matrix-table .badge--no { background: var(--red-bg); color: var(--red-alert); }
+.access-matrix-table .badge--unknown { background: var(--gray-100); color: var(--gray-500); }
+.access-matrix-table .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.access-matrix-table tr.track-trial { background: var(--purple-bg); }
+.access-matrix-table .notes {
+    font-size: 11px; color: var(--gray-700); margin-top: 4px; font-style: italic;
+}
+.access-matrix-table .notes-stale {
+    font-size: 11px; color: var(--amber-alert); margin-top: 4px; font-weight: 600;
+}
+.access-matrix-table .more-notes {
+    cursor: help; color: var(--gray-500); font-size: 10px; margin-left: 4px;
+    border-bottom: 1px dotted var(--gray-500);
+}
+.access-matrix .matrix-disclaimer {
+    margin-top: 10px; font-size: 11px; color: var(--gray-500); font-style: italic;
+}
+.access-matrix .matrix-plan-notes {
+    margin: 10px 0 4px 0; padding: 8px 12px; background: var(--amber-bg);
+    border-left: 3px solid var(--amber-alert); list-style: none; font-size: 12px;
+    color: var(--gray-900);
+}
+@media print {
+    .access-matrix { background: white; border: 1px solid var(--gray-200); }
+    .access-matrix details { width: 100%; }
+    .access-matrix summary::before { content: ""; }
+    .access-matrix details:not([open]) > *:not(summary) { display: block; }
+}
+
+/* Variant actionability — ESCAT tier badges */
+.variant-actionability { margin: 22px 0; }
+.variant-actionability h2 { color: var(--green-800); }
+.variant-actionability .section-sub {
+    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.actionability-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+    overflow: hidden;
+}
+.actionability-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.actionability-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.actionability-table tr:last-child td { border-bottom: none; }
+.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
+.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
+.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
+.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
+.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
+.actionability-table .src-list {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
+}
+.actionability-table .src-list li { padding: 1px 0; list-style: none; }
+.actionability-table .empty-row td {
+    text-align: center; color: var(--gray-500); font-style: italic;
+    padding: 14px 10px;
+}
+
+/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
+   IV light gray; X gray). Per-source level details render via
+   .evidence-sources <ul> in the same row. */
+.tier-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.4px; white-space: nowrap;
+}
+.escat-IA, .escat-IB { background: #16a34a; color: white; }
+.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
+.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
+.escat-IC, .escat-IVA, .escat-IVB, .escat-IV { background: var(--gray-100); color: var(--gray-700); }
+.escat-V { background: #e5e7eb; color: #7c2d12; }
+.escat-X { background: var(--gray-200); color: var(--gray-700); }
+.actionability-review-badge {
+    display: block; width: fit-content; margin: 0 0 4px 0; padding: 2px 5px;
+    border-radius: 3px; background: #fef3c7; color: #92400e;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+}
+
+/* Per-source evidence list inside each actionability row */
+.evidence-sources {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px;
+}
+.evidence-sources li { padding: 1px 0; color: var(--gray-700); }
+
+/* Biomarker audit sub-sections (covered / uncovered split) */
+.biomarker-subsection { margin-bottom: 10px; }
+.biomarker-subsection-header {
+    font-size: 12px; font-weight: 600; padding: 5px 0 4px 0;
+    font-family: var(--font-mono); letter-spacing: 0.3px;
+}
+.biomarker-subsection.covered .biomarker-subsection-header { color: var(--green-700); }
+.biomarker-subsection.uncovered .biomarker-subsection-header { color: #b45309; }
+.uncovered-table th { background: #78716c; }
+.biomarker-status-negative {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    background: var(--gray-100); color: var(--gray-600);
+    font-family: var(--font-mono); font-size: 11px;
+}
+.biomarker-status-bio_exists {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    background: #dbeafe; color: #1e40af;
+    font-family: var(--font-mono); font-size: 11px;
+}
+.biomarker-status-unmatched {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    background: #fef3c7; color: #92400e;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+}
+.evidence-sources .evidence-meta { color: var(--gray-500); font-size: 10px; }
+.evidence-sources a { color: var(--green-700); text-decoration: none; }
+.evidence-sources a:hover { text-decoration: underline; }
+
+/* Resistance evidence flag — ⚠ badge for direction="Does Not Support"
+   or significance contains "Resistance" (CIViC anti-evidence). */
+.evidence-resistance {
+    display: inline-block; padding: 0 6px; margin-left: 4px;
+    border-radius: 3px;
+    background: #fee2e2; color: #991b1b;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+
+/* Fallback rendering — when leveled evidence is unavailable,
+   primary_sources are promoted as citation cards without a level.
+   Visually muted relative to leveled evidence. */
+.evidence-sources--fallback li.evidence-fallback {
+    color: var(--gray-600); font-style: italic;
+}
+.evidence-fallback-note {
+    margin-top: 4px;
+    font-size: 10px; color: var(--gray-500);
+    font-family: var(--font-sans); font-style: italic;
+}
+
+/* NSZU availability badges — per-drug coverage flag rendered alongside
+   each component in the track's drug list. Render-time metadata only
+   (engine never reads these — CHARTER §8.3 invariant). */
+.nszu-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; white-space: nowrap;
+    margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }
+.nszu-partial { background: #fff3cd; color: #856404; }
+.nszu-oop { background: #ffe5cc; color: #804000; }
+.nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+/* ── Sign-off badges (CHARTER §6.1) ──────────────────────────────
+   Surfaces Clinical Co-Lead approval state on each track in the
+   treatment Plan render. Emitted by render._render_signoff_badge.
+   Mirrored in docs/style.css for the static-site renderer. */
+.track-signoff { margin: 4px 0 8px 0; }
+.signoff-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; line-height: 1.3;
+    border: 1px solid transparent;
+}
+.signoff-pending {
+    background: #fef2f2; color: #991b1b; border-color: #fecaca;
+}
+.signoff-partial {
+    background: #fffbeb; color: #92400e; border-color: #fde68a;
+}
+.signoff-complete {
+    background: #ecfdf5; color: #065f46; border-color: #a7f3d0;
+}
+
+.drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
+.drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
+.drug-list .drug-name { font-weight: 600; }
+.drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+
+/* Treatment phases — multi-phase regimen rendering (PR2 of phases-refactor).
+   Each phase is a discrete block with its own heading + drug list. Legacy
+   auto-wrapped single-phase regimens (name="main") render the wrapper but
+   suppress the heading, keeping the visual close to pre-PR2 for unmigrated
+   YAMLs. Multi-phase regimens (lymphodepletion → main_infusion for axi-cel,
+   etc.) render as visually separated blocks per
+   docs/reviews/regimen-phases-refactor-plan-2026-04-28.md §4.4. */
+.phase-block {
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    padding: 10px 14px; margin-bottom: 8px; background: var(--gray-50);
+}
+.phase-block:last-child { margin-bottom: 4px; }
+.phase-block[data-phase="main"]:only-of-type {
+    /* Auto-wrapped legacy regimen — single block, no border noise. */
+    border: none; padding: 0; background: transparent;
+}
+.phase-block .phase-heading {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--green-700); margin: 0 0 6px 0; font-weight: 700;
+}
+.phase-block .drug-list { margin: 0; }
+
+/* Bridging options block — CAR-T / TIL manufacturing-window slot. Lists
+   acceptable bridging regimen IDs; rendered after all phase blocks. */
+.bridging-options {
+    margin-top: 10px; padding: 10px 14px; background: var(--blue-bg);
+    border-left: 3px solid var(--blue-700); border-radius: 4px;
+}
+.bridging-options .bridging-options-label {
+    font-size: 12px; color: var(--blue-700);
+    font-weight: 600; margin-bottom: 4px;
+}
+.bridging-options-list {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px; color: var(--gray-700);
+}
+.bridging-options-list li.bridging-option { padding: 2px 0; }
+
+/* PR5 — citation-presence guard
+   `.no-citation-badge` is the WARN-mode flag rendered inline at the top of
+   any Regimen / Indication / BMA cell whose declared sources fail to
+   resolve to a real Source entity. It uses a soft amber palette so it
+   reads as a warning without overpowering surrounding clinical content.
+   `.stripped-block` is the STRICT-mode placeholder that replaces the
+   block body when the same condition fires.
+
+   Source: docs/reviews/cross-repo-task_torrent-sync-plan-2026-04-28.md
+   §6 verifier algorithms — item #1 "Cite-or-strip at render". */
+.no-citation-badge {
+  display: inline-block;
+  background: #fff8e1;
+  color: #6d4c00;
+  border: 1px solid #ffd54f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+.stripped-block {
+  background: #fafafa;
+  border: 1px dashed #bbb;
+  color: #888;
+  padding: 8px;
+  font-style: italic;
+  text-align: center;
+}
+</style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/clinical-styles/3f0fe13916348089255309c0c4de9eef32abbc421322d9df74e10a8539433420.css">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="f08819d17661eec31e24a2e5b72087e71cd13a0fae5ed44a86cfda752e4036a5"></head>
-<body><!-- shared-site-header:start --><div data-shared-site-header data-locale="de" data-page="cases/verified-aitl-l2-belinostat-ptcl.html" data-active="gallery" data-missing="[]"><nav aria-label="OpenOnco"><a href="/de/">OpenOnco</a> · <a href="/de/kb.html">Onco Wiki</a> · <a href="/de/try.html">Plan Builder</a></nav></div><link rel="stylesheet" href="/header.css?v=layout-20261011"><script src="/shared-site-header.js" defer></script><!-- shared-site-header:end --><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/cases/verified-aitl-l2-belinostat-ptcl.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
+<style>.oo-topbar-host{position:sticky;top:0;z-index:100;}.oo-topbar-host .top-bar{background:#fff;color:#111827;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;border-bottom:1px solid #e5e7eb;width:100%;max-width:100%;overflow-x:clip;}.oo-topbar-host .brand-line{display:flex;align-items:center;gap:12px;margin-right:30px;}.oo-topbar-host .brand-logo{display:none;}.oo-topbar-host .brand-mini{display:inline-flex;align-items:center;gap:9px;font-family:Playfair Display,Georgia,serif;font-size:26px;font-weight:900;color:#14532d;text-decoration:none;letter-spacing:0;}.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;margin:0 24px 0 16px;gap:4px;}.oo-topbar-host .top-nav a{color:#374151;padding:6px 10px;text-decoration:none;font-size:14.5px;font-weight:700;border-radius:4px;}.oo-topbar-host .top-nav a:hover{color:#14532d;background:transparent;}.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}.oo-topbar-host .top-cta-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;background:#fff;border:1px solid #e5e7eb;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;overflow:hidden;flex-shrink:0;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;padding:4px 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;}.oo-topbar-host .lang-switch .lang-current{background:#14532d;color:white;font-weight:600;}.oo-topbar-host .lang-switch .lang-other{color:#374151;text-decoration:none;transition:background .12s;}.oo-topbar-host .lang-switch .lang-other:hover{background:transparent;color:#14532d;}.oo-topbar-host .lang-switch .lang-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.oo-topbar-host .lang-switch .lang-flag.flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}.oo-topbar-host .btn-cta-top{color:#14532d;background:white;padding:10px 16px;border-radius:7px;font-weight:700;font-size:15px;text-decoration:none;border:1px solid #e5e7eb;box-shadow:none;white-space:nowrap;min-width:112px;box-sizing:border-box;text-align:center;display:inline-block;}.oo-topbar-host .btn-cta-try{min-width:132px;}.oo-topbar-host .btn-cta-top:hover{filter:none;}.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}.example-verification{background:#fffbeb;border:1px solid #f59e0b;color:#713f12;padding:10px 14px;margin:14px auto 0;max-width:1150px;border-radius:6px;font:600 14px/1.45 Source Sans 3,sans-serif;}@media print{.oo-topbar-host,.case-bar{display:none;}}@media (max-width:700px){.oo-topbar-host .top-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center;padding:12px max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left));}.oo-topbar-host .brand-line{grid-column:1;grid-row:1;min-width:0;margin-right:0;}.oo-topbar-host .brand-mini{max-width:100%;font-size:22px;overflow:hidden;text-overflow:ellipsis;}.oo-topbar-host .top-right{display:contents;}.oo-topbar-host .lang-switch{grid-column:2;grid-row:1;justify-self:end;font-size:10px;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:48px;padding:4px 6px;}.oo-topbar-host .top-nav{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;margin:0;gap:4px;justify-content:stretch;}.oo-topbar-host .top-nav a{min-width:0;padding:8px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.15;}.oo-topbar-host .top-cta-group{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:6px;justify-content:stretch;}.oo-topbar-host .btn-cta-top{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:44px;padding:8px 6px;font-size:13px;line-height:1.12;white-space:normal;overflow-wrap:anywhere;}.oo-topbar-host .btn-cta-try{min-width:0;}.case-bar{display:grid;gap:6px;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));}.case-bar a{margin-left:0;margin-right:12px;}}</style>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="cb469e3f5f3ae80a41c449ffd83d838fc16a094ebc85fc3b6d74735285e30adf"></head>
+<body><header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/de/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">OFFENE ONKOLOGIE</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/de/">Start</a>
+    <a href="/de/capabilities.html">Funktionen</a><a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Sprache"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg>DE <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Sprache"><a href="/cases/verified-aitl-l2-belinostat-ptcl.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/cases/verified-aitl-l2-belinostat-ptcl.html" lang="uk" hreflang="uk"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/cases/verified-aitl-l2-belinostat-ptcl.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/cases/verified-aitl-l2-belinostat-ptcl.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/cases/verified-aitl-l2-belinostat-ptcl.html" lang="de" hreflang="de" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/cases/verified-aitl-l2-belinostat-ptcl.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/cases/verified-aitl-l2-belinostat-ptcl.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/cases/verified-aitl-l2-belinostat-ptcl.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/cases/verified-aitl-l2-belinostat-ptcl.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/cases/verified-aitl-l2-belinostat-ptcl.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/cases/verified-aitl-l2-belinostat-ptcl.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/de/try.html" class="btn-cta-top btn-cta-try"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Menü"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/de/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>Plan erstellen</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Menü">
+    <a href="/de/">Start</a>
+    <a href="/de/capabilities.html">Funktionen</a><a href="/de/handbook.html">Handbuch</a><a href="/de/news.html">Neuigkeiten</a>
+    <a href="/de/about.html">Über das Projekt</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Werkzeuge</span>
+    <div class="top-cta-group">
+      <a href="/de/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Onco Wiki</span></a>
+      <a href="/de/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Tumorboard</span></a>
+      <a href="/de/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Prävention</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Open Source</span>
+  </div>
+  </div>
+</header><aside class="translation-notice" role="note"><strong>Vorläufige Übersetzung: klinische Prüfung ausstehend.</strong> <a href="/cases/verified-aitl-l2-belinostat-ptcl.html" lang="en" hreflang="en" data-original-source>Englisches Original ansehen</a></aside>
 <div class="oo-topbar-host no-print"></div>
 <div class="case-bar no-print"><div>OpenOnco · <strong>AITL · L2 · BELINOSTAT-PTCL</strong></div><div><a href="/de/gallery.html">← Zurück zur Galerie</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+verified-aitl-l2-belinostat-ptcl&amp;labels=tester-feedback" target="_blank" rel="noopener">Rückmeldungen zu diesem Fall</a></div></div>
 <div class="example-verification no-print">Synthetisches Lehrbeispiel. Nicht selbst behandeln: Eine qualifizierte behandelnde Ärztin oder ein qualifizierter behandelnder Arzt muss die Quellen, Patientendaten, Gegenanzeigen und den endgültigen Plan prüfen.</div><div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Behandlungsplan</div><div class="doc-title">Behandlungsplan — Angioimmunoblastisches T-Zell-Lymphom</div><div class="doc-sub">PLAN-VERIFIED-AITL-L2-AITL_2L_BELINOSTAT-V1 · v1 · 2026-10-12</div></div><div class="patient-strip"><div class="label">Patient</div><div class="value">VERIFIED-AITL-L2-AITL_2L_BELINOSTAT · Algorithm: ALGO-AITL-2L</div><div class="patient-meta-grid"><div class="patient-meta-item"><span class="meta-label">Diagnose</span><span class="meta-value">Angioimmunoblastisches T-Zell-Lymphom</span></div><div class="patient-meta-item"><span class="meta-label">MOH / ICD-10</span><span class="meta-value">C84.4</span></div><div class="patient-meta-item"><span class="meta-label">ICD-O-3</span><span class="meta-value">9705/3</span></div></div></div><section class="variant-actionability"><h2>Klinische Bedeutung von Mutationen (ESCAT)</h2><div class="section-sub">Tumor-Board-Kontext — der Motor verwendet diese Ebenen nicht, um Gleise zu ordnen</div><table class="actionability-table"><thead><tr><th>Biomarker</th><th>Variante</th><th>ESCAT</th><th>Evidenz</th><th>Klinische Bedeutung</th><th>Arzneimittel</th><th>Quellen</th></tr></thead><tbody><tr class="empty-row"><td colspan="7">In diesem Profil wurden keine klinisch praktikablen Varianten gefunden.</td></tr></tbody></table></section><section><h2>Primäre Option für die laufende Zeile</h2><div class="tracks"><div class="track track--standard"><div class="track-head"><div class="track-name">Standardplan</div><span class="track-default-badge">★ DEFAULT</span></div><dl><dt>Anwendungsgebiet</dt><dd>IND-AITL-2L-BELINOSTAT</dd><dt>Therapieschema</dt><dd>Belinostat IV Tage 1-5 q21d (BELIEF-Schema) — r/r PTCL inkl. AITL</dd><dt>Drugs + NSZU</dt><dd><section class="phase-block" data-phase="main"><ul class="drug-list"><li class="drug-row"><span class="drug-name">Belinostat</span> <span class="drug-id">(DRUG-BELINOSTAT)</span> <span class="drug-dose">1000 mg/m2 IV über 30 min · Tage 1-5 jedes 21-Tage-Zyklus, bis zur Progression oder inakzeptable Toxizität · IV</span> <span class="nszu-badge nszu-not-registered" title="BELIEF-Studie (O&#x27;Connor 2015): r/r PTCL (inkl. AITL, PTCL NOS, ALCL, Enteropathie-assoziiert, hepatosplenisch) — ORR 26%, CR 11%, mediane DOR 13,6 Mo. FDA-zugelassen für r/r PTCL. AITL-Subset-Ansprechen höher als PTCL NOS-Untergruppe (wahrscheinlich TFH...">✗ Nicht in der Ukraine registriert</span></li></ul></section></dd><dt>Unterstützungsbehandlung</dt><dd>SUP-PJP-PROPHYLAXIS, SUP-TLS-PROPHYLAXIS, SUP-ANTIEMETIC-PREMED</dd><dt>Begründung</dt><dd>Primary current-line option selected by ALGO-AITL-2L at step 3; branch-driving red flag: RF-AITL-ROMIDEPSIN-INELIGIBLE.</dd></dl></div></div></section><section><details><summary><h2>Andere aktuelle Alternativen (2 Spuren)</h2><span class="section-sub">Same treatment line; review when biomarker, access, contraindication, or patient-context assumptions change.</span></summary><div class="tracks"><div class="track track--aggressive"><div class="track-head"><div class="track-name">Aggressiver Plan</div></div><dl><dt>Anwendungsgebiet</dt><dd>IND-AITL-2L-AZACITIDINE</dd><dt>Therapieschema</dt><dd>5-Azacitidine SC/IV 75 mg/m² Tage 1-7 q28d — r/r AITL (epigenetisch ausgerichtet)</dd><dt>Drugs + NSZU</dt><dd><section class="phase-block" data-phase="main"><ul class="drug-list"><li class="drug-row"><span class="drug-name">Azacitidine</span> <span class="drug-id">(DRUG-AZACITIDINE)</span> <span class="drug-dose">75 mg/m2/Tag SC ODER IV · Tage 1-7 eines jeden 28-Tage-Zyklus (oder 5-2-2-Schema); bis zur Progression oder inakzeptablen Toxizität (≥6 Zyklen vor der Meldung von Versagen) · SC</span> <span class="nszu-badge nszu-partial" title="Used in MDS-HR (1L), AML-unfit (with venetoclax — VIALE-A), CMML, and AML maintenance (oral Onureg post-induction in selected patients). Response delayed — do NOT discontinue before cycle 6 unless overt progression. SC equivalent to IV; SC…">⚠ NSZU — not for this indication</span></li></ul></section></dd><dt>Unterstützungsbehandlung</dt><dd>SUP-PJP-PROPHYLAXIS, SUP-ANTIEMETIC-PREMED</dd><dt>Begründung</dt><dd>Zur Prüfung der HCP vorgelegte aktuelle Alternative</dd></dl></div><div class="track track--standard"><div class="track-head"><div class="track-name">Standardplan</div></div><dl><dt>Anwendungsgebiet</dt><dd>IND-AITL-2L-ROMIDEPSIN</dd><dt>Therapieschema</dt><dd>Romidepsin IV Tage 1, 8, 15 q28d — r/r PTCL inkl. AITL</dd><dt>Drugs + NSZU</dt><dd><section class="phase-block" data-phase="main"><ul class="drug-list"><li class="drug-row"><span class="drug-name">Romidepsin</span> <span class="drug-id">(DRUG-ROMIDEPSIN)</span> <span class="drug-dose">14 mg/m2 IV über 4 Stunden · Tage 1, 8, 15 jedes 28-Tage-Zyklus, bis zur Progression oder inakzeptable Toxizität · IV</span> <span class="nszu-badge nszu-not-registered" title="NCI 1312 / Coiffier 2012: r/r PTCL — ORR 25-38% (CR 15%); mDOR 17 Mo. FDA zunächst für r/re PTCC (2011) UND CTCL (2009) zugelassen; PT CL-Indikation freiwillig zurückgezogen 2021 nach Ro-CHOEP Bestätigungsstudie (PFS nicht höher als CHOP). CTCL...">✗ Nicht in der Ukraine registriert</span></li></ul></section></dd><dt>Unterstützungsbehandlung</dt><dd>SUP-PJP-PROPHYLAXIS, SUP-TLS-PROPHYLAXIS, SUP-ANTIEMETIC-PREMED</dd><dt>Begründung</dt><dd>Zur Prüfung der HCP vorgelegte aktuelle Alternative</dd></dl></div></div></details></section><section class="branch-explanation"><h2>Warum dieser Zweig gewählt wurde</h2><div class="section-sub">Auslöser des Patientenprofils, das den gewählten Zweig feuerte und antreibte.</div><div class="branch-step"><div class="branch-step-head">Schritt 3 → Zweig <code>IND-AITL-2L-BELINOSTAT</code></div><ul><li><strong><a class="rf-id-link" href="/de/kb/redflags/rf-aitl-romidepsin-ineligible.html">RF-AITL-ROMIDEPSIN-INELIGIBLE</a></strong> <span class="rf-winner-tag">★ Gewinner</span><span class="translation-original-fragment" lang="en" data-original-source data-label="Originaltext zur Überprüfung beibehalten">: Romidepsin inaccessible, contraindicated, or intolerant in AITL 2L+. Scenarios driving ineligibility: (1) Access — romidepsin is not approved in Ukraine (as of 2026); available only via named-patient programme or clinical trial; many patients cannot access; (2) Cardiac contraindication — class I/II QTc-prolonging cardiac arrhythmia or baseline QTc ≥480 ms; romidepsin HDACi class causes dose-dependent QTc prolongation and is contraindicated in significant baseline arrhythmia; (3) Prior HDACi intolerance — prior romidepsin or belinostat-related grade ≥3 cardiac event, thrombocytopenia, or GI toxicity requiring discontinuation. In all cases belinostat (BELIEF, 2014; PTCL ORR 25.8%, AITL ORR ~46%) is the preferred alternative HDACi: less QTc prolongation than romidepsin, IV weekly schedule, and UA-accessible via named-patient. Azacitidine remains an orthogonal alternative (HMA, not HDACi) routed via step 1 default.
- </span><span class="src-chip">SRC-NCCN-BCELL-2025</span><span class="src-chip">SRC-ESMO-PTCL-2024</span></li></ul></div></section><section><h2>Vorbehandlungsuntersuchungen</h2><div class="section-sub">Untersuchungen vor Behandlungsbeginn · kritisch / Standard / gewünscht · über Spuren verschmolzen</div><table class="tbl"><thead><tr><th>ID</th><th>Bezeichnung</th><th>Priorität</th><th>Kategorie</th><th>Anzugebende Stelle</th><th>Erforderlich für</th></tr></thead><tbody><tr><td>TEST-CBC</td><td>Vollständige Blutzahl mit Differential</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-CMP</td><td>Umfassendes Stoffwechsel-Panel</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HBV-SEROLOGY</td><td>Hepatitis B-Serologiegruppe (HBsAg, insgesamt anti-HBc, anti- HBs)</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HCV-ANTIBODY</td><td>HCV-Antikörper</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HIV-SEROLOGY</td><td>HIV-Antikörper/Antigen</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LDH</td><td>Lactat Dehydrogenase</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LFT</td><td>Leberfunktionsprüfungen (ALT, AST, Bilirubin, ALP, GGT, Albumin)</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-PREGNANCY</td><td>Beta-HCG</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Standard</td></tr><tr><td>TEST-B2-MICROGLOBULIN</td><td>Beta-2 Mikroglobulin</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-DAT-COOMBS</td><td>Direkter Antiglobulin-Test</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-EBER-ISH</td><td>EBER ISH</td><td><span class="badge badge--recommended">Standard</span></td><td>Pathologie</td><td class="lab-avail-cell"><a class="lab-chip" href="https://www.csdlab.ua/analyzes/onkologichni-doslidzhennya" target="_blank" rel="noopener" title="EBER ISH is a specialty ISH falling under CSD&#x27;s pathomorphology + &#x27;Інші ІГХ&#x27; menu. Less common than diagnostic IHC — confirm availability + turnaround with CSD.">Zentralverwahrerlabor ✓ (Code TBC)</a></td><td>Alle Gleise</td></tr><tr><td>TEST-HAPTOGLOBIN</td><td>Heptoglobin</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>aggressiv</td></tr><tr><td>TEST-IMMUNOGLOBULINS</td><td>Quantitative Immunglobuline</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LN-CORE-BIOPSY</td><td>Kern-LN-Biopsie</td><td><span class="badge badge--recommended">Standard</span></td><td>Histologie</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-PET-CT</td><td>FDG PET/CT (ganzer Körper)</td><td><span class="badge badge--recommended">Standard</span></td><td>Bildgebung</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-RETICULOCYTE</td><td>Retikulozytenzahl</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-EBV-SEROLOGY</td><td>EBV-Antikörper-Panel</td><td><span class="badge badge--optional">Gewünscht</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>aggressiv</td></tr><tr><td>TEST-NGS-LYMPHOID-PANEL</td><td>Lymphoid NGS-Panel</td><td><span class="badge badge--optional">Gewünscht</span></td><td>genomische</td><td class="lab-avail-cell"><a class="lab-chip" href="https://www.csdlab.ua/analyzes/onkologichni-doslidzhennya" target="_blank" rel="noopener" title="TP53/ATM/MYD88/BTK/IGHV — lymphoide molekulare Profilierung fällt unter das molekulare Menü der Hämatopathie des Zentralverwahrers. Spezifische Panelzusammensetzung + Code nicht öffentlich aufgeführt.">Zentralverwahrerlabor ✓ (Code TBC)</a></td><td>Alle Gleise</td></tr></tbody></table></section><section><h2>Rote Flaggen — PRO / CONTRA aggressiv</h2><div class="pro-contra"><div class="pc-col pc-col--pro"><h3>PRO-AGGRESSIVE</h3><div class="section-sub">Auslöser, die auf die aggressive Spur schieben</div><ul><li data-severity="major">AITL mit autoimmuner hämolytischer Anämie (AIHA, DAT+) und/oder Immunthromozytopenie (ITP) — paraneoplastisches Phänomen, das neben einer T-Zell-gerichteten Therapie gleichzeitige Immunsuppression benötigt<div class="rf-note">AITL ist das T-Zell-Lymphom, das am meisten mit Autoimmunzytopenien assoziiert ist — AIHA (warm IgG-vermittelt, DAT+) und ITP können vor, während oder nach der Lymphom-Therapie präsentieren. Standardansatz: Prednison-haltige Chemo (CHOEP/CHP-Bv...</div><a class="rf-id" href="/de/kb/redflags/rf-aitl-autoimmune-cytopenia.html">RF-AITL-AUTOIMMUNE-CYTOPENIA</a><span class="rf-src-row"><span class="rf-src-chip">SRC-NCCN-BCELL-2025</span><span class="rf-src-chip">SRC-ESMO-PTCL-2024</span></span></li><li data-severity="major">AITL mit EBV+ B-Zell-Erweiterung (große B-Zellen, EBER+ in Mikroumgebung) — Risiko eines sekundären EBV-getriebenen B-Zell-Lymphoms (DLBCL-like) während/nach T-Zell-gerichteter Therapie<div class="rf-note">AITL microenvironment klassisch enthält EBV+ B-Zellen (~80-90%). Subset entwickelt EBV-getriebenes sekundäres B-Zell-Lymphom (oft DLBCL-like) während/nach T-Zell-gerichteter Induktion — klonisch unterscheidet sich von Index AITL. Rebiopsie jede neue...</div><a class="rf-id" href="/de/kb/redflags/rf-aitl-ebv-driven-b-cell.html">RF-AITL-EBV-DRIVEN-B-CELL</a><span class="rf-src-row"><span class="rf-src-chip">SRC-NCCN-BCELL-2025</span><span class="rf-src-chip">SRC-ESMO-PTCL-2024</span></span></li></ul></div><div class="pc-col pc-col--contra"><h3>CONTRA-AGGRESSIVE</h3><div class="section-sub">Hard contraindications to escalation</div><ul><li>—</li></ul></div></div></section><section><h2>Was nicht zu tun ist</h2><div class="section-sub">Explicit prohibitive rules, each grounded in a regimen / supportive care / contraindication entity</div><div class="do-not"><div class="track-name">Standardplan (IND-AITL-2L-BELINOSTAT)</div><ul><li>Überspringen Sie nicht den Ausgangswert + serielle QTc — Belinostat hat ein Herzsignal; korrigieren Sie K/Mg vor der ersten Infusion.</li><li>Nicht ohne strenge Überwachung mit QT-verlängernden Arzneimitteln (Zylinder, bestimmte Antiemetika) kombinieren.</li><li>Verschreiben Sie nicht bei schwerer Leberfunktionsstörung — UGT1A1-abhängiger Metabolismus.</li><li>Nicht überspringen TLS-Überwachung im hoch belasteten AITL (IL2-gesteuerter Hyperaktivzustand) — Allopurinol + Hydratationszyklus 1.</li><li>Vergessen Sie nicht, die Re-Biopsie beim Auftreten einer schnell wachsenden CD20+ B-Zellmasse zu vergessen — sekundäres EBV-getriebenes DLBCL ist in der AITL-Mikroumgebung üblich.</li><li>Verschreiben Sie nicht ohne Finanzierungswege Klärung — Droge nicht in der Ukraine registriert.</li><li>Nicht ignorieren AIHA / ITP Trigger — AITL paraneoplastische Phänomene (RF-AITL-AUTOIMMUNE-CYTOPENIA); nicht mit medikamentösem Zytopen verwechseln.</li></ul></div><div class="do-not"><div class="track-name">Aggressiver Plan (IND-AITL-2L-AZACITIDINE)</div><ul><li>Nicht früher als 4-6 Zyklen ohne klare Progression stoppen — HMA-Antwort ist langsam eingestellt; frühe Auswertung = falsch negativ.</li><li>Vergessen Sie nicht, den Zytopenie- + Verzögerungszyklus bei ANC &lt; 500 / Thrombozyten &lt; 25K zu überwachen — die hämatologische Toxizität ist dosislimitierend.</li><li>Nicht die Nierenfunktion ignorieren — CrCl &lt; 60 erfordert eine 50%ige Dosisreduktion.</li><li>Nicht überspringen Re-Biopsie mit einem schnellen Wachstum der CD20+ Masse — sekundäre EBV-getriebene DLBCL in AITL Mikroumgebung; separates Routing.</li><li>Vergessen Sie nicht die Offenlegung von Off-Label-Produkten — für MDS/AML registriertes Arzneimittel; die Verwendung von AITL-Produkten außerhalb des Etiketts erfordert eine MDT-Dokumentation + eine Klärung des Finanzierungspfads.</li><li>Nicht überspringen NGS-Basiswerte für TET2/IDH2/DNMT3A — vorausschauende Anreicherung + zukünftiges Studienrouting (IDH2-Inhibitor Enasidenib für IDH2-mut).</li></ul></div><div class="do-not"><div class="track-name">Standardplan (IND-AITL-2L-ROMIDEPSIN)</div><ul><li>Vor der Infusion darf der Ausgangswert + serielle QTc + korrekte K/Mg-Werte nicht in den oberen Normbereich übergehen — Romidepsin hat ein Herzsignal.</li><li>Nicht mit QT-verlängernden Medikamenten kombinieren, ohne strenge Überwachung.</li><li>Nicht mit Warfarin kombinieren, ohne eine modifizierte INR-Überwachung zu haben — INR steigt erheblich.</li><li>Verschreiben Sie nicht zusammen mit einem gleichzeitig starken CYP3A-Inhibitor ohne Dosisreduktion auf 10 mg/m2.</li><li>Nicht überspringen TLS-Prophylaxe im hoch belasteten AITL — IL2-gesteuertes hyperaktiviertes Stadium.</li><li>Vergessen Sie nicht, die Re-Biopsie mit einem raschen Wachstum der CD20+ Masse zu vergessen — sekundäres EBV-getriebenes DLBCL ist in AITL-Mikroumgebung verbreitet.</li><li>Nicht ignorieren AIHA / ITP Trigger — AITL paraneoplastic; nicht mit medikamentösem Zytopen verwechseln.</li><li>Verschreiben Sie nicht ohne Finanzierungswege — Droge, die nicht in der Ukraine registriert ist.</li></ul></div></section><section><h2>Zeitleiste</h2><div class="section-sub">Behandlungs-Zeitlinie — abgeleitet aus dem Regime + Überwachungsprogramm</div><h3>Standardplan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induktion · Belinostat IV Tage 1-5 q21d (BELIEF-Schema) — r/r PTCL inkl. AITL</div><div class="window">21-Tage-Zyklen × Bis zur Progression oder inakzeptable Toxizität (ansprechend)</div></div></div><h3>Aggressiver Plan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induction · 5-Azacitidine SC/IV 75 mg/m² days 1-7 q28d — r/r AITL (epigenetic-targeted)</div><div class="window">28-Tage-Zyklen × Bis zur Progression (≥6 Zyklen vor der Deklaration des Versagens — langsames Ansprechen auf den Anfall)</div></div></div><h3>Standardplan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induktion · Romidepsin IV Tage 1, 8, 15 q28d — r/r PTCL inkl. AITL</div><div class="window">28-Tage-Zyklen × Bis zur Progression oder inakzeptable Toxizität (ansprechend)</div></div></div></section><section><h2>Kurzbericht</h2><div class="mdt"><h3>Diskussionsfragen (3, 1 Blockierung)</h3><ul class="q-list q-list--featured"><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> OQ-CD20-CONFIRMATION</div><div class="q-text">Wird der CD20+-Status durch die Histologie (IHC) bestätigt? Ohne CD20 + sind Rituximab/Obinutuzumab nicht indiziert.</div><div class="q-rationale">Die Anti-CD20-Therapie ist das Rückgrat der meisten Behandlungslinien; das Fehlen eines CD20-Ausdrucks verändert das Regime vollständig.</div><div class="q-owner">→ Pathologe</div></li><li class=""><div class="q-id">OQ-STAGING-COMPLETE</div><div class="q-text">Wurde die Inszenierung abgeschlossen (Lugano + PET/CT oder CT)?</div><div class="q-rationale">Prognose und Spurauswahl hängen von der Bühne und der Tumorbelastung ab.</div><div class="q-owner">→ Radiologe</div></li><li class=""><div class="q-id">OQ-LDH-CURRENT</div><div class="q-text">Was ist die aktuelle LDH? Marker für Tumorbelastung und Transformation.</div><div class="q-rationale">LDH ist Teil der prognostischen Indizes von indolenten Lymphomen.</div><div class="q-owner">→ Hämatologe</div></li></ul><h3>MDT-Talkbaum (4 Schritte)</h3><table class="tbl"><thead><tr><th>#</th><th>Eigentümer</th><th>Thema</th><th>Maßnahmen</th></tr></thead><tbody><tr><td class="mono">1</td><td>Pathologe</td><td>Pathologische Bestätigung <span class="badge badge--blocking">BLOCKING</span></td><td>Wird der CD20+-Status durch die Histologie (IHC) bestätigt? Ohne CD20 + sind Rituximab/Obinutuzumab nicht indiziert.</td></tr><tr><td class="mono">2</td><td>Hämatologe</td><td>Staging / Krankheitslast </td><td>Was ist die aktuelle LDH? Marker für Tumorbelastung und Transformation.</td></tr><tr><td class="mono">3</td><td>Radiologe</td><td>Staging / Krankheitslast </td><td>Wurde die Inszenierung abgeschlossen (Lugano + PET/CT oder CT)?</td></tr><tr><td class="mono">4</td><td>clinical_pharmacist</td><td>Fachprüfung </td><td>Chemotherapie-Therapie-Therapie – Arzneimittel-Interaktionen, Dosisanpassungen, Prämedikation.</td></tr></tbody></table><h3>Fähigkeiten (erforderlich) — Pflichtfach für virtuelle Fachkräfte (1)</h3><ul class="role-list"><li><span class="role-name">Hämatologe / Onkohämatologe</span> <span class="badge badge--required">erforderlich</span><div class="role-reason">Lymphomdiagnose – führende Spezialität für das Behandlungsmanagement.</div><div class="role-questions">Eigene: OQ-LDH-CURRENT</div></li></ul><h3>Qualifikationen (empfohlen) — zur Prüfung (2)</h3><ul class="role-list"><li><span class="role-name">Klinischer Apotheker</span> <span class="badge badge--recommended">empfohlen</span><div class="role-reason">Chemotherapie-Therapie-Therapie – Arzneimittel-Interaktionen, Dosisanpassungen, Prämedikation.</div></li><li><span class="role-name">Pathologe (allgemein)</span> <span class="badge badge--recommended">empfohlen</span><div class="role-reason">Bestätigen Sie die Lymphom-Histologie + bewerten Sie das Transformationsrisiko (DLBCL/Richter).</div><div class="role-questions">Owns: OQ-CD20-CONFIRMATION</div></li></ul><h3>Datenqualität</h3><div class="section-sub"><strong>Unvollständig für MDT-Abmeldung.</strong> MDT-Abmeldung ist unvollständig, bis kritische klinische Datenlücken beseitigt sind.</div><ul><li>Biomarkerabdeckung: 0/0 bekannt (100%), 0 fehlende, 0 Standardspurlücken</li><li>Fehlende kritische: cd20_ihc_status, lugano_stage</li><li>Fehlende empfohlene: ldh_ratio_to_uln, fib4_index, pet_ct_date</li><li>Nicht ausgewertete Warnhinweise: RF-AITL-AUTOIMMUNE-CYTOPENIA, RF-AITL-EBV-DRIVEN-B-CELL, RF-AITL-FRAILTY-AGE, RF-AITL-HYPOGAMMA, RF-AITL-ORGAN-DYSFUNCTION, RF-AITL-ROMIDEPSIN-INELIGIBLE, RF-AITL-TRANSFORMATION-PROGRESSION, RF-TCELL-CD30-POSITIVE</li></ul><h4>Fehlende Daten für die Wirkung des Arztes</h4><table class="tbl"><thead><tr><th>Priorität</th><th>Klinischer Gegenstand</th><th>Eigentümer</th><th>Warum es wichtig ist</th><th>Nächste Maßnahme</th><th>Blöcke</th></tr></thead><tbody><tr><td><span class="badge badge--required">CRITICAL</span></td><td><strong>CD20 IHC-Status</strong><div class="section-sub"><code>cd20_ihc_status</code></div></td><td>Pathologe</td><td>Bestätigt CD20-geführte Therapie ist biologisch angemessen.</td><td>Prüfen Sie CD20 IHC-Ergebnis, Muster, Methode und Berichtsdatum.</td><td>-</td></tr><tr><td><span class="badge badge--required">CRITICAL</span></td><td><strong>Lugano-Stufe</strong><div class="section-sub"><code>lugano_stage</code></div></td><td>Radiologe</td><td>Definiert die Lymphom-Ausdehnung und unterstützt Tumor-Ladung und Antwort-Bewertung Entscheidungen.</td><td>Dokument Lugano-Stufe von PET/CT oder Kontrast CT-Stadium.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>LDH-Verhältnis zu ULN</strong><div class="section-sub"><code>ldh_ratio_to_uln</code></div></td><td>medical_oncologist</td><td>Unterstützt prognostische Scoring und aggressiv-Biologie Flaggen.</td><td>Geben Sie LDH mit lokaler Obergrenze von normal ein.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>FIB-4 Leberfibroseindex</strong><div class="section-sub"><code>fib4_index</code></div></td><td>infectious_disease_hepatology</td><td>Screens Leberfibrose Risiko vor der hepatotoxischen Therapie oder antivirale Koordination.</td><td>Berechnen Sie FIB-4 ab dem Alter, AST, ALT und Thrombozytenzahl.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>PET/CT Datum</strong><div class="section-sub"><code>pet_ct_date</code></div></td><td>Radiologe</td><td>Zeigt an, ob die Ausgangsstation für die Behandlungsplanung und den späteren Ansprechvergleich vor kurzem genug ist.</td><td>Basis-PET/CT-Datum dokumentieren oder alternative Staging-Modalität erklären.</td><td>-</td></tr></tbody></table><details class="skill-catalog"><summary>Technische MDT-Fähigkeit Metadaten (3/16 in diesem Plan aktiviert)</summary><div class="section-sub">Alle registrierten virtuellen Spezialisten. ✓ — für diesen Fall aktiviert;      ), nicht aktiviert (verfügbar für andere klinische Szenarien).</div><table><thead><tr><th>Facharzt</th><th>skill_id</th><th>Fassung</th><th>Zuletzt überprüft</th><th>Abschreibungen</th><th>Bereich</th></tr></thead><tbody><tr class="dormant"><td>Zellulärer Therapiespezialist (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="activated"><td>Klinischer Apotheker</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinical_pharmacy</td></tr><tr class="activated"><td>Hämatologe / Onkohämatologe</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematology_oncology</td></tr><tr class="dormant"><td>Hämatopathien (Lymphom / Leukämie / Myelom)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Hämatopathie</td></tr><tr class="dormant"><td>Infektionskrankheit / Hepatologie</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>infectious_diseases</td></tr><tr class="dormant"><td>Medizinischer Onkologe (Solid-Tumor-Chemotherapier)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncology</td></tr><tr class="dormant"><td>Molekulargenetiker / Molekularonkologe</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncology</td></tr><tr class="dormant"><td>Palliativbehandlung</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>palliative_care</td></tr><tr class="activated"><td>Pathologe (allgemein)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Pathologie</td></tr><tr class="dormant"><td>Primärpflege / Familienarzt</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>primary_care</td></tr><tr class="dormant"><td>Psycho-Onkologe</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosozial</td></tr><tr class="dormant"><td>Strahlenonkologe</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiation_oncology</td></tr><tr class="dormant"><td>Radiologe</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostic_imaging</td></tr><tr class="dormant"><td>Sozialarbeiter/Fallleiter</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosozial</td></tr><tr class="dormant"><td>Chirurgischer Onkologe</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>surgical_oncology</td></tr><tr class="dormant"><td>Transplantationsspezialist (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr></tbody></table></details></div></section><section><h2>Quellen</h2><ul class="sources"><li><a href="https://www.annalsofoncology.org/article/S0923-7534(25)00911-1/fulltext" target="_blank" rel="noopener noreferrer">SRC-ESMO-LYMPHOMA-2025: Lymphomas: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up (2025)</a></li><li><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer">SRC-NCCN-BCELL-2025: NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas (v.2.2025)</a></li></ul></section><section class="experimental-track"><h2>Experimentelle Optionen (klinische Studien)</h2><div class="section-sub">Third plan track — open-enrollment trials from ClinicalTrials.gov. Render-time metadata; engine selection is not affected by this block (CHARTER §8.3). Last synced: 2026-10-12.</div><table class="trials-table"><thead><tr><th>NCT</th><th>Bezeichnung</th><th>Phase</th><th>Status</th><th>Sponsor</th><th>UA</th><th>Signale</th><th>Förderfähigkeit (Auszug)</th></tr></thead><tbody><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT05978141" target="_blank" rel="noopener">NCT05978141</a></td><td class="trial-title">Eine Registrierung für Menschen mit T-Zell-Lymphom</td><td class="trial-phase">N/A</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Memorial Sloan Kettering Krebszentrum</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Einzelstaat-Test (Vereinigte Staaten)">Einzelstaat</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT01137643" target="_blank" rel="noopener">NCT01137643</a></td><td class="trial-title">Gewebe, Blut und Körperflüssigkeit Probensammlung von Patienten mit hämatologischem Krebs</td><td class="trial-phase">N/A</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">UNC Lineberger Umfassendes Krebszentrum</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="primärer Endpunkt ist ein Surrogat (PFS/ORR), kein OS">Nur Endpunkte ersetzen</span> <span class="badge badge--design-flag" title="Einzelstaat-Test (Vereinigte Staaten)">Einzelstaat</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT04234048" target="_blank" rel="noopener">NCT04234048</a></td><td class="trial-title">Phase 1 Studie mit ST-001 nanoFenretinid im rezidivierten/refraktorischen T-Zell-Non-Hodgkin-Lymphom</td><td class="trial-phase">PHASE1</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Die erste Phase der Entwicklung ist die Entwicklung von SciTech.</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Nur Phase 1 — Frühes Sicherheits-/PK-Signal, nicht Wirksamkeit">Nur Phase 1</span> <span class="badge badge--design-flag" title="Zieleinschreibung N=46 (&lt;50)">Kleine N (&lt; 50)</span> <span class="badge badge--design-flag" title="Einzelstaat-Test (Vereinigte Staaten)">Einzelstaat</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06724237" target="_blank" rel="noopener">NCT06724237</a></td><td class="trial-title">Testen, ob eine hohe Dosis-Chemotherapie und Infusion der patienteneigenen Stammzellen das Überleben von Patienten mit peripherem T-Zell-Lymphom verbessert, die am Ende der Initialtherapie ein vollständiges Ansprechen erzielt haben</td><td class="trial-phase">PHASE3</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Gruppe für die östliche kooperative Onkologie</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="primärer Endpunkt ist ein Surrogat (PFS/ORR), kein OS">Nur Endpunkte ersetzen</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT07168317" target="_blank" rel="noopener">NCT07168317</a></td><td class="trial-title">Tislelizumab , Cyclophosphamide, Mitoxantrone Liposomes, Chidamide, and Prednisone in the Treatment of New Diagnosed AITL</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Das angeschlossene Krankenhaus der Medizinischen Universität Xuzhou</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Zieleinschreibung N=40 (&lt;50)">Kleine N (&lt; 50)</span> <span class="badge badge--design-flag" title="Einzelstaat-Prozess (China)">Einzelstaat</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06561048" target="_blank" rel="noopener">NCT06561048</a></td><td class="trial-title">Soquelitinib vs Standard der Pflege bei Teilnehmern mit rezidivierten/refraktorischen peripheren T-Zell-Lymphom nicht anders angegeben, follikulärer Helfer T-Cell- Lymphomen oder systemische Anaplastisches Großzell-Limphom</td><td class="trial-phase">PHASE3</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Corvus Pharmaceuticals, Inc.</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="primärer Endpunkt ist ein Surrogat (PFS/ORR), kein OS">Nur Endpunkte ersetzen</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06522737" target="_blank" rel="noopener">NCT06522737</a></td><td class="trial-title">Eine Studie von Duvelisib Versus Gemcitabine oder Bendamustine an Teilnehmern mit rezidiviertem/refraktorischem Nodal-T-Zell-Lymphom mit T-follikulärem Helfer (TFH) Phenotyp</td><td class="trial-phase">PHASE3</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">SecuraBio</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="primärer Endpunkt ist ein Surrogat (PFS/ORR), kein OS">Nur Endpunkte ersetzen</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06393738" target="_blank" rel="noopener">NCT06393738</a></td><td class="trial-title">Eine Studie mit ARV-393 im rezidivierten/refraktorischen Non-Hodgkin-Lymphom.</td><td class="trial-phase">PHASE1</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Arvinas Inc.</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Nur Phase 1 — Frühes Sicherheits-/PK-Signal, nicht Wirksamkeit">Nur Phase 1</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT04803201" target="_blank" rel="noopener">NCT04803201</a></td><td class="trial-title">Testen der Zugabe von Duvelisib oder CC-486 zur üblichen Behandlung von peripherem T-Zell-Lymphom</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Allianz für klinische Studien in der Onkologie</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Einzelstaat-Test (Vereinigte Staaten)">Einzelstaat</span></td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT07388563" target="_blank" rel="noopener">NCT07388563</a></td><td class="trial-title">Azacitidine and Abatacept in Relapsed or Refractory T-Cell Lymphoma</td><td class="trial-phase">PHASE1</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Nationales Krebsinstitut (NCI)</td><td class="trial-ua">—</td><td class="trial-outlook"><span class="badge badge--design-flag" title="Nur Phase 1 — Frühes Sicherheits-/PK-Signal, nicht Wirksamkeit">Nur Phase 1</span> <span class="badge badge--design-flag" title="Zieleinschreibung N=20 (&lt;50)">Kleine N (&lt; 50)</span> <span class="badge badge--design-flag" title="Einzelstaat-Test (Vereinigte Staaten)">Einzelstaat</span></td><td class="trial-elig"></td></tr></tbody></table><p class="trial-disclaimer">Überprüfen Sie Rekrutierungsstatus direkt mit der Teststelle. ctgov-Daten können hinter dem aktuellen UA-Site-Status zurückbleiben.</p></section><section class="access-matrix"><details open><summary><h2>Verfügbarkeit von Optionen in der Ukraine</h2><span class="section-sub">Pro-Track UA-Registrierung · NSZU · Kosten · Zugangsweg. Renderzeit-Metadaten; die Auswahl der Motoren hängt nicht von diesen Feldern ab (CHARTER §8.3).</span></summary><table class="access-matrix-table"><thead><tr><th>Option</th><th>Eintragung in die UA</th><th>NSZU</th><th>Kostenorientierung</th><th>Zugangsweg</th></tr></thead><tbody><tr class="track-standard"><td class="track-cell"><strong>Standardplan</strong><div class="regimen-name"><strong>Belinostat IV Tage 1-5 q21d (BELIEF-Schema) — r/r PTCL inkl. AITL</strong> <span class="regimen-id">(REG-BELINOSTAT-PTCL)</span></div><div class="notes">1/1 nicht in der Ukraine registrierte(s) Arzneimittel mit Bestandteilen <span class="more-notes" title="1/1 Wirkstoff(e) ohne NSZU-Formulierung">+1</span></div></td><td><span class="badge badge--no">® nicht registriert</span></td><td><span class="badge badge--no">® außerhalb des Pockets</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell"><em>nicht erfasst</em></td></tr><tr class="track-aggressive"><td class="track-cell"><strong>Aggressiver Plan</strong><div class="regimen-name"><strong>5-Azacitidine SC/IV 75 mg/m² Tage 1-7 q28d — r/r AITL (epigenetisch ausgerichtet)</strong> <span class="regimen-id">(REG-AZACITIDINE-AITL)</span></div></td><td><span class="badge badge--ok">✓ registriert</span></td><td><span class="badge badge--ok">✓ abgedeckt</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell">NSZU-Formel</td></tr><tr class="track-standard"><td class="track-cell"><strong>Standardplan</strong><div class="regimen-name"><strong>Romidepsin IV Tage 1, 8, 15 q28d — r/r PTCL inkl. AITL</strong> <span class="regimen-id">(REG-ROMIDEPSIN-PTCL)</span></div><div class="notes">1/1 nicht in der Ukraine registrierte(s) Arzneimittel mit Bestandteilen <span class="more-notes" title="1/1 Wirkstoff(e) ohne NSZU-Formulierung">+1</span></div></td><td><span class="badge badge--no">® nicht registriert</span></td><td><span class="badge badge--no">® außerhalb des Pockets</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell"><em>nicht erfasst</em></td></tr><tr class="track-trial"><td class="track-cell"><strong>Versuch · NCT05978141</strong><div class="regimen-name">Eine Registrierung für Menschen mit T-Zell-Lymphom</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Versuch · NCT01137643</strong><div class="regimen-name">Gewebe, Blut und Körperflüssigkeit Probensammlung von Patienten mit hämatologischem Krebs</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Prüfung · NCT04234048</strong><div class="regimen-name">Phase 1 Studie mit ST-001 nanoFenretinid im rezidivierten/refraktorischen T-Zell-Non-Hodgkin-Lymphom</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Prüfung · NCT06724237</strong><div class="regimen-name">Testen, ob eine hohe Dosis-Chemotherapie und Infusion der patienteneigenen Stammzellen das Überleben von Patienten mit peripherem T-Zell-Lymphom verbessert, die am Ende der Initialtherapie ein vollständiges Ansprechen erzielt haben</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Prüfung · NCT07168317</strong><div class="regimen-name">Tislelizumab , Cyclophosphamide, Mitoxantrone Liposomes, Chidamide, and Prednisone in the Treatment of New Diagnosed AITL</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Prüfung · NCT06561048</strong><div class="regimen-name">Soquelitinib vs Standard der Pflege bei Teilnehmern mit rezidivierten/refraktorischen peripheren T-Zell-Lymphom nicht anders angegeben, follikulärer Helfer T-Cell- Lymphomen oder systemische Anaplastisches Großzell-Limphom</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Versuch · NCT06522737</strong><div class="regimen-name">Eine Studie von Duvelisib Versus Gemcitabine oder Bendamustine an Teilnehmern mit rezidiviertem/refraktorischem Nodal-T-Zell-Lymphom mit T-follikulärem Helfer (TFH) Phenotyp</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Prüfung · NCT06393738</strong><div class="regimen-name">Eine Studie mit ARV-393 im rezidivierten/refraktorischen Non-Hodgkin-Lymphom.</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Versuch · NCT04803201</strong><div class="regimen-name">Testen der Zugabe von Duvelisib oder CC-486 zur üblichen Behandlung von peripherem T-Zell-Lymphom</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Versuch · NCT07388563</strong><div class="regimen-name">Azacitidine and Abatacept in Relapsed or Refractory T-Cell Lymphoma</div><div class="notes">Keine Website der UA aufgeführt — internationale Überweisung erforderlich</div></td><td><span class="badge badge--unknown">— unbekannt</span></td><td><span class="badge badge--unknown">— unbekannt</span></td><td class="cost-cell"><div class="cost-row"><span class="cost-label">Selbstbezahlung:</span> .0/Kurs</div></td><td class="pathway-cell">Prüfsponsor</td></tr></tbody></table><p class="matrix-disclaimer">Cost information is orientation. Verify with a specific pharmacy / foundation / trial site. Status updated: 2026-10-12.</p></details></section><div class="doc-footer"><div class="version-chain">plan_id: PLAN-VERIFIED-AITL-L2-AITL_2L_BELINOSTAT-V1 | version: 1 | generated: 2026-10-12T16:51:49.658943+00:00</div><div class="fda-disclosure"><strong>Grenzen des vorgesehenen Projektzwecks (CHARTER §11 + §15):</strong> Outpatient oncology treatment planning to support tumor-board discussion. For independent clinician review; not for autonomous clinical decision-making.</div><div class="fda-disclosure"><strong>Grenzen des vorgesehenen Projektzwecks (CHARTER §11 + §15):</strong> Beide Behandlungsoptionen werden zur Überprüfung vorgestellt. Die Auswahl des Motors einer "empfohlenen" Standard stellt keine klinische Entscheidung dar. Die endgültige Behandlungsauswahl erfordert ein HCP-Urteil mit Informationen, die dem System nicht zur Verfügung stehen.</div><div class="medical-disclaimer">Dieses Dokument ist eine Informationsquelle zur Unterstützung der Tumorkonferenz (gemäß CHARTER §11). Es ist kein System, das klinische Entscheidungen trifft. Jede Empfehlung muss von der behandelnden Ärztin oder dem behandelnden Arzt überprüft werden.</div></div></div>
+ </span><span class="src-chip">SRC-NCCN-BCELL-2025</span><span class="src-chip">SRC-ESMO-PTCL-2024</span></li></ul></div></section><section><h2>Vorbehandlungsuntersuchungen</h2><div class="section-sub">Untersuchungen vor Behandlungsbeginn · kritisch / Standard / gewünscht · über Spuren verschmolzen</div><table class="tbl"><thead><tr><th>ID</th><th>Bezeichnung</th><th>Priorität</th><th>Kategorie</th><th>Anzugebende Stelle</th><th>Erforderlich für</th></tr></thead><tbody><tr><td>TEST-CBC</td><td>Vollständige Blutzahl mit Differential</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-CMP</td><td>Umfassendes Stoffwechsel-Panel</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HBV-SEROLOGY</td><td>Hepatitis B-Serologiegruppe (HBsAg, insgesamt anti-HBc, anti- HBs)</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HCV-ANTIBODY</td><td>HCV-Antikörper</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-HIV-SEROLOGY</td><td>HIV-Antikörper/Antigen</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LDH</td><td>Lactat Dehydrogenase</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LFT</td><td>Leberfunktionsprüfungen (ALT, AST, Bilirubin, ALP, GGT, Albumin)</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-PREGNANCY</td><td>Beta-HCG</td><td><span class="badge badge--required">Kritisch</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Standard</td></tr><tr><td>TEST-B2-MICROGLOBULIN</td><td>Beta-2 Mikroglobulin</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-DAT-COOMBS</td><td>Direkter Antiglobulin-Test</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-EBER-ISH</td><td>EBER ISH</td><td><span class="badge badge--recommended">Standard</span></td><td>Pathologie</td><td class="lab-avail-cell"><a class="lab-chip" href="https://www.csdlab.ua/analyzes/onkologichni-doslidzhennya" target="_blank" rel="noopener" title="EBER ISH is a specialty ISH falling under CSD&#x27;s pathomorphology + &#x27;Інші ІГХ&#x27; menu. Less common than diagnostic IHC — confirm availability + turnaround with CSD.">Zentralverwahrerlabor ✓ (Code TBC)</a></td><td>Alle Gleise</td></tr><tr><td>TEST-HAPTOGLOBIN</td><td>Heptoglobin</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>aggressiv</td></tr><tr><td>TEST-IMMUNOGLOBULINS</td><td>Quantitative Immunglobuline</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-LN-CORE-BIOPSY</td><td>Kern-LN-Biopsie</td><td><span class="badge badge--recommended">Standard</span></td><td>Histologie</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-PET-CT</td><td>FDG PET/CT (ganzer Körper)</td><td><span class="badge badge--recommended">Standard</span></td><td>Bildgebung</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-RETICULOCYTE</td><td>Retikulozytenzahl</td><td><span class="badge badge--recommended">Standard</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>Alle Gleise</td></tr><tr><td>TEST-EBV-SEROLOGY</td><td>EBV-Antikörper-Panel</td><td><span class="badge badge--optional">Gewünscht</span></td><td>Labor</td><td class="lab-avail-cell">—</td><td>aggressiv</td></tr><tr><td>TEST-NGS-LYMPHOID-PANEL</td><td>Lymphoid NGS-Panel</td><td><span class="badge badge--optional">Gewünscht</span></td><td>genomische</td><td class="lab-avail-cell"><a class="lab-chip" href="https://www.csdlab.ua/analyzes/onkologichni-doslidzhennya" target="_blank" rel="noopener" title="TP53/ATM/MYD88/BTK/IGHV — lymphoide molekulare Profilierung fällt unter das molekulare Menü der Hämatopathie des Zentralverwahrers. Spezifische Panelzusammensetzung + Code nicht öffentlich aufgeführt.">Zentralverwahrerlabor ✓ (Code TBC)</a></td><td>Alle Gleise</td></tr></tbody></table></section><section><h2>Rote Flaggen — PRO / CONTRA aggressiv</h2><div class="pro-contra"><div class="pc-col pc-col--pro"><h3>PRO-AGGRESSIVE</h3><div class="section-sub">Auslöser, die auf die aggressive Spur schieben</div><ul><li data-severity="major">AITL mit autoimmuner hämolytischer Anämie (AIHA, DAT+) und/oder Immunthromozytopenie (ITP) — paraneoplastisches Phänomen, das neben einer T-Zell-gerichteten Therapie gleichzeitige Immunsuppression benötigt<div class="rf-note">AITL ist das T-Zell-Lymphom, das am meisten mit Autoimmunzytopenien assoziiert ist — AIHA (warm IgG-vermittelt, DAT+) und ITP können vor, während oder nach der Lymphom-Therapie präsentieren. Standardansatz: Prednison-haltige Chemo (CHOEP/CHP-Bv...</div><a class="rf-id" href="/de/kb/redflags/rf-aitl-autoimmune-cytopenia.html">RF-AITL-AUTOIMMUNE-CYTOPENIA</a><span class="rf-src-row"><span class="rf-src-chip">SRC-NCCN-BCELL-2025</span><span class="rf-src-chip">SRC-ESMO-PTCL-2024</span></span></li><li data-severity="major">AITL mit EBV+ B-Zell-Erweiterung (große B-Zellen, EBER+ in Mikroumgebung) — Risiko eines sekundären EBV-getriebenen B-Zell-Lymphoms (DLBCL-like) während/nach T-Zell-gerichteter Therapie<div class="rf-note">AITL microenvironment klassisch enthält EBV+ B-Zellen (~80-90%). Subset entwickelt EBV-getriebenes sekundäres B-Zell-Lymphom (oft DLBCL-like) während/nach T-Zell-gerichteter Induktion — klonisch unterscheidet sich von Index AITL. Rebiopsie jede neue...</div><a class="rf-id" href="/de/kb/redflags/rf-aitl-ebv-driven-b-cell.html">RF-AITL-EBV-DRIVEN-B-CELL</a><span class="rf-src-row"><span class="rf-src-chip">SRC-NCCN-BCELL-2025</span><span class="rf-src-chip">SRC-ESMO-PTCL-2024</span></span></li></ul></div><div class="pc-col pc-col--contra"><h3>CONTRA-AGGRESSIVE</h3><div class="section-sub">Hard contraindications to escalation</div><ul><li>—</li></ul></div></div></section><section><h2>Was nicht zu tun ist</h2><div class="section-sub">Explicit prohibitive rules, each grounded in a regimen / supportive care / contraindication entity</div><div class="do-not"><div class="track-name">Standardplan (IND-AITL-2L-BELINOSTAT)</div><ul><li>Überspringen Sie nicht den Ausgangswert + serielle QTc — Belinostat hat ein Herzsignal; korrigieren Sie K/Mg vor der ersten Infusion.</li><li>Nicht ohne strenge Überwachung mit QT-verlängernden Arzneimitteln (Zylinder, bestimmte Antiemetika) kombinieren.</li><li>Verschreiben Sie nicht bei schwerer Leberfunktionsstörung — UGT1A1-abhängiger Metabolismus.</li><li>Nicht überspringen TLS-Überwachung im hoch belasteten AITL (IL2-gesteuerter Hyperaktivzustand) — Allopurinol + Hydratationszyklus 1.</li><li>Vergessen Sie nicht, die Re-Biopsie beim Auftreten einer schnell wachsenden CD20+ B-Zellmasse zu vergessen — sekundäres EBV-getriebenes DLBCL ist in der AITL-Mikroumgebung üblich.</li><li>Verschreiben Sie nicht ohne Finanzierungswege Klärung — Droge nicht in der Ukraine registriert.</li><li>Nicht ignorieren AIHA / ITP Trigger — AITL paraneoplastische Phänomene (RF-AITL-AUTOIMMUNE-CYTOPENIA); nicht mit medikamentösem Zytopen verwechseln.</li></ul></div><div class="do-not"><div class="track-name">Aggressiver Plan (IND-AITL-2L-AZACITIDINE)</div><ul><li>Nicht früher als 4-6 Zyklen ohne klare Progression stoppen — HMA-Antwort ist langsam eingestellt; frühe Auswertung = falsch negativ.</li><li>Vergessen Sie nicht, den Zytopenie- + Verzögerungszyklus bei ANC &lt; 500 / Thrombozyten &lt; 25K zu überwachen — die hämatologische Toxizität ist dosislimitierend.</li><li>Nicht die Nierenfunktion ignorieren — CrCl &lt; 60 erfordert eine 50%ige Dosisreduktion.</li><li>Nicht überspringen Re-Biopsie mit einem schnellen Wachstum der CD20+ Masse — sekundäre EBV-getriebene DLBCL in AITL Mikroumgebung; separates Routing.</li><li>Vergessen Sie nicht die Offenlegung von Off-Label-Produkten — für MDS/AML registriertes Arzneimittel; die Verwendung von AITL-Produkten außerhalb des Etiketts erfordert eine MDT-Dokumentation + eine Klärung des Finanzierungspfads.</li><li>Nicht überspringen NGS-Basiswerte für TET2/IDH2/DNMT3A — vorausschauende Anreicherung + zukünftiges Studienrouting (IDH2-Inhibitor Enasidenib für IDH2-mut).</li></ul></div><div class="do-not"><div class="track-name">Standardplan (IND-AITL-2L-ROMIDEPSIN)</div><ul><li>Vor der Infusion darf der Ausgangswert + serielle QTc + korrekte K/Mg-Werte nicht in den oberen Normbereich übergehen — Romidepsin hat ein Herzsignal.</li><li>Nicht mit QT-verlängernden Medikamenten kombinieren, ohne strenge Überwachung.</li><li>Nicht mit Warfarin kombinieren, ohne eine modifizierte INR-Überwachung zu haben — INR steigt erheblich.</li><li>Verschreiben Sie nicht zusammen mit einem gleichzeitig starken CYP3A-Inhibitor ohne Dosisreduktion auf 10 mg/m2.</li><li>Nicht überspringen TLS-Prophylaxe im hoch belasteten AITL — IL2-gesteuertes hyperaktiviertes Stadium.</li><li>Vergessen Sie nicht, die Re-Biopsie mit einem raschen Wachstum der CD20+ Masse zu vergessen — sekundäres EBV-getriebenes DLBCL ist in AITL-Mikroumgebung verbreitet.</li><li>Nicht ignorieren AIHA / ITP Trigger — AITL paraneoplastic; nicht mit medikamentösem Zytopen verwechseln.</li><li>Verschreiben Sie nicht ohne Finanzierungswege — Droge, die nicht in der Ukraine registriert ist.</li></ul></div></section><section><h2>Zeitleiste</h2><div class="section-sub">Behandlungs-Zeitlinie — abgeleitet aus dem Regime + Überwachungsprogramm</div><h3>Standardplan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induktion · Belinostat IV Tage 1-5 q21d (BELIEF-Schema) — r/r PTCL inkl. AITL</div><div class="window">21-Tage-Zyklen × Bis zur Progression oder inakzeptable Toxizität (ansprechend)</div></div></div><h3>Aggressiver Plan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induction · 5-Azacitidine SC/IV 75 mg/m² days 1-7 q28d — r/r AITL (epigenetic-targeted)</div><div class="window">28-Tage-Zyklen × Bis zur Progression (≥6 Zyklen vor der Deklaration des Versagens — langsames Ansprechen auf den Anfall)</div></div></div><h3>Standardplan</h3><div class="timeline"><div class="tl-phase tl-phase--induction"><div class="name">Induktion · Romidepsin IV Tage 1, 8, 15 q28d — r/r PTCL inkl. AITL</div><div class="window">28-Tage-Zyklen × Bis zur Progression oder inakzeptable Toxizität (ansprechend)</div></div></div></section><section><h2>Kurzbericht</h2><div class="mdt"><h3>Diskussionsfragen (3, 1 Blockierung)</h3><ul class="q-list q-list--featured"><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> OQ-CD20-CONFIRMATION</div><div class="q-text">Wird der CD20+-Status durch die Histologie (IHC) bestätigt? Ohne CD20 + sind Rituximab/Obinutuzumab nicht indiziert.</div><div class="q-rationale">Die Anti-CD20-Therapie ist das Rückgrat der meisten Behandlungslinien; das Fehlen eines CD20-Ausdrucks verändert das Regime vollständig.</div><div class="q-owner">→ Pathologe</div></li><li class=""><div class="q-id">OQ-STAGING-COMPLETE</div><div class="q-text">Wurde die Inszenierung abgeschlossen (Lugano + PET/CT oder CT)?</div><div class="q-rationale">Prognose und Spurauswahl hängen von der Bühne und der Tumorbelastung ab.</div><div class="q-owner">→ Radiologe</div></li><li class=""><div class="q-id">OQ-LDH-CURRENT</div><div class="q-text">Was ist die aktuelle LDH? Marker für Tumorbelastung und Transformation.</div><div class="q-rationale">LDH ist Teil der prognostischen Indizes von indolenten Lymphomen.</div><div class="q-owner">→ Hämatologe</div></li></ul><h3>MDT-Talkbaum (4 Schritte)</h3><table class="tbl"><thead><tr><th>#</th><th>Eigentümer</th><th>Thema</th><th>Maßnahmen</th></tr></thead><tbody><tr><td class="mono">1</td><td>Pathologe</td><td>Pathologische Bestätigung <span class="badge badge--blocking">BLOCKING</span></td><td>Wird der CD20+-Status durch die Histologie (IHC) bestätigt? Ohne CD20 + sind Rituximab/Obinutuzumab nicht indiziert.</td></tr><tr><td class="mono">2</td><td>Hämatologe</td><td>Staging / Krankheitslast </td><td>Was ist die aktuelle LDH? Marker für Tumorbelastung und Transformation.</td></tr><tr><td class="mono">3</td><td>Radiologe</td><td>Staging / Krankheitslast </td><td>Wurde die Inszenierung abgeschlossen (Lugano + PET/CT oder CT)?</td></tr><tr><td class="mono">4</td><td>clinical_pharmacist</td><td>Fachprüfung </td><td>Chemotherapie-Therapie-Therapie – Arzneimittel-Interaktionen, Dosisanpassungen, Prämedikation.</td></tr></tbody></table><h3>Fähigkeiten (erforderlich) — Pflichtfach für virtuelle Fachkräfte (1)</h3><ul class="role-list"><li><span class="role-name">Hämatologe / Onkohämatologe</span> <span class="badge badge--required">erforderlich</span><div class="role-reason">Lymphomdiagnose – führende Spezialität für das Behandlungsmanagement.</div><div class="role-questions">Eigene: OQ-LDH-CURRENT</div></li></ul><h3>Qualifikationen (empfohlen) — zur Prüfung (2)</h3><ul class="role-list"><li><span class="role-name">Klinischer Apotheker</span> <span class="badge badge--recommended">empfohlen</span><div class="role-reason">Chemotherapie-Therapie-Therapie – Arzneimittel-Interaktionen, Dosisanpassungen, Prämedikation.</div></li><li><span class="role-name">Pathologe (allgemein)</span> <span class="badge badge--recommended">empfohlen</span><div class="role-reason">Bestätigen Sie die Lymphom-Histologie + bewerten Sie das Transformationsrisiko (DLBCL/Richter).</div><div class="role-questions">Owns: OQ-CD20-CONFIRMATION</div></li></ul><h3>Datenqualität</h3><div class="section-sub"><strong>Unvollständig für MDT-Abmeldung.</strong> MDT-Abmeldung ist unvollständig, bis kritische klinische Datenlücken beseitigt sind.</div><ul><li>Biomarkerabdeckung: 0/0 bekannt (100%), 0 fehlende, 0 Standardspurlücken</li><li>Fehlende kritische: cd20_ihc_status, lugano_stage</li><li>Fehlende empfohlene: ldh_ratio_to_uln, fib4_index, pet_ct_date</li><li>Nicht ausgewertete Warnhinweise: RF-AITL-AUTOIMMUNE-CYTOPENIA, RF-AITL-EBV-DRIVEN-B-CELL, RF-AITL-FRAILTY-AGE, RF-AITL-HYPOGAMMA, RF-AITL-ORGAN-DYSFUNCTION, RF-AITL-ROMIDEPSIN-INELIGIBLE, RF-AITL-TRANSFORMATION-PROGRESSION, RF-TCELL-CD30-POSITIVE</li></ul><h4>Fehlende Daten für die Wirkung des Arztes</h4><table class="tbl"><thead><tr><th>Priorität</th><th>Klinischer Gegenstand</th><th>Eigentümer</th><th>Warum es wichtig ist</th><th>Nächste Maßnahme</th><th>Blöcke</th></tr></thead><tbody><tr><td><span class="badge badge--required">CRITICAL</span></td><td><strong>CD20 IHC-Status</strong><div class="section-sub"><code>cd20_ihc_status</code></div></td><td>Pathologe</td><td>Bestätigt CD20-geführte Therapie ist biologisch angemessen.</td><td>Prüfen Sie CD20 IHC-Ergebnis, Muster, Methode und Berichtsdatum.</td><td>-</td></tr><tr><td><span class="badge badge--required">CRITICAL</span></td><td><strong>Lugano-Stufe</strong><div class="section-sub"><code>lugano_stage</code></div></td><td>Radiologe</td><td>Definiert die Lymphom-Ausdehnung und unterstützt Tumor-Ladung und Antwort-Bewertung Entscheidungen.</td><td>Dokument Lugano-Stufe von PET/CT oder Kontrast CT-Stadium.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>LDH-Verhältnis zu ULN</strong><div class="section-sub"><code>ldh_ratio_to_uln</code></div></td><td>medical_oncologist</td><td>Unterstützt prognostische Scoring und aggressiv-Biologie Flaggen.</td><td>Geben Sie LDH mit lokaler Obergrenze von normal ein.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>FIB-4 Leberfibroseindex</strong><div class="section-sub"><code>fib4_index</code></div></td><td>infectious_disease_hepatology</td><td>Screens Leberfibrose Risiko vor der hepatotoxischen Therapie oder antivirale Koordination.</td><td>Berechnen Sie FIB-4 ab dem Alter, AST, ALT und Thrombozytenzahl.</td><td>-</td></tr><tr><td><span class="badge badge--recommended">RECOMMENDED</span></td><td><strong>PET/CT Datum</strong><div class="section-sub"><code>pet_ct_date</code></div></td><td>Radiologe</td><td>Zeigt an, ob die Ausgangsstation für die Behandlungsplanung und den späteren Ansprechvergleich vor kurzem genug ist.</td><td>Basis-PET/CT-Datum dokumentieren oder alternative Staging-Modalität erklären.</td><td>-</td></tr></tbody></table><details class="skill-catalog"><summary>Technische MDT-Fähigkeit Metadaten (3/16 in diesem Plan aktiviert)</summary><div class="section-sub">Alle registrierten virtuellen Spezialisten. ✓ — für diesen Fall aktiviert;      ), nicht aktiviert (verfügbar für andere klinische Szenarien).</div><table><thead><tr><th>Facharzt</th><th>skill_id</th><th>Fassung</th><th>Zuletzt überprüft</th><th>Abschreibungen</th><th>Bereich</th></tr></thead><tbody><tr class="dormant"><td>Zellulärer Therapiespezialist (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="activated"><td>Klinischer Apotheker</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinical_pharmacy</td></tr><tr class="activated"><td>Hämatologe / Onkohämatologe</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematology_oncology</td></tr><tr class="dormant"><td>Hämatopathien (Lymphom / Leukämie / Myelom)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Hämatopathie</td></tr><tr class="dormant"><td>Infektionskrankheit / Hepatologie</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>infectious_diseases</td></tr><tr class="dormant"><td>Medizinischer Onkologe (Solid-Tumor-Chemotherapier)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncology</td></tr><tr class="dormant"><td>Molekulargenetiker / Molekularonkologe</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncology</td></tr><tr class="dormant"><td>Palliativbehandlung</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>palliative_care</td></tr><tr class="activated"><td>Pathologe (allgemein)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>Pathologie</td></tr><tr class="dormant"><td>Primärpflege / Familienarzt</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>primary_care</td></tr><tr class="dormant"><td>Psycho-Onkologe</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosozial</td></tr><tr class="dormant"><td>Strahlenonkologe</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiation_oncology</td></tr><tr class="dormant"><td>Radiologe</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostic_imaging</td></tr><tr class="dormant"><td>Sozialarbeiter/Fallleiter</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosozial</td></tr><tr class="dormant"><td>Chirurgischer Onkologe</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>surgical_oncology</td></tr><tr class="dormant"><td>Transplantationsspezialist (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr></tbody></table></details></div></section><section><h2>Quellen</h2><ul class="sources"><li><a href="https://www.annalsofoncology.org/article/S0923-7534(25)00911-1/fulltext" target="_blank" rel="noopener noreferrer">SRC-ESMO-LYMPHOMA-2025: Lymphomas: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up (2025)</a></li><li><a href="https://www.nccn.org/guidelines/guidelines-detail?category=1&amp;id=1480" target="_blank" rel="noopener noreferrer">SRC-NCCN-BCELL-2025: NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas (v.2.2025)</a></li></ul></section><section class="experimental-track experimental-track--empty"><h2>Experimentelle Optionen (klinische Studien)</h2><div class="section-sub">Last synced: 2026-10-12 · ctgov.</div><p class="empty-state">ctgov search not configured — pass search_fn to enumerate trials.</p></section><section class="access-matrix"><details open><summary><h2>Verfügbarkeit von Optionen in der Ukraine</h2><span class="section-sub">Pro-Track UA-Registrierung · NSZU · Kosten · Zugangsweg. Renderzeit-Metadaten; die Auswahl der Motoren hängt nicht von diesen Feldern ab (CHARTER §8.3).</span></summary><table class="access-matrix-table"><thead><tr><th>Option</th><th>Eintragung in die UA</th><th>NSZU</th><th>Kostenorientierung</th><th>Zugangsweg</th></tr></thead><tbody><tr class="track-standard"><td class="track-cell"><strong>Standardplan</strong><div class="regimen-name"><strong>Belinostat IV Tage 1-5 q21d (BELIEF-Schema) — r/r PTCL inkl. AITL</strong> <span class="regimen-id">(REG-BELINOSTAT-PTCL)</span></div><div class="notes">1/1 nicht in der Ukraine registrierte(s) Arzneimittel mit Bestandteilen <span class="more-notes" title="1/1 Wirkstoff(e) ohne NSZU-Formulierung">+1</span></div></td><td><span class="badge badge--no">® nicht registriert</span></td><td><span class="badge badge--no">® außerhalb des Pockets</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell"><em>nicht erfasst</em></td></tr><tr class="track-aggressive"><td class="track-cell"><strong>Aggressiver Plan</strong><div class="regimen-name"><strong>5-Azacitidine SC/IV 75 mg/m² Tage 1-7 q28d — r/r AITL (epigenetisch ausgerichtet)</strong> <span class="regimen-id">(REG-AZACITIDINE-AITL)</span></div></td><td><span class="badge badge--ok">✓ registriert</span></td><td><span class="badge badge--ok">✓ abgedeckt</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell">NSZU-Formel</td></tr><tr class="track-standard"><td class="track-cell"><strong>Standardplan</strong><div class="regimen-name"><strong>Romidepsin IV Tage 1, 8, 15 q28d — r/r PTCL inkl. AITL</strong> <span class="regimen-id">(REG-ROMIDEPSIN-PTCL)</span></div><div class="notes">1/1 nicht in der Ukraine registrierte(s) Arzneimittel mit Bestandteilen <span class="more-notes" title="1/1 Wirkstoff(e) ohne NSZU-Formulierung">+1</span></div></td><td><span class="badge badge--no">® nicht registriert</span></td><td><span class="badge badge--no">® außerhalb des Pockets</span></td><td class="cost-cell"><span class="cost-unknown">?-? — Prüfpfad</span></td><td class="pathway-cell"><em>nicht erfasst</em></td></tr></tbody></table><p class="matrix-disclaimer">Cost information is orientation. Verify with a specific pharmacy / foundation / trial site. Status updated: 2026-10-12.</p></details></section><div class="doc-footer"><div class="version-chain">plan_id: PLAN-VERIFIED-AITL-L2-AITL_2L_BELINOSTAT-V1 | version: 1 | generated: 2026-10-12T19:19:39.928286+00:00</div><div class="fda-disclosure"><strong>Grenzen des vorgesehenen Projektzwecks (CHARTER §11 + §15):</strong> Outpatient oncology treatment planning to support tumor-board discussion. For independent clinician review; not for autonomous clinical decision-making.</div><div class="fda-disclosure"><strong>Grenzen des vorgesehenen Projektzwecks (CHARTER §11 + §15):</strong> Beide Behandlungsoptionen werden zur Überprüfung vorgestellt. Die Auswahl des Motors einer "empfohlenen" Standard stellt keine klinische Entscheidung dar. Die endgültige Behandlungsauswahl erfordert ein HCP-Urteil mit Informationen, die dem System nicht zur Verfügung stehen.</div><div class="medical-disclaimer">Dieses Dokument ist eine Informationsquelle zur Unterstützung der Tumorkonferenz (gemäß CHARTER §11). Es ist kein System, das klinische Entscheidungen trifft. Jede Empfehlung muss von der behandelnden Ärztin oder dem behandelnden Arzt überprüft werden.</div></div></div>
 </body>
 </html>
