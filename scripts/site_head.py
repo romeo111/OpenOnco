@@ -1154,28 +1154,47 @@ picture and discussed by a multidisciplinary team (CHARTER §11 + §15).
     return out
 
 
+def finalize_public_page(html_text: str, *, path: str, available_paths: set[str], seo_available_paths: set[str] | None = None) -> str:
+    """Apply the normal public-page head and navigation to a selected page.
+
+    Partial clinical builds need the same finalization as full builds. The
+    caller supplies the published path inventory and controls which files
+    are read or written; this function does not scan the output directory.
+    Synchronize shared-reader source hashes after finalizing all originals.
+    """
+    from scripts.site_nav import render_top_bar
+    from scripts.shared_site_header import DEEP_SECTIONS, render_header_mount
+
+    locale, base = split_locale(path)
+    active = base.split('/')[0].removesuffix('.html')
+    active = {'index': 'home', 'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
+    header_re = re.compile(r'<header class="top-bar site-header">.*?</header>|<!-- shared-site-header:start -->.*?<!-- shared-site-header:end -->', re.S)
+    navigation = header_re.sub(
+        lambda _: render_header_mount(locale, base, active, available_paths)
+        if base.startswith(DEEP_SECTIONS)
+        else render_top_bar(active, locale, page_path=base, available_paths=available_paths),
+        html_text,
+    )
+    return inject_geo_lang_redirect(
+        inject_seo_metadata(navigation, path=path, available_paths=available_paths if seo_available_paths is None else seo_available_paths),
+        path=path,
+    )
+
+
 def finalize_site_discovery(
     output_dir: Path, stats: dict | None = None
 ) -> dict[str, str | int]:
-    from scripts.site_nav import render_top_bar
-    from scripts.shared_site_header import DEEP_SECTIONS, render_header_mount, write_shared_header_assets
+    from scripts.shared_site_header import write_shared_header_assets
     pages = _html_pages(output_dir)
     physical_paths = {page.relative_to(output_dir).as_posix() for page in pages}
     write_shared_header_assets(output_dir)
     write_geo_lang_asset(output_dir)
-    header_re = re.compile(r'<header class="top-bar site-header">.*?</header>|<!-- shared-site-header:start -->.*?<!-- shared-site-header:end -->', re.S)
     available_paths = _indexable_paths(output_dir)
     reader_pages = []
     def enrich_page(page):
         rel = page.relative_to(output_dir).as_posix()
         original = page.read_text(encoding="utf-8")
-        locale, base = split_locale(rel)
-        active = base.split('/')[0].removesuffix('.html')
-        active = {'index': 'home', 'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
-        deep = base.startswith(DEEP_SECTIONS)
-        navigation = header_re.sub(lambda _: render_header_mount(locale, base, active, physical_paths)
-                                   if deep else render_top_bar(active, locale, page_path=base, available_paths=physical_paths), original)
-        updated = inject_geo_lang_redirect(inject_seo_metadata(navigation, path=rel, available_paths=available_paths), path=rel)
+        updated = finalize_public_page(original, path=rel, available_paths=physical_paths, seo_available_paths=available_paths)
         if 'data-shared-clinical-source' in updated:
             reader_pages.append(page)
         if updated != original:
