@@ -34,3 +34,18 @@ def test_explicit_shared_readers_do_not_repeat_unused_geo_lookup():
     translated = inject_geo_lang_redirect(en, path='fr/cases/example.html')
     assert 'openonco-geo-lang:start' not in translated
     assert '<p>100 mg</p>' in translated
+
+
+def test_deep_geo_asset_preserves_code_and_body_and_is_idempotent(tmp_path):
+    from scripts.site_head import GEO_LANG_SCRIPT, geo_lang_payload, geo_lang_url, write_geo_lang_asset
+    original = '<html><head><meta charset="utf-8"></head><body><div data-shared-site-header></div><p>100 mg</p></body></html>'
+    write_geo_lang_asset(tmp_path)
+    assert (tmp_path / geo_lang_url().lstrip('/')).read_bytes() == geo_lang_payload()
+    assert geo_lang_payload().decode() == GEO_LANG_SCRIPT.split('<script>',1)[1].rsplit('</script>',1)[0]
+    for locale in ('cases/example.html','ukr/cases/example.html'):
+        result = inject_geo_lang_redirect(original,path=locale)
+        assert f'<script src="{geo_lang_url()}"></script>' in result
+        assert ' defer' not in result and ' async' not in result
+        assert result.split('<body>')[1] == original.split('<body>')[1]
+        assert inject_geo_lang_redirect(result,path=locale) == result
+        assert len(result.encode()) < 500

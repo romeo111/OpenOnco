@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import gzip
+import hashlib
 import json
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -698,6 +699,20 @@ def inject_seo_metadata(html_text: str, *, path: str, available_paths: set[str] 
     )
 
 
+def geo_lang_payload() -> bytes:
+    """Keep the exact existing redirect code, including its synchronous timing."""
+    return GEO_LANG_SCRIPT.split('<script>', 1)[1].rsplit('</script>', 1)[0].encode('utf-8')
+
+
+def geo_lang_url() -> str:
+    return '/geo-lang.' + hashlib.sha256(geo_lang_payload()).hexdigest()[:12] + '.js'
+
+
+def write_geo_lang_asset(output_dir: Path) -> None:
+    from scripts.clinical_asset_versions import write_asset
+    write_asset(output_dir, 'geo-lang.js', geo_lang_payload())
+
+
 def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
     """Insert the client-side IP → language auto-selection script into <head>.
 
@@ -734,17 +749,21 @@ def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
         # Never carry the script here; strip a previously-injected block if present.
         return existing.sub("", html_text, count=1) if existing.search(html_text) else html_text
 
+    block = GEO_LANG_SCRIPT
+    if locale in ('en', 'uk') and 'data-shared-site-header' in html_text:
+        block = GEO_LANG_START + f'\n<script src="{geo_lang_url()}"></script>\n' + GEO_LANG_END
+
     if existing.search(html_text):
-        return existing.sub(GEO_LANG_SCRIPT + "\n", html_text, count=1)
+        return existing.sub(lambda _: block + "\n", html_text, count=1)
 
     charset = re.search(r"<meta[^>]+charset[^>]*>", html_text, flags=re.IGNORECASE)
     if charset:
         insert_at = charset.end()
-        return html_text[:insert_at] + "\n" + GEO_LANG_SCRIPT + "\n" + html_text[insert_at:].lstrip()
+        return html_text[:insert_at] + "\n" + block + "\n" + html_text[insert_at:].lstrip()
 
     return re.sub(
         r"(<head[^>]*>)\s*",
-        lambda match: match.group(1) + "\n" + GEO_LANG_SCRIPT + "\n",
+        lambda match: match.group(1) + "\n" + block + "\n",
         html_text,
         count=1,
         flags=re.IGNORECASE,
@@ -1141,6 +1160,7 @@ def finalize_site_discovery(
     pages = _html_pages(output_dir)
     physical_paths = {page.relative_to(output_dir).as_posix() for page in pages}
     write_shared_header_assets(output_dir)
+    write_geo_lang_asset(output_dir)
     header_re = re.compile(r'<header class="top-bar site-header">.*?</header>|<!-- shared-site-header:start -->.*?<!-- shared-site-header:end -->', re.S)
     available_paths = _indexable_paths(output_dir)
     def enrich_page(page):

@@ -4,6 +4,10 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Hosting reserve (2026-10-12)
+
+After d013ef24ef, source and deployment state were clean and the eleven-language site occupied 990,524,208 bytes. Deep English/Ukrainian pages now share a content-addressed geographic-language script with byte-identical JavaScript and synchronous head placement; public entry pages retain their existing inline behavior, and explicit translated readers remain free of unused geo lookup code. The targeted build changed 7,968 pages and asserted that every normalized document outside the existing geo block stayed identical. Published size is now 956,358,160 bytes, restoring approximately 43.6 MB of reserve below the conservative 1,000,000,000-byte bound. Source routing/discovery checks and real generated-worker online/offline caching passed; clinical core and language catalog data are unchanged. Delivery/production verification follows this note. Remaining priorities include honest privacy/performance copy, remaining native terminology, source freshness, and practical clinician evaluation without a publication quorum.
+
 ### Current delivery: five complete display catalogs (2026-10-12)
 
 Final terminology follow-up: f41e21bfe6 Pages and CI both succeeded. Browser proof confirmed the Finnish full clinical catalog, shared header, and source iframe all loaded with `fi`; the native flag menu screenshot is saved locally. Observed Stage/Staging translations into floors, seasons, theatre and startup/localization words are now rejected. Explicit five-language labels use primary oncology terminology sources documented in LOCALIZATION.md; complete rejected prose retains its original. Source and compiled catalog inventories were refreshed, interactive controls regenerated, and one affected reader title restored from its original. 184 focused checks, nine-client stale/offline-cache checks and eleven-client engine/export checks passed. The existing API message dictionaries have no detected staging failures and require no backend change for this UI follow-up.

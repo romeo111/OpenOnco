@@ -41,6 +41,10 @@ const requestAsset = async path => {
 };
 (async () => {
   const resources = new Set();
+  const deepPage = fs.readFileSync('docs/cases/aitl-cd30-negative.html', 'utf8');
+  const geo = deepPage.match(/src="(\/geo-lang\.[a-f0-9]{12}\.js)"/);
+  assert(geo, 'Deep source pages must use the shared geographic-language asset');
+  resources.add(geo[1]);
   for (const locale of ['es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi']) {
     const page = fs.readFileSync(`docs/${locale}/try.html`, 'utf8');
     const script = page.match(/<script[^>]+src="(\/clinical-localization\.[a-f0-9]{12}\.js)"[^>]+data-catalog="([^"]+)"/);

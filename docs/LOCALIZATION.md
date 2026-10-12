@@ -18,6 +18,8 @@ Stage/staging labels use explicit terminology checked against [AIRC](https://www
 
 The navigation shell is shared across all eleven languages. Runtime and catalog assets have content-addressed filenames so previous offline caches cannot substitute stale translations. Large discovery inventories use deterministic gzip sitemap shards, each below both 50,000 URLs and 50 MB uncompressed, referenced by `/sitemap.xml`.
 
+Deep English/Ukrainian documents share the byte-identical geographic-language script through a content-addressed JavaScript asset, also cached offline. It executes synchronously in the same head position and preserves manual choices, bot exclusions and the guard against redirecting after a visitor starts entering data. Clinical content, source links and metadata outside that block remain unchanged; sharing this script saves approximately 34 MB in the published tree.
+
 English (`/`), Ukrainian (`/ukr/`), Spanish (`/es/`), Portuguese (`/pt/`), German (`/de/`) and French (`/fr/`) share the same clinical engine. English is first in the flag menu; Ukrainian is second.
 
 ## Published scope

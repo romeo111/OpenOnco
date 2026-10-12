@@ -120,6 +120,7 @@ self.addEventListener('fetch', (event) => {
 
   // SWR for the small interactive shell (HTML + CSS).
   if (/^\/clinical-localization(?:\.[a-f0-9]{12})?\.js$/.test(url.pathname) ||
+      /^\/geo-lang\.[a-f0-9]{12}\.js$/.test(url.pathname) ||
       /^\/(es|pt|de|fr|it|da|sv|nb|fi)\/(clinical-(ui-)?translations(?:\.[a-f0-9]{12})?|kb_search_index)\.json$/.test(url.pathname) ||
       url.pathname.endsWith('/shared-header.fragment') || url.pathname === '/shared-site-header.js' || url.pathname === '/shared-clinical-reader.js' ||
       SWR_PATHS.indexOf(url.pathname) !== -1 ||
