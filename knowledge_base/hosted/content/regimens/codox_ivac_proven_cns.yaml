@@ -1,0 +1,166 @@
+id: REG-CODOX-IVAC-PROVEN-CNS
+name: eviQ proven-CNS R-CODOX-M / R-IVAC reference for specialist review
+name_ua: Довідковий R-CODOX-M / R-IVAC eviQ при доведеному ураженні ЦНС для перевірки спеціалістом
+alternate_names:
+- eviQ 4492 v1 / 4493 v2 CNS reference
+components: []
+phases:
+- name: alternating_block_a
+  purpose_ua: Довідковий CODOX-M eviQ для ураження ЦНС, цикли 1 і 3; п’ять інтратекальних введень у кожному
+    блоці.
+  purpose_en: CNS-specific eviQ CODOX-M reference, cycles 1 and 3; five intrathecal treatments per block.
+  duration: Cycles 1 and 3; minimum 21 days between blocks and recovery required
+  timing_relative_to: absolute
+  optional: false
+  components:
+  - drug_id: DRUG-RITUXIMAB
+    dose: 375 mg/m²
+    schedule: IV days 1 and 11 of CNS CODOX-M blocks only (eviQ 4492)
+    route: IV
+  - drug_id: DRUG-DOXORUBICIN
+    dose: 40 mg/m²
+    schedule: IV day 1 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-VINCRISTINE
+    dose: 1.5 mg/m² (maximum 2 mg)
+    schedule: IV days 1 and 8 of CODOX-M blocks only; NEVER intrathecal
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: 800 mg/m²
+    schedule: IV day 1 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: 200 mg/m² per day
+    schedule: IV days 2-5 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-CYTARABINE
+    dose: 70 mg per dose
+    schedule: Intrathecal days 1, 3 and 5 of CNS CODOX-M blocks only; separate local intrathecal procedure
+    route: IT
+  - drug_id: DRUG-METHOTREXATE
+    dose: 300 mg/m² followed by 2700 mg/m²
+    schedule: 'IV day 10: first portion over 1 hour, then second portion over 23 hours; record infusion
+      START for rescue clock'
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg/m² per dose
+    schedule: IV rescue starts 36 hours after IV methotrexate START; every 3 hours during hours 36-48,
+      then every 6 hours until methotrexate <0.1 micromol/L; adjust for delayed clearance per protocol
+    route: IV
+  - drug_id: DRUG-FILGRASTIM
+    dose: 5 micrograms/kg per day
+    schedule: SC from day 13 of CODOX-M blocks until neutrophil recovery
+    route: SC
+  - drug_id: DRUG-METHOTREXATE
+    dose: 12 mg
+    schedule: Intrathecal days 15 and 17 of CNS CODOX-M blocks only; clinician may change IT days under
+      the selected protocol
+    route: IT
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg once after each IT methotrexate dose
+    schedule: PO 24 hours after each INTRATHECAL methotrexate dose (reference days 16 and 18); separate
+      from IV rescue clock
+    route: PO
+  sources:
+  - SRC-EVIQ-BURKITT-CNS-CODOX-4492
+- name: alternating_block_b
+  purpose_ua: Довідковий IVAC eviQ для ураження ЦНС, цикли 2 і 4; три інтратекальні введення в кожному
+    блоці. Календар ритуксимабу є адаптацією комітету eviQ.
+  purpose_en: CNS-specific eviQ IVAC reference, cycles 2 and 4; three intrathecal treatments per block.
+    Rituximab timing is the eviQ committee adaptation.
+  duration: Cycles 2 and 4; minimum 21 days between blocks and recovery required
+  timing_relative_to: previous_phase_completion
+  optional: false
+  components:
+  - drug_id: DRUG-CYTARABINE
+    dose: 2000 mg/m² per dose
+    schedule: IV over 3 hours, twice daily 12 hours apart on days 1 and 2 of IVAC blocks (four doses)
+    route: IV
+  - drug_id: DRUG-ETOPOSIDE
+    dose: 60 mg/m² per day
+    schedule: IV days 1-5 of IVAC blocks only
+    route: IV
+  - drug_id: DRUG-MESNA
+    dose: 360 mg/m²
+    schedule: IV loading dose day 1, 60 minutes before first ifosfamide; reference schedule, institutional
+      protocols may differ
+    route: IV
+  - drug_id: DRUG-IFOSFAMIDE
+    dose: 1500 mg/m² per day
+    schedule: IV over 2 hours on days 1-5 of IVAC blocks only, with mesna and hydration
+    route: IV
+  - drug_id: DRUG-MESNA
+    dose: 1500 mg/m² per day
+    schedule: IV over 24 hours on days 1-5 of IVAC blocks; reference schedule, verify continued uroprotection
+      under institutional protocol
+    route: IV
+  - drug_id: DRUG-RITUXIMAB
+    dose: 375 mg/m²
+    schedule: IV days 3 and 7 of IVAC blocks only
+    route: IV
+  - drug_id: DRUG-METHOTREXATE
+    dose: 12 mg
+    schedule: Intrathecal day 5 of IVAC blocks only; clinician may change IT day under local protocol
+    route: IT
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg once
+    schedule: PO 24 hours after INTRATHECAL methotrexate (reference day 6); not the CODOX-M IV rescue
+      schedule
+    route: PO
+  - drug_id: DRUG-FILGRASTIM
+    dose: 5 micrograms/kg per day
+    schedule: SC from day 7 of IVAC blocks until neutrophil recovery
+    route: SC
+  - drug_id: DRUG-CYTARABINE
+    dose: 70 mg per dose
+    schedule: Intrathecal days 7 and 9 of CNS IVAC blocks only; separate from high-dose IV cytarabine
+    route: IT
+  sources:
+  - SRC-EVIQ-BURKITT-CNS-IVAC-4493
+cycle_length_days: 21
+total_cycles: 'Identified eviQ CNS reference: two CODOX-M blocks alternating with two IVAC blocks; 16
+  total IT treatments in this reference schedule. Recovery and specialist review govern timing; other
+  trial variants differ.'
+toxicity_profile: very-high
+premedication:
+- Verify local rituximab premedication, antiemetics and tumour-lysis prevention.
+- Before HD-MTX, confirm hydration, alkalinization, urine pH >7 and the protocol-specific folinate rescue
+  clock.
+- IVAC requires mesna/uroprotection and hydration; neurological assessment before ifosfamide and cerebellar
+  assessment before cytarabine.
+mandatory_supportive_care:
+- SUP-PJP-PROPHYLAXIS
+- SUP-TLS-PROPHYLAXIS
+- SUP-ANTIEMETIC-PREMED
+- SUP-GCSF-NEUTROPENIA
+monitoring_schedule_id: MON-CODOX-IVAC-PROVEN-CNS
+dose_adjustments:
+- condition: Different, missing or conflicting risk/CNS context or reference variant
+  modification: Do not use this CNS-specific reference outside explicitly confirmed high-risk/proven-CNS
+    context and the selected eviQ variant; no automatic substitute.
+- condition: Older age, immune/HIV context, organ dysfunction or toxicity
+  modification: Specialist review of current protocol modifications is mandatory, including older-than-65
+    dose modifications and the advanced-HIV caution. The displayed base reference is not an individualized
+    dose calculation or complete eligibility assessment.
+- condition: Delayed methotrexate clearance, interacting drugs or third-space fluid
+  modification: Review kidney function, interactions, hydration and rescue urgently under the selected
+    specialist protocol. Do not apply fixed rescue regardless of clearance.
+sources:
+- SRC-EVIQ-BURKITT-CNS-CODOX-4492
+- SRC-EVIQ-BURKITT-CNS-IVAC-4493
+last_reviewed: null
+notes: Explicit eviQ 4492 v1/4493 v2 proven-CNS reference, not a merged trial calendar or individualized
+  prescription. IVAC rituximab days 3/7 are a committee adaptation from a trial excluding CNS disease;
+  this is not randomized proven-CNS efficacy evidence. The 16 IT treatments here differ from the Phillips
+  2020 trial prose (eight standard plus four additional). Eligibility, age/fitness, immune/HIV context,
+  organ function and toxicity require specialist review. No efficacy or reimbursement claim is supplied.
+  NEVER give vincristine intrathecally.
+notes_ua: Окремий довідковий протокол eviQ 4492 v1/4493 v2 для доведеного ураження ЦНС; це не змішаний
+  календар досліджень і не індивідуальне призначення. Дні 3/7 ритуксимабу в IVAC є адаптацією комітету
+  з дослідження без пацієнтів з ураженням ЦНС; це не рандомізований доказ ефективності при ураженні ЦНС.
+  Тут 16 IT-введень, що відрізняється від опису Phillips 2020 (вісім стандартних плюс чотири додаткові).
+  Придатність, вік, стан імунної системи/ВІЛ, функція органів і токсичність потребують оцінки спеціаліста.
+  Тверджень про ефективність чи відшкодування не наведено. Вінкристин НІКОЛИ не вводять інтратекально.
+ukrainian_review_status: pending_clinical_signoff
+draft_revision: 1
+review_status: pending_clinical_signoff

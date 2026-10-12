@@ -7,18 +7,30 @@ purpose: Draft first-line Burkitt routing. The high-risk/no-proven-CNS CODOX/IVA
 output_indications:
 - IND-BURKITT-1L-DAEPOCHR
 - IND-BURKITT-1L-CODOXM-IVAC
+- IND-BURKITT-1L-CODOX-IVAC-PROVEN-CNS
 default_indication: IND-BURKITT-1L-DAEPOCHR
 alternative_indication: IND-BURKITT-1L-CODOXM-IVAC
 decision_tree:
 - step: 1
+  evaluate:
+    all_of:
+    - finding: burkitt_protocol_variant
+      value: eviq_proven_cns
+  if_true:
+    result: IND-BURKITT-1L-CODOX-IVAC-PROVEN-CNS
+  if_false:
+    next_step: 2
+  notes: Explicit reference-variant opt-in only. The indication still enforces confirmed high-risk/proven-CNS
+    context; failed applicability produces no automatic replacement.
+- step: 2
   evaluate:
     any_of:
     - red_flag: RF-BURKITT-HIGH-RISK
   if_true:
     result: IND-BURKITT-1L-CODOXM-IVAC
   if_false:
-    next_step: 2
-- step: 2
+    next_step: 3
+- step: 3
   evaluate:
     all_of:
     - clinician_confirmation:
@@ -45,11 +57,15 @@ last_reviewed: null
 notes: The legacy high-risk flag does not establish applicability of the encoded eviQ high-risk/no-proven-CNS
   schedule. The indication requires burkitt_high_risk=true and cns_involvement=false; missing/conflicting
   or proven-CNS status prevents materialization. This does not validate risk classification, fitness,
-  HIV-specific ranking or CNS-positive/low-risk protocol choices.
+  HIV-specific ranking or CNS-positive/low-risk protocol choices. A separate eviQ proven-CNS reference
+  is exposed only on explicit variant opt-in plus confirmed matching risk/CNS values; choosing a reference
+  is not complete eligibility or clinical approval.
 notes_ua: Застарілий прапорець високого ризику не підтверджує придатність закодованого довідкового розкладу
   eviQ без доведеного ураження ЦНС. Показання вимагає burkitt_high_risk=true та cns_involvement=false;
   відсутній/суперечливий чи ЦНС-позитивний стан блокує матеріалізацію. Це не перевіряє класифікацію ризику,
-  придатність, вибір при ВІЛ чи протоколи для ЦНС-позитивного/низькоризикового захворювання.
+  придатність, вибір при ВІЛ чи протоколи для ЦНС-позитивного/низькоризикового захворювання. Окремий довідковий
+  варіант eviQ для доведеного ураження ЦНС доступний лише після явного вибору й підтвердження відповідного
+  ризику/ЦНС; вибір довідкового варіанта не є повною оцінкою придатності чи клінічним погодженням.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_13
 draft_revision: 2

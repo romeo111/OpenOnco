@@ -269,4 +269,23 @@ assert (KB/'sources/src_eviq_burkitt_ivac_4490.yaml').is_file()
 json.dumps({'monitoring':codox_track.monitoring_data['id'],'clinicalApproval':False,'protocolScopeGuard':True,'broaderEligibilityAuditPending':True})
 `));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,environment:'Node WASM, not browser'}));
+const cnsState=JSON.parse(await py.runPythonAsync(`
+cns_profile=json.loads(_codox_original_json)
+cns_profile['findings']['burkitt_protocol_variant']='eviq_proven_cns'
+cns_result=generate_plan(cns_profile,kb_root=KB)
+assert cns_result.default_indication_id=='IND-BURKITT-1L-CODOX-IVAC-PROVEN-CNS'
+assert len(cns_result.plan.tracks)==1
+cns_track=cns_result.plan.tracks[0]
+assert cns_track.monitoring_data['id']=='MON-CODOX-IVAC-PROVEN-CNS'
+ca,cb=[p['components'] for p in cns_track.regimen_data['phases']]
+assert any(c['drug_id']=='DRUG-CYTARABINE' and c['route']=='IT' and 'days 7 and 9' in c['schedule'] for c in cb)
+assert any(c['drug_id']=='DRUG-RITUXIMAB' and 'days 1 and 11' in c['schedule'] for c in ca)
+assert 'committee adaptation' in cns_track.regimen_data['notes']
+assert (KB/'sources/src_eviq_burkitt_cns_ivac_4493.yaml').is_file()
+cns_profile['findings']['cns_involvement']=False
+conflicting_cns=generate_plan(cns_profile,kb_root=KB)
+assert not conflicting_cns.plan.tracks and conflicting_cns.default_indication_id is None
+json.dumps({'variant':'eviq_proven_cns','scopeConflictWithheld':True,'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,environment:'Node WASM, not browser'}));

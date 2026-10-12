@@ -721,7 +721,7 @@ async function refreshBuildPanel(diseaseId = null) {
     : 'Browser');
 
   if (bundleIndex) {
-    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '4d6d722bd682'));
+    setText(coreVersionEl, 'v' + (coreBundleMetadata().version || '6f32ad9260c4'));
     if (offlineCacheTotal <= 0) {
       const total = offlineBundleUrls().length;
       setOfflineCacheProgress(0, total, 0);
@@ -1347,7 +1347,7 @@ function normalizeQuestionnaire(quest) {
   if (quest.id === 'QUEST-BURKITT-1L-STUB') {
     // Cached scope controls may be absent or have obsolete defaults. Replace
     // only these controls with the current authored, unanswered questions.
-    const scopeGroup = {"title": "Protocol scope: documented risk and CNS assessment", "description": "Answer only from a documented assessment. Leave unconfirmed values unanswered; absent information does not mean low risk or CNS-negative.", "questions": [{"field": "findings.burkitt_high_risk", "label": "High-risk Burkitt confirmed for the selected reference protocol", "type": "boolean", "impact": "critical", "helper": "Risk classification must be established by the treating team; a legacy flag is not a complete assessment."}, {"field": "findings.cns_involvement", "label": "Proven CNS involvement", "type": "boolean", "impact": "critical", "helper": "No must represent a documented CNS assessment. Yes requires a separate CNS-specific protocol; unknown must remain unanswered."}]};
+    const scopeGroup = {"title": "Protocol scope: documented risk and CNS assessment", "description": "Answer only from a documented assessment. Leave unconfirmed values unanswered; absent information does not mean low risk or CNS-negative.", "questions": [{"field": "findings.burkitt_high_risk", "label": "High-risk Burkitt confirmed for the selected reference protocol", "type": "boolean", "impact": "critical", "helper": "Risk classification must be established by the treating team; a legacy flag is not a complete assessment."}, {"field": "findings.cns_involvement", "label": "Proven CNS involvement", "type": "boolean", "impact": "critical", "helper": "No must represent a documented CNS assessment. Yes requires a separate CNS-specific protocol; unknown must remain unanswered."}, {"field": "findings.burkitt_protocol_variant", "label": "Proven CNS disease: reference variant selected for specialist review", "type": "enum", "impact": "recommended", "options": [{"value": "eviq_proven_cns", "label": "eviQ 4492/4493 proven-CNS reference"}], "helper": "Relevant only with documented high-risk and proven CNS involvement. Leave blank unless this explicit reference is selected for professional review; it does not confirm eligibility or dose suitability."}]};
     const requiredFields = new Set(scopeGroup.questions.map(question => question.field));
     for (let index = groups.length - 1; index >= 0; index--) {
       if (groups[index].title === scopeGroup.title) groups.splice(index, 1);

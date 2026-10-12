@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-13",
+  "scope": "Explicitly selected eviQ proven-CNS Burkitt reference variant",
+  "clinical_approval": false,
+  "behavior": "An exact eviq_proven_cns variant choice selects a separate reference only with typed high-risk and proven-CNS confirmation. Failed or conflicting scope yields no treatment or automatic substitute; the no-CNS and legacy EPOCH alternatives are not presented for that explicit choice. Unselected original CNS example remains withheld.",
+  "source_identity": [
+    "eviQ 4492 v1",
+    "eviQ 4493 v2"
+  ],
+  "reference_distinctions": [
+    "CODOX-M rituximab days 1/11, IT cytarabine days 1/3/5 and IT methotrexate days 15/17",
+    "IVAC separate high-dose IV and IT cytarabine; IT cytarabine days 7/9 and IT methotrexate day 5",
+    "Separate IV methotrexate/IV folinate clock and oral folinate after each IT methotrexate dose",
+    "Chosen eviQ course has 16 IT treatments; no alternative trial calendar merged",
+    "IVAC antibody timing disclosed as committee adaptation from a trial excluding CNS disease; no randomized CNS efficacy, reimbursement or individual cure probability asserted"
+  ],
+  "primary_sources": [
+    "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4492-burkitt-lymphoma-high-risk-proven-cns-disease",
+    "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4493-burkitt-lymphoma-high-risk-proven-cns-disease"
+  ],
+  "source_changes": {
+    "knowledge_base/hosted/content/regimens/codox_ivac_proven_cns.yaml": [
+      "new_entity"
+    ],
+    "knowledge_base/hosted/content/monitoring/mon_codox_ivac_proven_cns.yaml": [
+      "new_entity"
+    ],
+    "knowledge_base/hosted/content/indications/ind_burkitt_1l_codox_ivac_proven_cns.yaml": [
+      "new_entity"
+    ],
+    "knowledge_base/hosted/content/sources/src_eviq_burkitt_cns_codox_4492.yaml": [
+      "new_entity"
+    ],
+    "knowledge_base/hosted/content/sources/src_eviq_burkitt_cns_ivac_4493.yaml": [
+      "new_entity"
+    ],
+    "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml": [
+      "decision_tree",
+      "notes",
+      "notes_ua",
+      "output_indications"
+    ],
+    "knowledge_base/hosted/content/questionnaires/quest_burkitt_1l.yaml": [
+      "groups"
+    ],
+    "knowledge_base/hosted/content/indications/ind_burkitt_1l_daepochr.yaml": [
+      "applicable_to"
+    ]
+  },
+  "verification": [
+    "61 targeted scope/engine/publication regressions passed",
+    "4262 entities validated: no schema/reference/contract errors; 396 warnings",
+    "165 finalized pages including eleven Wiki counter pages; 70 original/reader identities checked",
+    "Only one bundled questionnaire changes; current unanswered reference-choice field is embedded in all eleven cached-form migrations",
+    "All 24 browser checks from actual CI workflow passed",
+    "Two new search rows and matched indication/regimen counters per locale; all existing rows and other counters preserved",
+    "Every changed clinical source copy equals canonical current bytes; duplicated AML dependencies verified; 88 other disease archives byte-identical",
+    "Pinned Node WASM 0.26.4 checks explicit CNS reference and conflicting scope, preserves previous synthetic states, with zero network attempts. Not browser-offline or clinical validation."
+  ],
+  "artifact_proof": {
+    "core_changed_members": [
+      "knowledge_base/hosted/content/_bundle_manifest.json",
+      "knowledge_base/hosted/content/monitoring/mon_codox_ivac_proven_cns.yaml",
+      "knowledge_base/hosted/content/regimens/codox_ivac_proven_cns.yaml",
+      "knowledge_base/hosted/content/sources/src_eviq_burkitt_cns_codox_4492.yaml",
+      "knowledge_base/hosted/content/sources/src_eviq_burkitt_cns_ivac_4493.yaml"
+    ],
+    "disease_changed_members": {
+      "DIS-AML": [
+        "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_codox_ivac_proven_cns.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_daepochr.yaml"
+      ],
+      "DIS-BURKITT": [
+        "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_codox_ivac_proven_cns.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_daepochr.yaml",
+        "knowledge_base/hosted/content/questionnaires/quest_burkitt_1l.yaml"
+      ]
+    },
+    "pages_verified": 154,
+    "reader_verification": {
+      "checked": 70,
+      "updated": 0,
+      "preserved": 0
+    },
+    "core_version": "6f32ad9260c4",
+    "core_compressed_version": "c05aa5a1c3b8"
+  },
+  "preferred_core_bytes": 2646435,
+  "open_risks": [
+    "Full clinical eligibility, immune/HIV/organ/age/fitness assessment and individualized dose modifications remain independent specialist work",
+    "No randomized proven-CNS efficacy or clinical approval claimed",
+    "Low-risk-specific protocol remains unimplemented; other legacy routes/estimates need separate audits",
+    "Production publication awaits explicit user authorization for updated PR 669"
+  ],
+  "delivery": "Prepared and verified locally; production publication not performed; explicit authorization pending."
+}
