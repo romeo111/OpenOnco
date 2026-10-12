@@ -486,6 +486,7 @@ const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Введіть коректне число.", "integer": "Введіть ціле число.", "range": "Введіть значення в цих межах:", "summary": "Виправте виділені числові поля перед генерацією або відкриттям JSON.", "sync": "Введіть це число повторно, щоб підтвердити його."};
 const numericInputErrors = new Map();
 const profileInputCopy = {"json": "Введіть коректний JSON.", "object": "Профіль має бути JSON-об’єктом.", "finite": "Профіль містить нескінченне або нечислове значення.", "section": "Цей розділ профілю має бути об’єктом або null:"};
+const questionnaireNoticeCopy = {"defaults": "Введіть відому інформацію. Відсутні дані залишаються невідомими й можуть обмежувати звіт.", "starter": "Автоматично створена початкова анкета: важлива інформація може бути відсутня. Перед рішеннями щодо лікування перевірте введені значення, пропущені дані та джерела з кваліфікованим лікарем.", "unknown": "Незаповнені поля скринінгу залишаються невідомими. Перевірки безпеки можуть бути неоціненими; сама повнота анкети не визначає клінічну достатність."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -1240,6 +1241,19 @@ function normalizeQuestionnaire(quest) {
   return { ...quest, groups };
 }
 
+function questionnaireIntro(quest) {
+  const intro = quest.intro || '';
+  return intro.startsWith('⚠ STUB questionnaire for ') && intro.includes('Auto-filled from KB metadata') ? questionnaireNoticeCopy.starter : intro;
+}
+
+function questionnaireDescription(group) {
+  const description = group.description || '';
+  if (description === 'Fill in what is available; the rest — engine will fall back to safe defaults.') return questionnaireNoticeCopy.defaults;
+  if (description.startsWith('Universal fields for fitness assessment, infection status, and organ function.') &&
+      description.includes("replaces 'unevaluated RedFlag' warnings")) return questionnaireNoticeCopy.unknown;
+  return description;
+}
+
 function renderForm(quest) {
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
@@ -1255,7 +1269,7 @@ function renderForm(quest) {
   questEmpty.style.display = 'none';
   if (quest.intro) {
     questIntro.hidden = false;
-    questIntro.textContent = quest.intro;
+    questIntro.textContent = questionnaireIntro(quest);
   } else {
     questIntro.hidden = true;
   }
@@ -1264,7 +1278,7 @@ function renderForm(quest) {
     groupEl.className = 'quest-group';
     groupEl.innerHTML = `
       <h3>${escHtml(group.title || '')}</h3>
-      ${group.description ? `<p class="quest-group-desc">${escHtml(group.description)}</p>` : ''}
+      ${group.description ? `<p class="quest-group-desc">${escHtml(questionnaireDescription(group))}</p>` : ''}
     `;
     for (const q of group.questions || []) {
       groupEl.appendChild(renderQuestion(q));

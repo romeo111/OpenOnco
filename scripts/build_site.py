@@ -4776,6 +4776,8 @@ def render_try(
     from scripts.runtime_cache_copy import COPY as runtime_copy
     from scripts.numeric_input_copy import COPY as numeric_copy
     from scripts.profile_input_copy import COPY as profile_copy
+    from scripts.questionnaire_notice_copy import COPY as questionnaire_copy
+    questionnaire_labels = questionnaire_copy[target_lang]
     profile_labels = profile_copy[target_lang]
     numeric_labels = numeric_copy[target_lang]
     runtime_labels = runtime_copy[target_lang]
@@ -5137,6 +5139,7 @@ const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {json.dumps(numeric_labels, ensure_ascii=False)};
 const numericInputErrors = new Map();
 const profileInputCopy = {json.dumps(profile_labels, ensure_ascii=False)};
+const questionnaireNoticeCopy = {json.dumps(questionnaire_labels, ensure_ascii=False)};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -5891,6 +5894,19 @@ function normalizeQuestionnaire(quest) {{
   return {{ ...quest, groups }};
 }}
 
+function questionnaireIntro(quest) {{
+  const intro = quest.intro || '';
+  return intro.startsWith('⚠ STUB questionnaire for ') && intro.includes('Auto-filled from KB metadata') ? questionnaireNoticeCopy.starter : intro;
+}}
+
+function questionnaireDescription(group) {{
+  const description = group.description || '';
+  if (description === 'Fill in what is available; the rest — engine will fall back to safe defaults.') return questionnaireNoticeCopy.defaults;
+  if (description.startsWith('Universal fields for fitness assessment, infection status, and organ function.') &&
+      description.includes("replaces 'unevaluated RedFlag' warnings")) return questionnaireNoticeCopy.unknown;
+  return description;
+}}
+
 function renderForm(quest) {{
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
@@ -5906,7 +5922,7 @@ function renderForm(quest) {{
   questEmpty.style.display = 'none';
   if (quest.intro) {{
     questIntro.hidden = false;
-    questIntro.textContent = quest.intro;
+    questIntro.textContent = questionnaireIntro(quest);
   }} else {{
     questIntro.hidden = true;
   }}
@@ -5915,7 +5931,7 @@ function renderForm(quest) {{
     groupEl.className = 'quest-group';
     groupEl.innerHTML = `
       <h3>${{escHtml(group.title || '')}}</h3>
-      ${{group.description ? `<p class="quest-group-desc">${{escHtml(group.description)}}</p>` : ''}}
+      ${{group.description ? `<p class="quest-group-desc">${{escHtml(questionnaireDescription(group))}}</p>` : ''}}
     `;
     for (const q of group.questions || []) {{
       groupEl.appendChild(renderQuestion(q));

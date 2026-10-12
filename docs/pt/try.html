@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="c54190350c394a6ea9f344d7e10015cd78ed5e0eb1e9e97ad0ecb734b15e241b"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="76c43b2e4de932cea9fcfe5f936ffef2ffe16708d7f5fdcc161be9f9d365c6da"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -470,6 +470,7 @@ const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Introduza um número válido.", "integer": "Introduza um número inteiro.", "range": "Use um valor dentro destes limites:", "summary": "Corrija os campos numéricos destacados antes de gerar ou abrir JSON.", "sync": "Introduza novamente este número para o confirmar."};
 const numericInputErrors = new Map();
 const profileInputCopy = {"json": "Introduza JSON válido.", "object": "O perfil deve ser um objeto JSON.", "finite": "O perfil contém um número não finito.", "section": "Esta secção do perfil deve ser um objeto ou null:"};
+const questionnaireNoticeCopy = {"defaults": "Introduza a informação conhecida. Os dados em falta continuam desconhecidos e podem limitar o relatório.", "starter": "Formulário inicial gerado automaticamente: pode faltar informação importante. Verifique os valores, os dados em falta e as fontes com um profissional clínico qualificado antes de decisões assistenciais.", "unknown": "Os campos de rastreio por preencher continuam desconhecidos. Algumas verificações de segurança podem não ser avaliadas; a completude do formulário não estabelece a sua suficiência clínica."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -1224,6 +1225,19 @@ function normalizeQuestionnaire(quest) {
   return { ...quest, groups };
 }
 
+function questionnaireIntro(quest) {
+  const intro = quest.intro || '';
+  return intro.startsWith('⚠ STUB questionnaire for ') && intro.includes('Auto-filled from KB metadata') ? questionnaireNoticeCopy.starter : intro;
+}
+
+function questionnaireDescription(group) {
+  const description = group.description || '';
+  if (description === 'Fill in what is available; the rest — engine will fall back to safe defaults.') return questionnaireNoticeCopy.defaults;
+  if (description.startsWith('Universal fields for fitness assessment, infection status, and organ function.') &&
+      description.includes("replaces 'unevaluated RedFlag' warnings")) return questionnaireNoticeCopy.unknown;
+  return description;
+}
+
 function renderForm(quest) {
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
@@ -1239,7 +1253,7 @@ function renderForm(quest) {
   questEmpty.style.display = 'none';
   if (quest.intro) {
     questIntro.hidden = false;
-    questIntro.textContent = quest.intro;
+    questIntro.textContent = questionnaireIntro(quest);
   } else {
     questIntro.hidden = true;
   }
@@ -1248,7 +1262,7 @@ function renderForm(quest) {
     groupEl.className = 'quest-group';
     groupEl.innerHTML = `
       <h3>${escHtml(group.title || '')}</h3>
-      ${group.description ? `<p class="quest-group-desc">${escHtml(group.description)}</p>` : ''}
+      ${group.description ? `<p class="quest-group-desc">${escHtml(questionnaireDescription(group))}</p>` : ''}
     `;
     for (const q of group.questions || []) {
       groupEl.appendChild(renderQuestion(q));

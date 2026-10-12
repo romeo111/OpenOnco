@@ -186,6 +186,8 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
         page = re.sub(r"^const runtimeCacheCopy = .*;$", lambda _: "const runtimeCacheCopy = " + json.dumps(COPY[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
         from scripts.numeric_input_copy import COPY as numeric_copy
         from scripts.profile_input_copy import COPY as profile_copy
+        from scripts.questionnaire_notice_copy import COPY as questionnaire_copy
+        page = re.sub(r"^const questionnaireNoticeCopy = .*;$", lambda _: "const questionnaireNoticeCopy = " + json.dumps(questionnaire_copy[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
         page = re.sub(r"^const profileInputCopy = .*;$", lambda _: "const profileInputCopy = " + json.dumps(profile_copy[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
         page = re.sub(r"^const numericInputCopy = .*;$", lambda _: "const numericInputCopy = " + json.dumps(numeric_copy[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
     active = path.split('/')[0].removesuffix('.html')
