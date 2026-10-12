@@ -67,6 +67,27 @@ for taxane, drug in [('paclitaxel','DRUG-PACLITAXEL'),('nab-paclitaxel','DRUG-NA
     states.append({'histology':'squamous','taxane':taxane,'default':outcome.default_indication_id})
 json.dumps(states)
 `));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-TESTICULAR-GCT'])).buffer,'zip');
+const bepExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='coverage-testicular-gct-bep-1l');
+assert(bepExample, 'Synthetic BEP fixture missing');
+py.globals.set('_bep_json',JSON.stringify(bepExample.json));
+const bepState=JSON.parse(await py.runPythonAsync(`
+import yaml
+assert apply_disease_module(KB, disease_id='DIS-TESTICULAR-GCT')['ok']
+bep_profile=json.loads(_bep_json)
+bep_profile['patient_id']='VIRTUAL-OFFLINE-BEP-001'
+bep_result=generate_plan(bep_profile,kb_root=KB)
+assert bep_result.default_indication_id == 'IND-GCT-METASTATIC-1L-BEP'
+reg=yaml.safe_load((KB/'regimens/reg_bep_gct.yaml').read_text())
+assert 'not universally required' in reg['premedication'][2]
+assert 'HRCT' in reg['monitoring'][0]
+assert 'not an automatic permanent-discontinuation' in reg['components'][0]['dose_modifications'][0]['action']
+assert reg['review_status'] == 'pending_clinical_signoff'
+assert reg['last_reviewed'] is None
+assert (KB/'sources/src_eviq_testicular_bep_320.yaml').is_file()
+assert (KB/'sources/src_bleomycin_uk_best_practice_2018.yaml').is_file()
+json.dumps({'default':bep_result.default_indication_id,'clinicalApproval':False})
+`));
 assert.equal(networkAttempts,0);
 
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,environment:'Node WASM, not browser'}));

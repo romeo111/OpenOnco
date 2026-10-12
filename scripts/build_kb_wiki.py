@@ -705,6 +705,33 @@ def _source_chip(source_id: str, entities: dict[str, KbEntity]) -> str:
     return f'<span class="kb-chip" title="{html.escape(title)}">{label}</span>'
 
 
+def _scoped_claim_sections(entity: KbEntity, entities: dict[str, KbEntity], *, locale: str = "en") -> str:
+    """Keep claim-level evidence visible without promoting it to record-wide approval."""
+    claims = entity.data.get("clinical_claims")
+    if not isinstance(claims, list):
+        return ""
+    sections = []
+    for claim in claims:
+        if not isinstance(claim, dict) or not isinstance(claim.get("text"), str):
+            continue
+        text = claim.get("text_ua") if locale == "uk" and isinstance(claim.get("text_ua"), str) else claim["text"]
+        language = "uk" if locale == "uk" and isinstance(claim.get("text_ua"), str) else "en"
+        scope = claim.get("scope", "")
+        locator = claim.get("source_locator", "")
+        sources = claim.get("source_ids", [])
+        sources = sources if isinstance(sources, list) else []
+        chips = " ".join(_source_chip(value, entities) for value in sources if isinstance(value, str))
+        sections.append(f'<article class="kb-scoped-claim"><p lang="{language}">{html.escape(text)}</p>'
+                        f'<p class="kb-muted" lang="en">{html.escape(str(scope))}</p>'
+                        f'<p>{chips}</p><p class="kb-muted" lang="en">{html.escape(str(locator))}</p></article>')
+    if not sections:
+        return ""
+    heading = "Докази для окремих тверджень" if locale == "uk" else "Evidence for specific statements"
+    notice = ("Цитати стосуються лише наведених тверджень і меж застосування. Вони не встановлюють клінічного схвалення всього запису."
+              if locale == "uk" else "These citations cover only the statements and scopes shown. They do not establish clinical approval of this record.")
+    return f'<section class="kb-scoped-evidence"><h2>{heading}</h2><p class="kb-muted">{notice}</p>{"".join(sections)}</section>'
+
+
 def _frontmatter(
     entity: KbEntity,
     entities: dict[str, KbEntity],
@@ -925,6 +952,7 @@ def render_entity_page(
   {_frontmatter(entity, entities, reverse_refs, locale=locale)}
   {specifics if entity.kind not in {"indications", "regimens"} else ""}
   {notes_html}
+  {_scoped_claim_sections(entity, entities, locale=locale)}
   {_reverse_ref_section(entity, reverse_refs, locale=locale)}
 </main>"""
     switch_locale = "en" if locale == "uk" else "uk"
@@ -962,6 +990,12 @@ def _search_entry(entity: KbEntity, reverse_refs: dict[str, list[KbEntity]], *, 
             _text(d.get("mechanism")),
             _text(d.get("evidence_summary")),
             _text(_safe_notes(d.get("notes"))),
+            " ".join(
+                " ".join([str(claim.get("text", "")), str(claim.get("scope", "")),
+                          " ".join(value for value in claim.get("source_ids", []) if isinstance(value, str))])
+                for claim in d.get("clinical_claims", [])
+                if isinstance(claim, dict) and isinstance(claim.get("source_ids", []), list)
+            ) if isinstance(d.get("clinical_claims", []), list) else "",
         ]
     )
     return {

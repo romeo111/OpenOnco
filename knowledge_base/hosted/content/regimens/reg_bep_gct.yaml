@@ -11,8 +11,8 @@ components:
     schedule: "Days 2, 9, 16 of each 21-day cycle (once weekly per cycle)"
     cumulative_dose_limit: "Do NOT exceed cumulative lifetime dose of 400 IU — irreversible pulmonary fibrosis risk; most protocols do not exceed 360 IU (12 doses × 30 IU)"
     dose_modifications:
-      - trigger: "DLCO decline >25% from baseline"
-        action: "Hold bleomycin; reassess; may discontinue and continue EP alone"
+      - trigger: "Suspected bleomycin pulmonary toxicity, including a clinically concerning DLCO decline"
+        action: "Hold bleomycin pending specialist assessment, symptoms and imaging review. A DLCO decline alone is not an automatic permanent-discontinuation or EP-switch rule."
       - trigger: "Clinical bleomycin pneumonitis (dyspnea, dry cough, new infiltrates)"
         action: "Permanently discontinue bleomycin; systemic corticosteroids"
       - trigger: "CrCl <50 mL/min"
@@ -40,14 +40,14 @@ components:
 premedication:
   - "Aggressive IV hydration: 500 mL-1L normal saline over 2h before each cisplatin dose"
   - "Antiemetics: highly emetogenic protocol (5-HT3 + NK1 antagonist + dexamethasone; ondansetron + aprepitant + dexamethasone)"
-  - "G-CSF primary prophylaxis with pegfilgrastim day 7 of each cycle (especially for 4-cycle BEP or poor performance status)"
+  - "G-CSF primary prophylaxis is not universally required for BEP. Assess individual risk and the need to maintain dose intensity; if selected, follow the institutional growth-factor protocol."
   - "Anti-Raynaud prophylaxis: nifedipine if bleomycin-associated Raynaud's develops"
 
 cycle_length_days: 21
 total_planned_cycles: "3 cycles (good risk per IGCCC) OR 4 cycles (intermediate/poor risk per IGCCC)"
 
 monitoring:
-  - "PFTs (spirometry + DLCO): baseline; before cycle 3 and 4 (if 4-cycle protocol) — bleomycin pulmonary toxicity"
+  - "Baseline pulmonary assessment; PFTs including DLCO may provide a reference. Review respiratory symptoms each cycle; new cough or dyspnea requires prompt assessment, with HRCT for suspected toxicity. Interpret PFTs alongside clinical findings and imaging."
   - "Serum tumor markers (AFP, beta-hCG, LDH): before each cycle and 1 week after last cycle — marker trajectory is primary response assessment"
   - "CXR or CT chest: baseline; if new respiratory symptoms — bleomycin pneumonitis"
   - "BMP, CrCl: before each cycle — cisplatin nephrotoxicity"
@@ -59,7 +59,7 @@ monitoring:
 key_toxicities:
   - toxicity: "Bleomycin pulmonary toxicity"
     grade_3_4_incidence: "~3-5%"
-    management: "DLCO monitoring; discontinue if DLCO falls >25% or clinical pneumonitis; high-dose corticosteroids; perioperative oxygen and fluid management require individual anesthesia assessment; avoid unnecessary hyperoxia while maintaining adequate oxygenation"
+    management: "New cough or dyspnea requires prompt specialist assessment for bleomycin toxicity, with HRCT when suspected. PFT/DLCO is an adjunct and does not guarantee prevention. Withhold bleomycin pending evaluation of suspected toxicity; subsequent treatment requires specialist review. Perioperative oxygen and fluid management remain individualized while maintaining adequate oxygenation."
   - toxicity: "Cisplatin nephrotoxicity"
     grade_3_4_incidence: "~10-15%"
     management: "Aggressive hydration; avoid NSAIDs/aminoglycosides; magnesium supplementation; long-term GFR reduction common (monitor post-treatment)"
@@ -68,7 +68,7 @@ key_toxicities:
     management: "Audiometry baseline + post-treatment; high-frequency hearing loss often permanent; amifostine not routinely used"
   - toxicity: "Myelosuppression (neutropenia)"
     grade_3_4_incidence: "~30-40%"
-    management: "G-CSF prophylaxis (primary pegfilgrastim day 7); febrile neutropenia protocol; delay cycle if ANC <1000 day 1"
+    management: "Individualize G-CSF prophylaxis to risk and dose-intensity needs. Febrile neutropenia requires urgent assessment and treatment; treatment timing and dose changes require specialist review."
   - toxicity: "Raynaud's phenomenon"
     grade_3_4_incidence: "~5-10% (bleomycin vascular effect)"
     management: "Nifedipine; avoid cold exposure; bleomycin dose reduction"
@@ -78,12 +78,12 @@ key_toxicities:
 
 watchpoints_ua:
   - "УВАГА: BEP — ВИСОКА emetogenność (цисплатин); потрійна антиеметична терапія обов'язкова (5-HT3 + NK1 + дексаметазон)"
-  - "УВАГА: Блеоміцинова легенева токсичність — моніторинг DLCO перед кожним циклом; при падінні >25% — ВІДМІНИТИ блеоміцин та продовжити EP"
+  - "Новий кашель або задишка потребують негайної оцінки щодо токсичності блеоміцину; за підозри потрібні огляд фахівця та HRCT. PFT/DLCO доповнюють оцінку, але не гарантують запобігання токсичності. Зниження DLCO саме по собі не є автоматичною підставою для остаточної відміни чи переходу на EP."
   - "Повідомте анестезіологу про попереднє застосування блеоміцину. Легеневий ризик та оксигенація потребують індивідуальної оцінки й моніторингу; цей запис не встановлює абсолютну межу FiO₂, яка може призвести до недостатньої оксигенації."
   - "УВАГА: Маркери (АФП, бета-хГЛ, ЛДГ) ПЕРЕД кожним циклом — зростання маркерів під час BEP може вказувати на рефрактерність або фальш-підвищення; проконсультуватись з GCT-фахівцем"
   - "УВАГА: Активно гідратувати перед і після цисплатину (1L NaCl 0.9% до/після кожної дози); уникати НПЗЗ та аміноглікозидів — нефротоксичність"
   - "УВАГА: Аудіограма до початку та після завершення BEP — цисплатин-індукована ототоксичність часто незворотна (висока частота)"
-  - "УВАГА: G-КСФ (пегфілграстим день 7 кожного циклу) — рекомендований первинна профілактика; GCT є потенційно курабельним захворюванням — підтримувати дозові інтенсивності"
+  - "Первинна профілактика G-КСФ при BEP не є обов'язковою для всіх. Рішення враховує індивідуальний ризик та підтримання дозової інтенсивності; якщо її обрано, дотримуються протоколу закладу."
 
 last_reviewed: null
 review_status: pending_clinical_signoff
@@ -93,13 +93,15 @@ notes_ua: >
   пухлин зародкових клітин (ПЗК) яєчка. Блеоміцин (bleomycin) 30 ОД
   в/в дні 2, 9, 16; етопозид (etoposide) 100 мг/м²/добу дні 1-5;
   цисплатин (cisplatin) 20 мг/м²/добу дні 1-5 q21d. Хороший ризик
-  (IGCCC): 3 цикли; проміжний/поганий ризик: 4 цикли. G-КСФ первинна
-  профілактика (пегфілграстим день 7) обов'язкова. Кумулятивна доза
+  (IGCCC): 3 цикли; проміжний/поганий ризик: 4 цикли. Первинна профілактика
+  G-КСФ не є обов'язковою для всіх; її обирають за індивідуальним ризиком
+  та потребою підтримати дозову інтенсивність за протоколом закладу. Кумулятивна доза
   блеоміцину не повинна перевищувати 360-400 ОД (незворотній легеневий
   фіброз). Після блеоміцину повідомте анестезіологу про легеневий ризик.
   Киснева терапія потребує індивідуальної оцінки та достатньої оксигенації;
-  універсальної заборони FiO2 понад 30% цей запис не встановлює. Контроль DLCO перед циклами
-  3 і 4; при падінні DLCO >25% перейти на EP. Аудіограма до і після BEP.
+  універсальної заборони FiO2 понад 30% цей запис не встановлює. Контроль симптомів у кожному циклі; новий кашель або задишка потребують
+  оцінки фахівця та HRCT за підозри токсичності. PFT/DLCO є допоміжними;
+  лише за зниженням DLCO автоматично не переходять на EP. Аудіограма до і після BEP.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_12
 draft_revision: 2
@@ -118,3 +120,25 @@ clinical_claims:
     other BEP dosing or supportive-care statements.
   source_locator: Bleomycin label pulmonary adverse reactions; Aakre 2014 Results/Discussion;
     PMID 6200191 abstract.
+
+- claim_id: bep-individualized-gcsf
+  text: Primary G-CSF prophylaxis is not universally required for metastatic testicular
+    BEP; clinicians may choose it to maintain dose intensity. Supportive therapy follows
+    individual assessment and institutional protocol.
+  source_ids:
+  - SRC-EVIQ-TESTICULAR-BEP-320
+  scope: G-CSF supportive-care selection only; no approval of anticancer dosing, renal
+    adjustments or treatment eligibility.
+  source_locator: eviQ 320 v9 treatment schedule footnote ** and supportive therapy
+    defaults paragraph.
+- claim_id: bleomycin-pulmonary-assessment
+  text: New cough or dyspnea during bleomycin treatment requires assessment for pulmonary
+    toxicity; HRCT is preferred when toxicity is suspected. PFT/DLCO is adjunctive,
+    is not a sole automatic stop rule and does not guarantee prevention of pulmonary
+    toxicity.
+  source_ids:
+  - SRC-BLEOMYCIN-UK-BEST-PRACTICE-2018
+  scope: Pulmonary symptom assessment and role of PFT/DLCO only; no blanket validation
+    of other BEP claims.
+  source_locator: 'British Journal of Cancer best-practice guideline: role of PFTs
+    and symptom monitoring sections.'
