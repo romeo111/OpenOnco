@@ -1557,7 +1557,10 @@ function profileInputError(profile) {
   while (pending.length) {
     const value = pending.pop();
     if (typeof value === 'number' && !Number.isFinite(value)) return profileInputCopy.finite;
-    if (value && typeof value === 'object') pending.push(...Object.values(value));
+    if (value && typeof value === 'object') {
+      // Do not spread wide collections into a function call (argument limit).
+      for (const child of Object.values(value)) pending.push(child);
+    }
   }
   return '';
 }
