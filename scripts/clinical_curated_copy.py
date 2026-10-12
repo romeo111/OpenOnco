@@ -329,6 +329,7 @@ SHOWCASE_TITLES = {
 
 
 def messages_for(locale):
+    from scripts.patient_contact_copy import messages_for as patient_contact_messages
     from scripts.regulatory_copy import messages_for as regulatory_messages
     from scripts.offline_ui_copy import messages_for as offline_messages
     from scripts.privacy_copy import messages_for as privacy_messages
@@ -350,6 +351,7 @@ def messages_for(locale):
         catalog.update(regulatory_messages(locale))
         catalog.update(content_review_messages(locale))
         catalog['first line'] = TREATMENT_LINE_LABELS[locale]
+        catalog.update(patient_contact_messages(locale))
         return catalog
     title = NSCLC[locale]
     status = {
@@ -399,6 +401,7 @@ def messages_for(locale):
     catalog.update(privacy_messages(locale))
     catalog.update(regulatory_messages(locale))
     catalog['first line'] = TREATMENT_LINE_LABELS[locale]
+    catalog.update(patient_contact_messages(locale))
     return catalog
 
 
