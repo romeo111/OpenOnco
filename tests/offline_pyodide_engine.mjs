@@ -113,5 +113,53 @@ assert (KB/'sources/src_bleomycin_uk_best_practice_2018.yaml').is_file()
 json.dumps({'default':bep_result.default_indication_id,'clinicalApproval':False})
 `));
 assert.equal(networkAttempts,0);
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-CHL'])).buffer,'zip');
+const chlExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='chl-early');
+assert(chlExample, 'Synthetic early Hodgkin fixture missing');
+py.globals.set('_chl_json',JSON.stringify(chlExample.json));
+const chlState=JSON.parse(await py.runPythonAsync(`
+assert apply_disease_module(KB, disease_id='DIS-CHL')['ok']
+chl_profile=json.loads(_chl_json)
+chl_profile['patient_id']='VIRTUAL-OFFLINE-CHL-001'
+chl_result=generate_plan(chl_profile,kb_root=KB)
+expected_mon={'REG-ABVD':'MON-ABVD-REGIMEN','REG-A-AVD':'MON-A-AVD-REGIMEN','REG-NIVO-AVD':'MON-NIVO-AVD-REGIMEN'}
+for track in chl_result.plan.tracks:
+    regimen=(track.regimen_data or {}).get('id')
+    if regimen in expected_mon:
+        assert track.monitoring_data['id']==expected_mon[regimen]
+abvd_tracks=[t for t in chl_result.plan.tracks if (t.regimen_data or {}).get('id')=='REG-ABVD']
+assert abvd_tracks
+for track in abvd_tracks:
+    assert track.monitoring_data['id']=='MON-ABVD-REGIMEN'
+    assert track.monitoring_data['linked_to_regimen']==track.regimen_data['id']
+    during=next(p for p in track.monitoring_data['phases'] if p['name']=='on_treatment')
+    assert 'days 1 and 15' in during['window'] and '28-day' in during['window']
+for lang,needle in [('en','Before each administration on days 1 and 15'),('uk','Перед кожним введенням у дні 1 і 15')]:
+    chl_html=render_plan_html(chl_result,target_lang=lang)
+    assert needle in chl_html
+    assert 'MON-R-CHOP-REGIMEN' not in chl_html
+    assert 'Confirm CD20+ DLBCL histology' not in chl_html
+json.dumps({'monitoring':'MON-ABVD-REGIMEN','abvdTracks':len(abvd_tracks),'clinicalApproval':False})
+`));
+const advancedChl=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='chl-advanced');
+py.globals.set('_advanced_chl_json',JSON.stringify(advancedChl.json));
+const advancedChlState=JSON.parse(await py.runPythonAsync(`
+advanced_result=generate_plan(json.loads(_advanced_chl_json),kb_root=KB)
+seen=[]
+for track in advanced_result.plan.tracks:
+    regimen=(track.regimen_data or {}).get('id')
+    if regimen in expected_mon:
+        assert track.monitoring_data['id']==expected_mon[regimen]
+        seen.append(regimen)
+assert {'REG-ABVD','REG-A-AVD'} <= set(seen)
+from knowledge_base.engine.plan import _materialize_track
+from knowledge_base.validation.loader import load_content
+nivo_track=_materialize_track('aggressive','IND-CHL-1L-N-AVD',False,'Synthetic materialization check',load_content(KB).entities_by_id)
+assert nivo_track.monitoring_data['id']=='MON-NIVO-AVD-REGIMEN'
+assert nivo_track.monitoring_data['linked_to_regimen']==nivo_track.regimen_data['id']
+assert 'MON-R-CHOP-REGIMEN' not in render_plan_html(advanced_result,target_lang='en')
+json.dumps({'regimens':seen,'explicitNivoTrackMonitoring':nivo_track.monitoring_data['id'],'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
 
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,environment:'Node WASM, not browser'}));

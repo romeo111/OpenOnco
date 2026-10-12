@@ -1,112 +1,132 @@
 id: REG-A-AVD
-name: "A+AVD (Brentuximab vedotin + Adriamycin + Vinblastine + Dacarbazine), 6 cycles"
-name_ua: "A+AVD (Брентуксимаб + Доксорубіцин + Вінбластин + Дакарбазин), 6 циклів"
-alternate_names: ["A+AVD", "BV-AVD", "ECHELON-1"]
-
+name: A+AVD (Brentuximab vedotin + Adriamycin + Vinblastine + Dacarbazine), 6 cycles
+name_ua: A+AVD (Брентуксимаб + Доксорубіцин + Вінбластин + Дакарбазин), 6 циклів
+alternate_names:
+- A+AVD
+- BV-AVD
+- ECHELON-1
 components:
-- {drug_id: DRUG-BRENTUXIMAB-VEDOTIN, dose: "1.2 mg/kg", schedule: "IV days 1+15 of
-    28-day cycle × 6", route: IV}
-- {drug_id: DRUG-DOXORUBICIN, dose: "25 mg/m²", schedule: "IV days 1+15 of 28-day
-    cycle", route: IV}
-- {drug_id: DRUG-VINBLASTINE, dose: "6 mg/m²", schedule: "IV days 1+15 of 28-day cycle",
-  route: IV}
-- {drug_id: DRUG-DACARBAZINE, dose: "375 mg/m²", schedule: "IV days 1+15 of 28-day
-    cycle", route: IV}
-
+- drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+  dose: 1.2 mg/kg
+  schedule: IV days 1+15 of 28-day cycle × 6
+  route: IV
+- drug_id: DRUG-DOXORUBICIN
+  dose: 25 mg/m²
+  schedule: IV days 1+15 of 28-day cycle
+  route: IV
+- drug_id: DRUG-VINBLASTINE
+  dose: 6 mg/m²
+  schedule: IV days 1+15 of 28-day cycle
+  route: IV
+- drug_id: DRUG-DACARBAZINE
+  dose: 375 mg/m²
+  schedule: IV days 1+15 of 28-day cycle
+  route: IV
 cycle_length_days: 28
-total_cycles: "6"
+total_cycles: '6'
 toxicity_profile: moderate-high
-
-premedication: ["Aprepitant + dexamethasone + 5-HT3 antagonist", "Brentuximab premedications
-    first dose"]
+premedication:
+- Aprepitant + dexamethasone + 5-HT3 antagonist
+- Brentuximab premedications first dose
 mandatory_supportive_care:
 - SUP-ANTIEMETIC-PREMED
 - SUP-GCSF-NEUTROPENIA
-monitoring_schedule_id: MON-R-CHOP-REGIMEN
-
+monitoring_schedule_id: MON-A-AVD-REGIMEN
 dose_adjustments:
-- {condition: "Grade ≥2 peripheral neuropathy", modification: "Hold or reduce brentuximab"}
-- {condition: "Cumulative anthracycline >300 mg/m²", modification: "Echo + LVEF check"}
-- {condition: "ABSOLUTE: NEVER combine with bleomycin", modification: "Removal of
-    bleomycin from ABVD is the entire point of A+AVD — additive lung toxicity is fatal"}
-
-ukraine_availability: {all_components_registered: true, 
-    all_components_reimbursed: false, notes: "Brentuximab not НСЗУ-reimbursed; ABVD
-    fallback when access blocking"}
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-HODGKIN-2024]
-
-# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
-# Brentuximab peripheral neuropathy + cumulative anthracycline cardiac
-# risk + cytopenia are the main watch axes. G-CSF mandatory so
-# neutropenic-fever risk is partially mitigated but not eliminated.
-# STUB pending §6.1 two-Co-Lead signoff (dev-mode exemption).
+- condition: Grade ≥2 peripheral neuropathy
+  modification: Hold or reduce brentuximab
+- condition: Cumulative anthracycline >300 mg/m²
+  modification: Echo + LVEF check
+- condition: 'ABSOLUTE: NEVER combine with bleomycin'
+  modification: Removal of bleomycin from ABVD is the entire point of A+AVD — additive
+    lung toxicity is fatal
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: Brentuximab not НСЗУ-reimbursed; ABVD fallback when access blocking
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-HODGKIN-2024
 between_visit_watchpoints:
-- trigger_ua: "Поколювання або оніміння в кистях і стопах"
-  action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте інтенсивність,
-    обговоріть на кожному візиті"
+- trigger_ua: Поколювання або оніміння в кистях і стопах
+  action_ua: Брентуксимаб може спричиняти нейропатію — занотовуйте інтенсивність,
+    обговоріть на кожному візиті
   urgency: log_at_next_visit
-  cycle_day_window: "Day 14+ of each cycle"
+  cycle_day_window: Day 14+ of each cycle
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Помірна втома після кожної дози"
-  action_ua: "Очікувано — більше відпочивайте у дні 1-3 після інфузії"
+- trigger_ua: Помірна втома після кожної дози
+  action_ua: Очікувано — більше відпочивайте у дні 1-3 після інфузії
   urgency: log_at_next_visit
-  cycle_day_window: "Day 1-3"
+  cycle_day_window: Day 1-3
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Випадання волосся (зазвичай починається на 2-3 тижні)"
-  action_ua: "Очікуване — волосся повертається після завершення курсу"
+- trigger_ua: Випадання волосся (зазвичай починається на 2-3 тижні)
+  action_ua: Очікуване — волосся повертається після завершення курсу
   urgency: log_at_next_visit
-  cycle_day_window: "Day 14-21"
+  cycle_day_window: Day 14-21
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Лихоманка вище 38°C"
-  action_ua: "Подзвоніть у клініку того ж дня — навіть з G-CSF можлива нейтропенія
-    і ризик інфекції"
+- trigger_ua: Лихоманка вище 38°C
+  action_ua: Подзвоніть у клініку того ж дня — навіть з G-CSF можлива нейтропенія
+    і ризик інфекції
   urgency: call_clinic_same_day
-  cycle_day_window: "Day 7-14"
+  cycle_day_window: Day 7-14
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Поколювання стає сильним болем, заважає ходити або застібати ґудзики"
-  action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії; може знадобитись
-    пауза в брентуксимабі"
+- trigger_ua: Поколювання стає сильним болем, заважає ходити або застібати ґудзики
+  action_ua: Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії; може знадобитись
+    пауза в брентуксимабі
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Нова задишка при навантаженні, набряки ніг, прискорене серцебиття"
-  action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце; потрібна
-    оцінка функції"
+- trigger_ua: Нова задишка при навантаженні, набряки ніг, прискорене серцебиття
+  action_ua: Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце; потрібна
+    оцінка функції
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Тяжка реакція на брентуксимаб під час інфузії: задишка, набряк обличчя,
-    висип"
-  action_ua: "Якщо в клініці — медперсонал реагує негайно. Якщо вдома — викликайте
-    швидку"
+- trigger_ua: 'Тяжка реакція на брентуксимаб під час інфузії: задишка, набряк обличчя,
+    висип'
+  action_ua: Якщо в клініці — медперсонал реагує негайно. Якщо вдома — викликайте
+    швидку
   urgency: er_now
-  cycle_day_window: "Day 1 of cycle 1"
+  cycle_day_window: Day 1 of cycle 1
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-
-last_reviewed: "2026-04-25"
-notes: >
-  ECHELON-1 trial (Connors 2018, follow-up 2022): superior OS for
-  advanced cHL vs ABVD (HR ~0.59 for OS at 6 years). Bleomycin replaced
-  by brentuximab → eliminates BPT risk. G-CSF mandatory (vs ABVD where
-  G-CSF avoided). Preferred 1L for advanced Hodgkin per NCCN where
+last_reviewed: null
+notes: 'ECHELON-1 trial (Connors 2018, follow-up 2022): superior OS for advanced cHL
+  vs ABVD (HR ~0.59 for OS at 6 years). Bleomycin replaced by brentuximab → eliminates
+  BPT risk. G-CSF mandatory (vs ABVD where G-CSF is not routinely required, but is
+  not universally contraindicated). Preferred 1L for advanced Hodgkin per NCCN where
   brentuximab accessible.
-notes_ua: >
-  Дослідження ECHELON-1 (Connors 2018, спостереження 2022): перевага за загальною
-  виживаністю при поширеній класичній лімфомі Годжкіна (cHL) порівняно з ABVD
-  (HR ~0.59 за OS через 6 років). Блеоміцин замінено брентуксимабом (brentuximab
-  vedotin) — усувається ризик блеоміцин-асоційованої легеневої токсичності (BPT).
-  Г-КСФ обов'язковий (на відміну від ABVD, де Г-КСФ протипоказаний). Переважна
-  схема лікування першої лінії при поширеній лімфомі Годжкіна за NCCN за умови
-  доступності брентуксимабу.
+
+  '
+notes_ua: 'Дослідження ECHELON-1 (Connors 2018, спостереження 2022): перевага за загальною
+  виживаністю при поширеній класичній лімфомі Годжкіна (cHL) порівняно з ABVD (HR
+  ~0.59 за OS через 6 років). Блеоміцин замінено брентуксимабом (brentuximab vedotin)
+  — усувається ризик блеоміцин-асоційованої легеневої токсичності (BPT). Г-КСФ обов''язковий
+  (на відміну від ABVD, де Г-КСФ не потрібний рутинно, але не має універсальної заборони).
+  Переважна схема лікування першої лінії при поширеній лімфомі Годжкіна за NCCN за
+  умови доступності брентуксимабу.
+
+  '
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_11
 draft_revision: 2
+review_status: pending_clinical_signoff
+clinical_claims:
+- claim_id: hodgkin-regimen-specific-monitoring
+  text: BV-AVD requires primary G-CSF prophylaxis and neuropathy monitoring for both
+    brentuximab vedotin and vinblastine. Both use days 1 and 15 of a 28-day cycle,
+    not R-CHOP monitoring.
+  source_ids:
+  - SRC-EVIQ-BV-AVD-4449
+  scope: Regimen-specific monitoring only; not whole-record efficacy, eligibility,
+    dosing or pediatric clinical approval.
+  source_locator: eviQ 4449 Treatment schedule, Clinical information and Pre-treatment
+    assessment.

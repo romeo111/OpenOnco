@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-12",
+  "scope": "Distinct ABVD, BV-AVD and N-AVD monitoring replacing inappropriate R-CHOP schedule and checkpoints",
+  "clinical_approval": false,
+  "change": "New distinct monitoring records for ABVD, BV-AVD and N-AVD. Removes inherited CD20/DLBCL, IPI, vincristine, 21-day timing and R-CHOP count-delay checkpoints from generated Hodgkin plans. Preserves ABVD pulmonary protocol differences, BV-AVD primary G-CSF prophylaxis and N-AVD immune/endocrine surveillance. No component doses or treatment schedules changed.",
+  "source_urls": [
+    "https://www.eviq.org.au/haematology/lymphoma/hodgkin-lymphoma/56-advanced-stage-abvd-doxorubicin-bleomycin-vinb",
+    "https://www.eviq.org.au/haematology/lymphoma/hodgkin-lymphoma/4449-hl-bv-avd-brentuximab-vedotin-doxorubicin-vi",
+    "https://www.eviq.org.au/haematology/lymphoma/hodgkin-lymphoma/5035-hodgkin-lymphoma-n-avd-nivolumab-doxorubicin",
+    "https://eprints.gla.ac.uk/343042/2/343042.pdf"
+  ],
+  "source_semantic_changes": {
+    "knowledge_base/hosted/content/regimens/abvd.yaml": [
+      "clinical_claims",
+      "monitoring_schedule_id"
+    ],
+    "knowledge_base/hosted/content/regimens/a_avd.yaml": [
+      "clinical_claims",
+      "last_reviewed",
+      "monitoring_schedule_id",
+      "notes",
+      "notes_ua",
+      "review_status"
+    ],
+    "knowledge_base/hosted/content/regimens/reg_nivo_avd.yaml": [
+      "clinical_claims",
+      "last_reviewed",
+      "monitoring_schedule_id",
+      "review_status"
+    ],
+    "knowledge_base/hosted/content/sources/src_eviq_abvd_56.yaml": [
+      "notes"
+    ],
+    "knowledge_base/hosted/content/sources/src_bsh_chl_bleomycin_2025.yaml": [
+      "notes"
+    ]
+  },
+  "open_risks": [
+    "All three monitoring records and Ukrainian text pending human clinical signoff",
+    "Not a complete staging, survivorship or pediatric treatment protocol",
+    "Legacy regimen dosing, eligibility, efficacy and regulatory/availability text beyond this scope remain unreviewed",
+    "Other non-Hodgkin regimens still reuse R-CHOP monitoring and require separate evidence audit",
+    "BEP neuropathy/EP and cure/outcome claims unreviewed",
+    "Node WASM verification does not prove actual browser offline behavior",
+    "Legacy advanced Hodgkin algorithm does not select N-AVD in the current synthetic fixture; explicit N-AVD materialization tested without changing treatment selection"
+  ],
+  "verification": [
+    "10 unique targeted tests passed across baseline and expanded test file",
+    "4241 entities: 0 schema/ref/contract errors; 396 warnings",
+    "143 preview pages and 65 original source hashes verified",
+    "Exactly ten core members changed; all 90 disease archives byte-identical",
+    "Exactly three semantic search rows per language changed; all other rows and counts preserved",
+    "Actual pinned local Node WASM: synthetic early and advanced Hodgkin plans resolve distinct monitoring; N-AVD explicitly materialized without changing selection. AML, BEP and five NSCLC states preserved. Zero network attempts; not clinical validation or browser offline proof."
+  ],
+  "bundle": {
+    "core_version": "dda370fea531",
+    "core_compressed_version": "d560cd5e4947",
+    "retained_disease_archives": 90
+  }
+}
