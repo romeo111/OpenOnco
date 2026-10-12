@@ -6,7 +6,7 @@ from pathlib import Path
 import yaml
 
 from scripts.site_translation_catalog import numeric_tokens, polarity_tokens, quantity_tokens
-from scripts.clinical_curated_copy import AVAILABILITY_LABELS, diagnostic_display
+from scripts.clinical_curated_copy import AVAILABILITY_LABELS, STAGING_LABELS, diagnostic_display
 
 IDENTIFIERS = re.compile(
     r'\b(?:SRC|DIS|BIO|DRUG|REG|ALGO|RF|IND|HQ|HB|PLAN|TEST|SUP|WORKUP|OQ|CI|CC|BMA|COVERAGE|VERIFIED|KEYNOTE|FIGHT|LIBRETTO)-[A-Z0-9_-]+\b'
@@ -18,6 +18,28 @@ ABBREVIATIONS = re.compile(r'\b(?:OpenOnco|CIViC|[Hh]edgehog|MYC|BCL2|BCL6|ATM|C
 STATES = re.compile(r'\b[A-Za-z][A-Za-z0-9]*(?:/[A-Za-z0-9]+)*[+-](?!\w)')
 RISK_SYSTEMS = re.compile(r'\b(?:ELN|IPSS-R|IPSS-M|IPSS|IPI|AAIPI|R-ISS|ISS|IGCCCG|IMDC|INRG|INSS|AJCC|FIGO|BCLC)\b', re.I)
 TRIAL_NAMES = re.compile(r'\b(?:SUNLIGHT|MOUNTAINEER)\b')
+STAGING_SOURCE = re.compile(r'\bstaging\b', re.I)
+STAGING_MISTRANSLATIONS = {
+    'it': re.compile(r'\b(?:stagione|messa in scena)\b', re.I),
+    'da': re.compile(r'\b(?:igangsættelse|iscenesættelse)\b', re.I),
+    'sv': re.compile(r'\biscensättning\b', re.I),
+    'nb': re.compile(r'\b(?:igangsetting|iscenesettelse)\b', re.I),
+    'fi': re.compile(r'\b(?:lavastus|paikannus)\b', re.I),
+}
+
+
+def staging_fidelity(source, translated, locale):
+    if source == translated:
+        return True
+    labels = STAGING_LABELS.get(locale, {})
+    if source in labels:
+        return translated == labels[source]
+    bad = STAGING_MISTRANSLATIONS.get(locale)
+    if bad and STAGING_SOURCE.search(source) and bad.search(translated):
+        return False
+    if locale == 'da' and re.search(r'\bstage\b', source, re.I) and re.search(r'\betage\b', translated, re.I):
+        return False
+    return True
 DAILY_EN = re.compile(r'\b(?:once daily|every day|daily)\b', re.I)
 WEEKLY_EN = re.compile(r'\b(?:once weekly|every week|weekly)\b', re.I)
 WEEKLY_TRANSLATION = {
@@ -98,6 +120,8 @@ def registered_gene_symbols():
 def acceptable_draft(source, translated, locale, drug_pattern=None):
     if source == translated:
         return True  # Explicit original retained, not a translated clinical claim.
+    if not staging_fidelity(source, translated, locale):
+        return False
     if source == '✗ Not registered in UA' and translated == AVAILABILITY_LABELS.get(locale):
         return True  # Exact curated country and negation; no arbitrary exemption.
     if diagnostic_display(source, locale) == translated:

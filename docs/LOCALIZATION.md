@@ -12,7 +12,9 @@ Nordic authoring uses `Helsinki-NLP/opus-mt-en-gmq` at `1011a691a63e61b4beb68d47
 
 ## Earlier editions and maintenance
 
-The five new catalogs each contain 36,858 display strings. Native draft counts are IT 21,157; DA 19,677; SV 19,860; NB 19,261; FI 15,411. Remaining entries retain originals, including protected diagnosis names. These counts describe display strings, not medically approved records.
+The five new catalogs each contain 36,858 display strings. Native draft counts are IT 21,154; DA 19,658; SV 19,847; NB 19,260; FI 15,404. Remaining entries retain originals, including protected diagnosis names. These counts describe display strings, not medically approved records.
+
+Stage/staging labels use explicit terminology checked against [AIRC](https://www.airc.it/cancro/affronta-la-malattia/la-fase-della-diagnosi/stadiazione), [Kræftens Bekæmpelse](https://www.cancer.dk/fakta-kraeft/ordbog-kraeft/s/stadieinddeling/), [Swedish RCC](https://kunskapsbanken.cancercentrum.se/diagnoser/njurcancer/vardprogram/bilaga-3-stadieindelning-uicc-2017-8th-ed/), [Helsedirektoratet](https://www.helsedirektoratet.no/retningslinjer/kreft-i-tykktarm-og-endetarm-handlingsprogram/IS%202849%20Nasjonalt%20handlingsprogram%20kreft%20i%20tykktarm%20og%20endetarm.pdf) and [Finnish Cancer Organizations](https://kaikkisyovasta.fi/tietoa-syovasta/mika-on-syopa/syovan-levinneisyys/). Observed translations into floors, seasons, theatre or startup terms are rejected; the complete original fragment is retained instead. This glossary check is not clinical approval.
 
 The navigation shell is shared across all eleven languages. Runtime and catalog assets have content-addressed filenames so previous offline caches cannot substitute stale translations. Large discovery inventories use deterministic gzip sitemap shards, each below both 50,000 URLs and 50 MB uncompressed, referenced by `/sitemap.xml`.
 

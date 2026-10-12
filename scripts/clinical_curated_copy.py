@@ -9,6 +9,14 @@ AVAILABILITY_LABELS = {
     'fi': '✗ Ei rekisteröity Ukrainassa',
 }
 
+STAGING_LABELS = {
+    'it': {'Stage': 'Stadio', 'Staging': 'Stadiazione'},
+    'da': {'Stage': 'Stadium', 'Staging': 'Stadieinddeling'},
+    'sv': {'Stage': 'Stadium', 'Staging': 'Stadieindelning'},
+    'nb': {'Stage': 'Stadium', 'Staging': 'Stadieinndeling'},
+    'fi': {'Stage': 'Levinneisyysaste', 'Staging': 'Levinneisyysluokitus'},
+}
+
 
 def diagnostic_display(source, locale):
     """Translate only the label of an exact technical code list, never clinical prose."""
@@ -331,6 +339,7 @@ def messages_for(locale):
         if protected.exists():
             catalog.update({name: name for name in json.loads(protected.read_text(encoding='utf-8'))})
         catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
+        catalog.update(STAGING_LABELS[locale])
         return catalog
     title = NSCLC[locale]
     status = {
