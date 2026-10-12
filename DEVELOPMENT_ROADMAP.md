@@ -4,6 +4,10 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### HTTP JSON decoder failures (2026-10-12)
+
+Both Vercel HTTP entrypoints now return HTTP 400 for JSON decoder ValueError (including Python's integer digit limit) and RecursionError, before clinical processing, quota or provider calls. Existing size, UTF-8, top-level object and non-finite guards are retained. Real malformed JSON, a 10000-digit integer, and 6000 nested arrays are exercised through each HTTP handler; a valid nested object still reaches processing unchanged. 41 targeted HTTP/profile/language tests passed. No medical sources, treatment logic, catalogs or protected reports changed. Production verification remains part of delivery.
+
 ### TAX 327 citation access (2026-10-12)
 
 Prior solo-policy deployment `b1840fb111` passed full CI 38239241732; Pages and API are published. Citation audit found one Source with DOI/PMID but no URL: SRC-TAX327-TANNOCK-2004. PubMed PMID 15470213 and publisher NEJM DOI 10.1056/NEJMoa040720 confirm the stored title/year; added the canonical PubMed URL. No trial results, doses or routing rules changed. Four unprotected EN/UK educational clinician/patient reports now link the existing citation label; removing only the new anchors reproduces their original bodies exactly. Protected case prefixes remain untouched.

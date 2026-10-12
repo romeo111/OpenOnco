@@ -37,7 +37,7 @@ class handler(BaseHTTPRequestHandler):  # pylint: disable=invalid-name
             return
         try:
             payload = json.loads(raw)
-        except json.JSONDecodeError:
+        except (ValueError, RecursionError):
             self._send_json(400, _cors_headers(), {"status": "error", "message": "Invalid JSON body"})
             return
         if not isinstance(payload, dict):
