@@ -4094,17 +4094,32 @@ __MARKET_CARDS__
 
 def render_ask(*, target_lang: str = "en") -> str:
     is_en = target_lang == "en"
-    title = "Tumor board question" if is_en else "Запит до tumor board"
-    kicker = "OpenOnco AI draft" if is_en else "OpenOnco AI-чернетка"
+    title = "Ask an oncology question" if is_en else "Поставте запитання про онкологію"
+    kicker = "OpenOnco · AI-assisted draft" if is_en else "OpenOnco · чернетка за допомогою ШІ"
     lead = (
-        "Paste an oncology vignette in natural language. ChatGPT structures the case, "
-        "OpenOnco checks it against the rule engine, and the page returns an answer, "
-        "reasonable alternatives, or clarifying questions."
+        "Describe a de-identified case or ask about a treatment plan. A model structures "
+        "the question; OpenOnco checks available rule-based evidence and flags details "
+        "that still need clinical review."
         if is_en else
-        "Опишіть онкологічну клінічну ситуацію своїми словами. ChatGPT структурує кейс, "
-        "OpenOnco звіряє його з алгоритмами, а сторінка повертає відповідь, обґрунтовані "
-        "альтернативи або уточнювальні питання."
+        "Опишіть знеособлений клінічний випадок або поставте запитання щодо плану лікування. "
+        "Модель структурує запитання; OpenOnco звіряє доступні дані з правилами й позначає "
+        "деталі, які ще потребують оцінки лікаря."
     )
+    clinician_label = "For clinicians" if is_en else "Для лікарів"
+    clinician_intro = (
+        "Prepare a de-identified case for multidisciplinary discussion."
+        if is_en else "Підготуйте знеособлений випадок до мультидисциплінарного обговорення."
+    )
+    patient_label = "For patients" if is_en else "Для пацієнтів"
+    safety_heading = "Before you submit" if is_en else "Перед надсиланням"
+    decision_heading = "Care decisions stay with your clinician" if is_en else "Рішення про лікування ухвалює ваш лікар"
+    compose_title = "Describe your question" if is_en else "Опишіть своє запитання"
+    response_title = "Discussion draft" if is_en else "Чернетка для обговорення"
+    response_empty = (
+        "Your draft will appear here after you submit a question."
+        if is_en else "Після надсилання запитання тут з’явиться чернетка."
+    )
+    settings_label = "Advanced · API connection" if is_en else "Додатково · підключення API"
     endpoint_label = "API endpoint" if is_en else "API endpoint"
     case_label = "Clinical situation" if is_en else "Клінічна ситуація"
     run_label = "Answer with OpenOnco" if is_en else "Відповісти через OpenOnco"
@@ -4166,17 +4181,14 @@ def render_ask(*, target_lang: str = "en") -> str:
         if is_en else
         "Не вставляйте реальні персональні дані пацієнта. Це чернетка для tumor board, а не автономна медична порада."
     )
-    # Patient-welcome layer (additive). The `safety` line above is load-bearing and
-    # renders verbatim; the lines below sit alongside it, never replacing it.
+    # The audience card is introductory; explicit privacy and treatment-safety
+    # notices remain separate and precede the submission controls.
     patient_welcome = (
-        "For clinicians and for patients alike: if your own oncologist gave you a plan, use "
-        "this page to understand it in plain language and prepare questions for your next "
-        "visit. It does not evaluate whether your plan is right and does not replace your "
-        "oncologist."
+        "Understand your oncologist's plan in plain language and prepare questions for "
+        "your next visit. This draft cannot decide whether the plan is right for you."
         if is_en else
-        "Для лікарів і для пацієнтів: якщо ваш онколог дав вам план, скористайтеся цією "
-        "сторінкою, щоб зрозуміти його простою мовою та підготувати питання до наступного "
-        "візиту. Вона не оцінює, чи правильний ваш план, і не замінює вашого онколога."
+        "Зрозумійте план свого онколога простою мовою та підготуйте запитання до "
+        "наступного візиту. Ця чернетка не визначає, чи підходить вам план."
     )
     patient_safety = (
         "This does not replace your own doctor. Never start, stop, or change treatment based "
@@ -4308,30 +4320,50 @@ def render_ask(*, target_lang: str = "en") -> str:
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 <style>
-.ask-hero {{ display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:22px; align-items:end; margin-bottom:22px; }}
-.ask-kicker {{ margin:0 0 8px; color:#0f766e; font-weight:800; letter-spacing:0; text-transform:uppercase; font-size:12px; }}
-.ask-hero h1 {{ margin-bottom:10px; }}
-.ask-hero-meter {{ display:grid; grid-template-columns:repeat(2, minmax(112px, 1fr)); gap:10px; min-width:260px; }}
-.ask-stat {{ border:1px solid #d6e4de; background:#f8fbf8; border-radius:8px; padding:12px; }}
-.ask-stat strong {{ display:block; color:#073b22; font-size:24px; line-height:1; margin-bottom:5px; }}
-.ask-stat span {{ color:#53605a; font-size:13px; line-height:1.25; }}
-.ask-grid {{ display:grid; grid-template-columns:minmax(0, 0.92fr) minmax(0, 1.08fr); gap:18px; align-items:start; }}
-.ask-panel {{ border:1px solid #dbe7df; border-radius:8px; background:#fff; padding:18px; box-shadow:0 14px 38px rgba(9, 44, 27, 0.08); }}
-.ask-panel h2 {{ font-size:22px; }}
-.ask-endpoint {{ padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; }}
+.ask-hero {{ position:relative; overflow:hidden; display:grid; grid-template-columns:minmax(0, 1fr) 210px; gap:30px; align-items:start; padding:clamp(24px, 4vw, 48px); margin:12px 0 16px; border-radius:22px; color:#f5fff9; background:radial-gradient(circle at 90% 8%, rgba(79, 194, 146, .24), transparent 34%), linear-gradient(135deg, #0a3022, #124a35 66%, #145844); box-shadow:0 24px 55px rgba(7, 45, 30, .16); }}
+.ask-hero::after {{ content:""; position:absolute; width:360px; height:360px; right:-130px; bottom:-260px; border:1px solid rgba(215,255,229,.18); border-radius:50%; pointer-events:none; }}
+.ask-kicker {{ display:inline-block; margin:0 0 18px; padding:7px 12px; border:1px solid rgba(207,245,223,.32); border-radius:999px; color:#c9f2d8; background:rgba(255,255,255,.07); font:700 11px/1.2 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }}
+.ask-hero h1 {{ max-width:12ch; margin:0 0 16px; color:#fff; font-size:clamp(34px, 4.6vw, 60px); line-height:1.04; letter-spacing:-.035em; }}
+.ask-hero .lead {{ max-width:66ch; margin:0; color:#dbf1e3; font-size:clamp(16px, 1.6vw, 19px); line-height:1.55; }}
+.ask-audiences {{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; max-width:760px; margin-top:28px; }}
+.ask-audience {{ min-width:0; padding:16px 18px; border:1px solid rgba(228,255,238,.22); border-radius:14px; background:rgba(255,255,255,.08); }}
+.ask-audience strong {{ display:block; margin-bottom:5px; color:#fff; font-size:14px; }}
+.ask-audience p {{ margin:0; color:#d8efe1; font-size:13px; line-height:1.45; }}
+.ask-hero-meter {{ display:grid; gap:10px; position:relative; z-index:1; }}
+.ask-stat {{ border:1px solid rgba(225,255,237,.24); background:rgba(255,255,255,.1); border-radius:14px; padding:16px; }}
+.ask-stat strong {{ display:block; color:#fff; font-size:27px; line-height:1; margin-bottom:8px; }}
+.ask-stat span {{ color:#d9f0e2; font-size:13px; line-height:1.35; }}
+.ask-guidance {{ display:grid; grid-template-columns:minmax(0, 1.2fr) minmax(0, .8fr); gap:12px; margin:0 0 22px; }}
+.ask-guidance-card {{ border:1px solid #d8e5dc; border-radius:14px; background:#f7fbf8; padding:17px 20px; }}
+.ask-guidance-card strong {{ display:block; color:#17432b; font-size:14px; margin-bottom:6px; }}
+.ask-guidance-card p {{ margin:0 0 7px; color:#425349; font-size:13px; line-height:1.48; }}
+.ask-guidance-card p:last-child {{ margin-bottom:0; }}
+.ask-guidance-card.is-safety {{ border-color:#edd9af; background:#fffaf0; }}
+.ask-guidance-card.is-safety strong {{ color:#754b15; }}
+.ask-guidance-card.is-safety p {{ color:#6c4a21; }}
+.ask-grid {{ display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:18px; align-items:start; }}
+.ask-panel {{ min-width:0; border:1px solid #dbe7df; border-radius:16px; background:#fff; padding:clamp(18px, 2.3vw, 28px); box-shadow:0 14px 38px rgba(9, 44, 27, 0.08); }}
+.ask-panel-heading {{ display:flex; align-items:flex-start; gap:13px; margin-bottom:20px; }}
+.ask-step {{ flex:0 0 auto; display:grid; place-items:center; width:32px; height:32px; border-radius:10px; background:#e6f5eb; color:#146341; font:700 12px var(--font-mono); }}
+.ask-panel-heading h2 {{ margin:0; font-size:clamp(21px, 2vw, 27px); line-height:1.15; }}
+.ask-advanced {{ margin:0 0 16px; padding:11px 13px; border:1px solid #e0e9e3; border-radius:10px; background:#f8fbf9; }}
+.ask-advanced summary {{ cursor:pointer; color:#426753; font-size:13px; font-weight:700; }}
+.ask-endpoint {{ display:block; margin-top:12px; }}
 .ask-endpoint input {{ margin-top:6px; font-size:12px; color:#475569; }}
-.ask-panel textarea {{ width:100%; min-height:310px; resize:vertical; font:14px/1.5 var(--mono); border-color:#cbd5e1; border-radius:8px; background:#fbfdfc; }}
+.ask-panel textarea {{ width:100%; min-height:300px; resize:vertical; font:15px/1.55 var(--font-sans); border-color:#bfcfc4; border-radius:11px; background:#fbfdfc; padding:14px; }}
 .ask-panel textarea:focus, .ask-panel input:focus {{ outline:2px solid rgba(20, 118, 82, 0.22); border-color:#0f766e; }}
 .ask-panel input {{ width:100%; }}
 .ask-actions {{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }}
 .ask-actions .btn {{ min-height:42px; }}
-.ask-result {{ white-space:pre-wrap; font:14px/1.55 var(--mono); background:#102018; color:#ecfdf5; border:1px solid #244d38; border-radius:8px; padding:16px; min-height:380px; overflow:auto; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }}
-.ask-result:empty::before {{ content:""; display:block; min-height:1px; }}
+.ask-result {{ white-space:pre-wrap; font:14px/1.65 var(--font-mono); background:#f5faf6; color:#163b27; border:1px solid #d6e7da; border-radius:12px; padding:19px; min-height:270px; overflow:auto; }}
+.ask-result:empty {{ display:grid; place-items:center; text-align:center; border-style:dashed; background:#f9fcfa; }}
+.ask-result:empty::before {{ content:attr(data-empty-label); max-width:28ch; color:#627569; font:15px/1.5 var(--font-sans); }}
 .ask-muted {{ color:#647067; font-size:14px; }}
-.ask-patient-note {{ margin-top:8px; }}
-.ask-patient-safety {{ margin:8px 0 0; padding:8px 12px; border-left:3px solid #f59e0b; background:#fffbeb; color:#7c2d12; font-weight:700; font-size:13.5px; line-height:1.4; border-radius:0 6px 6px 0; }}
 .ask-deid-note {{ margin:8px 0 0; color:#475569; font-size:13px; line-height:1.45; }}
-.ask-examples {{ display:grid; gap:10px; margin:12px 0 14px; max-height:460px; overflow:auto; padding-right:4px; }}
+.ask-examples-wrap {{ margin-bottom:16px; border:1px solid #dbe7df; border-radius:11px; background:#f9fcfa; }}
+.ask-examples-wrap summary {{ cursor:pointer; padding:13px 15px; color:#1d5136; font-size:14px; font-weight:800; }}
+.ask-examples-wrap[open] summary {{ border-bottom:1px solid #dbe7df; }}
+.ask-examples {{ display:grid; gap:10px; margin:12px; max-height:400px; overflow:auto; padding-right:4px; }}
 .ask-example {{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; border:1px solid #dbe7df; border-radius:8px; padding:12px; background:#f8fbf8; }}
 .ask-example-title {{ font-weight:800; margin-bottom:4px; color:#073b22; }}
 .ask-example-text {{ color:#56635c; font-size:13px; line-height:1.38; }}
@@ -4351,42 +4383,58 @@ def render_ask(*, target_lang: str = "en") -> str:
 .ask-plan-link {{ display:none; margin-bottom:12px; padding:12px; border:1px solid #b7e4c7; background:#f0fdf4; border-radius:8px; }}
 .ask-plan-link.is-visible {{ display:block; }}
 .ask-plan-link p {{ margin:0 0 8px; color:#166534; font-size:14px; }}
-@media (max-width: 900px) {{ .ask-hero, .ask-grid {{ grid-template-columns:1fr; }} .ask-hero-meter {{ min-width:0; }} }}
-@media (max-width: 640px) {{ .ask-hero-meter, .ask-progress-steps {{ grid-template-columns:1fr 1fr; }} }}
-@media (max-width: 520px) {{ .ask-example {{ grid-template-columns:1fr; }} .ask-progress-head {{ display:block; }} .ask-progress-head span {{ display:block; margin-top:4px; }} }}
+@media (max-width: 900px) {{ .ask-hero, .ask-grid {{ grid-template-columns:1fr; }} .ask-hero-meter {{ grid-template-columns:repeat(2, minmax(0, 1fr)); }} }}
+@media (max-width: 640px) {{ .ask-guidance, .ask-audiences {{ grid-template-columns:1fr; }} .ask-progress-steps {{ grid-template-columns:1fr 1fr; }} }}
+@media (max-width: 520px) {{ .ask-hero {{ padding:22px; border-radius:16px; }} .ask-hero-meter {{ grid-template-columns:1fr 1fr; }} .ask-example {{ grid-template-columns:1fr; }} .ask-progress-head {{ display:block; }} .ask-progress-head span {{ display:block; margin-top:4px; }} }}
 </style>
 </head>
 <body>
 {_render_top_bar(active="ask", target_lang=target_lang, lang_switch_href=_lang_switch_href("ask", target_lang))}
 
 <main class="try-page">
-  <div class="ask-hero">
-    <div>
+  <section class="ask-hero" aria-labelledby="askTitle">
+    <div class="ask-hero-copy">
       <p class="ask-kicker">{kicker}</p>
-      <h1>{html.escape(title)}</h1>
+      <h1 id="askTitle">{html.escape(title)}</h1>
       <p class="lead">{lead}</p>
-      <p class="ask-muted">{safety}</p>
-      <p class="ask-muted" data-data-flow="server">{html.escape(privacy_copy.TRANSFER_BODY['en' if is_en else 'uk'])}</p>
-      <p class="ask-muted ask-patient-note">{patient_welcome}</p>
-      <p class="ask-patient-safety">{patient_safety}</p>
+      <div class="ask-audiences">
+        <div class="ask-audience"><strong>{clinician_label}</strong><p>{clinician_intro}</p></div>
+        <div class="ask-audience"><strong>{patient_label}</strong><p>{patient_welcome}</p></div>
+      </div>
     </div>
     <div class="ask-hero-meter" aria-label="{quota_label}">
       <div class="ask-stat"><strong>3</strong><span>{quota_hero_label}</span></div>
       <div class="ask-stat"><strong>{wait_value}</strong><span>{wait_label}</span></div>
     </div>
+  </section>
+
+  <div class="ask-guidance">
+    <div class="ask-guidance-card">
+      <strong>{safety_heading}</strong>
+      <p>{safety}</p>
+      <p data-data-flow="server">{html.escape(privacy_copy.TRANSFER_BODY['en' if is_en else 'uk'])}</p>
+    </div>
+    <div class="ask-guidance-card is-safety">
+      <strong>{decision_heading}</strong>
+      <p>{patient_safety}</p>
+    </div>
   </div>
 
   <div class="ask-grid">
     <section class="ask-panel">
-      <label class="qt-label ask-endpoint">
-        {endpoint_label}
-        <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
-      </label>
-      <label class="qt-label" style="margin-top:12px">
+      <div class="ask-panel-heading"><span class="ask-step" aria-hidden="true">01</span><h2>{compose_title}</h2></div>
+      <label class="qt-label">
         {case_label}
         <textarea id="caseText" spellcheck="true" placeholder="{html.escape(placeholder)}"></textarea>
       </label>
       <p class="ask-deid-note">{deid_note}</p>
+      <details class="ask-advanced">
+        <summary>{settings_label}</summary>
+        <label class="qt-label ask-endpoint">
+          {endpoint_label}
+          <input id="endpointInput" value="/api/clinical-question" spellcheck="false">
+        </label>
+      </details>
       <div class="ask-quota">
         <span>{quota_label}</span>
         <strong><span id="quotaUsed">0</span> / 3</strong>
@@ -4413,13 +4461,16 @@ def render_ask(*, target_lang: str = "en") -> str:
       <p id="askStatus" class="ask-muted" role="status" aria-live="polite"></p>
     </section>
     <section class="ask-panel">
-      <h2 style="margin-top:0">{examples_title}</h2>
-      <div id="askExamples" class="ask-examples"></div>
+      <div class="ask-panel-heading"><span class="ask-step" aria-hidden="true">02</span><h2>{response_title}</h2></div>
+      <details class="ask-examples-wrap">
+        <summary>{examples_title}</summary>
+        <div id="askExamples" class="ask-examples"></div>
+      </details>
       <div id="planGeneratorLinkWrap" class="ask-plan-link">
         <p>{plan_link_hint}</p>
         <a id="planGeneratorLink" class="btn" href="try.html">{plan_link_label}</a>
       </div>
-      <div id="askResult" class="ask-result"></div>
+      <div id="askResult" class="ask-result" role="status" aria-live="polite" aria-label="{response_title}" data-empty-label="{response_empty}"></div>
     </section>
   </div>
 </main>

@@ -33,7 +33,7 @@ class ProseCollector(HTMLParser):
         if self.dynamic_only:
             return
         if not any(t in {'script', 'style', 'code', 'pre'} for t in self.stack):
-            for key in ('title', 'aria-label', 'placeholder', 'alt', 'data-step-label'):
+            for key in ('title', 'aria-label', 'placeholder', 'alt', 'data-step-label', 'data-empty-label'):
                 if prose(attrs.get(key, '')):
                     self.strings.add(normalize(attrs[key]))
             if tag == 'meta' and attrs.get('name') == 'description' and prose(attrs.get('content', '')):
