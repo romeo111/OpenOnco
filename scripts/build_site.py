@@ -5411,6 +5411,25 @@ function reportExportError() {{
   return messages[document.documentElement.lang] || messages.en;
 }}
 
+function reportHtmlForDownload(displayedDocument) {{
+  const root = displayedDocument.documentElement.cloneNode(true);
+  // Resolve site-relative references on a detached copy. Local fragments
+  // must still navigate within the saved report; the live view is unchanged.
+  for (const link of root.querySelectorAll('a[href]')) {{
+    const href = link.getAttribute('href');
+    if (!href || href.trim().startsWith('#')) continue;
+    try {{
+      const resolved = new URL(href, displayedDocument.baseURI);
+      if (resolved.protocol === 'https:' || resolved.protocol === 'http:') {{
+        link.setAttribute('href', resolved.href);
+      }}
+    }} catch (_) {{
+      // Preserve an unparseable authored link instead of blocking export.
+    }}
+  }}
+  return '<!DOCTYPE html>\\n' + root.outerHTML;
+}}
+
 function downloadHtml() {{
   if (uiBusy || generating) return;
   if (planSource == null || !reportReady || planDirty) return;
@@ -5421,7 +5440,7 @@ function downloadHtml() {{
     if (!displayedDocument || !displayedDocument.documentElement) throw new Error('Report document unavailable');
     const root = displayedDocument.documentElement;
     const displayedLanguage = root.dataset.translationLocale || root.lang || currentResultLang;
-    const html = '<!DOCTYPE html>\\n' + root.outerHTML;
+    const html = reportHtmlForDownload(displayedDocument);
     const blob = new Blob([html], {{ type: 'text/html;charset=utf-8' }});
     url = URL.createObjectURL(blob);
     a = document.createElement('a');

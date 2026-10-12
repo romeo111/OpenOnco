@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('docs/try.html', 'utf8');
-const names = ['waitForFrameLoad', 'downloadHtml', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
+const names = ['waitForFrameLoad', 'downloadHtml', 'reportHtmlForDownload', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
 const code = names.map(name => {
   const match = html.match(new RegExp(`^(?:async )?function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
   assert(match, name); return match[0];
@@ -13,9 +13,19 @@ let failClick = false, removed = 0;
 const revoked = [];
 const body = { appendChild(anchor) { anchor.parentNode = this; }, removeChild(anchor) { anchor.parentNode = null; removed++; } };
 const button = () => ({ disabled: false });
+function reportRoot(outerHTML, dataset = {}, lang = 'en') {
+  return {outerHTML, dataset, lang, cloneNode() {
+    let copy = this.outerHTML;
+    const links = [...copy.matchAll(/href="([^"]*)"/g)].map(match => ({
+      getAttribute: () => match[1],
+      setAttribute(_name, value) { copy = copy.replace(match[0], 'href="'+value+'"'); },
+    }));
+    return {querySelectorAll: () => links, get outerHTML() { return copy; }};
+  }};
+}
 const frame = {
   srcdoc: '<html>Previous report</html>',
-  contentDocument: { documentElement: { dataset: { translationLocale: 'fr' }, outerHTML: '<html lang="fr"><a href="https://example.org/source">Source</a><p>DIS-AML 100 mg</p></html>' } },
+  contentDocument: {baseURI:'https://openonco.info/try.html', documentElement: reportRoot('<html lang="fr"><a href="https://example.org/source">Source</a><p>DIS-AML 100 mg</p></html>',{translationLocale:'fr'},'fr') },
   contentWindow: { focus() {}, print() { prints++; } },
   addEventListener: (type, fn) => events.set(type, fn),
   removeEventListener: type => events.delete(type),
@@ -24,7 +34,7 @@ const context = vm.createContext({
   resultFrame: frame, Blob, Date,
   setTimeout: fn => { const id = ++nextTimer; timers.set(id, fn); return id; },
   clearTimeout: id => timers.delete(id), setError: error => { if (error) errors.push(error); },
-  URL: { createObjectURL: value => { blob = value; return 'blob:test'; }, revokeObjectURL: url => revoked.push(url) },
+  URL: class extends URL { static createObjectURL(value) { blob = value; return 'blob:test'; } static revokeObjectURL(url) { revoked.push(url); } },
   document: { documentElement: { lang: 'en' }, body, createElement: () => ({ click() { if (failClick) throw new Error('Download rejected'); filename = this.download; } }) },
   isInteractionLocked: () => false, setLockedTitle() {}, refreshModeButtonAvailability() {}, openPlanModal() {},
   runBtn: button(), viewPlanBtn: button(), pdfBtn: button(), modalPdfBtn: button(), modalHtmlBtn: button(),
@@ -94,6 +104,14 @@ const run = value => vm.runInContext(value, context);
   failClick = false;
   assert.doesNotThrow(() => run('downloadHtml()'));
   assert.match(filename, /^openonco-plan\.patient\.uk\./, 'Retry must remain available after export failure');
+  const linkedHtml = '<html lang="uk"><a href="/kb/drugs/test.html">Drug</a><a href="../kb/source.html?lang=uk#evidence">Evidence</a><a href="#details">Details</a><a href="https://pubmed.ncbi.nlm.nih.gov/123/">Citation</a><a href="mailto:contact@example.org">Contact</a><a href="http://[">Malformed</a><p>DIS-AML 100 mg</p></html>';
+  context.linkDocument = {baseURI:'https://openonco.info/cases/source.html',documentElement:reportRoot(linkedHtml,{},'uk')};
+  const portable = run('reportHtmlForDownload(linkDocument)');
+  assert(portable.includes('href="https://openonco.info/kb/drugs/test.html"'));
+  assert(portable.includes('href="https://openonco.info/kb/source.html?lang=uk#evidence"'));
+  for (const href of ['#details','https://pubmed.ncbi.nlm.nih.gov/123/','mailto:contact@example.org','http://[']) assert(portable.includes('href="'+href+'"'));
+  assert(portable.includes('<p>DIS-AML 100 mg</p>'));
+  assert.equal(context.linkDocument.documentElement.outerHTML, linkedHtml, 'Export must not mutate the live report');
   const overlay = fs.readFileSync('scripts/clinical-localization.js', 'utf8');
   assert(!overlay.includes('reloadReport'), 'Overlay must delegate all reloads to the guarded builder');
   assert(overlay.includes("await switchResultLang('en')"));
@@ -115,6 +133,7 @@ const run = value => vm.runInContext(value, context);
     assert(page.includes('const planFresh = reportReady && planSource !== null && !planDirty;'));
     assert(page.includes('if (planSource == null || !reportReady || planDirty) return;'));
     assert(page.includes('if (!planSource || !reportReady || isInteractionLocked()) return;'));
+    assert.equal(page.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0], html.match(/^function reportHtmlForDownload\([^\n]*\{[\s\S]*?^\}/m)[0]);
   }
   for (const locale of ['en', 'uk', 'es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi']) {
     context.document.documentElement.lang = locale;
