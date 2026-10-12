@@ -86,6 +86,13 @@ abvd=yaml.safe_load((KB/'regimens/abvd.yaml').read_text())
 assert abvd['components'][1]['dose']=='10 USP units/m²'
 bleomycin=yaml.safe_load((KB/'drugs/bleomycin.yaml').read_text())
 assert 'USP' in bleomycin['typical_dosing']
+assert 'adequate oxygenation' in bleomycin['notes']
+assert 'Avoid high-flow O2' not in bleomycin['notes']
+assert 'not demonstrated increased pulmonary complications' in bleomycin['major_interactions'][1]
+assert 'Г-КСФ протипоказаний' not in abvd['notes_ua']
+fever=next(w for w in abvd['between_visit_watchpoints'] if w['trigger_ua']=='Лихоманка вище 38°C')
+assert fever['urgency']=='call_clinic_same_day'
+assert 'не призначається' not in fever['action_ua']
 assert (KB/'sources/src_eviq_abvd_56.yaml').is_file()
 assert 'HRCT' in reg['monitoring'][0]
 assert 'EP still contains cisplatin' in reg['components'][0]['dose_modifications'][2]['action']

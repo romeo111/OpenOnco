@@ -70,13 +70,15 @@ between_visit_watchpoints:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-HODGKIN-2024
 - trigger_ua: Лихоманка вище 38°C
-  action_ua: Подзвоніть у клініку того ж дня — на ABVD G-CSF не призначається, нейтропенія
-    вища
+  action_ua: Подзвоніть у клініку того ж дня — лихоманка може бути ознакою інфекції
+    та потребує оцінки, зокрема щодо нейтропенії. Рішення про G-CSF приймає клінічна
+    команда індивідуально.
   urgency: call_clinic_same_day
   cycle_day_window: Day 7-14
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
+  - SRC-EVIQ-ABVD-56
 - trigger_ua: Біль у грудях, прискорене серцебиття, набряки гомілок
   action_ua: Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце
   urgency: call_clinic_same_day
@@ -93,17 +95,20 @@ last_reviewed: null
 review_status: pending_clinical_signoff
 notes: 'Long-standing 1L Hodgkin standard (40+ years). Pulmonary toxicity (BPT) ~5-10%
   — DLCO mandatory pre-treatment + serial. NEVER combine with brentuximab (additive
-  lung toxicity). G-CSF avoided on ABVD (increases pulmonary toxicity). Modern alternative
-  for advanced Hodgkin: A+AVD (ECHELON-1) — brentuximab replaces bleomycin, superior
-  OS in advanced disease.
+  lung toxicity). Growth-factor support is not routinely required; it may be considered
+  after delays due to sepsis or other patient factors, with monitoring for pulmonary
+  toxicity. Modern alternative for advanced Hodgkin: A+AVD (ECHELON-1) — brentuximab
+  replaces bleomycin, superior OS in advanced disease.
 
   '
 notes_ua: 'Усталений стандарт першої лінії лімфоми Годжкіна понад 40 років. Легенева
   токсичність (BPT) — ~5-10%; вимірювання DLCO обов''язкове до початку лікування та
   серійно в процесі. Поєднання з брентуксимабом (brentuximab vedotin) категорично
-  заборонено через адитивну легеневу токсичність. Г-КСФ протипоказаний при ABVD (підсилює
-  BPT). Сучасна альтернатива при поширеній лімфомі Годжкіна — A+AVD (ECHELON-1): брентуксимаб
-  замінює блеоміцин, показано перевагу за загальною виживаністю.
+  заборонено через адитивну легеневу токсичність. Г-КСФ не потрібний рутинно при ABVD,
+  але його можуть розглянути після затримок через сепсис або інші клінічні чинники;
+  потрібен моніторинг легеневої токсичності. Сучасна альтернатива при поширеній лімфомі
+  Годжкіна — A+AVD (ECHELON-1): брентуксимаб замінює блеоміцин, показано перевагу
+  за загальною виживаністю.
 
   '
 ukrainian_review_status: pending_clinical_signoff
@@ -122,3 +127,15 @@ clinical_claims:
     selection, cumulative-risk elimination or whole-record clinical approval.
   source_locator: US label Description/How supplied; eviQ 56 v7 treatment schedule
     and dose-equivalence note.
+- claim_id: abvd-growth-factor-not-routine-not-prohibited
+  text: Growth-factor support is not routinely required with ABVD. It may be considered
+    after treatment delays due to sepsis or other patient factors, with pulmonary
+    monitoring. The US bleomycin label reports a possible interaction but states randomized
+    clinical studies have not demonstrated increased pulmonary complications.
+  source_ids:
+  - SRC-EVIQ-ABVD-56
+  - SRC-BLEOMYCIN-US-LABEL
+  scope: ABVD growth-factor selection and uncertainty of the pulmonary interaction
+    only; no universal requirement, contraindication or reassurance of zero risk.
+  source_locator: eviQ 56 v7 growth-factor note and haematological toxicity guidance;
+    US bleomycin label Pulmonary adverse reactions.
