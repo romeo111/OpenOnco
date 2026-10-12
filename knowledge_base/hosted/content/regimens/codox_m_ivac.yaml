@@ -149,45 +149,70 @@ sources:
 - SRC-EVIQ-BURKITT-IVAC-4490
 - SRC-EVIQ-BURKITT-OVERVIEW-3727
 - SRC-NCCN-BCELL-2025
+- SRC-EVIQ-CODOX-PATIENT-4489
+- SRC-EVIQ-IVAC-PATIENT-4490
+- SRC-EVIQ-MOUTH-PATIENT-3099
 between_visit_watchpoints:
 - trigger_ua: Виражена втома, що триває тижнями між циклами
-  action_ua: Очікувано — кістковий мозок відновлюється повільно
-  urgency: log_at_next_visit
+  action_ua: Повідомте лікаря або медсестру про виражену втому. Не вважайте її автоматично наслідком повільного
+    відновлення кісткового мозку.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Мукозит, болі і виразки в порожнині рота
-  action_ua: Поширене на HD-MTX/HiDAC — полоскання порожнини рота, м'яка їжа
-  urgency: log_at_next_visit
+  - SRC-EVIQ-CODOX-PATIENT-4489
+- trigger_ua: Біль або виразки в роті без перелічених нижче ознак негайного звернення
+  action_ua: Повідомте лікаря або медсестру. Дбайливо доглядайте за ротом; обирайте м’яку їжу. Якщо не
+    можете їсти чи пити, є неконтрольований біль, кровотеча або утруднене ковтання — зв’яжіться з командою
+    негайно.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
+  - SRC-EVIQ-CODOX-PATIENT-4489
+  - SRC-EVIQ-MOUTH-PATIENT-3099
 - trigger_ua: Поколювання або оніміння в кистях/стопах
-  action_ua: Вінкристин може спричиняти нейропатію — занотовуйте
-  urgency: log_at_next_visit
+  action_ua: Повідомте лікаря або медсестру про поколювання чи оніміння, зокрема якщо вони заважають повсякденним
+    діям.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-- trigger_ua: Біль у спині, головний біль після інтратекальної ін'єкції
-  action_ua: Зустрічається — лежіть рівно після пункції, пийте багато води; занотовуйте інтенсивність
-  urgency: log_at_next_visit
+  - SRC-EVIQ-CODOX-PATIENT-4489
+- trigger_ua: Дуже сильний головний біль, який не минає після призначеного знеболення
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги. Не відкладайте звернення до наступного візиту, зокрема після інтратекального введення.
+  urgency: contact_clinic_now
   sources:
-  - SRC-NCCN-BCELL-2025
+  - SRC-EVIQ-CODOX-PATIENT-4489
+  - SRC-EVIQ-IVAC-PATIENT-4490
 - trigger_ua: Зменшення кількості сечі, набряки
   action_ua: Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: Лихоманка вище 38°C
+- trigger_ua: Температура 38°C або вище
   action_ua: Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису
   urgency: er_now
   sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-CTCAE-V5
+  - SRC-EVIQ-CODOX-PATIENT-4489
+  - SRC-EVIQ-IVAC-PATIENT-4490
 - trigger_ua: Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у перші дні циклу 1
   action_ua: Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду пухлини
   urgency: er_now
   cycle_day_window: Day 1-7 of cycle 1
   sources:
   - SRC-NCCN-BCELL-2025
+- trigger_ua: Не можете їсти чи пити; неконтрольований біль або кровотеча з рота; утруднене відкривання
+    рота чи ковтання; білі плями в роті або сильний кашель під час їжі чи пиття
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою. Якщо не можете зв’язатися з лікувальною командою,
+    зверніться до найближчого відділення невідкладної допомоги.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-MOUTH-PATIENT-3099
+- trigger_ua: Нова сплутаність свідомості, виражена сонливість, запаморочення, втрата рівноваги, двоїння
+    в очах, галюцинації, судоми, утруднена хода або повільне нечітке мовлення під час чи невдовзі після
+    IVAC
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги. Не списуйте ці симптоми на звичайну втому або пункцію.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-IVAC-PATIENT-4490
 last_reviewed: null
 notes: Scoped reference schedule repair based on eviQ 4489 v1 and 4490 v2, for high-risk Burkitt WITHOUT
   proven CNS disease. This is not original Magrath or LMB and not a universal Burkitt/CNS prescription.

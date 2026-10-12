@@ -1,0 +1,49 @@
+{
+  "status": "implemented_pending_clinical_review_and_production",
+  "clinical_approval": false,
+  "translation_signoff": false,
+  "baseline": "e7c1fcc2c3",
+  "primary_source_audit": "codox_patient_watchpoints_open_2026-10-13.json",
+  "changes": [
+    "Fever includes exactly 38 degrees C",
+    "Severe unrelieved headache has immediate-contact instruction",
+    "IVAC neurological symptoms have immediate-contact instruction",
+    "Mouth/throat immediate-contact criteria and unreachable-team ED fallback reflect eviQ 3099 v6",
+    "Fatigue and neuropathy notify-team instructions no longer impose unsupported next-visit delay",
+    "Renderer/schema distinguish notify-team, same-day call, immediate contact and emergency department; no inferred deadline",
+    "Removed outdated two-co-lead requirement from schema docstring; clinical approval remains governed by repository policy"
+  ],
+  "verification": {
+    "targeted_tests_passed": 115,
+    "schema_entities": 4265,
+    "schema_errors": 0,
+    "reference_errors": 0,
+    "contract_errors": 0,
+    "warnings": 396,
+    "critical_lint": "passed",
+    "ci_browser_checks": 24,
+    "pinned_node_wasm": "passed; zero network attempts; not actual browser offline or clinical validation",
+    "regimen_other_fields_preserved": true,
+    "pages": 110,
+    "reader_bindings": 50,
+    "all_90_disease_archives_unchanged": true,
+    "core_members": [
+      "knowledge_base/engine/render.py",
+      "knowledge_base/hosted/content/regimens/codox_m_ivac.yaml",
+      "knowledge_base/hosted/content/sources/src_eviq_codox_patient_4489.yaml",
+      "knowledge_base/hosted/content/sources/src_eviq_ivac_patient_4490.yaml",
+      "knowledge_base/hosted/content/sources/src_eviq_mouth_patient_3099.yaml",
+      "knowledge_base/schemas/regimen.py"
+    ],
+    "core_version": "300f9cb4f150",
+    "core_compressed_version": "8ed27ad6c1ca"
+  },
+  "remaining": [
+    "Clinical and translation signoff remains pending",
+    "English patient action prose retains explicitly marked original Ukrainian where no saved translation exists",
+    "CNS-specific patient watchpoints are not copied from no-CNS sources",
+    "Other regimens, including EPOCH fever wording, require independent source review",
+    "Ukraine reimbursement/availability claims remain unverified",
+    "Production website/API publication awaits explicit approval after prior automatic review rejection"
+  ]
+}

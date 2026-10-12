@@ -152,14 +152,13 @@ class BetweenVisitWatchpoint(Base):
     as a treatment-selection signal (CHARTER §8.3).
 
     Authoring queue: `docs/plans/patient_watchpoints_authoring_queue_2026-05-01-0100.md`.
-    Two Clinical Co-Lead sign-offs required per regimen before the
-    `between_visit_watchpoints` field can be considered authored
-    (CHARTER §6.1; see PATIENT_MODE_SPEC §6).
+    Clinical review status is governed by the repository review policy;
+    adding source references does not itself establish clinical approval.
     """
 
     trigger_ua: str  # plain UA: what the patient might notice at home
     action_ua: str  # plain UA: what to do — log, call clinic, or ER
-    urgency: Literal["log_at_next_visit", "call_clinic_same_day", "er_now"]
+    urgency: Literal["log_at_next_visit", "contact_clinic", "call_clinic_same_day", "contact_clinic_now", "er_now"]
     cycle_day_window: Optional[str] = None  # e.g. "Day 7-14 — nadir"
     sources: list[str] = Field(default_factory=list)
 

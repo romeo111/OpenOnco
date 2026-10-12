@@ -4195,17 +4195,23 @@ def _build_why_bullets_html(plan_result: PlanResult, track, *, target_lang: str 
 # emergency banner).
 _BV_URGENCY_ORDER: tuple[str, ...] = (
     "log_at_next_visit",
+    "contact_clinic",
     "call_clinic_same_day",
+    "contact_clinic_now",
     "er_now",
 )
 _BV_URGENCY_HEADING_UA: dict[str, str] = {
     "log_at_next_visit": "Занотуйте і обговоріть на наступному візиті",
+    "contact_clinic": "Повідомте лікаря або медсестру",
     "call_clinic_same_day": "Подзвоніть у клініку того ж дня",
+    "contact_clinic_now": "Негайно зв’яжіться з лікарем або медсестрою",
     "er_now": "Звертайтесь у лікарню негайно",
 }
 _BV_URGENCY_CSS_CLASS: dict[str, str] = {
     "log_at_next_visit": "bv-urgency-group bv-log",
+    "contact_clinic": "bv-urgency-group bv-call",
     "call_clinic_same_day": "bv-urgency-group bv-call",
+    "contact_clinic_now": "bv-urgency-group bv-er",
     "er_now": "bv-urgency-group bv-er",
 }
 _BV_FALLBACK_HTML = (
@@ -4259,7 +4265,9 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
     section_heading = "What to watch for between visits" if english else "На що звернути увагу між візитами"
     urgency_headings = {
         "log_at_next_visit": "Make a note and discuss it at your next visit",
+        "contact_clinic": "Tell your doctor or nurse",
         "call_clinic_same_day": "Call the clinic the same day",
+        "contact_clinic_now": "Contact your doctor or nurse immediately",
         "er_now": "Go to hospital immediately",
     } if english else _BV_URGENCY_HEADING_UA
     fallback = (

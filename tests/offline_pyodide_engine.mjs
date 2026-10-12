@@ -262,6 +262,13 @@ assert len([c for c in b if c['drug_id']=='DRUG-MESNA'])==2
 assert {c['route'] for c in a if c['drug_id']=='DRUG-METHOTREXATE'}=={'IV','IT'}
 assert any('36 hours after IV methotrexate START' in c['schedule'] for c in a if c['drug_id']=='DRUG-LEUCOVORIN')
 assert codox_track.monitoring_data['id']=='MON-CODOX-IVAC-REGIMEN'
+codox_points=codox_track.regimen_data['between_visit_watchpoints']
+assert any(w['trigger_ua']=='Температура 38°C або вище' and w['urgency']=='er_now' for w in codox_points)
+assert len([w for w in codox_points if w['urgency']=='contact_clinic_now'])==3
+for lang,heading in [('en','Contact your doctor or nurse immediately'),('uk','Негайно зв’яжіться з лікарем або медсестрою')]:
+    patient_codox=render_plan_html(codox_result,target_lang=lang,mode='patient')
+    assert heading in patient_codox and 'Не можете їсти чи пити' in patient_codox
+    assert 'Дуже сильний головний біль' in patient_codox
 for lang,needle in [('en','Assess neurological function before each ifosfamide dose'),('uk','Оцініть неврологічний стан перед кожною дозою іфосфаміду')]:
     codox_html=render_plan_html(codox_result,target_lang=lang)
     assert needle in codox_html and 'DRUG-MESNA' in codox_html
