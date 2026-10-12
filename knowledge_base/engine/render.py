@@ -3193,6 +3193,18 @@ def render_plan_html(
         if plan_result.plan.knowledge_base_state.get('profile_selection_withheld'):
             title = 'Treatment applicability requires confirmation' if english else 'Потрібне підтвердження відповідності лікування'
             explanation = ('No medicine plan has been selected. The profile has unconfirmed, conflicting or excluded values. Check metastatic stage, driver status, functional status, the chosen chemotherapy partner and clinical exclusions before selecting this route. No automatic substitute was selected.' if english else 'План препаратів не обрано. Профіль містить непідтверджені, суперечливі або виключені значення. Перед вибором цього маршруту перевірте метастатичну стадію, драйверний статус, функціональний стан, обраний компонент хіміотерапії та клінічні виключення. Автоматичну заміну не обрано.')
+            if plan_result.plan.algorithm_id in {'ALGO-PTCL-1L', 'ALGO-AITL-1L', 'ALGO-ALCL-1L'} and 'biomarkers.BIO-CD30-IHC' in plan_result.plan.knowledge_base_state.get('unconfirmed_profile_fields', []):
+                explanation = (
+                    'No medicine plan has been selected. Confirm the documented CD30 result '
+                    'and resolve conflicting profile values with the clinical team before '
+                    'considering BV-CHP. Confirmation does not establish individual eligibility '
+                    'or local approval. No automatic substitute was selected.'
+                    if english else
+                    'План препаратів не обрано. Підтвердьте документований результат CD30 '
+                    'та узгодьте суперечливі значення профілю з лікарем перед розглядом BV-CHP. '
+                    'Підтвердження не встановлює індивідуальної відповідності лікуванню '
+                    'або місцевого регуляторного дозволу. Автоматичну заміну не обрано.'
+                )
             if plan_result.plan.algorithm_id == 'ALGO-BURKITT-1L':
                 explanation = (
                     'No medicine plan has been selected. Confirm the documented Burkitt risk '

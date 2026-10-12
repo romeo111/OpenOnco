@@ -4,6 +4,10 @@ plan_track: aggressive
 applicable_to:
   disease_id: DIS-AITL
   line_of_therapy: 1
+  confirmed_profile_values:
+    biomarkers.BIO-CD30-IHC: [positive]
+  excluded_profile_values:
+    findings.cd30_positive: [false]
   stage_requirements: []
   biomarker_requirements_required:
     - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive"}
@@ -71,7 +75,7 @@ rationale_ua: >
   аутологічна трансплантація стовбурових клітин.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_06
-draft_revision: 2
+draft_revision: 3
 sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}, {source_id: SRC-ECHELON-2-HORWITZ-2019, position: supports, relevant_quote_paraphrase: ECHELON-2 trial — see referenced publication for primary outcome data.}]
 known_controversies:
   - topic: "AutoSCT consolidation in CR1 after CHP-Bv"
@@ -105,3 +109,10 @@ time_critical: false
 last_reviewed: "2026-04-25"
 reviewer_signoffs: 0
 notes: STUB. AITL-specific CD30+ arm with full EBV/AIHA/hypogamma workup overlay.
+
+profile_confirmation_note: >
+  Planning requires the canonical biomarkers.BIO-CD30-IHC value positive;
+  unknown, absent, numeric, Boolean and structured values are not interpreted as confirmation.
+  A conflicting or malformed findings.cd30_positive value blocks this candidate.
+  This input guard does not establish treatment eligibility, subtype-specific benefit or local approval.
+  US ADCETRIS labeling section 1.5 supports CD30-expressing PTCL scope; no universal percentage cutoff is inferred.

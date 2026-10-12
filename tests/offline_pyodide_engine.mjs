@@ -320,6 +320,18 @@ assert apply_disease_module(KB,disease_id='DIS-PTCL-NOS')['ok']
 ordinary_ptcl=generate_plan(json.loads(_ptcl_json),kb_root=KB)
 assert ordinary_ptcl.plan.tracks
 assert all(t.indication_id!='IND-PTCL-1L-CHOEP-ALLOSCT' for t in ordinary_ptcl.plan.tracks)
+assert all((t.regimen_data or {}).get('id')!='REG-CHP-BV' for t in ordinary_ptcl.plan.tracks)
+for cd30_profile in [json.loads(_ptcl_json), json.loads(_tcell_json)]:
+    cd30_profile['biomarkers']['BIO-CD30-IHC']='negative'
+    cd30_profile['findings']['cd30_positive']=False
+    negative_cd30=generate_plan(cd30_profile,kb_root=KB)
+    assert negative_cd30.plan.tracks
+    assert all((t.regimen_data or {}).get('id')!='REG-CHP-BV' for t in negative_cd30.plan.tracks)
+    cd30_profile['findings']['cd30_positive']=True
+    unconfirmed_cd30=generate_plan(cd30_profile,kb_root=KB)
+    assert not unconfirmed_cd30.plan.tracks and not unconfirmed_cd30.plan.sequencing_tracks
+    assert unconfirmed_cd30.plan.knowledge_base_state['profile_selection_withheld']
+    assert 'Confirm the documented CD30 result' in render_plan_html(unconfirmed_cd30,target_lang='en',mode='patient')
 bundle_module=importlib.import_module('knowledge_base.validation.bundle')
 original_loader=bundle_module.load_packaged_content
 def forced_loader(*args,**kwargs):
