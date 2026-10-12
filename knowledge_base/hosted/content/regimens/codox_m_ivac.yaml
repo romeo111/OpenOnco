@@ -152,6 +152,7 @@ sources:
 - SRC-EVIQ-CODOX-PATIENT-4489
 - SRC-EVIQ-IVAC-PATIENT-4490
 - SRC-EVIQ-MOUTH-PATIENT-3099
+- SRC-EVIQ-TLS-108
 between_visit_watchpoints:
 - trigger_ua: Виражена втома, що триває тижнями між циклами
   action_ua: Повідомте лікаря або медсестру про виражену втому. Не вважайте її автоматично наслідком повільного
@@ -180,24 +181,25 @@ between_visit_watchpoints:
   sources:
   - SRC-EVIQ-CODOX-PATIENT-4489
   - SRC-EVIQ-IVAC-PATIENT-4490
-- trigger_ua: Зменшення кількості сечі, набряки
-  action_ua: Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок
-  urgency: call_clinic_same_day
+- trigger_ua: Зменшення кількості сечі або зміна її кольору
+  action_ua: Якнайшвидше повідомте лікаря або медсестру. Обсяг пиття узгодьте з лікувальною командою.
+  urgency: contact_clinic
   sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-CTCAE-V5
+  - SRC-EVIQ-CODOX-PATIENT-4489
 - trigger_ua: Температура 38°C або вище
   action_ua: Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису
   urgency: er_now
   sources:
   - SRC-EVIQ-CODOX-PATIENT-4489
   - SRC-EVIQ-IVAC-PATIENT-4490
-- trigger_ua: Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у перші дні циклу 1
-  action_ua: Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду пухлини
-  urgency: er_now
-  cycle_day_window: Day 1-7 of cycle 1
+- trigger_ua: Раптова сильна слабкість, нерегулярне серцебиття або м’язові спазми
+  action_ua: 'Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги. Ці симптоми потребують медичної оцінки й самі по собі не доводять діагноз синдрому розпаду
+    пухлини. Не обмежуйте звернення першими днями першого циклу: синдром може виникнути і до лікування.'
+  urgency: contact_clinic_now
   sources:
-  - SRC-NCCN-BCELL-2025
+  - SRC-EVIQ-CODOX-PATIENT-4489
+  - SRC-EVIQ-TLS-108
 - trigger_ua: Не можете їсти чи пити; неконтрольований біль або кровотеча з рота; утруднене відкривання
     рота чи ковтання; білі плями в роті або сильний кашель під час їжі чи пиття
   action_ua: Негайно зв’яжіться з лікарем або медсестрою. Якщо не можете зв’язатися з лікувальною командою,
@@ -213,6 +215,12 @@ between_visit_watchpoints:
   urgency: contact_clinic_now
   sources:
   - SRC-EVIQ-IVAC-PATIENT-4490
+- trigger_ua: Набряк щиколоток, нова задишка, біль або стискання у грудях чи нерегулярне серцебиття
+  action_ua: Негайно зв’яжіться з лікарем або медсестрою чи зверніться до найближчого відділення невідкладної
+    допомоги. Такі симптоми потребують оцінки також після завершення лікування.
+  urgency: contact_clinic_now
+  sources:
+  - SRC-EVIQ-CODOX-PATIENT-4489
 last_reviewed: null
 notes: Scoped reference schedule repair based on eviQ 4489 v1 and 4490 v2, for high-risk Burkitt WITHOUT
   proven CNS disease. This is not original Magrath or LMB and not a universal Burkitt/CNS prescription.
@@ -230,5 +238,5 @@ notes_ua: Довідковий розклад виправлено за eviQ 448
   НІКОЛИ не вводять інтратекально.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_11
-draft_revision: 2
+draft_revision: 3
 review_status: pending_clinical_signoff

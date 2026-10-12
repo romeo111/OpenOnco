@@ -58,16 +58,35 @@ def test_patient_sources_and_protocol_boundary_are_explicit(result):
                    if (t.regimen_data or {}).get('id') == 'REG-CODOX-M-IVAC')
     urgent = [w for w in regimen['between_visit_watchpoints']
               if w['urgency'] == 'contact_clinic_now']
-    assert len(urgent) == 3
+    assert len(urgent) == 5
     for point in urgent:
         assert point['sources']
         for sid in point['sources']:
             matches = [yaml.safe_load(p.read_text(encoding='utf-8'))
-                       for p in (KB / 'sources').glob('src_eviq_*patient*.yaml')]
+                       for p in (KB / 'sources').glob('src_eviq_*.yaml')]
             source = next(s for s in matches if s['id'] == sid)
-            assert source['source_type'] == 'patient_information'
+            assert source['source_type'] in {'patient_information', 'clinical_resource'}
             assert source['url'].startswith('https://www.eviq.org.au/')
     cns = yaml.safe_load((KB / 'regimens/codox_ivac_proven_cns.yaml').read_text(encoding='utf-8'))
     assert cns.get('between_visit_watchpoints')
     assert not any(sid in {'SRC-EVIQ-CODOX-PATIENT-4489', 'SRC-EVIQ-IVAC-PATIENT-4490'}
                    for point in cns['between_visit_watchpoints'] for sid in point['sources'])
+
+
+def test_kidney_contact_and_tls_emergency_have_no_invented_calendar_limits(result):
+    regimen = next(t.regimen_data for t in result.plan.tracks
+                   if (t.regimen_data or {}).get('id') == 'REG-CODOX-M-IVAC')
+    kidney = next(point for point in regimen['between_visit_watchpoints'] if 'кількості сечі' in point['trigger_ua'])
+    assert kidney['urgency'] == 'contact_clinic' and 'Якнайшвидше' in kidney['action_ua']
+    assert 'того ж дня' not in kidney['action_ua']
+    tls = next(point for point in regimen['between_visit_watchpoints'] if 'м’язові спазми' in point['trigger_ua'])
+    assert tls['urgency'] == 'contact_clinic_now' and not tls.get('cycle_day_window')
+    assert 'і до лікування' in tls['action_ua'] and 'не доводять діагноз' in tls['action_ua']
+    assert 'SRC-EVIQ-TLS-108' in tls['sources']
+    soup = BeautifulSoup(render_plan_html(result, mode='patient', target_lang='en'), 'html.parser')
+    section = soup.select_one('.bv-track[data-source-id="REG-CODOX-M-IVAC"]')
+    assert not section.select('.translation-fallback')
+    assert 'before treatment' in section.get_text()
+    assert 'as soon as possible' in section.get_text()
+    assert 'Swollen ankles' in section.get_text()
+    assert 'after treatment has finished' in section.get_text()

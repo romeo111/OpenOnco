@@ -270,11 +270,14 @@ assert any('36 hours after IV methotrexate START' in c['schedule'] for c in a if
 assert codox_track.monitoring_data['id']=='MON-CODOX-IVAC-REGIMEN'
 codox_points=codox_track.regimen_data['between_visit_watchpoints']
 assert any(w['trigger_ua']=='Температура 38°C або вище' and w['urgency']=='er_now' for w in codox_points)
-assert len([w for w in codox_points if w['urgency']=='contact_clinic_now'])==3
+assert len([w for w in codox_points if w['urgency']=='contact_clinic_now'])==5
+tls_point=next(w for w in codox_points if 'м’язові спазми' in w['trigger_ua'])
+assert not tls_point.get('cycle_day_window') and 'і до лікування' in tls_point['action_ua']
 for lang,heading in [('en','Contact your doctor or nurse immediately'),('uk','Негайно зв’яжіться з лікарем або медсестрою')]:
     patient_codox=render_plan_html(codox_result,target_lang=lang,mode='patient')
     assert heading in patient_codox and ('Unable to eat or drink' if lang=='en' else 'Не можете їсти чи пити') in patient_codox
     assert ('Very severe headache' if lang=='en' else 'Дуже сильний головний біль') in patient_codox
+    assert ('before treatment' if lang=='en' else 'і до лікування') in patient_codox
 for lang,needle in [('en','Assess neurological function before each ifosfamide dose'),('uk','Оцініть неврологічний стан перед кожною дозою іфосфаміду')]:
     codox_html=render_plan_html(codox_result,target_lang=lang)
     assert needle in codox_html and 'DRUG-MESNA' in codox_html

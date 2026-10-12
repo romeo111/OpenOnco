@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 KB = ROOT / 'knowledge_base/hosted/content'
 
 
-@pytest.mark.parametrize('name,expected', [('codox_m_ivac.yaml', 7), ('da_epoch_r.yaml', 10),
+@pytest.mark.parametrize('name,expected', [('codox_m_ivac.yaml', 10), ('da_epoch_r.yaml', 10),
                                          ('codox_ivac_proven_cns.yaml', 12)])
 def test_saved_pairs_preserve_numbers_and_unreviewed_entries_remain_original(name, expected):
     regimen = yaml.safe_load((KB / 'regimens' / name).read_text(encoding='utf-8'))
