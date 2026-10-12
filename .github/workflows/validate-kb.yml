@@ -67,7 +67,16 @@ jobs:
           node tests/browser_workspace_cache.cjs
           node tests/browser_plan_navigation.cjs
           node tests/browser_offline_bundle_retry.cjs
+          node tests/browser_pyodide_runtime_cache.cjs
           node tests/browser_bundle_versions.cjs
+
+      - name: Verify pinned runtime inventory
+        run: python -m scripts.audit_pyodide_runtime
+
+      - name: Verify offline WASM engine with synthetic profile
+        run: |
+          python -m scripts.audit_pyodide_runtime --download-dir .tmp/pyodide-runtime
+          node tests/offline_pyodide_engine.mjs .tmp/pyodide-runtime
 
       - name: Verify preferred core transfer budget and identical clinical content
         run: python -m scripts.audit_core_transport

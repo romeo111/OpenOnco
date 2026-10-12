@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import hashlib
 import json
 import re
 import shutil
@@ -518,6 +519,11 @@ def write_service_worker(output_dir: Path, *, core_version: str = "", core_strea
     plan_paths = [f'/{prefix}/try.html' if prefix else '/try.html'
                   for prefix, _, _ in LOCALES.values()]
     cache_name = "openonco-bundle-l4-" + (core_version or "v1")
+    runtime_manifest = json.loads((Path(__file__).with_name("pyodide-runtime-manifest.json")).read_text(encoding="utf-8"))
+    runtime_assets = {runtime_manifest["base_url"] + name: asset for name, asset in runtime_manifest["assets"].items()}
+    runtime_fingerprint = hashlib.sha256(json.dumps(runtime_assets, sort_keys=True).encode()).hexdigest()[:12]
+    runtime_js = Path(__file__).with_name("pyodide-runtime-cache.js").read_text(encoding="utf-8")
+    runtime_js = runtime_js.replace("__PYODIDE_RUNTIME_ASSETS__", json.dumps(runtime_assets, sort_keys=True)).replace("__PYODIDE_RUNTIME_CACHE__", "openonco-runtime-" + runtime_fingerprint)
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Cache strategies:
 //   0. Network-first index and validated public form catalogs with offline fallback.
@@ -531,6 +537,7 @@ const CACHE_NAME = '__CACHE_NAME__';
 const CORE_STREAM_VERSION = '__CORE_STREAM_VERSION__';
 const WORKSPACE_DATA_PATHS = ['/questionnaires.json', '/examples.json'];
 const PLAN_PAGE_PATHS = __PLAN_PAGE_PATHS__;
+__PYODIDE_RUNTIME_HELPERS__
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -699,7 +706,12 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Never touch cross-origin traffic. Embedded third-party frames (the news
+  if (event.request.mode !== 'navigate' && Object.prototype.hasOwnProperty.call(PYODIDE_RUNTIME_ASSETS, event.request.url)) {
+    event.respondWith(pyodideRuntimeResponse(event.request));
+    return;
+  }
+
+  // Never touch other cross-origin traffic. Embedded third-party frames (the news
   // comment widget) load with request.mode === 'navigate', so without this
   // guard the navigation branch below would re-issue them as no-store fetches
   // and break them. It also stops the pathname-only matching further down from
@@ -743,7 +755,7 @@ self.addEventListener('fetch', (event) => {
     )
   );
 });
-""".replace("__CACHE_NAME__", cache_name).replace("__CORE_STREAM_VERSION__", core_stream_version).replace("__PLAN_PAGE_PATHS__", json.dumps(plan_paths))
+""".replace("__CACHE_NAME__", cache_name).replace("__CORE_STREAM_VERSION__", core_stream_version).replace("__PLAN_PAGE_PATHS__", json.dumps(plan_paths)).replace("__PYODIDE_RUNTIME_HELPERS__", runtime_js)
     out = output_dir / "sw.js"
     out.write_text(sw_js, encoding="utf-8")
     return {"path": "sw.js", "cache_name": cache_name}
@@ -6502,7 +6514,24 @@ async function cacheAllBundlesForOffline() {{
   }}
 }}
 
+async function retainEngineRuntime() {{
+  if (!('serviceWorker' in navigator)) return;
+  try {{
+    const registration = await navigator.serviceWorker.ready;
+    if (registration.active) registration.active.postMessage({{ type: 'CACHE_ENGINE_RUNTIME' }});
+  }} catch (error) {{
+    console.warn('[OpenOnco] runtime retention unavailable:', error);
+  }}
+}}
+
+if ('serviceWorker' in navigator) {{
+  navigator.serviceWorker.addEventListener('controllerchange', () => {{
+    if (enginReady && planSource === 'generated') retainEngineRuntime().catch(() => {{}});
+  }});
+}}
+
 function scheduleOfflineCacheWarmup() {{
+  retainEngineRuntime().catch(() => {{}});
   const run = () => cacheAllBundlesForOffline().catch((e) => {{
     console.warn('[OpenOnco] offline cache warmup failed:', e);
     setText(offlineModulesStateEl, '{"Cache failed" if target_lang == "en" else "Кеш не вдався"}');

@@ -118,6 +118,19 @@ is `node tests/browser_workspace_cache.cjs`. Complete offline plan generation
 still needs a separate browser test of the runtime and disease-module loading;
 catalog caching alone does not verify that whole workflow.
 
+The worker separately retains ten exact pinned Pyodide 0.26.4 runtime files
+(20,815,756 bytes), including the complete pydantic/pyyaml dependency closure.
+Every retained or downloaded file must match its SHA-256 and size; unrelated
+CDN URLs, other versions, query-bearing URLs and POST requests are excluded.
+First uncontrolled visits and worker upgrades prepare the fixed inventory
+after generation, without sending profiles or DOM content. Runtime fetches
+omit credentials and referrers. Storage denial preserves valid online loading.
+`python -m scripts.audit_pyodide_runtime --download-dir .tmp/pyodide-runtime`
+and `node tests/offline_pyodide_engine.mjs .tmp/pyodide-runtime` reproduce a
+synthetic AML report with fetch and TCP disabled. This proves the Node WASM
+workflow; browser cache retention, offline reopening and printing still need
+end-to-end browser evidence. See the [pinned Pyodide deployment documentation](https://pyodide.org/en/0.26.4/usage/downloading-and-deploying.html).
+
 Visited Plan Builder pages in all eleven languages are also retained. A first
 visit requests a public-page copy after worker activation; it sends only the
 page path, never the populated form or profile. Online navigation refreshes

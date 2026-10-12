@@ -115,3 +115,15 @@ JavaScript options, including `force-cache`, are not localized. Finnish uses
 [University of Helsinki browser-cache instructions](https://helpdesk.it.helsinki.fi/ohjeet/tuki-ja-neuvonta/selaimen-valimuistin-tyhjennys).
 
 Offline module preparation retries incomplete index, network, storage or integrity failures. Returning online schedules another pass only after an engine-generated plan; verified retained modules are reused and concurrent/completed passes remain deduplicated. A partial cache is not full offline readiness. `tests/browser_offline_bundle_retry.cjs` exercises the shipped client code in CI; this does not establish full browser offline engine or PDF behavior.
+
+Pinned runtime retention (2026-10-12): all eleven Plan Builder clients prepare
+the same ten Pyodide 0.26.4 runtime files after generation and worker upgrades.
+The separate cache survives clinical-bundle updates and validates SHA-256 plus
+size for both retained and network responses. It accepts only the exact public
+inventory; runtime requests omit credentials/referrers and contain no profile
+or DOM data. First visits can retain already downloaded HTTP-cache bytes;
+corrupt HTTP entries get one forced reload. Storage failures preserve online
+operation. The complete pydantic/pyyaml dependency closure totals 20,815,756
+bytes and adds no hosted binary assets. CI verifies the worker's offline and
+failure behavior and runs a synthetic Node WASM plan with fetch/TCP disabled.
+Full offline browser reopening/generation and PDF printing remain unproven.

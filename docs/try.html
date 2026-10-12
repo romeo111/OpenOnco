@@ -1873,7 +1873,24 @@ async function cacheAllBundlesForOffline() {
   }
 }
 
+async function retainEngineRuntime() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    if (registration.active) registration.active.postMessage({ type: 'CACHE_ENGINE_RUNTIME' });
+  } catch (error) {
+    console.warn('[OpenOnco] runtime retention unavailable:', error);
+  }
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (enginReady && planSource === 'generated') retainEngineRuntime().catch(() => {});
+  });
+}
+
 function scheduleOfflineCacheWarmup() {
+  retainEngineRuntime().catch(() => {});
   const run = () => cacheAllBundlesForOffline().catch((e) => {
     console.warn('[OpenOnco] offline cache warmup failed:', e);
     setText(offlineModulesStateEl, 'Cache failed');

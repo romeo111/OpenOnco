@@ -275,3 +275,19 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
 - Offline runtime evidence: render_try loads pinned Pyodide 0.26.4 and pydantic/pyyaml from cdn.jsdelivr.net. The deployed worker exits for cross-origin requests, so these runtime dependencies rely on browser HTTP caching rather than the explicit retained module cache. Full offline engine startup remains unproven; inspect minimal pinned runtime retention and verify in a real offline browser before describing full readiness.
 
 - Verification for offline preparation retry: complete temporary-site build and lazy-load/language/layout suite passed (38 tests); all seven shipped-client Node regressions and critical Python lint passed. No clinical source data or engine bundle changed.
+
+- 2026-10-12: Added exact pinned Pyodide 0.26.4 runtime retention: 10 assets,
+  20,815,756 bytes, full pydantic/pyyaml dependency closure verified against the
+  downloaded lock file and hashes. Cache hits and downloads are size/SHA-256
+  checked; corrupt retained bytes are evicted and corrupt HTTP-cache bytes get
+  one forced reload. Exact URL/method/navigation guards preserve unrelated
+  cross-origin/API/POST/profile traffic; runtime requests omit credentials and
+  referrers. Bounded, deduplicated first-visit preparation and worker-upgrade
+  retry use only a fixed inventory, never supplied URLs or DOM. No hosted runtime
+  binaries or clinical data changed. All 11 clients share the behavior. Real
+  retained bytes passed the worker offline/failure regression. A public synthetic
+  AML profile generated a 73,547-character report in Node WASM with fetch/TCP
+  disabled and zero network attempts; this is not clinical validation or full
+  browser offline proof. Added reproducible inventory download/audit and offline
+  WASM generation to CI; language/layout checks passed (28 tests). Real browser
+  offline reopening/generation and PDF proof remain open.

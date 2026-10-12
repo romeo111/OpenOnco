@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="8570176fc4a2a1a07571d2713294a49e2c58a3a4824969d9727953722dc9d3a2"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="fc6d40ca87a94098aa7c622f3734592e1951a7f61a177eee6be77f5877fcffdf"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -1857,7 +1857,24 @@ async function cacheAllBundlesForOffline() {
   }
 }
 
+async function retainEngineRuntime() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    if (registration.active) registration.active.postMessage({ type: 'CACHE_ENGINE_RUNTIME' });
+  } catch (error) {
+    console.warn('[OpenOnco] runtime retention unavailable:', error);
+  }
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (enginReady && planSource === 'generated') retainEngineRuntime().catch(() => {});
+  });
+}
+
 function scheduleOfflineCacheWarmup() {
+  retainEngineRuntime().catch(() => {});
   const run = () => cacheAllBundlesForOffline().catch((e) => {
     console.warn('[OpenOnco] offline cache warmup failed:', e);
     setText(offlineModulesStateEl, 'Cache failed');

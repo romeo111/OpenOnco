@@ -11,6 +11,81 @@ const CACHE_NAME = 'openonco-bundle-l4-894440195fdf';
 const CORE_STREAM_VERSION = 'f52aee8f8012';
 const WORKSPACE_DATA_PATHS = ['/questionnaires.json', '/examples.json'];
 const PLAN_PAGE_PATHS = ["/try.html", "/ukr/try.html", "/es/try.html", "/pt/try.html", "/de/try.html", "/fr/try.html", "/it/try.html", "/da/try.html", "/sv/try.html", "/nb/try.html", "/fi/try.html"];
+// Exact pinned runtime URLs only. No patient data or unrelated CDN traffic.
+const PYODIDE_RUNTIME_ASSETS = {"https://cdn.jsdelivr.net/pyodide/v0.26.4/full/PyYAML-6.0.1-cp312-cp312-pyodide_2024_0_wasm32.whl": {"bytes": 480325, "sha256": "7e2c1229550f6e6c64398b551fd70d641709a02df9ae08449c6625451ab68c2a"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/annotated_types-0.6.0-py3-none-any.whl": {"bytes": 27605, "sha256": "50f2adc38958cbac4c343806a8d7554bd987098e332ea5a796c642018455af2a"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pydantic-2.7.0-py3-none-any.whl": {"bytes": 1622248, "sha256": "750ccf9a0b0b9d8ddb555430510d444c1b00f121e51aa94e3b18a82af4d73a99"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pydantic_core-2.18.1-cp312-cp312-pyodide_2024_0_wasm32.whl": {"bytes": 4765973, "sha256": "f85156f928fbed235b783546dbe6fb38ca72cdc72e48aa8f841ea435c0fb2166"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide-lock.json": {"bytes": 106335, "sha256": "cd50b49de944c579045e122fe8628b31f9ce446379f032f36c05e273d38766e0"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.asm.js": {"bytes": 1229099, "sha256": "919560652ed3dad3707cb3a394785da1e046fb13dc0defa162058ff230cb7eed"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.asm.wasm": {"bytes": 10088051, "sha256": "b7e66a19427a55010ac3367c1b6c64b893f9826f783412945fdf0c3337f3bc94"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs": {"bytes": 13779, "sha256": "7f24c6655a79eacf0061d3d4e6a60dc0b1938812d15c52d7ff8b37d9e0689e51"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/python_stdlib.zip": {"bytes": 2341872, "sha256": "72894522b791858b9d613ac786b951d8b5094035dcf376313ea24a466810f336"}, "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/typing_extensions-4.11.0-py3-none-any.whl": {"bytes": 140469, "sha256": "696ecd97bd0abc88fc25d376ac06f4233ab16bba3e992c4b37bbc2715240d4e8"}};
+const PYODIDE_RUNTIME_CACHE = 'openonco-runtime-42c5cc37cb67';
+
+async function verifiedRuntimeResponse(response, asset) {
+  if (!response || !response.ok || response.type === 'opaque') {
+    throw new Error('Runtime download unavailable.');
+  }
+  const bytes = await response.clone().arrayBuffer();
+  if (bytes.byteLength !== asset.bytes) {
+    const error = new Error('Runtime size mismatch.'); error.name = 'RuntimeIntegrityError'; throw error;
+  }
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+  if (hash !== asset.sha256) {
+    const error = new Error('Runtime integrity mismatch.'); error.name = 'RuntimeIntegrityError'; throw error;
+  }
+  return response;
+}
+
+async function pyodideRuntimeResponse(request) {
+  const url = typeof request === 'string' ? request : request.url;
+  const asset = PYODIDE_RUNTIME_ASSETS[url];
+  if (!asset) throw new Error('Unlisted runtime URL.');
+  const cache = await caches.open(PYODIDE_RUNTIME_CACHE).catch(() => null);
+  if (cache && request.cache !== 'reload') {
+    const retained = await cache.match(url).catch(() => null);
+    if (retained) {
+      try { return await verifiedRuntimeResponse(retained, asset); }
+      catch (_) { await cache.delete(url).catch(() => {}); }
+    }
+  }
+  const download = mode => fetch(request, { credentials: 'omit', redirect: 'error', referrerPolicy: 'no-referrer', cache: mode });
+  let response;
+  try {
+    // A first uncontrolled visit may already have these immutable bytes in HTTP cache.
+    response = await verifiedRuntimeResponse(await download(request.cache === 'reload' ? 'reload' : 'force-cache'), asset);
+  } catch (error) {
+    if (error.name !== 'RuntimeIntegrityError' || request.cache === 'reload') throw error;
+    // A bad HTTP-cache entry must not permanently trap the next attempt.
+    response = await verifiedRuntimeResponse(await download('reload'), asset);
+  }
+  if (cache) await cache.put(url, response.clone()).catch(() => {});
+  return response;
+}
+
+let pyodideRuntimePreparation = null;
+function preparePyodideRuntime() {
+  if (!pyodideRuntimePreparation) {
+    pyodideRuntimePreparation = (async () => {
+      // Bound memory/network concurrency. A later request retries incomplete files.
+      const urls = Object.keys(PYODIDE_RUNTIME_ASSETS);
+      let next = 0;
+      const results = await Promise.allSettled([0, 1].map(async () => {
+        while (next < urls.length) await pyodideRuntimeResponse(urls[next++]);
+      }));
+      const failure = results.find(result => result.status === 'rejected');
+      if (failure) throw failure.reason;
+    })().finally(() => { pyodideRuntimePreparation = null; });
+  }
+  return pyodideRuntimePreparation;
+}
+
+self.addEventListener('message', event => {
+  if (!event.data || event.data.type !== 'CACHE_ENGINE_RUNTIME') return;
+  try {
+    const source = new URL(event.source.url);
+    if (source.origin !== self.location.origin || !PLAN_PAGE_PATHS.includes(source.pathname)) return;
+  } catch (_) { return; }
+  // Always use the fixed inventory; ignore supplied URLs, DOM or clinical input.
+  event.waitUntil(preparePyodideRuntime().catch(error => {
+    console.warn('[OpenOnco] runtime retention incomplete:', error);
+  }));
+});
+
 const PRECACHE = [
   '/manifest.webmanifest',
   '/logo.svg',
@@ -179,7 +254,12 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Never touch cross-origin traffic. Embedded third-party frames (the news
+  if (event.request.mode !== 'navigate' && Object.prototype.hasOwnProperty.call(PYODIDE_RUNTIME_ASSETS, event.request.url)) {
+    event.respondWith(pyodideRuntimeResponse(event.request));
+    return;
+  }
+
+  // Never touch other cross-origin traffic. Embedded third-party frames (the news
   // comment widget) load with request.mode === 'navigate', so without this
   // guard the navigation branch below would re-issue them as no-store fetches
   // and break them. It also stops the pathname-only matching further down from
