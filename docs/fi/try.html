@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="43eff4fe311c7e5f2718b0ef9e5df4b52a8839aea4de28661aadf076f3e88561"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="1a5063fc07fcf7e8e86ebcc3e0075f9ec5e98a18bd814640914012e380d097d7"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -469,7 +469,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Anna kelvollinen luku.", "integer": "Anna kokonaisluku.", "range": "Anna arvo näiden rajojen sisällä:", "summary": "Korjaa korostetut numerokentät ennen suunnitelman luomista tai JSONin avaamista.", "sync": "Vahvista tämä luku kirjoittamalla se uudelleen."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Anna kelvollinen JSON.", "object": "Profiilin on oltava JSON-objekti.", "finite": "Profiili sisältää luvun, joka ei ole äärellinen.", "section": "Tämän profiilin osan on oltava objekti tai null:", "transfer": "Pidä profiili JSON-tilassa: valitse vastaavan sairauden lomake ja kenttien tukemat arvot. JSON on säilytetty."};
+const profileInputCopy = {"json": "Anna kelvollinen JSON.", "object": "Profiilin on oltava JSON-objekti.", "finite": "Profiili sisältää luvun, joka ei ole äärellinen.", "section": "Tämän profiilin osan on oltava objekti tai null:", "transfer": "Pidä profiili JSON-tilassa: valitse vastaavan sairauden lomake ja kenttien tukemat arvot. JSON on säilytetty.", "restored": "JSON-luonnos palautettu. Tarkista se ennen raportin luomista.", "restoreLimited": "JSON-luonnos palautettu; kyselylomaketta ei voitu ladata. Voit jatkaa JSON-tilassa."};
 const questionnaireNoticeCopy = {"defaults": "Anna tiedossa olevat tiedot. Puuttuvat tiedot jäävät tuntemattomiksi ja voivat rajoittaa raporttia.", "starter": "Automaattisesti luotu aloituslomake: Tärkeitä tietoja voi puuttua. Tarkista arvot, puuttuvat tiedot ja lähteet pätevän terveydenhuollon ammattilaisen kanssa ennen hoitopäätöksiä.", "unknown": "Täyttämättömät seulontakentät jäävät tuntemattomiksi. Turvallisuustarkistuksia voi jäädä arvioimatta; lomakkeen täydellisyys ei yksin osoita kliinistä riittävyyttä."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1104,6 +1104,14 @@ function applyDraftFields(draft) {
   saveDraft();
 }
 
+function restoreJsonDraft(draft) {
+  if (!draft || draft.mode !== 'json' || typeof draft.jsonText !== 'string') return false;
+  textarea.value = draft.jsonText;
+  // Restore unfinished text too; do not rewrite saved questionnaire metadata.
+  setMode('json', { persist: false });
+  return true;
+}
+
 function loadDraft() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -1473,7 +1481,7 @@ function pauseEvalForToolbar() {
 }
 
 // ── Mode switch ───────────────────────────────────────────────────────────
-function setMode(newMode, { syncFromForm = false, syncFromJson = false } = {}) {
+function setMode(newMode, { syncFromForm = false, syncFromJson = false, persist = true } = {}) {
   if (newMode === 'form' && syncFromJson && mode === 'json') {
     const imported = buildProfile();
     if (!imported) return;
@@ -1495,7 +1503,7 @@ function setMode(newMode, { syncFromForm = false, syncFromJson = false } = {}) {
   formPane.hidden = mode !== 'form';
   jsonPane.hidden = mode !== 'json';
   if (formJson !== null) textarea.value = formJson;
-  saveDraft();
+  if (persist) saveDraft();
   updateRunBtnEnabled();
 }
 
@@ -2642,6 +2650,7 @@ async function loadAssets() {
   // the page usable from the inlined manifest instead of leaving the boot
   // banner stuck on "Loading questionnaires…".
   const draft = loadDraft();
+  const jsonDraftRestored = restoreJsonDraft(draft);
   let draftRestored = false;
   let draftRestoreFailed = false;
   if (draft && draft.questId) {
@@ -2664,14 +2673,19 @@ async function loadAssets() {
       } catch (e) {
         draftRestoreFailed = true;
         console.warn('[OpenOnco] failed to restore saved draft:', e);
-        setError('Could not restore the saved draft: ' + (e.message || e));
+        if (!jsonDraftRestored) setError('Could not restore the saved draft: ' + (e.message || e));
         diseaseSelect.value = '';
         renderForm(null);
         repopulateExamples(null);
       }
     }
   }
-  if (!draftRestored) {
+  if (!draftRestored && jsonDraftRestored) {
+    const limited = draftRestoreFailed || !!draft.questId;
+    setStatus(limited ? profileInputCopy.restoreLimited : profileInputCopy.restored, limited ? 'warn' : 'ok');
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+  } else if (!draftRestored) {
     // Initial load done — hide the top busy banner; sidebar still shows hint.
     if (draftRestoreFailed) {
       setStatus('Saved draft could not be restored. Pick a disease to start again.', 'warn', 'warn');

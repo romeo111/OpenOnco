@@ -30,3 +30,19 @@ TRANSFER = {
 }
 for locale, message in TRANSFER.items():
     COPY[locale]['transfer'] = message
+
+RESTORE = {
+'en': ('JSON draft restored. Review it before generating a report.', 'JSON draft restored; its questionnaire could not be loaded. You can continue in JSON mode.'),
+'uk': ('Чернетку JSON відновлено. Перевірте її перед створенням звіту.', 'Чернетку JSON відновлено; анкету завантажити не вдалося. Можна продовжити в режимі JSON.'),
+'es': ('Borrador JSON restaurado. Revíselo antes de generar un informe.', 'Borrador JSON restaurado; no se pudo cargar su cuestionario. Puede continuar en modo JSON.'),
+'pt': ('Rascunho JSON restaurado. Reveja-o antes de gerar um relatório.', 'Rascunho JSON restaurado; não foi possível carregar o questionário. Pode continuar no modo JSON.'),
+'de': ('JSON-Entwurf wiederhergestellt. Prüfen Sie ihn vor dem Erstellen eines Berichts.', 'JSON-Entwurf wiederhergestellt; der Fragebogen konnte nicht geladen werden. Sie können im JSON-Modus fortfahren.'),
+'fr': ('Brouillon JSON restauré. Vérifiez-le avant de générer un rapport.', 'Brouillon JSON restauré ; le questionnaire n’a pas pu être chargé. Vous pouvez continuer en mode JSON.'),
+'it': ('Bozza JSON ripristinata. Controllala prima di generare un rapporto.', 'Bozza JSON ripristinata; impossibile caricare il questionario. Puoi continuare in modalità JSON.'),
+'da': ('JSON-kladde gendannet. Kontrollér den, før du opretter en rapport.', 'JSON-kladde gendannet; spørgeskemaet kunne ikke indlæses. Du kan fortsætte i JSON-tilstand.'),
+'sv': ('JSON-utkast återställt. Granska det innan du skapar en rapport.', 'JSON-utkast återställt; frågeformuläret kunde inte läsas in. Du kan fortsätta i JSON-läge.'),
+'nb': ('JSON-utkast gjenopprettet. Kontroller det før du lager en rapport.', 'JSON-utkast gjenopprettet; spørreskjemaet kunne ikke lastes inn. Du kan fortsette i JSON-modus.'),
+'fi': ('JSON-luonnos palautettu. Tarkista se ennen raportin luomista.', 'JSON-luonnos palautettu; kyselylomaketta ei voitu ladata. Voit jatkaa JSON-tilassa.'),
+}
+for locale, messages in RESTORE.items():
+    COPY[locale]['restored'], COPY[locale]['restoreLimited'] = messages

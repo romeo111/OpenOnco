@@ -5773,6 +5773,14 @@ function applyDraftFields(draft) {{
   saveDraft();
 }}
 
+function restoreJsonDraft(draft) {{
+  if (!draft || draft.mode !== 'json' || typeof draft.jsonText !== 'string') return false;
+  textarea.value = draft.jsonText;
+  // Restore unfinished text too; do not rewrite saved questionnaire metadata.
+  setMode('json', {{ persist: false }});
+  return true;
+}}
+
 function loadDraft() {{
   try {{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -6142,7 +6150,7 @@ function pauseEvalForToolbar() {{
 }}
 
 // ── Mode switch ───────────────────────────────────────────────────────────
-function setMode(newMode, {{ syncFromForm = false, syncFromJson = false }} = {{}}) {{
+function setMode(newMode, {{ syncFromForm = false, syncFromJson = false, persist = true }} = {{}}) {{
   if (newMode === 'form' && syncFromJson && mode === 'json') {{
     const imported = buildProfile();
     if (!imported) return;
@@ -6164,7 +6172,7 @@ function setMode(newMode, {{ syncFromForm = false, syncFromJson = false }} = {{}
   formPane.hidden = mode !== 'form';
   jsonPane.hidden = mode !== 'json';
   if (formJson !== null) textarea.value = formJson;
-  saveDraft();
+  if (persist) saveDraft();
   updateRunBtnEnabled();
 }}
 
@@ -7311,6 +7319,7 @@ async function loadAssets() {{
   // the page usable from the inlined manifest instead of leaving the boot
   // banner stuck on "Loading questionnaires…".
   const draft = loadDraft();
+  const jsonDraftRestored = restoreJsonDraft(draft);
   let draftRestored = false;
   let draftRestoreFailed = false;
   if (draft && draft.questId) {{
@@ -7333,14 +7342,19 @@ async function loadAssets() {{
       }} catch (e) {{
         draftRestoreFailed = true;
         console.warn('[OpenOnco] failed to restore saved draft:', e);
-        setError('{"Could not restore the saved draft: " if target_lang == "en" else "Не вдалося відновити чернетку: "}' + (e.message || e));
+        if (!jsonDraftRestored) setError('{"Could not restore the saved draft: " if target_lang == "en" else "Не вдалося відновити чернетку: "}' + (e.message || e));
         diseaseSelect.value = '';
         renderForm(null);
         repopulateExamples(null);
       }}
     }}
   }}
-  if (!draftRestored) {{
+  if (!draftRestored && jsonDraftRestored) {{
+    const limited = draftRestoreFailed || !!draft.questId;
+    setStatus(limited ? profileInputCopy.restoreLimited : profileInputCopy.restored, limited ? 'warn' : 'ok');
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+  }} else if (!draftRestored) {{
     // Initial load done — hide the top busy banner; sidebar still shows hint.
     if (draftRestoreFailed) {{
       setStatus('{"Saved draft could not be restored. Pick a disease to start again." if target_lang == "en" else "Чернетку не вдалося відновити. Оберіть хворобу, щоб почати знову."}', 'warn', 'warn');
