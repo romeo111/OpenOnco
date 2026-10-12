@@ -4838,7 +4838,7 @@ def render_try(
 
   <!-- Top status banner stays for loading/warnings. Success messages live in
        the lower status area so examples do not push the questionnaire down. -->
-  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+  <div id="statusTop" class="status-top is-busy" data-kind="info">
     <span class="status-top-spinner" aria-hidden="true"></span>
     <span class="status-top-body">
       <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
@@ -5085,7 +5085,7 @@ def render_try(
   </div>
 </div>
 
-<div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
+<div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true" aria-labelledby="generatingTitle" aria-describedby="generatingLead generatingHint">
   <div class="generating-card">
     <div class="generating-spinner" aria-hidden="true"></div>
     <h3 id="generatingTitle">{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
@@ -5093,6 +5093,9 @@ def render_try(
     <p class="generating-hint" id="generatingHint">{'Starting the engine…' if target_lang == 'en' else 'Запускаю двигун…'}</p>
   </div>
 </div>
+
+<div id="workflowStatusAnnouncement" role="status" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"></div>
+<div id="workflowErrorAnnouncement" role="alert" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"></div>
 
 <script type="module">
 // Pyodide is loaded lazily on first Generate-click so a slow CDN fetch
@@ -5271,10 +5274,23 @@ let activeExampleCaseId = null;
 let activeExampleSelection = '';
 let activeExampleHasPatient = false;
 
+const workflowStatusAnnouncement = document.getElementById('workflowStatusAnnouncement');
+const workflowErrorAnnouncement = document.getElementById('workflowErrorAnnouncement');
+let pendingWorkflowStatus = '';
+let pendingWorkflowError = '';
+
+function flushWorkflowAnnouncements() {{
+  if (mainTryEl && mainTryEl.inert) return;
+  if (workflowStatusAnnouncement && workflowStatusAnnouncement.textContent !== pendingWorkflowStatus) workflowStatusAnnouncement.textContent = pendingWorkflowStatus;
+  if (workflowErrorAnnouncement && workflowErrorAnnouncement.textContent !== pendingWorkflowError) workflowErrorAnnouncement.textContent = pendingWorkflowError;
+}}
+
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
+  pendingWorkflowStatus = msg || '';
+  flushWorkflowAnnouncements();
   // Mirror important transient states to the prominent top banner.
   //  topMode='busy'  → spinner, blue
   //  topMode='ok'    → green ✓
@@ -5318,6 +5334,8 @@ function clearLoadingProgress() {{
   statusTopProgress.style.removeProperty('--status-progress');
 }}
 function setError(msg) {{
+  pendingWorkflowError = msg || '';
+  flushWorkflowAnnouncements();
   if (msg) {{
     errorBox.hidden = false;
     errorBox.textContent = msg;
@@ -7180,6 +7198,7 @@ function setGeneratingUI(on, hint, title, lead) {{
   if (on && generatingTitle) generatingTitle.textContent = title || UI_LOCK_TEXT.generateTitle;
   if (on && generatingLead) generatingLead.textContent = lead || UI_LOCK_TEXT.generateLead;
   if (on && hint) setGeneratingHint(hint);
+  if (!on) flushWorkflowAnnouncements();
 }}
 
 function setGeneratingHint(text) {{
