@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-12",
+  "scope": "Restore missing cisplatin in MCL R-DHAP induction and separate block-specific monitoring/protocol identity",
+  "clinical_approval": false,
+  "change": "Restored missing cisplatin 100 mg/m² over 24h day 1 of R-DHAP cycles 2/4/6; clarified two cytarabine doses on day 2, 12h apart. Added block-specific induction monitoring with renal, cerebellar, ocular and hearing assessments. Removed Nordic/LyMA conflation, unsupported fixed transplant/maintenance representation and PFS/TTF endpoint conflation. No individualized treatment authority or safe-equivalence claim for the prior incomplete record.",
+  "source_urls": [
+    "https://www.eviq.org.au/haematology-and-bmt/lymphoma/mantle-cell-lymphoma/1884-r-dhap-rituximab-dexamethasone-cytarabine-ci",
+    "https://www.eviq.org.au/haematology/lymphoma/mantle-cell-lymphoma/1883-r-chop-rituximab-cyclophosphamide-doxorubici",
+    "https://www.eviq.org.au/haematology/lymphoma/mantle-cell-lymphoma/1855-r-chop-and-r-dhap-overview"
+  ],
+  "source_semantic_changes": {
+    "knowledge_base/hosted/content/regimens/r_dhap_autosct.yaml": [
+      "alternate_names",
+      "clinical_claims",
+      "dose_adjustments",
+      "last_reviewed",
+      "monitoring_schedule_id",
+      "name",
+      "name_ua",
+      "notes",
+      "notes_ua",
+      "phases",
+      "review_status",
+      "total_cycles"
+    ],
+    "knowledge_base/hosted/content/indications/ind_mcl_1l_intensive.yaml": [
+      "clinical_claims",
+      "expected_outcomes",
+      "last_reviewed",
+      "review_status"
+    ],
+    "knowledge_base/engine/render.py": [
+      "three native monitoring-phase display labels only"
+    ]
+  },
+  "verification": [
+    "13 target tests passed",
+    "4250 entities: 0 schema/ref/contract errors; 396 warnings",
+    "176 pages and 80 final original-source hashes verified after standard page finalization",
+    "Exactly six core members and one MCL indication changed; 89 disease archives byte-identical",
+    "Exactly two semantic search rows per language changed; all other rows and counts preserved",
+    "ZIP/TAR identity, bundle hashes, preferred core budget and actual nine-language stale/offline cache scenario passed",
+    "Actual Node WASM loads cisplatin only in R-DHAP cycles, two cytarabine doses, native block monitoring and TTF/PFS distinction; zero network attempts; not clinical or browser offline validation"
+  ],
+  "case_ids": [
+    "bma-bma-ccnd1-ihc-mcl",
+    "bma-bma-atm-loss-mcl",
+    "bma-bma-ccnd1-t1114-mcl",
+    "bma-bma-tp53-mut-mcl",
+    "mcl-fit-younger",
+    "mcl-unfit-tp53",
+    "mcl-pirtobrutinib-3l"
+  ],
+  "open_risks": [
+    "All updated clinical records and Ukrainian text pending human clinical signoff",
+    "Restored protocol component is a real correction: no claim that prior incomplete R-DHAP representation was safe or equivalent",
+    "Transplant conditioning, mobilization and maintenance remain unspecified and require separate protocols",
+    "Other response/survival estimates, modern MCL treatment preference, eligibility and reimbursement claims remain unreviewed",
+    "Other R-CHOP reuse in CODOX-M/IVAC, DA-EPOCH-R and CHOEP-alloSCT still pending",
+    "Node WASM test does not prove actual browser offline behavior"
+  ],
+  "bundle": {
+    "core_version": "1788e272bf52",
+    "core_compressed_version": "517b5f8f395a",
+    "changed_disease_archives": [
+      "DIS-MCL"
+    ],
+    "retained_disease_archives": 89
+  }
+}

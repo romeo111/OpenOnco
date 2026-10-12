@@ -861,6 +861,9 @@ def _track_label(track_id: str, target_lang: str = "uk") -> str:
 _MONITORING_PHASE_LABELS: dict[str, dict[str, str]] = {
     "baseline":                     {"uk": "Базова оцінка",                          "en": "Baseline"},
     "on_treatment":                 {"uk": "Під час лікування",                      "en": "On treatment"},
+    "on_treatment_rchop":           {"uk": "Під час лікування: R-CHOP",              "en": "On treatment: R-CHOP"},
+    "on_treatment_rdhap":           {"uk": "Під час лікування: R-DHAP",              "en": "On treatment: R-DHAP"},
+    "pre_consolidation_assessment": {"uk": "Оцінка перед консолідацією",             "en": "Assessment before consolidation"},
     "on_treatment_btki":            {"uk": "Під час лікування (BTKi)",               "en": "On treatment (BTKi)"},
     "on_treatment_veno":            {"uk": "Під час лікування (венетоклакс)",        "en": "On treatment (venetoclax)"},
     "induction":                    {"uk": "Індукція",                               "en": "Induction"},

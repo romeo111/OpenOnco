@@ -194,4 +194,28 @@ assert (KB/'sources/src_adcetris_us_label.yaml').is_file()
 json.dumps({'regimens':seen_tcell,'clinicalApproval':False})
 `));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,environment:'Node WASM, not browser'}));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-MCL'])).buffer,'zip');
+const mclExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='mcl-fit-younger');
+assert(mclExample, 'Synthetic MCL fixture missing');
+py.globals.set('_mcl_json',JSON.stringify(mclExample.json));
+const mclState=JSON.parse(await py.runPythonAsync(`
+assert apply_disease_module(KB,disease_id='DIS-MCL')['ok']
+mcl_result=generate_plan(json.loads(_mcl_json),kb_root=KB)
+mcl_track=next(t for t in mcl_result.plan.tracks if (t.regimen_data or {}).get('id')=='REG-MCL-INTENSIVE-RDHAP-AUTOSCT')
+mcl_reg=mcl_track.regimen_data
+assert mcl_reg['components']==mcl_reg['phases'][0]['components']
+cis=[c for c in mcl_reg['phases'][0]['components'] if c['drug_id']=='DRUG-CISPLATIN']
+assert len(cis)==1 and cis[0]['dose']=='100 mg/m²'
+assert '24 hours' in cis[0]['schedule'] and 'cycles 2, 4, 6' in cis[0]['schedule']
+cyta=next(c for c in mcl_reg['phases'][0]['components'] if c['drug_id']=='DRUG-CYTARABINE')
+assert cyta['dose']=='2 g/m² per dose' and 'two doses 12 hours apart' in cyta['schedule']
+assert mcl_track.monitoring_data['id']=='MON-MCL-RCHOP-RDHAP-INDUCTION'
+for lang,needle in [('en','Assess cerebellar function before every'),('uk','Оцініть функцію мозочка перед кожною')]:
+    mcl_html=render_plan_html(mcl_result,target_lang=lang)
+    assert needle in mcl_html and 'DRUG-CISPLATIN' in mcl_html
+    assert 'MON-R-CHOP-REGIMEN' not in mcl_html
+assert 'time to treatment failure' in mcl_track.indication_data['expected_outcomes']['progression_free_survival']
+json.dumps({'regimen':mcl_reg['id'],'cisplatin':cis[0],'monitoring':mcl_track.monitoring_data['id'],'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,environment:'Node WASM, not browser'}));
