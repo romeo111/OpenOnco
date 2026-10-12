@@ -6,10 +6,10 @@ plan_track: standard
 
 components:
   - drug_id: DRUG-BLEOMYCIN
-    dose: "30 IU IV push over 10 min (or 30 IU in 100 mL NS over 30 min)"
+    dose: "30 USP units IV push over 10 min (or 30 USP units in 100 mL NS over 30 min)"
     route: IV
     schedule: "Days 2, 9, 16 of each 21-day cycle (once weekly per cycle)"
-    cumulative_dose_limit: "Do NOT exceed cumulative lifetime dose of 400 IU — irreversible pulmonary fibrosis risk; most protocols do not exceed 360 IU (12 doses × 30 IU)"
+    cumulative_dose_limit: "Do NOT exceed cumulative lifetime dose of 400 USP units — irreversible pulmonary fibrosis risk; most protocols do not exceed 360 USP units (12 doses × 30 USP units)"
     dose_modifications:
       - trigger: "Suspected bleomycin pulmonary toxicity, including a clinically concerning DLCO decline"
         action: "Hold bleomycin pending specialist assessment, symptoms and imaging review. A DLCO decline alone is not an automatic permanent-discontinuation or EP-switch rule."
@@ -96,7 +96,7 @@ notes_ua: >
   (IGCCC): 3 цикли; проміжний/поганий ризик: 4 цикли. Первинна профілактика
   G-КСФ не є обов'язковою для всіх; її обирають за індивідуальним ризиком
   та потребою підтримати дозову інтенсивність за протоколом закладу. Кумулятивна доза
-  блеоміцину не повинна перевищувати 360-400 ОД (незворотній легеневий
+  блеоміцину не повинна перевищувати 360-400 одиниць USP (незворотній легеневий
   фіброз). Після блеоміцину повідомте анестезіологу про легеневий ризик.
   Киснева терапія потребує індивідуальної оцінки та достатньої оксигенації;
   універсальної заборони FiO2 понад 30% цей запис не встановлює. Контроль симптомів у кожному циклі; новий кашель або задишка потребують
@@ -166,3 +166,16 @@ clinical_claims:
     impairment.
   source_locator: 'PMID 9164194 / DOI 10.1200/JCO.1997.15.5.1844: abstract Results
     and Conclusion.'
+
+- claim_id: bleomycin-usp-international-unit-convention
+  text: Bleomycin unit systems must be identified explicitly. The eviQ equivalence
+    is 1.5 USP units = 1500 International Units, so 30 USP units = 30000 International
+    Units. US product vials are labelled 15 or 30 units of Bleomycin for Injection
+    USP. Do not interpret milligram activity as a general mg-by-weight conversion.
+  source_ids:
+  - SRC-BLEOMYCIN-US-LABEL
+  - SRC-EVIQ-TESTICULAR-BEP-320
+  scope: Unit nomenclature and equivalence only; not individualized dosing, schedule
+    selection, cumulative-risk elimination or whole-record clinical approval.
+  source_locator: US label Description/How supplied; eviQ 320 treatment schedule bleomycin
+    equivalence footnote.

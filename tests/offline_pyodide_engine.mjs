@@ -80,6 +80,13 @@ bep_result=generate_plan(bep_profile,kb_root=KB)
 assert bep_result.default_indication_id == 'IND-GCT-METASTATIC-1L-BEP'
 reg=yaml.safe_load((KB/'regimens/reg_bep_gct.yaml').read_text())
 assert 'not universally required' in reg['premedication'][2]
+assert reg['components'][0]['dose'].startswith('30 USP units')
+assert '400 USP units' in reg['components'][0]['cumulative_dose_limit']
+abvd=yaml.safe_load((KB/'regimens/abvd.yaml').read_text())
+assert abvd['components'][1]['dose']=='10 USP units/m²'
+bleomycin=yaml.safe_load((KB/'drugs/bleomycin.yaml').read_text())
+assert 'USP' in bleomycin['typical_dosing']
+assert (KB/'sources/src_eviq_abvd_56.yaml').is_file()
 assert 'HRCT' in reg['monitoring'][0]
 assert 'EP still contains cisplatin' in reg['components'][0]['dose_modifications'][2]['action']
 assert 'universal 15 mg/m²/day rule' in reg['components'][2]['dose_modifications'][0]['action']
