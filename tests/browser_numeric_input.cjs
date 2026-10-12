@@ -47,6 +47,9 @@ for (const [value,type,expected] of [['0','integer',0],['-2','integer',-2],['1.0
   assert.equal(run('parseNumericValue(v,t)'),expected,`${type}: ${value}`);
 }
 context.a=a;context.b=b;
+run('answers[a.dataset.field]=61.5');
+assert.equal(run('numericInputError(a)'), 'sync', 'Reject hidden model values that differ from the displayed control');
+run('answers[a.dataset.field]=61');
 a.value='61.5'; run('onAnswerChange({target:a})');
 assert.equal(run('answers[a.dataset.field]'),'61.5','Keep the invalid edit in the draft, not a truncated integer');
 assert.equal(calls.drafts.at(-1)[a.dataset.field],'61.5');

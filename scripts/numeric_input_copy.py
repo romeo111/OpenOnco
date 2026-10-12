@@ -14,3 +14,19 @@ VALUES = {
     'fi': ('Anna kelvollinen luku.', 'Anna kokonaisluku.', 'Anna arvo näiden rajojen sisällä:', 'Korjaa korostetut numerokentät ennen suunnitelman luomista tai JSONin avaamista.'),
 }
 COPY = {locale: dict(zip(KEYS, values)) for locale, values in VALUES.items()}
+
+SYNC = {
+    'en': 'Re-enter this number to confirm it.',
+    'uk': 'Введіть це число повторно, щоб підтвердити його.',
+    'es': 'Vuelva a introducir este número para confirmarlo.',
+    'pt': 'Introduza novamente este número para o confirmar.',
+    'de': 'Geben Sie diese Zahl zur Bestätigung erneut ein.',
+    'fr': 'Saisissez à nouveau ce nombre pour le confirmer.',
+    'it': 'Inserisci di nuovo questo numero per confermarlo.',
+    'da': 'Indtast dette tal igen for at bekræfte det.',
+    'sv': 'Ange detta tal igen för att bekräfta det.',
+    'nb': 'Skriv inn dette tallet på nytt for å bekrefte det.',
+    'fi': 'Vahvista tämä luku kirjoittamalla se uudelleen.',
+}
+for locale, text in SYNC.items():
+    COPY[locale]['sync'] = text

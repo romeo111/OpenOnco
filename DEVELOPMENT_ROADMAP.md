@@ -354,3 +354,15 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   remain open.
 
 - Numeric draft boundary: browser-native transient badInput tokens may expose an empty input.value, so their literal text cannot be serialized/restored; they remain blocked while displayed. This does not claim preservation of every malformed keystroke or validate direct JSON/API input.
+
+- 2026-10-12: Actual browser exposed a pre-existing restore defect during
+  numeric verification: unqualified data-field selectors matched the outer
+  question wrapper, leaving visible controls at defaults while answers held
+  restored values. Fixed draft and example/QR population to select only actual
+  input/select/textarea controls. Added real save/load regression (no mocked
+  persistence) preserving invalid edits, zero/false enums and correct display.
+  Numeric validation now also rejects hidden model/control mismatches, with
+  scoped native confirmation text for all eleven languages. This prevents
+  valid-looking default controls from bypassing invalid stored values. The
+  follow-up keeps clinical source data and engine rules unchanged; actual
+  repeated-browser-reload confirmation remains pending at this commit.

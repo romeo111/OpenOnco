@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="e146920c1e9664f72ac9ed827619104b06a9f362740c071cb989765033855224"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="a95b99df0c0d7d30d3957232c583f7cafff6a7a80d2cae081a69219482976312"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -467,7 +467,7 @@ const modePatientBtn = document.getElementById('modePatientBtn');
 const modalHtmlBtn = document.getElementById('modalHtmlBtn');
 const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
-const numericInputCopy = {"number": "Introduza um número válido.", "integer": "Introduza um número inteiro.", "range": "Use um valor dentro destes limites:", "summary": "Corrija os campos numéricos destacados antes de gerar ou abrir JSON."};
+const numericInputCopy = {"number": "Introduza um número válido.", "integer": "Introduza um número inteiro.", "range": "Use um valor dentro destes limites:", "summary": "Corrija os campos numéricos destacados antes de gerar ou abrir JSON.", "sync": "Introduza novamente este número para o confirmar."};
 const numericInputErrors = new Map();
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1079,6 +1079,23 @@ function saveDraft() {
   } catch (e) { /* private mode etc — silent fail */ }
 }
 
+function findAnswerControl(field) {
+  const selector = '[data-field="' + CSS.escape(field) + '"]';
+  return formPane.querySelector('input' + selector + ',select' + selector + ',textarea' + selector);
+}
+
+function applyDraftFields(draft) {
+  for (const [field, value] of Object.entries(draft.answers || {})) {
+    const input = findAnswerControl(field);
+    if (!input) continue;
+    input.value = typeof value === 'boolean' ? String(value) : input.dataset.type === 'enum' ? JSON.stringify(value) : value;
+    answers[field] = value;
+  }
+  if (typeof draft.jsonText === 'string') textarea.value = draft.jsonText;
+  if (draft.mode === 'json') setMode('json');
+  saveDraft();
+}
+
 function loadDraft() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -1342,7 +1359,10 @@ function numericInputError(input) {
   if (input.value === '' && answers[input.dataset.field] !== undefined &&
       answers[input.dataset.field] !== null && answers[input.dataset.field] !== '') return 'number';
   const type = input.dataset.type || (input.step === 'any' || input.step === '0.1' ? 'float' : 'integer');
-  return numericValueError(input.value, type, input.min, input.max);
+  const issue = numericValueError(input.value, type, input.min, input.max);
+  if (issue) return issue;
+  if (input.value !== '' && parseNumericValue(answers[input.dataset.field], type) !== parseNumericValue(input.value, type)) return 'sync';
+  return '';
 }
 
 function validateNumericInputs() {
@@ -2575,19 +2595,7 @@ async function loadAssets() {
             const fullList = await ensureQuestionnaires();
             renderForm(fullList[idx]);
           repopulateExamples(idx);
-          // Apply saved answers
-          if (draft.answers) {
-            for (const [field, val] of Object.entries(draft.answers)) {
-              const inp = formPane.querySelector(`[data-field="${CSS.escape(field)}"]`);
-              if (!inp) continue;
-              if (typeof val === 'boolean') inp.value = String(val);
-              else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
-              else inp.value = val;
-              answers[field] = val;
-            }
-          }
-          if (draft.jsonText) textarea.value = draft.jsonText;
-          if (draft.mode === 'json') setMode('json');
+          applyDraftFields(draft);
           setStatus('Draft restored ✓ Click «Generate» when you are ready.', 'ok');
           updateRunBtnEnabled();
           updateImpactPanelLocal();
@@ -2836,7 +2844,7 @@ function populateFormFromProfile(quest, profile) {
       if (!path) continue;
       const val = getByPath(profile, path);
       if (val === undefined || val === null) continue;
-      const inp = formPane.querySelector(`[data-field="${CSS.escape(path)}"]`);
+      const inp = findAnswerControl(path);
       if (!inp) continue;
       if (q.type === 'boolean') inp.value = String(val);
       else if (q.type === 'enum') inp.value = JSON.stringify(val);

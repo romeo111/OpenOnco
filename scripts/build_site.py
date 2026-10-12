@@ -5744,6 +5744,23 @@ function saveDraft() {{
   }} catch (e) {{ /* private mode etc — silent fail */ }}
 }}
 
+function findAnswerControl(field) {{
+  const selector = '[data-field="' + CSS.escape(field) + '"]';
+  return formPane.querySelector('input' + selector + ',select' + selector + ',textarea' + selector);
+}}
+
+function applyDraftFields(draft) {{
+  for (const [field, value] of Object.entries(draft.answers || {{}})) {{
+    const input = findAnswerControl(field);
+    if (!input) continue;
+    input.value = typeof value === 'boolean' ? String(value) : input.dataset.type === 'enum' ? JSON.stringify(value) : value;
+    answers[field] = value;
+  }}
+  if (typeof draft.jsonText === 'string') textarea.value = draft.jsonText;
+  if (draft.mode === 'json') setMode('json');
+  saveDraft();
+}}
+
 function loadDraft() {{
   try {{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -6007,7 +6024,10 @@ function numericInputError(input) {{
   if (input.value === '' && answers[input.dataset.field] !== undefined &&
       answers[input.dataset.field] !== null && answers[input.dataset.field] !== '') return 'number';
   const type = input.dataset.type || (input.step === 'any' || input.step === '0.1' ? 'float' : 'integer');
-  return numericValueError(input.value, type, input.min, input.max);
+  const issue = numericValueError(input.value, type, input.min, input.max);
+  if (issue) return issue;
+  if (input.value !== '' && parseNumericValue(answers[input.dataset.field], type) !== parseNumericValue(input.value, type)) return 'sync';
+  return '';
 }}
 
 function validateNumericInputs() {{
@@ -7240,19 +7260,7 @@ async function loadAssets() {{
             const fullList = await ensureQuestionnaires();
             renderForm(fullList[idx]);
           repopulateExamples(idx);
-          // Apply saved answers
-          if (draft.answers) {{
-            for (const [field, val] of Object.entries(draft.answers)) {{
-              const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
-              if (!inp) continue;
-              if (typeof val === 'boolean') inp.value = String(val);
-              else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
-              else inp.value = val;
-              answers[field] = val;
-            }}
-          }}
-          if (draft.jsonText) textarea.value = draft.jsonText;
-          if (draft.mode === 'json') setMode('json');
+          applyDraftFields(draft);
           setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
           updateRunBtnEnabled();
           updateImpactPanelLocal();
@@ -7501,7 +7509,7 @@ function populateFormFromProfile(quest, profile) {{
       if (!path) continue;
       const val = getByPath(profile, path);
       if (val === undefined || val === null) continue;
-      const inp = formPane.querySelector(`[data-field="${{CSS.escape(path)}}"]`);
+      const inp = findAnswerControl(path);
       if (!inp) continue;
       if (q.type === 'boolean') inp.value = String(val);
       else if (q.type === 'enum') inp.value = JSON.stringify(val);
