@@ -90,6 +90,12 @@ assert 'adequate oxygenation' in bleomycin['notes']
 assert 'Avoid high-flow O2' not in bleomycin['notes']
 assert 'not demonstrated increased pulmonary complications' in bleomycin['major_interactions'][1]
 assert 'Г-КСФ протипоказаний' not in abvd['notes_ua']
+assert all('DLCO' not in item for item in bleomycin['absolute_contraindications'])
+assert 'withhold bleomycin' in abvd['dose_adjustments'][0]['modification']
+assert '400 USP units (400000 International Units)' in abvd['dose_adjustments'][1]['modification']
+assert 'not an automatic universal stopping dose' in abvd['dose_adjustments'][1]['modification']
+assert 'no routine repeated PFTs' in abvd['notes']
+assert (KB/'sources/src_bsh_chl_bleomycin_2025.yaml').is_file()
 fever=next(w for w in abvd['between_visit_watchpoints'] if w['trigger_ua']=='Лихоманка вище 38°C')
 assert fever['urgency']=='call_clinic_same_day'
 assert 'не призначається' not in fever['action_ua']
