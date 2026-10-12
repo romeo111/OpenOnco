@@ -4848,6 +4848,7 @@ def render_try(
     _nsclc_form = _histology_yaml.safe_load((KB_ROOT / "questionnaires" / "quest_nsclc_1l.yaml").read_text(encoding="utf-8"))
     _histology_field = next(question for group in _nsclc_form["groups"] for question in group["questions"] if question["field"] == "findings.histology")
     _histology_field_json = json.dumps(_histology_field, ensure_ascii=False).replace("</", "<\\/")
+    _nsclc_required_questions_json = json.dumps([question for group in _nsclc_form['groups'] for question in group['questions'] if question['field'] in {'findings.histology', 'findings.stage', 'findings.driver_negative', 'findings.nsclc_taxane_choice'}], ensure_ascii=False).replace('</', '<\\/')
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
@@ -6058,11 +6059,16 @@ function normalizeQuestionnaire(quest) {{
   const groups = (quest.groups || []).map(group => group.title === screeningTitle
     ? {{ ...group, questions: (group.questions || []).filter(question => !authored.has(question.field)) }}
     : group);
-  if (quest.id === 'QUEST-NSCLC-1L-STUB' && !authored.has('findings.histology')) {{
-    const histologyQuestion = {_histology_field_json};
+  if (quest.id === 'QUEST-NSCLC-1L-STUB') {{
+    quest = {{ ...quest, intro: (quest.intro || '').replace('Awaiting clinical co-lead review.', 'Awaiting clinical review.') }};
+    const requiredQuestions = {_nsclc_required_questions_json};
+    const requiredFields = new Set(requiredQuestions.map(question => question.field));
+    for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {{
+      groups[groupIndex] = {{ ...groups[groupIndex], questions: (groups[groupIndex].questions || []).filter(question => !requiredFields.has(question.field)) }};
+    }}
     const index = groups.findIndex(group => group.title !== screeningTitle);
-    if (index >= 0) groups[index] = {{ ...groups[index], questions: [histologyQuestion, ...(groups[index].questions || [])] }};
-    else groups.unshift({{ title: 'Demographics + baseline status', questions: [histologyQuestion] }});
+    if (index >= 0) groups[index] = {{ ...groups[index], questions: [...requiredQuestions, ...(groups[index].questions || [])] }};
+    else groups.unshift({{ title: 'Demographics + baseline status', questions: requiredQuestions }});
   }}
   return {{ ...quest, groups }};
 }}

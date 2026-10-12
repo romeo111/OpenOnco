@@ -18,6 +18,8 @@ output_indications:
   - IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
   - IND-NSCLC-PDL1-HIGH-MET-1L
   - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+  - IND-NSCLC-SQ-PEMBRO-CARBO-PACLITAXEL-1L
+  - IND-NSCLC-SQ-PEMBRO-CARBO-NAB-PACLITAXEL-1L
   - IND-NSCLC-DRIVER-NEG-MET-1L-NIVO-IPI-CHEMO
 
 default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
@@ -178,15 +180,34 @@ decision_tree:
         mOS 15.8 mo; 3-yr OS 25% vs 14%). Benefit consistent across all PD-L1 subgroups
         including TPS <1%. Alternative to pembro+chemo when this regimen is preferred.
     if_false:
-      result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
-      notes: >
-        PD-L1 TPS <50% or unknown + pembro+chemo preferred: pembrolizumab +
-        platinum-doublet (KEYNOTE-189 non-squamous or KEYNOTE-407 squamous).
-        TMB-high (≥10 mut/Mb) may support pembro mono even at low TPS.
+      next_step: 11
 
-sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
-last_reviewed: "2026-05-09"
+  - step: 11
+    evaluate:
+      finding: histology
+      value: squamous
+    if_true:
+      next_step: 12
+    if_false:
+      result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+
+  - step: 12
+    evaluate:
+      finding: nsclc_taxane_choice
+      value: nab-paclitaxel
+    if_true:
+      result: IND-NSCLC-SQ-PEMBRO-CARBO-NAB-PACLITAXEL-1L
+    if_false:
+      result: IND-NSCLC-SQ-PEMBRO-CARBO-PACLITAXEL-1L
+      notes: Explicit paclitaxel confirmation is required by this indication; missing or unknown choices withhold selection.
+
+sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024, SRC-KEYNOTE-407-PAZ-ARES-2018, SRC-KEYTRUDA-USPI-2026]
+last_reviewed: null
+draft: true
 notes: >
+  Squamous partner branches authored 2026-10-12; clinical signoff pending.
+  The 2026-05-09 review date described the previous algorithm revision only.
+
   NSCLC DRIVER CASCADE (1L):
   EGFR (ex19del/L858R/ex20ins) → ALK fusion → ROS1 fusion → MET ex14 →
   RET fusion → BRAF V600E → NTRK fusion → PD-L1 ICI ± chemo

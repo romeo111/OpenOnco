@@ -51,6 +51,7 @@ from knowledge_base.validation.loader import load_content
 from ._actionability import find_matching_actionability
 from ._track_filter import is_track_excluded
 from .histology import histology_confirmed
+from .profile_applicability import unconfirmed_profile_fields
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
@@ -226,6 +227,11 @@ def _flatten_findings(patient: dict) -> dict:
     — RF firing detection without a Disease).
     """
     findings = dict(patient.get("findings") or {})
+    histology = findings.get('histology')
+    if histology is None:
+        histology = (patient.get('disease') or {}).get('histology')
+    if isinstance(histology, str) and histology.strip().casefold() == 'squamous':
+        findings['histology'] = 'squamous'
     for k, v in (patient.get("biomarkers") or {}).items():
         findings.setdefault(k, v)
     for k, v in (patient.get("demographics") or {}).items():
@@ -1007,6 +1013,13 @@ def generate_plan(
 
     _ACTIVE_TRACKS = {"standard", "aggressive"}
     histology_selection_withheld = False
+    profile_selection_withheld = False
+    unconfirmed_fields = unconfirmed_profile_fields(_resolve(entities, current_default_id) or {}, patient) if current_default_id else []
+    if unconfirmed_fields:
+        profile_selection_withheld = True
+        result.warnings.append('Treatment applicability checks failed for profile fields: ' + ', '.join(unconfirmed_fields) + '. Values are unconfirmed, conflicting or excluded; no treatment or automatic substitute selected.')
+        current_candidate_ids = []
+        sequencing_candidate_ids = []
 
     if current_default_id and not histology_confirmed(_resolve(entities, current_default_id) or {}, patient):
         histology_selection_withheld = True
@@ -1021,6 +1034,9 @@ def generate_plan(
     tracks: list[PlanTrack] = []
     for ind_id in current_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if ind and unconfirmed_profile_fields(ind, patient):
+            result.warnings.append(f'track {ind_id} withheld: required profile values are not confirmed')
+            continue
         if ind and not histology_confirmed(ind, patient):
             result.warnings.append(f"track {ind_id} withheld: histology applicability is not confirmed")
             continue
@@ -1048,6 +1064,8 @@ def generate_plan(
     sequencing_tracks: list[PlanTrack] = []
     for ind_id in sequencing_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if ind and unconfirmed_profile_fields(ind, patient):
+            continue
         if ind and not histology_confirmed(ind, patient):
             continue
         if ind and is_track_excluded(ind, patient_biomarkers):
@@ -1071,6 +1089,8 @@ def generate_plan(
     kb_state = {
         "loaded_entities": len(entities),
         "histology_selection_withheld": histology_selection_withheld,
+        "profile_selection_withheld": profile_selection_withheld,
+        "unconfirmed_profile_fields": unconfirmed_fields,
         "indications_used": [t.indication_id for t in tracks],
         "sequencing_indications": [t.indication_id for t in sequencing_tracks],
         "algorithm_version": algo.get("last_reviewed"),

@@ -1,0 +1,56 @@
+id: IND-NSCLC-SQ-PEMBRO-CARBO-PACLITAXEL-1L
+plan_track: aggressive
+applicable_to:
+  disease_id: DIS-NSCLC
+  histology_allowed_values:
+  - squamous
+  line_of_therapy: 1
+  stage_stratum: STAGE_IV_METASTATIC
+  confirmed_profile_values:
+    findings.stage:
+    - IV
+    findings.driver_negative:
+    - true
+    demographics.ecog:
+    - 0
+    - 1
+    findings.nsclc_taxane_choice:
+    - paclitaxel
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 1
+  excluded_profile_values:
+    findings.autoimmune_disease_active:
+    - true
+    findings.systemic_immunosuppression:
+    - true
+    findings.noninfectious_pneumonitis_requiring_steroids:
+    - true
+    findings.symptomatic_cns_metastases:
+    - true
+recommended_regimen: REG-PEMBRO-CARBO-PACLITAXEL-NSCLC-SQ
+evidence_level: high
+sources:
+- source_id: SRC-KEYNOTE-407-PAZ-ARES-2018
+  position: supports
+  relevant_quote_paraphrase: KEYNOTE-407 studied first-line metastatic squamous NSCLC
+    across PD-L1 levels with carboplatin and one of two alternative taxanes.
+- source_id: SRC-KEYTRUDA-USPI-2026
+  position: supports
+  relevant_quote_paraphrase: US label sections 1.2 and 14.2 describe squamous combination
+    eligibility and the trial dosing schedule.
+last_reviewed: null
+reviewers: []
+required_tests:
+- TEST-PDL1-IHC
+- TEST-CECT-CAP
+notes: Draft route, not clinically signed off. Trial population ECOG 0-1. No PD-L1
+  >=1% requirement. Organ function, autoimmune disease, immunosuppression, pregnancy,
+  neuropathy and other contraindications still require independent clinician assessment.
+  Driver-negative confirmation must come from the actual molecular assessment, not
+  be inferred from missing results.
+notes_ua: Чернетка маршруту, клінічно не погоджена. У дослідженні ECOG 0-1. Вимоги
+  PD-L1 >=1% немає. Функція органів, аутоімунні хвороби, імуносупресія, вагітність,
+  нейропатія та інші протипоказання потребують окремої клінічної оцінки. Відсутність
+  результатів не підтверджує відсутність драйверних змін.
+ukrainian_review_status: pending_clinical_signoff

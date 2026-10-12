@@ -52,8 +52,19 @@ for histology in ['adenocarcinoma','squamous',None]:
     else:
         assert outcome.default_indication_id is None
         assert not outcome.plan.tracks and not outcome.plan.sequencing_tracks
-        assert outcome.plan.knowledge_base_state['histology_selection_withheld']
+        reason='profile_selection_withheld' if histology == 'squamous' else 'histology_selection_withheld'
+        assert outcome.plan.knowledge_base_state[reason]
     states.append({'histology':histology,'default':outcome.default_indication_id})
+for taxane, drug in [('paclitaxel','DRUG-PACLITAXEL'),('nab-paclitaxel','DRUG-NAB-PACLITAXEL')]:
+    profile=copy.deepcopy(base)
+    profile['patient_id']='VIRTUAL-OFFLINE-SQUAMOUS'
+    profile['findings']['histology']='squamous'
+    profile['findings']['nsclc_taxane_choice']=taxane
+    outcome=generate_plan(profile,kb_root=KB)
+    assert outcome.default_indication_id == 'IND-NSCLC-SQ-PEMBRO-CARBO-'+taxane.upper()+'-1L'
+    selected=next(track for track in outcome.plan.tracks if track.is_default)
+    assert [comp['drug_id'] for comp in selected.regimen_data['components']] == ['DRUG-PEMBROLIZUMAB','DRUG-CARBOPLATIN',drug]
+    states.append({'histology':'squamous','taxane':taxane,'default':outcome.default_indication_id})
 json.dumps(states)
 `));
 assert.equal(networkAttempts,0);

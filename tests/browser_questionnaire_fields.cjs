@@ -20,6 +20,19 @@ for (const original of cached) {
   const fields = normalized.groups.flatMap(group => group.questions.map(question => question.field));
   assert.equal(fields.length, new Set(fields).size, original.id);
 }
+const currentNsclc = current.find(questionnaire => questionnaire.id === 'QUEST-NSCLC-1L-STUB');
+const recentNsclc = structuredClone(currentNsclc);
+for (const group of recentNsclc.groups) group.questions = group.questions.filter(question => !['findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(question.field));
+const recentBefore = JSON.stringify(recentNsclc);
+context.quest = recentNsclc;
+const upgraded = JSON.parse(JSON.stringify(vm.runInContext('normalizeQuestionnaire(quest)', context)));
+assert.deepEqual(upgraded, currentNsclc, 'A cached form with histology alone must receive all current applicability questions');
+assert.equal(JSON.stringify(recentNsclc), recentBefore);
+for (const field of ['findings.histology','findings.stage','findings.driver_negative','findings.nsclc_taxane_choice']) {
+  const question = upgraded.groups.flatMap(group => group.questions).find(question => question.field === field);
+  assert.equal(question.impact, 'critical');
+  assert.equal(Object.hasOwn(question, 'default_value'), false, field);
+}
 for (const prefix of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
   const page = fs.readFileSync('docs/'+prefix+'try.html','utf8');
   assert(page.includes('quest = normalizeQuestionnaire(quest);'));

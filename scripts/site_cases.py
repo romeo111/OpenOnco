@@ -8591,3 +8591,15 @@ for _case in CASES:
 
     if _case.badge in {"Auto-stub", "Variant"} or _case.case_id in QUARANTINED_CASE_IDS:
         _case.visibility = "internal"
+
+# Explicit synthetic KEYNOTE-407 partner choices; no clinical signoff implied.
+for _taxane, _taxane_ua in [('paclitaxel', 'паклітаксел'), ('nab-paclitaxel', 'наб-паклітаксел')]:
+    CASES.append(CaseEntry(
+        case_id='nsclc-squamous-' + _taxane,
+        file='patient_nsclc_squamous_' + _taxane.replace('-', '_') + '.json',
+        label_ua='Плоскоклітинний НМРЛ · PD-L1 0% · ' + _taxane_ua,
+        summary_ua='Вигаданий приклад IV стадії, ECOG 1 та підтвердженого відсутнього драйвера. Обрано один таксан для чернетки KEYNOTE-407. Клінічна перевірка очікується.',
+        badge='Treatment Plan', badge_class='bdg-plan', category='solid',
+        label_en='Squamous NSCLC · PD-L1 0% · ' + _taxane,
+        summary_en='Fictional stage IV, ECOG 1, confirmed driver-negative example with one explicit taxane choice. KEYNOTE-407 draft; clinical review pending.',
+    ))

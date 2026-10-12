@@ -36,9 +36,11 @@ def test_real_nsclc_route_requires_positive_histology_and_never_promotes_a_subst
     else:
         assert result.default_indication_id is None
         assert result.plan.tracks == [] and result.plan.sequencing_tracks == []
-        assert result.plan.knowledge_base_state['histology_selection_withheld'] is True
-        assert any('Histology applicability' in warning for warning in result.warnings)
-        assert 'Histology applicability' in render_plan_html(result, target_lang='en')
+        reason = 'profile_selection_withheld' if histology == 'squamous' else 'histology_selection_withheld'
+        assert result.plan.knowledge_base_state[reason] is True
+        message = 'profile fields' if histology == 'squamous' else 'Histology applicability'
+        assert any(message in warning for warning in result.warnings)
+        assert 'No medicine plan has been selected' in render_plan_html(result, target_lang='en')
         assert 'REG-PEMBRO-CHEMO-NSCLC-NONSQ' not in render_plan_html(result, target_lang='en', mode='patient')
 
 

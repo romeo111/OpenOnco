@@ -12,7 +12,7 @@ without `phases:` continue to work unchanged.
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import (
@@ -43,6 +43,8 @@ class BiomarkerRequirement(Base):
 class IndicationApplicability(Base):
     disease_id: str
     histology_allowed_values: list[str] = Field(default_factory=list)
+    confirmed_profile_values: dict[str, list[StrictStr | StrictBool | StrictInt]] = Field(default_factory=dict)
+    excluded_profile_values: dict[str, list[StrictStr | StrictBool | StrictInt]] = Field(default_factory=dict)
     line_of_therapy: Optional[int] = None  # 1, 2, 3... — None = line-agnostic (cross-line algo routing)
     stage_requirements: list[str] = Field(default_factory=list)
     biomarker_requirements_required: list[BiomarkerRequirement] = Field(default_factory=list)

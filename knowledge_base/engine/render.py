@@ -3176,7 +3176,7 @@ def render_plan_html(
     so unsourced content cannot reach the patient. STRICT is the
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
-    if plan_result.plan and plan_result.plan.knowledge_base_state.get("histology_selection_withheld"):
+    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld")):
         english = target_lang == 'en'
         title = 'Histology-specific selection required' if english else 'Потрібен вибір з урахуванням гістології'
         explanation = (
@@ -3186,6 +3186,9 @@ def render_plan_html(
             'План препаратів не обрано. Потрібно перевірити висновок патології та відповідність '
             'лікувального маршруту гістології. Автоматичну заміну не обрано.'
         )
+        if plan_result.plan.knowledge_base_state.get('profile_selection_withheld'):
+            title = 'Treatment applicability requires confirmation' if english else 'Потрібне підтвердження відповідності лікування'
+            explanation = ('No medicine plan has been selected. The profile has unconfirmed, conflicting or excluded values. Check metastatic stage, driver status, functional status, the chosen chemotherapy partner and clinical exclusions before selecting this route. No automatic substitute was selected.' if english else 'План препаратів не обрано. Профіль містить непідтверджені, суперечливі або виключені значення. Перед вибором цього маршруту перевірте метастатичну стадію, драйверний статус, функціональний стан, обраний компонент хіміотерапії та клінічні виключення. Автоматичну заміну не обрано.')
         details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
             f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
         ) + '</ul>'

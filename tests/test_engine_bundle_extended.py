@@ -327,7 +327,8 @@ def test_lazy_nsclc_bundle_preserves_histology_withholding(bundle_out, tmp_path,
     partial = generate_plan(profile, kb_root=target / 'knowledge_base/hosted/content')
     for result in (full, partial):
         assert result.plan is not None
-        assert result.plan.knowledge_base_state['histology_selection_withheld'] is True
+        reason = 'profile_selection_withheld' if histology == 'squamous' else 'histology_selection_withheld'
+        assert result.plan.knowledge_base_state[reason] is True
         assert result.plan.tracks == result.plan.sequencing_tracks == []
         assert result.default_indication_id is None
         assert result.warnings
