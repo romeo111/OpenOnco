@@ -2,84 +2,118 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OpenOnco Handbuch - OpenOnko Handbuch</title>
-  <link rel="stylesheet" href="/style.css?v=layout-20261011">
-  <style>
-    .hb-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
-    .hb-kicker { color: #4b5563; font-size: 13px; font-weight: 700; text-transform: uppercase; }
-    .hb-hero { display: grid; gap: 14px; border-bottom: 1px solid #d6dee8; padding-bottom: 22px; }
-    .hb-hero h1 { margin: 0; font-size: 34px; line-height: 1.08; }
-    .hb-lead { max-width: 820px; color: #334155; font-size: 17px; line-height: 1.55; }
-    .hb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
-    .hb-card, .hb-panel, .hb-question { border: 1px solid #d6dee8; border-radius: 8px; background: #fff; padding: 16px; }
-    .hb-card h2, .hb-panel h2 { margin-top: 0; font-size: 20px; }
-    .hb-card a { color: #0f766e; font-weight: 700; text-decoration: none; }
-    .hb-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .hb-badge { display: inline-flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 999px; padding: 3px 8px; font-size: 12px; background: #f8fafc; color: #334155; }
-    .hb-badge--draft { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
-    .hb-badge--proposed { border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }
-    .hb-badge--reviewed { border-color: #16a34a; background: #f0fdf4; color: #166534; }
-    .hb-badge--stale { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
-    .hb-badge--retired { border-color: #6b7280; background: #f3f4f6; color: #374151; }
-    .hb-review-panel dl.hb-review-meta { margin: 0 0 10px; display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }
-    .hb-review-panel dt { color: #475569; font-weight: 600; }
-    .hb-review-panel dd { margin: 0; color: #0f172a; }
-    .hb-review-panel h3 { margin: 4px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
-    .hb-signoff-list { margin: 0; padding-left: 18px; font-size: 13px; }
-    .hb-signoff-list li { margin-bottom: 6px; }
-    .hb-signoff-empty { margin: 0; font-size: 13px; color: #64748b; }
-    .hb-review-rules { margin: 12px 0 0; font-size: 12px; color: #64748b; }
-    .hb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; margin-top: 24px; }
-    .hb-main { display: grid; gap: 18px; }
-    .hb-side { display: grid; gap: 16px; align-content: start; }
-    .hb-chip-grid { display: grid; gap: 8px; }
-    .hb-chip { display: grid; gap: 3px; border: 1px solid #d6dee8; border-radius: 6px; padding: 8px; }
-    .hb-chip small { color: #64748b; }
-    .hb-question { display: grid; gap: 10px; }
-    .hb-question-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .hb-question-id { margin-left: auto; font-size: 12px; color: #64748b; }
-    .hb-question-stem { margin: 0; font-size: 15px; line-height: 1.5; color: #0f172a; }
-    .hb-options { display: grid; gap: 6px; }
-    .hb-option { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: start; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
-    .hb-option:hover { border-color: #99f6e4; background: #f0fdfa; }
-    .hb-option input { margin-top: 3px; }
-    .hb-option-key { font-weight: 700; color: #115e59; }
-    .hb-option--short { grid-template-columns: 1fr; }
-    .hb-option--short input { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
-    .hb-question-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .hb-question-status { font-size: 13px; color: #475569; }
-    .hb-btn { font: inherit; cursor: pointer; padding: 7px 12px; border-radius: 6px; border: 1px solid #0f766e; background: #0f766e; color: #fff; }
-    .hb-btn--reset, .hb-btn--ghost { background: transparent; color: #0f766e; }
-    .hb-btn--reveal { background: #475569; border-color: #475569; }
-    .hb-result { margin-top: 4px; padding: 12px; border-left: 4px solid #0f766e; border-radius: 6px; background: #f8fafc; color: #1f2937; }
-    .hb-result--correct { border-left-color: #16a34a; background: #f0fdf4; }
-    .hb-result--incorrect { border-left-color: #dc2626; background: #fef2f2; }
-    .hb-result--reveal { border-left-color: #475569; background: #f1f5f9; }
-    .hb-result-headline { margin: 0 0 6px; font-weight: 600; }
-    .hb-result-explanation { margin: 0 0 8px; }
-    .hb-result-sources { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: #475569; }
-    .hb-result-source { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; }
-    .hb-result-tags { margin-top: 6px; font-size: 12px; color: #475569; }
-    .hb-result-tag { display: inline-block; background: #e0f2fe; border-radius: 999px; padding: 2px 8px; margin-right: 4px; color: #075985; }
-    .hb-quiz-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
-    .hb-quiz-header h2 { margin: 0; }
-    .hb-quiz-tools { display: flex; align-items: center; gap: 10px; }
-    .hb-score { font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 4px 10px; border-radius: 999px; }
-    .hb-quiz-note { margin: 6px 0 12px; font-size: 13px; color: #475569; }
-    .hb-disclaimer { border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px; color: #78350f; }
-    .hb-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(150px, 1fr)); gap: 10px 14px; align-items: end; margin-top: 22px; padding: 14px; border: 1px solid #d6dee8; border-radius: 8px; background: #f8fafc; }
-    .hb-control { display: grid; gap: 4px; font-size: 12px; color: #475569; }
-    .hb-control span { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-    .hb-control input, .hb-control select { font: inherit; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; }
-    .hb-control input:focus, .hb-control select:focus { outline: 2px solid #0f766e; outline-offset: 1px; }
-    .hb-result-count { grid-column: 1 / -1; margin: 4px 0 0; font-size: 13px; color: #475569; }
-    .hb-empty { grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; background: #fff; color: #475569; text-align: center; }
-    .hb-tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .hb-tag { display: inline-flex; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #e0f2f1; color: #115e59; border: 1px solid #99f6e4; }
-    @media (max-width: 860px) { .hb-layout { grid-template-columns: 1fr; } .hb-hero h1 { font-size: 28px; } .hb-controls { grid-template-columns: 1fr; } }
-  </style>
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="4461ad30b3a205357bb83f3967589a9207a2589658cf038cd832fcc7323779f0"></head>
+  <!-- openonco-seo:start -->
+<meta name="description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
+<link rel="canonical" href="https://openonco.info/de/handbook.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/handbook.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/handbook.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/handbook.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/handbook.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/handbook.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/handbook.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/handbook.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/handbook.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/handbook.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/handbook.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/handbook.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/handbook.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenOnco Handbuch - OpenOnko Handbuch">
+<meta property="og:description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<meta property="og:url" content="https://openonco.info/de/handbook.html">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco Handbuch - OpenOnko Handbuch">
+<meta name="twitter:description" content="OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco Handbuch - OpenOnko Handbuch","description":"OpenOnco Handbook: source-linked oncology learning chapters and practice questions. English original and Ukrainian draft translation; not official ESMO material or CME credit.","url":"https://openonco.info/de/handbook.html","inLanguage":"de","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/de/handbook.html"}}</script>
+<!-- openonco-seo:end -->
+<link rel="stylesheet" href="/style.css?v=layout-20261011">
+  <link rel="stylesheet" href="/clinical-styles/694eea648296658d7f1088903440ed90c39a7c0c4eb28f733482b4d43b06083a.css">
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="273d7717b07d6aa1399959aaeeefa54d739362ac055a581d1a9af06ad35d0450"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -137,7 +171,7 @@
       <div class="hb-kicker">Handbuch zu OpenOnco</div>
       <h1>Kapitel über das quellenbasierte Onkologie-Lernen</h1>
       <p class="hb-lead">Bildungskapitel, die aus kontrollierten OpenOnco YAML-Entitäten, Quell-IDs, synthetischen Fällen und Metadaten erstellt wurden. Dies ist kein offizieller ESMO-Inhalt und gewährt keine CME-Gutschrift.</p>
-      <p><a href="/de/review/dlbcl-1l/">DLBCL Erstlinien-Klinik-Rezensionspaket</a>: synthetische Szenarien, tatsächliche Ergebnisse, Herkunft und exportierbares Feedback. Klinische Überprüfung ist noch aus.</p>
+      <p><a href="/review/dlbcl-1l/index.html">DLBCL Erstlinien-Klinik-Rezensionspaket</a>: synthetische Szenarien, tatsächliche Ergebnisse, Herkunft und exportierbares Feedback. Klinische Überprüfung ist noch aus.</p>
     </section>
     <section class="hb-controls" aria-label="Kapitel filtern und durchsuchen">
       <label class="hb-control hb-control--search">
@@ -527,5 +561,5 @@
     </script>
 
   </main>
-<script src="/clinical-localization.c41d641d7daf.js" data-locale="de" data-catalog="/de/clinical-ui-translations.bb60e14039f3.json" defer></script></body>
+<script src="/clinical-localization.c41d641d7daf.js" data-locale="de" data-catalog="/de/clinical-ui-translations.acafa8ff0fb0.json" defer></script></body>
 </html>

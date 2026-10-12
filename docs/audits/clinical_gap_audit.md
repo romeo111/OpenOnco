@@ -1,6 +1,6 @@
 # Clinical gap audit
 
-Generated: `2026-10-11T23:29:48Z`
+Generated: `2026-10-12T16:53:38Z`
 
 This is a coverage/governance audit, not a clinical recommendation set.
 It makes the five largest known gaps measurable and repeatable.
@@ -9,11 +9,11 @@ It makes the five largest known gaps measurable and repeatable.
 
 | Gap | Current | Target | Status |
 |---|---:|---|---|
-| Optional external clinical review | 0/2614 signoff-eligible entities reviewed (0.0%) | Record actual additional reviews when available; no reviewer quota for solo-project releases. | `informational` |
+| Optional external clinical review | 0/2618 signoff-eligible entities reviewed (0.0%) | Record actual additional reviews when available; no reviewer quota for solo-project releases. | `informational` |
 | Solid tumor 2L+ coverage | 23/67 solid diseases have a 2L+ algorithm; 26/67 have a 2L+ indication | Every modeled solid disease has at least one advanced/relapsed-line algorithm and indication. | `coverage_gap` |
-| Surgery/radiation detail | 21 structured procedure entities; 9 structured radiation-course entities; 816 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `coverage_gap` |
-| Supportive-care depth | 136/404 regimens have mandatory supportive care (33.7%); 43 have monitoring; 358 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
-| Drug indication and off-label tracking | 1/862 inferred drug-disease-indication pairs have a first-class record; 1 carry a source-backed assessed status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `coverage_gap` |
+| Surgery/radiation detail | 21 structured procedure entities; 9 structured radiation-course entities; 818 indications mention surgery/radiation in text | Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields. | `coverage_gap` |
+| Supportive-care depth | 136/406 regimens have mandatory supportive care (33.5%); 43 have monitoring; 358 have dose adjustments | Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage. | `coverage_gap` |
+| Drug indication and off-label tracking | 1/868 inferred drug-disease-indication pairs have a first-class record; 1 carry a source-backed assessed status | Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance. | `coverage_gap` |
 
 ## Next actions
 
@@ -108,7 +108,7 @@ It makes the five largest known gaps measurable and repeatable.
 
 - Blocker: The first-class model is present, but most regimen-derived drug-use pairs still need source-backed assessment.
 - Next action: Backfill high-volume and high-risk pairs from current regulatory labels first; keep uncertain pairs explicitly not_assessed until verified.
-- Inferred pairs to backfill: 862
+- Inferred pairs to backfill: 868
 - First-class records: 1; source-backed assessed statuses: 1; explicitly not assessed: 0
 
 ## Machine-readable outputs
