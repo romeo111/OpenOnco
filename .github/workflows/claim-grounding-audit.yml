@@ -9,10 +9,9 @@ name: KB claim-grounding audit
 # Manual workflow_dispatch supports an opt-in semantic grounding pass
 # (calls the Claude API; consumes ~$5-15 per full run).
 #
-# When the report changes, the workflow opens a small PR to refresh
-# `docs/kb-claim-grounding-report.md` + `.json`. We mirror the
-# civic-monthly-refresh.yml pattern (same peter-evans action, same
-# label conventions) for operator familiarity.
+# Every successful audit uploads both reports. Automatic refresh PRs are
+# optional: set repository variable KB_AUDIT_AUTO_PR=true only when Actions
+# is permitted to create PRs. Artifact delivery does not require that setting.
 
 on:
   schedule:
@@ -52,23 +51,51 @@ jobs:
           fi
 
       - name: Run audit (detection or semantic)
+        id: audit
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AUDIT_LIMIT: ${{ inputs.limit }}
+          AUDIT_SEMANTIC: ${{ inputs.semantic }}
         run: |
-          set -e
-          ARGS=""
-          if [ -n "${{ github.event.inputs.limit }}" ]; then
-            ARGS="$ARGS --limit ${{ github.event.inputs.limit }}"
+          set -euo pipefail
+          ARGS=()
+          if [ -n "$AUDIT_LIMIT" ]; then
+            if ! [[ "$AUDIT_LIMIT" =~ ^[1-9][0-9]*$ ]]; then
+              echo "::error::limit must be a positive integer"
+              exit 1
+            fi
+            ARGS+=(--limit "$AUDIT_LIMIT")
           fi
-          if [ "${{ github.event.inputs.semantic }}" = "true" ]; then
+          if [ "$AUDIT_SEMANTIC" = "true" ]; then
             if [ -z "$ANTHROPIC_API_KEY" ]; then
               echo "::warning::semantic requested but ANTHROPIC_API_KEY missing — falling back to detection-only"
             else
-              ARGS="$ARGS --semantic"
+              ARGS+=(--semantic)
             fi
           fi
-          # shellcheck disable=SC2086
-          python -m scripts.audit_claim_grounding $ARGS
+          python -m scripts.audit_claim_grounding "${ARGS[@]}"
+
+      - name: Preserve audit reports
+        id: reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kb-claim-grounding-${{ github.run_id }}
+          path: |
+            docs/kb-claim-grounding-report.md
+            docs/kb-claim-grounding-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish audit summary
+        env:
+          REPORT_URL: ${{ steps.reports.outputs.artifact-url }}
+          AUTO_PR: ${{ vars.KB_AUDIT_AUTO_PR }}
+        run: |
+          echo "Claim-grounding reports: $REPORT_URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "This audit detects source anchors; it is not clinical validation." >> "$GITHUB_STEP_SUMMARY"
+          if [ "$AUTO_PR" != "true" ]; then
+            echo "Automatic refresh PRs are disabled; the complete reports remain available in the artifact." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Detect report changes
         id: diff
@@ -80,7 +107,7 @@ jobs:
           fi
 
       - name: Open refresh PR
-        if: steps.diff.outputs.changed == 'true'
+        if: steps.diff.outputs.changed == 'true' && vars.KB_AUDIT_AUTO_PR == 'true'
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
           branch: kb-claim-grounding-refresh-${{ github.run_id }}
