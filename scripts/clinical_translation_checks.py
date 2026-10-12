@@ -62,8 +62,43 @@ DAILY_TRANSLATION = {
     'da': re.compile(r'\b(?:daglig\w*|hver dag)\b', re.I),
     'sv': re.compile(r'\b(?:daglig\w*|varje dag)\b', re.I),
     'nb': re.compile(r'\b(?:daglig\w*|hver dag)\b', re.I),
-    'fi': re.compile(r'\b(?:päivittäin|kerran päivässä|joka päivä)\b', re.I),
+    'fi': re.compile(r'\b(?:päivittäin|päivässä|joka päivä)\b', re.I),
 }
+SOURCE_FREQUENCY = re.compile(r'\b(once|twice|three times)\s+(?:daily|weekly|every day|every week)\b', re.I)
+FREQUENCY_TRANSLATION = {
+    'es': (r'\buna vez\b', r'\bdos veces\b', r'\btres veces\b'),
+    'pt': (r'\buma vez\b', r'\bduas vezes\b', r'\btrês vezes\b'),
+    'de': (r'\b(?:einmal|ein mal)\b', r'\b(?:zweimal|zwei mal)\b', r'\b(?:dreimal|drei mal)\b'),
+    'fr': (r'\bune fois\b', r'\bdeux fois\b', r'\btrois fois\b'),
+    'it': (r'\buna volta\b', r'\bdue volte\b', r'\btre volte\b'),
+    'da': (r'\ben gang\b', r'\bto gange\b', r'\btre gange\b'),
+    'sv': (r'\ben gång\b', r'\btvå gånger\b', r'\btre gånger\b'),
+    'nb': (r'\ben gang\b', r'\bto ganger\b', r'\btre ganger\b'),
+    'fi': (r'\bkerran\b', r'\b(?:kahdesti|kaksi kertaa)\b', r'\b(?:kolmesti|kolme kertaa)\b'),
+}
+
+
+def schedule_fidelity(source, translated, locale):
+    if source == translated:
+        return True
+    daily, weekly = bool(DAILY_EN.search(source)), bool(WEEKLY_EN.search(source))
+    if not daily and not weekly:
+        return True
+    if daily and weekly:
+        return False  # Mixed periods need clause-level clinical review.
+    daily_form, weekly_form = DAILY_TRANSLATION.get(locale), WEEKLY_TRANSLATION.get(locale)
+    if daily_form is None or weekly_form is None:
+        return False
+    if bool(daily_form.search(translated)) != daily or bool(weekly_form.search(translated)) != weekly:
+        return False
+    source_counts = [{'once': 1, 'twice': 2, 'three times': 3}[match.group(1).lower()]
+                     for match in SOURCE_FREQUENCY.finditer(source)]
+    translated_counts = sorted((match.start(), count)
+                               for count, pattern in enumerate(FREQUENCY_TRANSLATION[locale], 1)
+                               for match in re.finditer(pattern, translated, re.I))
+    return source_counts == [count for _, count in translated_counts]
+
+
 ALTERNATE_INJECTION_SITE = re.compile(r'\bAlternate (?:flanks/buttocks|sides|injection sites)\b', re.I)
 ALTERNATION_TRANSLATION = {
     'es': re.compile(r'\baltern\w*\b', re.I),
@@ -136,19 +171,8 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
         return False
     # Numbers alone cannot distinguish a daily dose from a weekly dose.
     # Likewise, an injection-site rotation instruction must not disappear.
-    weekly_form = WEEKLY_TRANSLATION.get(locale)
-    if DAILY_EN.search(source) and not WEEKLY_EN.search(source):
-        if weekly_form is None or weekly_form.search(translated):
-            return False
-        daily_form = DAILY_TRANSLATION.get(locale)
-        if daily_form is None or not daily_form.search(translated):
-            return False
-    if WEEKLY_EN.search(source) and not DAILY_EN.search(source):
-        if weekly_form is None or not weekly_form.search(translated):
-            return False
-        daily_form = DAILY_TRANSLATION.get(locale)
-        if daily_form is not None and daily_form.search(translated):
-            return False
+    if not schedule_fidelity(source, translated, locale):
+        return False
     alternation_form = ALTERNATION_TRANSLATION.get(locale)
     if ALTERNATE_INJECTION_SITE.search(source) and (alternation_form is None or not alternation_form.search(translated)):
         return False

@@ -4,6 +4,12 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Explicit daily/weekly frequency preservation (2026-10-12)
+
+Synthetic evidence showed once-daily source text could pass with twice-daily IT/FR/DE translations. Build and dynamic display guards now compare each explicit once/twice/three-times occurrence with native count phrases in all nine clinical display languages. Missing, altered, added or reordered count phrases retain the complete original. Mixed daily/weekly text also retains its original until clause alignment can be verified. Plain daily/weekly labels remain supported without inventing a frequency; numeric input, engine data, doses, source records and medical catalogs are unchanged.
+
+Python and Node regression cases cover correct and changed daily/weekly counts, missing counts, added twice-daily counts, repeated instructions and mixed periods. Native browser regex boundaries use Unicode letters/numbers so Finnish endings such as päivässä match correctly. Verification: 87 language/terminology tests passed, the final 35 terminology cases passed after adding reordered-count checks, two private-draft provenance tests passed using fixtures outside this checkout, two asset tests and Node frequency/cache suites passed. Medical catalog byte proof: `.tmp/frequency-catalog-proof.json`. This remains a lexical guard: abbreviations, unsupported count expressions, clause semantics and pretranslated static prose still require audit and clinical review. All protected report prefixes remain excluded from asset-reference updates.
+
 ### Daily/weekly schedule fidelity in translated dynamic reports (2026-10-12)
 
 The build-time lexical guard now requires daily/weekly cadence evidence in all nine clinical display editions, including ES/PT/DE/FR, and rejects a translated weekly instruction that adds a daily instruction. The browser applies the same patterns to loaded catalogs before translating generated reports; an unproven cadence retains the complete original. Numeric inputs, engine output and medical source records are unchanged. This is a conservative display guard, not semantic or clinical validation. Mixed schedules, explicit frequency counts and pretranslated static prose still require a broader audit.

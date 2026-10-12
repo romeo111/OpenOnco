@@ -39,17 +39,28 @@
     counters[code] = copy.counters;
   }
   // BEGIN dosing schedule guard: retain original when cadence is unproven.
-  const schedulePatterns = {"es":{"daily":"\\b(?:diari\\w*|cada d[ií]a|al d[ií]a)\\b","weekly":"\\b(?:una|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b"},"pt":{"daily":"\\b(?:di[aá]ri\\w*|diariamente|cada dia|por dia|ao dia)\\b","weekly":"\\b(?:uma|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b"},"de":{"daily":"\\b(?:t[aä]glich\\w*|jeden tag|pro tag)\\b","weekly":"\\bwöchentlich\\b|\\beinmal\\s+pro\\s+woche\\b"},"fr":{"daily":"\\b(?:quotidien\\w*|chaque jour|par jour)\\b","weekly":"\\b(?:une|1)\\s+(?:seule\\s+)?fois\\s+par\\s+semaine\\b|\\bhebdomadaire\\b"},"it":{"daily":"\\b(?:ogni giorno|al giorno|quotidianamente|giornalier\\w*)\\b","weekly":"\\b(?:settimana|settimanale|settimanalmente)\\b"},"da":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ugentlig\\w*|hver uge)\\b"},"sv":{"daily":"\\b(?:daglig\\w*|varje dag)\\b","weekly":"\\b(?:veckovis|varje vecka|en gång i veckan)\\b"},"nb":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ukentlig\\w*|hver uke)\\b"},"fi":{"daily":"\\b(?:päivittäin|kerran päivässä|joka päivä)\\b","weekly":"\\b(?:viikoittain|kerran viikossa|joka viikko)\\b"}};
+  const schedulePatterns = {"es":{"daily":"\\b(?:diari\\w*|cada d[ií]a|al d[ií]a)\\b","weekly":"\\b(?:una|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b","frequency":["\\buna vez\\b","\\bdos veces\\b","\\btres veces\\b"]},"pt":{"daily":"\\b(?:di[aá]ri\\w*|diariamente|cada dia|por dia|ao dia)\\b","weekly":"\\b(?:uma|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b","frequency":["\\buma vez\\b","\\bduas vezes\\b","\\btrês vezes\\b"]},"de":{"daily":"\\b(?:t[aä]glich\\w*|jeden tag|pro tag)\\b","weekly":"\\bwöchentlich\\b|\\beinmal\\s+pro\\s+woche\\b","frequency":["\\b(?:einmal|ein mal)\\b","\\b(?:zweimal|zwei mal)\\b","\\b(?:dreimal|drei mal)\\b"]},"fr":{"daily":"\\b(?:quotidien\\w*|chaque jour|par jour)\\b","weekly":"\\b(?:une|1)\\s+(?:seule\\s+)?fois\\s+par\\s+semaine\\b|\\bhebdomadaire\\b","frequency":["\\bune fois\\b","\\bdeux fois\\b","\\btrois fois\\b"]},"it":{"daily":"\\b(?:ogni giorno|al giorno|quotidianamente|giornalier\\w*)\\b","weekly":"\\b(?:settimana|settimanale|settimanalmente)\\b","frequency":["\\buna volta\\b","\\bdue volte\\b","\\btre volte\\b"]},"da":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ugentlig\\w*|hver uge)\\b","frequency":["\\ben gang\\b","\\bto gange\\b","\\btre gange\\b"]},"sv":{"daily":"\\b(?:daglig\\w*|varje dag)\\b","weekly":"\\b(?:veckovis|varje vecka|en gång i veckan)\\b","frequency":["\\ben gång\\b","\\btvå gånger\\b","\\btre gånger\\b"]},"nb":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ukentlig\\w*|hver uke)\\b","frequency":["\\ben gang\\b","\\bto ganger\\b","\\btre ganger\\b"]},"fi":{"daily":"\\b(?:päivittäin|päivässä|joka päivä)\\b","weekly":"\\b(?:viikoittain|kerran viikossa|joka viikko)\\b","frequency":["\\bkerran\\b","\\b(?:kahdesti|kaksi kertaa)\\b","\\b(?:kolmesti|kolme kertaa)\\b"]}};
+  const sourceFrequency = "\\b(once|twice|three times)\\s+(?:daily|weekly|every day|every week)\\b";
   const preserveSchedule = (source, translated, language) => {
     if (source === translated) return true;
     const daily = /\b(?:once daily|every day|daily)\b/i.test(source);
     const weekly = /\b(?:once weekly|every week|weekly)\b/i.test(source);
-    if (daily === weekly) return true;
+    if (!daily && !weekly) return true;
+    if (daily && weekly) return false;
     const forms = schedulePatterns[language];
     if (!forms) return false;
-    const hasDaily = new RegExp(forms.daily, 'i').test(translated);
-    const hasWeekly = new RegExp(forms.weekly, 'i').test(translated);
-    return daily ? hasDaily && !hasWeekly : hasWeekly && !hasDaily;
+    // JavaScript's ASCII word boundaries miss endings such as Finnish ä.
+    const boundary = '(?:(?<![\\p{L}\\p{N}_])(?=[\\p{L}\\p{N}_])|(?<=[\\p{L}\\p{N}_])(?![\\p{L}\\p{N}_]))';
+    const nativePattern = pattern => new RegExp(pattern.replaceAll('\\b', boundary), 'giu');
+    const hasDaily = nativePattern(forms.daily).test(translated);
+    const hasWeekly = nativePattern(forms.weekly).test(translated);
+    if (daily !== hasDaily || weekly !== hasWeekly) return false;
+    const sourceCounts = [...source.matchAll(new RegExp(sourceFrequency, 'gi'))]
+      .map(match => ({once: 1, twice: 2, 'three times': 3})[match[1].toLowerCase()]);
+    const translatedCounts = forms.frequency.flatMap((pattern, index) =>
+      [...translated.matchAll(nativePattern(pattern))].map(match => ({position: match.index, count: index + 1})))
+      .sort((left, right) => left.position - right.position).map(match => match.count);
+    return sourceCounts.length === translatedCounts.length && sourceCounts.every((count, index) => count === translatedCounts[index]);
   };
   // END dosing schedule guard.
   fetch(catalogURL).then(response => {

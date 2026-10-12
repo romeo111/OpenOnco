@@ -3,6 +3,43 @@ from scripts.clinical_translation_checks import acceptable_draft
 from scripts.clinical_curated_copy import AVAILABILITY_LABELS, STAGING_LABELS, messages_for
 
 
+@pytest.mark.parametrize('locale,period,counts', [
+    ('es', 'al día', ['una vez', 'dos veces', 'tres veces']),
+    ('pt', 'ao dia', ['uma vez', 'duas vezes', 'três vezes']),
+    ('de', 'täglich', ['einmal', 'zweimal', 'dreimal']),
+    ('fr', 'par jour', ['une fois', 'deux fois', 'trois fois']),
+    ('it', 'al giorno', ['una volta', 'due volte', 'tre volte']),
+    ('da', 'dagligt', ['en gang', 'to gange', 'tre gange']),
+    ('sv', 'dagligen', ['en gång', 'två gånger', 'tre gånger']),
+    ('nb', 'daglig', ['en gang', 'to ganger', 'tre ganger']),
+    ('fi', 'päivässä', ['kerran', 'kahdesti', 'kolmesti']),
+])
+def test_explicit_frequency_is_preserved_for_every_edition(locale, period, counts):
+    weekly = {'es': 'semanalmente', 'pt': 'semanalmente', 'de': 'wöchentlich',
+              'fr': 'hebdomadaire', 'it': 'settimanale', 'da': 'ugentligt',
+              'sv': 'varje vecka', 'nb': 'ukentlig', 'fi': 'viikoittain'}[locale]
+    for index, source_count in enumerate(['once', 'twice', 'three times']):
+        source = f'100 mg {source_count} daily'
+        assert acceptable_draft(source, f'100 mg {counts[index]} {period}', locale)
+        assert not acceptable_draft(source, f'100 mg {period}', locale)
+        assert not acceptable_draft(source, f'100 mg {counts[(index + 1) % 3]} {period}', locale)
+        assert acceptable_draft(source, source, locale)
+        assert acceptable_draft(f'100 mg {source_count} weekly', f'100 mg {counts[index]} {weekly}', locale)
+        assert not acceptable_draft(f'100 mg {source_count} weekly', f'100 mg {counts[(index + 1) % 3]} {weekly}', locale)
+    assert not acceptable_draft('100 mg daily', f'100 mg {counts[1]} {period}', locale)
+    assert not acceptable_draft('100 mg once daily; 100 mg once daily',
+                                f'100 mg {counts[0]} {period}; 100 mg {counts[1]} {period}', locale)
+    assert not acceptable_draft('100 mg once daily; 200 mg twice daily',
+                                f'100 mg {counts[1]} {period}; 200 mg {counts[0]} {period}', locale)
+
+
+def test_mixed_periods_retain_original_until_clause_alignment_is_verified():
+    from scripts.clinical_translation_checks import schedule_fidelity
+    source = '100 mg once daily; 100 mg twice weekly'
+    assert not schedule_fidelity(source, '100 mg deux fois par jour; 100 mg une fois hebdomadaire', 'fr')
+    assert schedule_fidelity(source, source, 'fr')
+
+
 @pytest.mark.parametrize('locale,daily,weekly', [
     ('es', '100 mg al día', '100 mg semanalmente'),
     ('pt', '100 mg ao dia', '100 mg semanalmente'),

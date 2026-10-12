@@ -53,7 +53,7 @@ def test_added_language_cannot_turn_daily_dose_into_weekly(locale, weekly):
     ('sv', '100 mg dagligen'), ('nb', '100 mg daglig'), ('fi', '100 mg päivittäin'),
 ])
 def test_added_language_dosing_schedule_is_retained_when_translated(locale, daily):
-    assert acceptable_draft('100 mg once daily', daily, locale)
+    assert acceptable_draft('100 mg daily', daily, locale)
     assert not acceptable_draft('100 mg once weekly', daily, locale)
 
 
