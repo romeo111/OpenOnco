@@ -67,8 +67,17 @@ def _audit_case(case: CaseEntry, *, examples_dir: Path, kb_root: Path) -> dict[s
         else:
             result = generate_plan(profile, kb_root=kb_root)
             plan = result.plan
+            histology_withheld = bool(plan and plan.knowledge_base_state.get('histology_selection_withheld') is True)
+            if histology_withheld and (plan.tracks or plan.sequencing_tracks or result.default_indication_id):
+                record['issues'].append('histology-withheld output still contains a treatment selection')
             if plan is None or not plan.tracks:
-                record["issues"].append("no treatment or prevention plan generated")
+                if (histology_withheld and case.scenario_type == 'molecular'
+                        and not plan.sequencing_tracks and result.default_indication_id is None
+                        and any('Histology applicability' in warning for warning in result.warnings)):
+                    record['status'] = 'withheld'
+                    record['withheld_reason'] = 'Histology-specific treatment route not confirmed; no automatic substitute.'
+                else:
+                    record["issues"].append("no treatment or prevention plan generated")
             if case.scenario_type == "diagnostic":
                 record["issues"].append("treatment profile has diagnostic scenario_type")
 
@@ -109,7 +118,8 @@ def audit_examples(
         "scope": "all_registered" if include_internal else "public",
         "summary": {
             "checked": len(records),
-            "passed": len(records) - len(failures),
+            "passed": sum(record['status'] == 'pass' for record in records),
+            "withheld": sum(record['status'] == 'withheld' for record in records),
             "failed": len(failures),
             "by_quality_tier": dict(Counter(record["quality_tier"] for record in records)),
             "unregistered_bma_profiles": len(unregistered_bma),
@@ -129,6 +139,7 @@ def _markdown(report: dict[str, Any]) -> str:
         "",
         f"- Checked: {summary['checked']}",
         f"- Passed: {summary['passed']}",
+        f"- Selection withheld: {summary['withheld']}",
         f"- Failed: {summary['failed']}",
         f"- Unregistered BMA profiles: {summary['unregistered_bma_profiles']}",
         "",
@@ -160,6 +171,7 @@ def main(argv: list[str] | None = None) -> int:
     summary = report["summary"]
     print(
         f"Example audit ({report['scope']}): {summary['passed']}/{summary['checked']} passed; "
+        f"{summary['withheld']} explicitly withheld; "
         f"{summary['unregistered_bma_profiles']} unregistered BMA profiles"
     )
     for record in report["failures"]:
