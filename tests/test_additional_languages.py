@@ -111,3 +111,17 @@ def test_new_language_empty_request_has_native_disclaimer_without_model_use(loca
 def test_canonical_diagnosis_names_do_not_publish_literal_model_corruption(locale):
     from scripts.clinical_curated_copy import messages_for
     assert messages_for(locale)['Colorectal carcinoma'] == 'Colorectal carcinoma'
+
+
+@pytest.mark.parametrize('locale', ['es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi'])
+def test_treatment_line_copy_overrides_literal_row_translations(locale):
+    import json
+    import re
+    from pathlib import Path
+    from scripts.clinical_curated_copy import messages_for, TREATMENT_LINE_LABELS
+    runtime = (Path(__file__).resolve().parents[1] / 'scripts/clinical-localization.js').read_text(encoding='utf-8')
+    embedded = json.loads(re.search(r'const treatmentLineCopy = (.*);', runtime)[1])
+    assert embedded == TREATMENT_LINE_LABELS
+    assert messages_for(locale)['first line'] == embedded[locale]
+    assert embedded[locale] not in ['prima riga', 'första raden', 'ensimmäinen rivi']
+    assert runtime.index("catalog['first line'] = treatmentLineCopy[locale]") < runtime.index('const nativeValues =')

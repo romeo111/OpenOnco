@@ -9,6 +9,8 @@ AVAILABILITY_LABELS = {
     'fi': '✗ Ei rekisteröity Ukrainassa',
 }
 
+TREATMENT_LINE_LABELS = {'es': 'primera línea de tratamiento', 'pt': 'primeira linha de tratamento', 'de': 'Erstlinientherapie', 'fr': 'première ligne de traitement', 'it': 'prima linea di trattamento', 'da': 'første behandlingslinje', 'sv': 'första behandlingslinjen', 'nb': 'første behandlingslinje', 'fi': 'ensilinjan hoito'}
+
 STAGING_LABELS = {
     'it': {'Stage': 'Stadio', 'Staging': 'Stadiazione'},
     'da': {'Stage': 'Stadium', 'Staging': 'Stadieinddeling'},
@@ -347,6 +349,7 @@ def messages_for(locale):
         catalog.update(offline_messages(locale))
         catalog.update(regulatory_messages(locale))
         catalog.update(content_review_messages(locale))
+        catalog['first line'] = TREATMENT_LINE_LABELS[locale]
         return catalog
     title = NSCLC[locale]
     status = {
@@ -395,6 +398,7 @@ def messages_for(locale):
     catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
     catalog.update(privacy_messages(locale))
     catalog.update(regulatory_messages(locale))
+    catalog['first line'] = TREATMENT_LINE_LABELS[locale]
     return catalog
 
 
