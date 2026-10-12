@@ -10,9 +10,10 @@ from pathlib import Path, PurePosixPath
 
 from scripts.additional_locale_copy import NOTICES
 from scripts.site_nav import render_top_bar
+from scripts.clinical_asset_versions import clinical_runtime_url
 
 
-def render_shared_reader(source: str, locale: str, path: str, title: str) -> str:
+def render_shared_reader(source: str, locale: str, path: str, title: str, *, runtime_assets=None) -> str:
     # Paths come from the builder's existing public source inventory, never a
     # request parameter or an external destination.
     if (not path.endswith('.html') or '\\' in path
@@ -25,6 +26,9 @@ def render_shared_reader(source: str, locale: str, path: str, title: str) -> str
     original = english_original if source_language.split('-')[0] == 'en' else ukrainian_original if source_language.split('-')[0] == 'uk' else unspecified_original
     digest = hashlib.sha256(source.encode('utf-8')).hexdigest()
     escaped_title, escaped_path = html.escape(title), html.escape('/' + path, quote=True)
+    assets = runtime_assets or {}
+    runtime = assets.get('runtime', clinical_runtime_url())
+    catalog = assets.get('clinical-translations.json', f'/{locale}/clinical-translations.json')
     return f'''<!doctype html>
 <html lang="{locale}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escaped_title}</title><link rel="stylesheet" href="/header.css?v=layout-20261011">
@@ -36,7 +40,7 @@ def render_shared_reader(source: str, locale: str, path: str, title: str) -> str
 <iframe data-shared-clinical-source src="{escaped_path}" title="{escaped_title}"></iframe>
 <noscript><p class="reader-loading"><a href="{escaped_path}">{html.escape(original)}</a></p></noscript></main>
 <script src="/shared-clinical-reader.js" data-locale="{locale}" data-source="{escaped_path}" defer></script>
-<script src="/clinical-localization.js?v=20261011-source-language" data-locale="{locale}" data-catalog="/{locale}/clinical-translations.json" defer></script>
+<script src="{runtime}" data-locale="{locale}" data-catalog="{catalog}" defer></script>
 </body></html>\n'''
 
 

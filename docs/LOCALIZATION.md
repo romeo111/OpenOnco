@@ -2,7 +2,7 @@
 
 ## Additional interface editions (2026-10-12)
 
-Italian `/it/`, Danish `/da/`, Swedish `/sv/`, Norwegian Bokmål `/nb/` and Finnish `/fi/` extend the menu to eleven languages, retaining English first and Ukrainian second. These are interface-first language drafts; broader clinical catalogs are authored locally in separate staging. Do not describe them as complete or clinically validated translations.
+Italian `/it/`, Danish `/da/`, Swedish `/sv/`, Norwegian Bokmål `/nb/` and Finnish `/fi/` extend the menu to eleven languages, retaining English first and Ukrainian second. Each edition includes a locally authored full-corpus display catalog, with original fragments retained when translation checks reject a draft. These translations remain pending clinical review; do not describe them as fully translated or clinically validated.
 
 Public and interactive pages use the shared templates. Deep clinical documents use small same-origin readers with the same source presentation and saved display catalogs. The previous six-language inventory was 786,113,461 bytes; five fully duplicated clinical trees would exceed the published GitHub Pages 1 GB limit. Original documents remain accessible without JavaScript. Canonical diagnosis names retain their source wording after an observed literal model error; numbers, medication names, source IDs and engine inputs are protected.
 
@@ -11,6 +11,10 @@ Public and interactive pages use the shared templates. Deep clinical documents u
 Nordic authoring uses `Helsinki-NLP/opus-mt-en-gmq` at `1011a691a63e61b4beb68d47332790e072f685f0`; Finnish uses `Helsinki-NLP/opus-mt-en-fi` at `2f68f12519005b50f9e1afe6fd57b13add55e156`. Italian uses the existing pinned Romance model. Weights remain in the optional local authoring environment; no model or translation API runs on page visits. The clinical-question API retains its separate existing provider costs.
 
 ## Earlier editions and maintenance
+
+The five new catalogs each contain 36,858 display strings. Native draft counts are IT 21,157; DA 19,677; SV 19,860; NB 19,261; FI 15,411. Remaining entries retain originals, including protected diagnosis names. These counts describe display strings, not medically approved records.
+
+The navigation shell is shared across all eleven languages. Runtime and catalog assets have content-addressed filenames so previous offline caches cannot substitute stale translations. Large discovery inventories use deterministic gzip sitemap shards, each below both 50,000 URLs and 50 MB uncompressed, referenced by `/sitemap.xml`.
 
 English (`/`), Ukrainian (`/ukr/`), Spanish (`/es/`), Portuguese (`/pt/`), German (`/de/`) and French (`/fr/`) share the same clinical engine. English is first in the flag menu; Ukrainian is second.
 

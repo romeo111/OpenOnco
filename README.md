@@ -1,6 +1,6 @@
 # OpenOnco
 
-Additional interface editions: [Italiano](https://openonco.info/it/), [Dansk](https://openonco.info/da/), [Svenska](https://openonco.info/sv/), [Norsk bokmål](https://openonco.info/nb/) and [Suomi](https://openonco.info/fi/). Their clinical readers share the original documents and apply saved display catalogs; medical passages and canonical diagnosis names may retain their source language. Broader clinical translations are in preparation. See [localization scope](docs/LOCALIZATION.md).
+Additional editions: [Italiano](https://openonco.info/it/), [Dansk](https://openonco.info/da/), [Svenska](https://openonco.info/sv/), [Norsk bokmål](https://openonco.info/nb/) and [Suomi](https://openonco.info/fi/). Their clinical readers share the original documents and apply full-corpus saved display catalogs. Medical passages rejected by translation checks and canonical diagnosis names retain their source language. Clinical translation review remains pending. See [localization scope](docs/LOCALIZATION.md).
 
 OpenOnco is a solo project. One maintainer delivers updates with automated
 checks and source traceability. External clinical review is optional and is

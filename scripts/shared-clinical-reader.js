@@ -16,6 +16,10 @@
       const prefix = code === 'en' ? '' : code === 'uk' ? 'ukr/' : `${code}/`;
       link.href = `/${prefix}${page}`;
     }
+    header.addEventListener('click', event => {
+      const link = event.target.closest('.language-menu a[lang]');
+      if (link) { try { localStorage.setItem('oo_lang', link.lang); } catch (_) {} }
+    });
   }).catch(() => {
     // Keep an accessible source/navigation fallback if an asset cannot load.
     const home = document.createElement('a');
@@ -27,7 +31,7 @@
     const doc = frame.contentDocument;
     if (!doc || !doc.body) return;
     const style = doc.createElement('style');
-    style.textContent = '.top-bar.site-header,.translation-notice{display:none!important}html,body{min-height:0!important;height:auto!important}';
+    style.textContent = '.top-bar.site-header,[data-shared-site-header],.translation-notice{display:none!important}html,body{min-height:0!important;height:auto!important}';
     doc.head.append(style);
     const resize = () => { frame.style.height = `${Math.max(600, doc.documentElement.scrollHeight, doc.body.scrollHeight)}px`; };
     new ResizeObserver(resize).observe(doc.body);

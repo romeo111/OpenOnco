@@ -6,6 +6,7 @@ This command does not run during builds and does not imply indexing.
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 from pathlib import Path
@@ -26,7 +27,18 @@ def payload_for(site: Path) -> dict:
     key = key_file.read_text(encoding="utf-8").strip()
     if key != key_file.stem:
         raise ValueError("IndexNow key filename and content must match")
-    urls = sorted({e.text for e in ET.parse(site / "sitemap.xml").findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")})
+    namespace = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+    root = ET.parse(site / 'sitemap.xml').getroot()
+    if root.tag == namespace + 'sitemapindex':
+        documents = []
+        for entry in root.findall(namespace + 'sitemap/' + namespace + 'loc'):
+            url = entry.text or ''
+            if not url.startswith(BASE) or not re.fullmatch(r'sitemap-part-\d+\.xml\.gz', url[len(BASE):]):
+                raise ValueError('Expected local generated sitemap shards')
+            documents.append(ET.fromstring(gzip.decompress((site / url[len(BASE):]).read_bytes())))
+    else:
+        documents = [root]
+    urls = sorted({e.text for document in documents for e in document.findall(namespace + 'url/' + namespace + 'loc')})
     if not urls or any(not u.startswith(BASE) for u in urls):
         raise ValueError("Expected canonical URLs on openonco.info")
     return {"host": HOST, "key": key, "keyLocation": BASE + key_file.name, "urlList": urls}

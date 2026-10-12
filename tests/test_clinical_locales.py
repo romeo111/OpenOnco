@@ -76,7 +76,8 @@ def test_original_attribution_uses_declared_source_language_without_guessing(loc
     assert expected_link in output
     assert 'value="positive"' in output
     assert '<script>const original = "uk";</script>' in output
-    assert 'clinical-localization.js?v=20261011-source-language' in output
+    from scripts.clinical_asset_versions import clinical_runtime_url
+    assert clinical_runtime_url() in output
     assert hashlib.sha256(source.encode('utf-8')).hexdigest() in output
 
 
@@ -371,6 +372,59 @@ def test_incomplete_language_blocks_all_catalog_replacement(monkeypatch, tmp_pat
     assert before == {path.name: path.read_bytes() for path in baseline.iterdir()}
 
 
+def test_publication_retains_interface_work_and_reports_all_catalog_keys(monkeypatch, tmp_path):
+    from scripts.publish_clinical_catalogs import publish
+    baseline, _, _ = _publication_fixture(tmp_path)
+    for locale in ('es', 'pt', 'de', 'fr'):
+        path = baseline / f'clinical.{locale}.json'
+        current = json.loads(path.read_text(encoding='utf-8'))
+        current['New interface key'] = 'New interface key'
+        path.write_text(json.dumps(current), encoding='utf-8')
+    model = {'name': 'fixture Nordic model', 'revision': 'pinned-fixture-revision'}
+    (baseline / 'clinical_manifest.json').write_text(json.dumps({'models': {'gmq': model}}), encoding='utf-8')
+    monkeypatch.chdir(tmp_path)
+    publish()
+    manifest = json.loads((baseline / 'clinical_manifest.json').read_text(encoding='utf-8'))
+    assert manifest['models']['gmq'] == model
+    for locale in ('es', 'pt', 'de', 'fr'):
+        catalog = json.loads((baseline / f'clinical.{locale}.json').read_text(encoding='utf-8'))
+        assert catalog['New interface key'] == 'New interface key'
+        counts = manifest['languages'][locale]
+        assert counts['strings'] == len(catalog) == 3
+        assert counts['translated_strings'] + counts['original_strings'] == len(catalog)
+        assert counts['original_strings'] == 3
+        assert counts['review'] == 'pending_clinical_review'
+
+
+def test_publication_dry_run_does_not_change_current_catalogs(monkeypatch, tmp_path):
+    from scripts.publish_clinical_catalogs import publish
+    baseline, _, _ = _publication_fixture(tmp_path)
+    before = {path.name: path.read_bytes() for path in baseline.iterdir()}
+    monkeypatch.chdir(tmp_path)
+    inventory = publish(apply=False)
+    assert before == {path.name: path.read_bytes() for path in baseline.iterdir()}
+    assert not (tmp_path / '.tmp/clinical-catalog-backups').exists()
+    assert set(inventory) == {'es', 'pt', 'de', 'fr'}
+    assert all(value['final_check_originals'] == 1 for value in inventory.values())
+
+
+def test_full_publication_cannot_replace_protected_diagnosis_names(monkeypatch, tmp_path):
+    from scripts.publish_clinical_catalogs import publish
+    baseline, staging, dose = _publication_fixture(tmp_path)
+    diagnosis = 'Colorectal carcinoma'
+    (baseline / 'additional-diagnosis-originals.json').write_text(json.dumps([diagnosis]), encoding='utf-8')
+    (baseline / 'clinical.it.json').write_text(json.dumps({diagnosis: diagnosis}), encoding='utf-8')
+    original_stage = {dose: dose, diagnosis: 'Fargeectalkarcinom'}
+    path = staging / 'clinical.it.json'
+    path.write_text(json.dumps(original_stage), encoding='utf-8')
+    path.with_suffix('.summary.json').write_text(json.dumps({'source_strings': 1, 'strings': 2}), encoding='utf-8')
+    monkeypatch.chdir(tmp_path)
+    publish(locales=['it'])
+    catalog = json.loads((baseline / 'clinical.it.json').read_text(encoding='utf-8'))
+    assert catalog[diagnosis] == diagnosis
+    assert json.loads(path.read_text(encoding='utf-8')) == original_stage
+
+
 def test_recheck_restores_corrupted_identifiers_without_clinical_approval(tmp_path):
     from scripts.recheck_clinical_catalogs import recheck
     catalogs = tmp_path / 'scripts' / 'locales'
@@ -447,6 +501,12 @@ def test_html_export_uses_visible_translated_document():
     root = Path(__file__).resolve().parents[1]
     # Execute export behavior, including native translation and actual Ukrainian fallback.
     subprocess.run(['node', 'tests/browser_report_export.cjs'], cwd=root, check=True, timeout=30)
+
+
+def test_translation_cache_uses_actual_versioned_assets_offline():
+    import subprocess
+    root = Path(__file__).resolve().parents[1]
+    subprocess.run(['node', 'tests/browser_translation_cache.cjs'], cwd=root, check=True, timeout=60)
 
 
 def test_completed_clinical_inventory_advertises_real_tool_counterparts():

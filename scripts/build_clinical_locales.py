@@ -15,6 +15,7 @@ from scripts.site_nav import render_top_bar
 from scripts.site_translation_catalog import LANGUAGES, PAGES, ProseCollector, load_catalog, normalize, source_pages
 from scripts.additional_locale_copy import ADDITIONAL_LANGUAGES
 from scripts.shared_clinical_reader import render_shared_reader, write_reader_assets
+from scripts.clinical_asset_versions import clinical_runtime_url, write_clinical_assets
 
 NOTICES = {
     'es': ('Traducción preliminar: revisión clínica pendiente.', 'Consultar el original en inglés'),
@@ -170,7 +171,7 @@ class LocalizedHTML(HTMLParser):
     def handle_comment(self, data):
         self.parts.append(f'<!--{data}-->')
 
-def localize_page(source, locale, path, available, catalog, *, style_assets=None):
+def localize_page(source, locale, path, available, catalog, *, style_assets=None, runtime_assets=None):
     # The final discovery pass will create canonical/hreflang/JSON-LD for this URL.
     source = re.sub(r'<!-- openonco-seo:start -->.*?<!-- openonco-seo:end -->', '', source, flags=re.S)
     source = re.sub(r'<header class="top-bar site-header">.*?</header>', '', source, flags=re.S)
@@ -196,19 +197,24 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
         page = page.replace('"/kb_search_index.json"', f'"/{locale}/kb_search_index.json"')
     if path in PAGES or path.startswith('handbook/'):
         catalog_file = 'clinical-translations.json' if path == 'try.html' else 'clinical-ui-translations.json'
-        runtime = f'<script src="/clinical-localization.js?v=20261011-source-language" data-locale="{locale}" data-catalog="/{locale}/{catalog_file}" defer></script>'
+        assets = runtime_assets or {}
+        runtime = f'<script src="{assets.get("runtime", clinical_runtime_url())}" data-locale="{locale}" data-catalog="{assets.get(catalog_file, f"/{locale}/{catalog_file}")}" defer></script>'
         page = page.replace('</body>', runtime + '</body>')
     digest = hashlib.sha256(source.encode('utf-8')).hexdigest()
     page = page.replace('</head>', f'<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="{digest}"></head>')
     return '\n'.join(line.rstrip() for line in page.splitlines()) + '\n'
 
-def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
+def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None, *, locales=None):
     catalog_dir = catalog_dir or Path(__file__).with_name('locales')
     manifest = catalog_dir / 'clinical_manifest.json'
     if not manifest.exists():
         return {'clinical_localized_pages': 0, 'pages': []}
     inventory = json.loads(manifest.read_text(encoding='utf-8'))['languages']
     active_languages = [locale for locale in LANGUAGES if locale in inventory]
+    if locales is not None:
+        if not locales or any(locale not in active_languages for locale in locales):
+            raise ValueError('Select completed supported clinical locales')
+        active_languages = [locale for locale in active_languages if locale in locales]
     for locale in active_languages:
         catalog_path = manifest.parent / f'clinical.{locale}.json'
         if hashlib.sha256(catalog_path.read_bytes()).hexdigest() != inventory[locale]['sha256']:
@@ -260,6 +266,7 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
         ui_catalog.update(curated)
         ui_catalog.update({value: value for value in curated.values()})
         write_generated_text(root / 'clinical-ui-translations.json', json.dumps(ui_catalog, ensure_ascii=False, separators=(',', ':')))
+        runtime_assets = write_clinical_assets(output_dir, locale)
         for path in pages:
             relative = path.relative_to(output_dir).as_posix()
             target = root / relative
@@ -269,9 +276,9 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
                 match = re.search(r'<title>(.*?)</title>', source, re.S)
                 source_title = html.unescape(match[1]) if match else 'OpenOnco'
                 title = catalog.get(normalize(source_title), source_title)
-                rendered = render_shared_reader(source, locale, relative, title)
+                rendered = render_shared_reader(source, locale, relative, title, runtime_assets=runtime_assets)
             else:
-                rendered = localize_page(source, locale, relative, available, catalog, style_assets=style_assets)
+                rendered = localize_page(source, locale, relative, available, catalog, style_assets=style_assets, runtime_assets=runtime_assets)
             write_generated_text(target, rendered)
             published.append(f'{locale}/{relative}')
         index = json.loads((output_dir / 'kb_search_index.json').read_text(encoding='utf-8'))
@@ -284,7 +291,8 @@ def build_clinical_locales(output_dir: Path, catalog_dir: Path | None = None):
             entry['search_text'] = entry.get('search_text', '') + ' ' + ' '.join(str(entry.get(k, '')) for k in ('title', 'summary', 'subtitle', 'kind')).lower()
         write_generated_text(root / 'kb_search_index.json', json.dumps(index, ensure_ascii=False))
     if published:
-        (output_dir / 'clinical-localization.js').write_text(Path(__file__).with_name('clinical-localization.js').read_text(encoding='utf-8'), encoding='utf-8')
+        from scripts.clinical_asset_versions import clinical_runtime_bytes
+        (output_dir / 'clinical-localization.js').write_bytes(clinical_runtime_bytes())
         styles_root = output_dir / 'clinical-styles'
         styles_root.mkdir(exist_ok=True)
         for digest, css in style_assets.items():

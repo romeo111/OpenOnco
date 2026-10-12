@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import gzip
 import json
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -726,7 +727,10 @@ def inject_geo_lang_redirect(html_text: str, *, path: str | None = None) -> str:
     )
     is_404 = bool(path and path.replace("\\", "/").lstrip("/").endswith("404.html"))
     is_review = bool(path and path.replace("\\", "/").lstrip("/").startswith("review/"))
-    if is_redirect_stub or is_404 or is_review:
+    locale, base = split_locale(path or '')
+    explicit_shared_reader = locale not in ('en', 'uk') and (
+        'data-shared-site-header' in html_text or 'data-shared-clinical-source' in html_text)
+    if is_redirect_stub or is_404 or is_review or explicit_shared_reader:
         # Never carry the script here; strip a previously-injected block if present.
         return existing.sub("", html_text, count=1) if existing.search(html_text) else html_text
 
@@ -812,14 +816,35 @@ def write_sitemap(output_dir: Path, *, available_paths: set[str] | None = None) 
             + alternates + "\n"
             "  </url>"
         )
-    sitemap = (
+    opening = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
-        + "\n".join(urls)
-        + "\n</urlset>\n"
     )
     out = output_dir / "sitemap.xml"
-    out.write_text(sitemap, encoding="utf-8")
+    # Limit uncompressed bytes as well as URL count. Compressed shards keep
+    # eleven complete language trees on the existing free static host.
+    shards, current, size = [], [], len(opening.encode()) + len('\n</urlset>\n')
+    for entry in urls:
+        entry_size = len(entry.encode('utf-8')) + 1
+        if current and (len(current) >= 50000 or size + entry_size > 45000000):
+            shards.append(current)
+            current, size = [], len(opening.encode()) + len('\n</urlset>\n')
+        current.append(entry)
+        size += entry_size
+    if current or not shards:
+        shards.append(current)
+    if len(shards) == 1 and size < 1000000:
+        out.write_text(opening + '\n'.join(shards[0]) + '\n</urlset>\n', encoding='utf-8')
+        return out
+    references = []
+    for number, entries in enumerate(shards, 1):
+        name = f'sitemap-part-{number}.xml.gz'
+        payload = (opening + '\n'.join(entries) + '\n</urlset>\n').encode('utf-8')
+        (output_dir / name).write_bytes(gzip.compress(payload, mtime=0))
+        references.append(f'<sitemap><loc>{SITE_BASE_URL}/{name}</loc></sitemap>')
+    out.write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                   '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                   + '\n'.join(references) + '\n</sitemapindex>\n', encoding='utf-8')
     return out
 
 
@@ -1112,9 +1137,11 @@ def finalize_site_discovery(
     output_dir: Path, stats: dict | None = None
 ) -> dict[str, str | int]:
     from scripts.site_nav import render_top_bar
+    from scripts.shared_site_header import DEEP_SECTIONS, render_header_mount, write_shared_header_assets
     pages = _html_pages(output_dir)
     physical_paths = {page.relative_to(output_dir).as_posix() for page in pages}
-    header_re = re.compile(r'<header class="top-bar site-header">.*?</header>', re.S)
+    write_shared_header_assets(output_dir)
+    header_re = re.compile(r'<header class="top-bar site-header">.*?</header>|<!-- shared-site-header:start -->.*?<!-- shared-site-header:end -->', re.S)
     available_paths = _indexable_paths(output_dir)
     def enrich_page(page):
         rel = page.relative_to(output_dir).as_posix()
@@ -1122,7 +1149,9 @@ def finalize_site_discovery(
         locale, base = split_locale(rel)
         active = base.split('/')[0].removesuffix('.html')
         active = {'index': 'home', 'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
-        navigation = header_re.sub(lambda _: render_top_bar(active, locale, page_path=base, available_paths=physical_paths), original)
+        deep = base.startswith(DEEP_SECTIONS)
+        navigation = header_re.sub(lambda _: render_header_mount(locale, base, active, physical_paths)
+                                   if deep else render_top_bar(active, locale, page_path=base, available_paths=physical_paths), original)
         updated = inject_geo_lang_redirect(inject_seo_metadata(navigation, path=rel, available_paths=available_paths), path=rel)
         if updated != original:
             page.write_text(updated, encoding="utf-8")

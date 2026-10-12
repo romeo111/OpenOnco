@@ -10,7 +10,7 @@ from scripts.clinical_curated_copy import safety_notices_for
 from scripts.site_translation_catalog import LANGUAGES
 
 
-def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-source-strings.json'), locales=None):
+def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-source-strings.json'), locales=None, *, apply=True):
     sources = json.loads(corpus.read_text(encoding='utf-8'))
     destination = Path('scripts/locales')
     index = json.loads(Path('docs/kb_search_index.json').read_text(encoding='utf-8'))
@@ -27,10 +27,19 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
         catalog = json.loads(path.read_text(encoding='utf-8'))
         previous = destination / path.name
         baseline = json.loads(previous.read_text(encoding='utf-8')) if previous.exists() else {}
-        if not set(baseline) <= set(catalog) or not set(sources) <= set(catalog):
-            raise ValueError(f'{locale}: incomplete catalog or missing previous keys')
+        if not set(sources) <= set(catalog):
+            raise ValueError(f'{locale}: incomplete source corpus')
         if summary['source_strings'] != len(sources) or summary['strings'] != len(catalog):
             raise ValueError(f'{locale}: completion summary mismatch')
+        # Interface work can advance while the long authoring job is running.
+        # Retain newly added current keys without modifying its staged snapshot.
+        catalog.update({key: value for key, value in baseline.items() if key not in catalog})
+        if locale in ('it', 'da', 'sv', 'nb', 'fi'):
+            protected_path = destination / 'additional-diagnosis-originals.json'
+            if not protected_path.exists():
+                raise ValueError(f'{locale}: missing protected diagnosis terminology')
+            protected = json.loads(protected_path.read_text(encoding='utf-8'))
+            catalog.update({name: name for name in protected if name in catalog})
         failures = [source for source, value in catalog.items() if not acceptable_draft(source, value, locale, pattern)]
         # A stricter final check may reject an earlier generation checkpoint.
         # Preserve the complete source for that key; never reconstruct a dose
@@ -49,11 +58,14 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
         inventory[locale] = {
             'sha256': hashlib.sha256(payload).hexdigest(),
             'strings': len(catalog),
-            'translated_strings': sum(catalog[source] != source for source in sources),
-            'original_strings': sum(catalog[source] == source for source in sources),
+            'translated_strings': sum(source != value for source, value in catalog.items()),
+            'original_strings': sum(source == value for source, value in catalog.items()),
+            'source_strings': len(sources),
             'review': 'pending_clinical_review',
             'final_check_originals': len(failures),
         }
+    if not apply:
+        return inventory
     # Validation of all languages precedes any replacement. Preserve every
     # previous version by its content hash; repeated publication is reversible.
     backup = Path('.tmp/clinical-catalog-backups')
@@ -70,12 +82,14 @@ def publish(staging=Path('.tmp/clinical-next'), corpus=Path('.tmp/clinical-sourc
         'source_sha256': hashlib.sha256(corpus.read_bytes()).hexdigest(),
         'languages': {**previous_manifest.get('languages', {}), **inventory},
         'models': {
+            **previous_manifest.get('models', {}),
             'es/pt/fr': {'name': 'Helsinki-NLP/opus-mt-en-ROMANCE', 'revision': 'f8f3a28e8b6272d0ccc0290b832f699e154ae431', 'license': 'Apache-2.0'},
             'de': {'name': 'Helsinki-NLP/opus-mt-en-de', 'revision': '6183067f769a302e3861815543b9f312c71b0ca4', 'license': 'CC-BY-4.0'},
         },
     }
-    manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(inventory, indent=2))
+    return inventory
 
 
 if __name__ == '__main__':

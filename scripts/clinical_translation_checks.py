@@ -6,7 +6,7 @@ from pathlib import Path
 import yaml
 
 from scripts.site_translation_catalog import numeric_tokens, polarity_tokens, quantity_tokens
-from scripts.clinical_curated_copy import diagnostic_display
+from scripts.clinical_curated_copy import AVAILABILITY_LABELS, diagnostic_display
 
 IDENTIFIERS = re.compile(
     r'\b(?:SRC|DIS|BIO|DRUG|REG|ALGO|RF|IND|HQ|HB|PLAN|TEST|SUP|WORKUP|OQ|CI|CC|BMA|COVERAGE|VERIFIED|KEYNOTE|FIGHT|LIBRETTO)-[A-Z0-9_-]+\b'
@@ -17,6 +17,7 @@ VARIANTS = re.compile(r'\b(?:p\.)?[A-Z]\d{1,5}[A-Z*]\b')
 ABBREVIATIONS = re.compile(r'\b(?:OpenOnco|CIViC|[Hh]edgehog|MYC|BCL2|BCL6|ATM|CHEK2|PALB2|PTEN|ESMO|NCCN|FDA|EMA|WHO|ESCAT|TKI|PARPi|IHC|ISH|TNM|ECOG|BID|TID|QD|PO|IV|SC|NSCLC|SCLC|AML|ALL|APL|CLL|CML|DLBCL|HRR|PDAC|GIST|[BT](?=-[Cc]ell))\b')
 STATES = re.compile(r'\b[A-Za-z][A-Za-z0-9]*(?:/[A-Za-z0-9]+)*[+-](?!\w)')
 RISK_SYSTEMS = re.compile(r'\b(?:ELN|IPSS-R|IPSS-M|IPSS|IPI|AAIPI|R-ISS|ISS|IGCCCG|IMDC|INRG|INSS|AJCC|FIGO|BCLC)\b', re.I)
+TRIAL_NAMES = re.compile(r'\b(?:SUNLIGHT|MOUNTAINEER)\b')
 DAILY_EN = re.compile(r'\b(?:once daily|every day|daily)\b', re.I)
 WEEKLY_EN = re.compile(r'\b(?:once weekly|every week|weekly)\b', re.I)
 WEEKLY_TRANSLATION = {
@@ -97,6 +98,8 @@ def registered_gene_symbols():
 def acceptable_draft(source, translated, locale, drug_pattern=None):
     if source == translated:
         return True  # Explicit original retained, not a translated clinical claim.
+    if source == '✗ Not registered in UA' and translated == AVAILABILITY_LABELS.get(locale):
+        return True  # Exact curated country and negation; no arbitrary exemption.
     if diagnostic_display(source, locale) == translated:
         return True  # Exact technical list: the code suffix is identical.
     if not translated or numeric_tokens(source) != numeric_tokens(translated):
@@ -143,6 +146,8 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
     if any(variant.casefold() not in translated.casefold() for variant in VARIANTS.findall(source)):
         return False
     if any(not re.search(r'(?<!\w)' + re.escape(token) + r'(?!\w)', translated, re.I) for token in ABBREVIATIONS.findall(source)):
+        return False
+    if any(not re.search(r'\b' + re.escape(name) + r'\b', translated) for name in TRIAL_NAMES.findall(source)):
         return False
     genes = registered_gene_symbols()
     protected = RISK_SYSTEMS.findall(source) + (genes.findall(source) if genes else [])

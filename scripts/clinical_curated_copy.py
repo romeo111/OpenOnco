@@ -1,6 +1,14 @@
 """Explicit display terminology; source disease codes remain unchanged."""
 import re
 
+AVAILABILITY_LABELS = {
+    'es': '✗ No registrado en Ucrania', 'pt': '✗ Não registado na Ucrânia',
+    'de': '✗ Nicht in der Ukraine registriert', 'fr': '✗ Non enregistré en Ukraine',
+    'it': '✗ Non registrato in Ucraina', 'da': '✗ Ikke registreret i Ukraine',
+    'sv': '✗ Inte registrerat i Ukraina', 'nb': '✗ Ikke registrert i Ukraina',
+    'fi': '✗ Ei rekisteröity Ukrainassa',
+}
+
 
 def diagnostic_display(source, locale):
     """Translate only the label of an exact technical code list, never clinical prose."""
@@ -322,6 +330,7 @@ def messages_for(locale):
         protected = Path(__file__).with_name('locales') / 'additional-diagnosis-originals.json'
         if protected.exists():
             catalog.update({name: name for name in json.loads(protected.read_text(encoding='utf-8'))})
+        catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
         return catalog
     title = NSCLC[locale]
     status = {
@@ -366,4 +375,5 @@ def messages_for(locale):
             'Multiple myeloma: first-line risk and fitness reasoning': 'Myélome multiple : risque et état général en première ligne',
             'Advanced ovarian cancer: HRD/BRCA first-line maintenance reasoning': 'Cancer de l’ovaire avancé : raisonnement sur le traitement d’entretien HRD/BRCA en première ligne',
         })
+    catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
     return catalog

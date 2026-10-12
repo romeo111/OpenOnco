@@ -929,10 +929,11 @@ def test_lang_switch_shows_flag_for_active_mode(site_dir: Path):
         summary = menu.split("</summary>", 1)[0]
         assert '<svg class="language-flag"' in summary
         assert f'lang="{active}" hreflang="{active}" aria-current="true"' in menu
-        languages = ("en", "uk", "es", "pt", "de", "fr")
+        from scripts.site_locales import LOCALES
+        languages = tuple(LOCALES)
         positions = [menu.index(f'lang="{language}" hreflang="{language}"') for language in languages]
         assert positions == sorted(positions)
-        assert menu.count('<svg class="language-flag"') == 7
+        assert menu.count('<svg class="language-flag"') == len(languages) + 1
 
 
 def test_en_landing_links_use_en_paths(site_dir: Path):

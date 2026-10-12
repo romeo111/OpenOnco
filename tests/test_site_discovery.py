@@ -1,7 +1,33 @@
 import re
+import gzip
 from xml.etree import ElementTree as ET
 
 from scripts.site_head import finalize_site_discovery, inject_seo_metadata, write_sitemap
+
+
+def test_large_sitemap_shards_preserve_urls_and_are_deterministic(tmp_path):
+    from scripts.submit_indexnow import payload_for
+    paths = {f'page-{number}.html' for number in range(50001)}
+    index = ET.parse(write_sitemap(tmp_path, available_paths=paths)).getroot()
+    namespace = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+    shards = index.findall('s:sitemap/s:loc', namespace)
+    assert len(shards) == 2
+    urls = []
+    before = {}
+    for shard in shards:
+        path = tmp_path / shard.text.rsplit('/', 1)[-1]
+        before[path.name] = path.read_bytes()
+        payload = gzip.decompress(before[path.name])
+        assert len(payload) <= 50000000
+        entries = ET.fromstring(payload).findall('s:url/s:loc', namespace)
+        assert len(entries) <= 50000
+        urls.extend(entry.text for entry in entries)
+    assert len(urls) == len(set(urls)) == len(paths)
+    key = 'a' * 32
+    (tmp_path / (key + '.txt')).write_text(key)
+    assert payload_for(tmp_path)['urlList'] == sorted(urls)
+    write_sitemap(tmp_path, available_paths=paths)
+    assert all((tmp_path / name).read_bytes() == payload for name, payload in before.items())
 
 
 def test_sitemap_excludes_redirect_noindex_and_noncanonical_pages(tmp_path):

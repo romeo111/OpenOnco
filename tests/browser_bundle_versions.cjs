@@ -7,7 +7,7 @@ const page = fs.readFileSync('docs/try.html', 'utf8');
 const worker = fs.readFileSync('docs/sw.js', 'utf8');
 function fn(source, name) {
   const match = source.match(new RegExp(`^(?:async )?function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
-  assert(match, name); return match[0];
+  assert(match, name); return match[0].replace(/\r\n/g, '\n');
 }
 const bytes = Uint8Array.from([1, 2, 3]);
 const version = createHash('sha256').update(bytes).digest('hex').slice(0, 12);
