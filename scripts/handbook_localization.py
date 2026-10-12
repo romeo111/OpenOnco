@@ -9,6 +9,7 @@ from pathlib import Path
 TRANSLATIONS = json.loads(Path(__file__).with_name("locales").joinpath("handbook.uk.json").read_text(encoding="utf-8"))
 CONTENT_KEYS = {"title", "learning_objectives", "at_a_glance", "heading", "body", "stem", "text", "explanation", "learning_focus", "legal_notes"}
 UI = {
+    "Declared editorial review": "Заявлений редакційний перегляд",
     "OpenOnco Handbook": "Посібник OpenOnco",
     "Source-grounded oncology learning chapters": "Навчальні розділи з онкології з посиланнями на джерела",
     "Educational chapters generated from checked-in OpenOnco YAML entities, source IDs, synthetic cases, and review metadata. This is not official ESMO content and does not grant CME credit.": "Навчальні розділи створені з YAML-записів OpenOnco, ідентифікаторів джерел, синтетичних випадків і метаданих рев’ю. Це не офіційний контент ESMO; бали CME не нараховуються.",

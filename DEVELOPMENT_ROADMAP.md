@@ -4,6 +4,14 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Solo publication and truthful optional review records (2026-10-12)
+
+The remaining two-person quota is replaced by detection of a current eligible content-review record. Publication itself has no reviewer quorum under §6.1. Stats, coverage, BMA display readiness and patient badges share `MIN_ELIGIBLE_CONTENT_REVIEWS=1`; existing authorization, current revision, scope, independent identity/author checks and required BMA dossier remain intact. Zero valid reviews remains unreviewed. Handbook `reviewed` is explicitly labelled declared editorial metadata, not credentialed clinical approval; raw MDT review rows are labelled recorded, not reviewed. The review dashboard describes optional current coverage and separates additional history from quorum. Source-literature requirements are unchanged.
+
+Verification: 123 policy/handbook/MDT tests, 167 render/review tests, 33 locale/layout/asset tests, 92 API/reference/package tests, 22 browser suites and lint passed. Actual Node WASM AML generation passed with zero network attempts. All 2061 clinical content members and 90 disease ZIPs are byte-identical; core ZIP `0a91a5fbbec0`, gzip `103d6f3f5020`, 2624063 bytes. Actual reviewed coverage stays 0/2570; historical rows (5) and legacy counters (30) remain explicitly non-authoritative. Medical translation catalogs are unchanged; new native review labels use small UI catalogs/runtime overrides, with old UI/runtime hashes retained for protected/older readers. Protected case prefixes are neither read nor staged.
+
+The existing API package contains 4342 exact approved source files. Vercel dry-run was rejected by automatic permission review for possible non-public data transmission. GitHub visibility is PUBLIC and local payload checks exclude environment files, caches and local project metadata. Backend delivery must retry only after the same source is publicly committed; never bypass a rejection. Pages/API production verification remains required for this change. Actual clinical review, clinical semantic validation, complete offline browser reopening and NVDA/VoiceOver speech remain unfinished.
+
 ### Published iframe edge proof and solo-review policy audit (2026-10-12)
 
 `cbb7ce965d` is published (Pages run 38232460680 succeeded). Real browser verification now uses the actual last tabbable report control (a summary): forward Tab lands on `langUaBtn`; reverse Shift+Tab from the first report link lands on `planModalClose`. Proof: `.tmp/iframe-tab-boundary-browser-proof.json` and PNG. Original synthetic draft restored; temporary tab closed; console errors absent. Earlier last-hyperlink wording was corrected because it did not identify the actual boundary. NVDA/VoiceOver speech remains unverified.

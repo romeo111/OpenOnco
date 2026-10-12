@@ -87,7 +87,7 @@ class SkillMetadata:
 
     @property
     def review_status(self) -> str:
-        return "reviewed" if self.signoffs >= 2 else "stub"
+        return "recorded" if self.signoffs else "stub"
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -625,7 +625,7 @@ def _role_name(role_id: str) -> str:
 # candidate #7a (clinical sign-off 2026-04-26) the metadata for each
 # skill lives in `knowledge_base/hosted/content/mdt_skills/<role_id>.yaml`
 # rather than as a Python literal here, so clinical co-leads can bump
-# version, add sign-offs, and register sources via the same two-reviewer
+# version, add sign-offs, and register sources via the optional content-review
 # governance as Indications and RedFlags (CHARTER §6.1, ADR-0002).
 #
 # The `_SKILL_REGISTRY` symbol is preserved (tests + render layer import

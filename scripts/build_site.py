@@ -119,7 +119,7 @@ _BUNDLE_INCLUDE_DIRS = [
     "validation",
     "hosted/content",
 ]
-_BUNDLE_INCLUDE_FILES = ["__init__.py"]
+_BUNDLE_INCLUDE_FILES = ["__init__.py", "review_policy.py"]
 
 
 # Entity directories whose YAMLs are *split out* into per-disease modules

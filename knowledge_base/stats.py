@@ -20,6 +20,8 @@ CLI:
 
 from __future__ import annotations
 
+from .review_policy import MIN_ELIGIBLE_CONTENT_REVIEWS
+
 import argparse
 import json
 import sys
@@ -94,7 +96,7 @@ class DiseaseCoverage:
     @property
     def coverage_status(self) -> str:
         # Full chain = disease + ≥1 indication + ≥1 regimen + algorithm.
-        # CHARTER §6.1: two Co-Lead sign-offs required to leave STUB state.
+        # Review records remain optional; technical checks alone confer no clinical review.
         if self.indications >= 1 and self.regimens >= 1 and self.has_algorithm:
             if self.clinical_records_total > 0 and self.clinical_records_reviewed == self.clinical_records_total:
                 return "reviewed"
@@ -222,7 +224,7 @@ def _build_coverage(
         )
         required_ids.discard(None)
         reviewed_records = sum(
-            entity_id in clinical_records and review_counts.get(entity_id, 0) >= 2
+            entity_id in clinical_records and review_counts.get(entity_id, 0) >= MIN_ELIGIBLE_CONTENT_REVIEWS
             for entity_id in required_ids
         )
         out.append(
@@ -275,7 +277,7 @@ def collect_stats() -> Stats:
             if dir_name in REVIEW_TYPES:
                 reviewer_total += 1
                 count = current_review_count(d, dir_name, reviewers, disease_context)
-                reviewer_reviewed += count >= 2
+                reviewer_reviewed += count >= MIN_ELIGIBLE_CONTENT_REVIEWS
                 if d.get("id"):
                     clinical_records[d["id"]] = d
                     review_counts[d["id"]] = count

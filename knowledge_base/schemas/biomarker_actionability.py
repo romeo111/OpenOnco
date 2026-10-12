@@ -30,6 +30,7 @@ from pydantic import Field, field_validator, model_validator
 
 from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from ._review_readiness import eligible_signoffs
+from ..review_policy import MIN_ELIGIBLE_CONTENT_REVIEWS
 from .base import Base, ClinicalClaim
 
 
@@ -126,7 +127,7 @@ def actionability_release_readiness(
 
     Passing requires an explicitly applicable therapeutic-predictive claim,
     a clinically reviewed evidence dossier, current-version sign-offs from
-    two distinct in-scope reviewers, and a non-empty tier. All other BMA
+    at least one authorized independent in-scope reviewer, and a non-empty tier. All other BMA
     cells remain labelled context for review; they never participate in
     treatment-track selection.
     """
@@ -155,8 +156,8 @@ def actionability_release_readiness(
         entity_type="BiomarkerActionability", disease_lineage=disease_lineage,
         rejection_reasons=review_rejections,
     )
-    if len(signoffs) < 2:
-        reasons.append("fewer than two current, in-scope authorized reviewer sign-offs")
+    if len(signoffs) < MIN_ELIGIBLE_CONTENT_REVIEWS:
+        reasons.append("no current, in-scope authorized reviewer sign-off")
         reasons.extend(review_rejections)
 
     return ActionabilityReleaseReadiness(ready=not reasons, reasons=tuple(reasons))

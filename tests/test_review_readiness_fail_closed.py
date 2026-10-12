@@ -82,17 +82,22 @@ def test_normalized_reproduced_readiness_gaps_are_rejected(failure):
 def test_named_registered_profile_without_current_authority_is_rejected(status):
     profiles = _profiles()
     profiles["REV-TEST-B"]["authorization"]["status"] = status
-    assert not _readiness(_candidate(), profiles).ready
+    data = _candidate()
+    data["reviewer_signoffs"] = data["reviewer_signoffs"][1:]
+    assert not _readiness(data, profiles).ready
 
 
 def test_unknown_reviewer_registry_cannot_establish_clinical_readiness():
     assert not _readiness(_candidate(), {}).ready
 
 
-def test_two_accounts_of_one_person_are_not_independent_reviews():
+def test_two_accounts_of_one_person_are_one_review():
     profiles = _profiles()
     profiles["REV-TEST-B"]["authorization"]["identity_key"] = profiles["REV-TEST-A"]["authorization"]["identity_key"]
-    assert not _readiness(_candidate(), profiles).ready
+    data = _candidate()
+    rows = eligible_signoffs(data, profiles, revision_field="last_verified", entity_type="BiomarkerActionability")
+    assert len(rows) == 1
+    assert _readiness(data, profiles).ready
 
 
 @pytest.mark.parametrize("field,value", [
@@ -102,7 +107,9 @@ def test_two_accounts_of_one_person_are_not_independent_reviews():
 def test_incomplete_or_future_authorization_cannot_confer_readiness(field, value):
     profiles = _profiles()
     profiles["REV-TEST-B"]["authorization"][field] = value
-    assert not _readiness(_candidate(), profiles).ready
+    data = _candidate()
+    data["reviewer_signoffs"] = data["reviewer_signoffs"][1:]
+    assert not _readiness(data, profiles).ready
 
 
 @pytest.mark.parametrize("timestamp", [
@@ -112,13 +119,16 @@ def test_incomplete_or_future_authorization_cannot_confer_readiness(field, value
 def test_invalid_future_or_pre_authorization_review_is_rejected(timestamp):
     data = _candidate()
     data["reviewer_signoffs"][1]["timestamp"] = timestamp
+    data["reviewer_signoffs"] = data["reviewer_signoffs"][1:]
     assert not _readiness(data, _profiles()).ready
 
 
 def test_changed_current_scope_invalidates_old_affirmative_scope_flag():
     profiles = _profiles()
     profiles["REV-TEST-B"]["sign_off_scope"]["diseases_explicit"] = ["DIS-DLBCL-NOS"]
-    assert not _readiness(_candidate(), profiles).ready
+    data = _candidate()
+    data["reviewer_signoffs"] = data["reviewer_signoffs"][1:]
+    assert not _readiness(data, profiles).ready
 
 
 @pytest.mark.parametrize("revision", ["invalid-date", "2099-01-01"])
@@ -170,7 +180,7 @@ def test_nested_indication_review_uses_current_authorized_context():
     data.pop("disease_id")
     badge = _render_signoff_badge_patient(data, target_lang="en", reviewer_profiles=_profiles())
     assert 'data-review-count="2"' in badge
-    assert "Required clinical-content reviews recorded" in badge
+    assert "Current clinical-content review recorded" in badge
     assert "approved" not in badge.lower()
 
 
@@ -189,7 +199,7 @@ def test_patient_review_statuses_have_explicit_native_draft_copy(locale):
     for source in (
         "Clinical content review pending",
         "Clinical content review pending (1 of 2 eligible reviews recorded)",
-        "Required clinical-content reviews recorded",
+        "Current clinical-content review recorded",
         "This status describes reviews of the knowledge-base content, not approval of a plan for you.",
     ):
         assert catalog[source] and catalog[source] != source
@@ -207,8 +217,9 @@ def test_audit_uses_supplied_kb_registry_and_fails_closed_on_revocation(tmp_path
     arguments = dict(bma_dir=bma_dir, biomarker_dir=tmp_path / "biomarkers",
                      civic_root=tmp_path / "civic", manifest=None, as_of=date(2026, 10, 11))
     assert audit_escat_readiness(**arguments)["release_ready_count"] == 1
-    profiles["REV-TEST-B"]["authorization"]["status"] = "revoked"
-    (reviewers_dir / "REV-TEST-B.yaml").write_text(yaml.safe_dump(profiles["REV-TEST-B"]), encoding="utf-8")
+    for rid, profile in profiles.items():
+        profile["authorization"]["status"] = "revoked"
+        (reviewers_dir / f"{rid}.yaml").write_text(yaml.safe_dump(profile), encoding="utf-8")
     report = audit_escat_readiness(**arguments)
     assert report["release_ready_count"] == 0
     assert any("human-governance authorization" in issue["detail"] for issue in report["issues"])

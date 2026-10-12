@@ -356,12 +356,13 @@ def test_molecular_geneticist_triggers_on_genomic_biomarker():
     base_ind["applicable_to"] = applicable
     default.indication_data = base_ind
 
-    from knowledge_base.engine import mdt_orchestrator as _mod
+    from knowledge_base.validation import bundle as _mod
 
-    real_load = _mod.load_content
+    real_load = _mod.load_packaged_content
 
-    def fake_load(root):
-        result = real_load(root)
+    def fake_load(root, **kwargs):
+        from copy import deepcopy
+        result = deepcopy(real_load(root, **kwargs))
         result.entities_by_id["BIO-TEST-BRAF-V600E"] = {
             "type": "biomarkers",
             "data": {
@@ -373,11 +374,11 @@ def test_molecular_geneticist_triggers_on_genomic_biomarker():
         }
         return result
 
-    _mod.load_content = fake_load
+    _mod.load_packaged_content = fake_load
     try:
         mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
     finally:
-        _mod.load_content = real_load
+        _mod.load_packaged_content = real_load
 
     role_ids = (
         {r.role_id for r in mdt.required_roles}
@@ -412,12 +413,13 @@ def test_missing_required_biomarker_surfaces_coverage_and_open_question():
     base_ind["applicable_to"] = applicable
     default.indication_data = base_ind
 
-    from knowledge_base.engine import mdt_orchestrator as _mod
+    from knowledge_base.validation import bundle as _mod
 
-    real_load = _mod.load_content
+    real_load = _mod.load_packaged_content
 
-    def fake_load(root):
-        result = real_load(root)
+    def fake_load(root, **kwargs):
+        from copy import deepcopy
+        result = deepcopy(real_load(root, **kwargs))
         result.entities_by_id["BIO-TEST-BRAF-V600E"] = {
             "type": "biomarkers",
             "data": {
@@ -430,11 +432,11 @@ def test_missing_required_biomarker_surfaces_coverage_and_open_question():
         }
         return result
 
-    _mod.load_content = fake_load
+    _mod.load_packaged_content = fake_load
     try:
         mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
     finally:
-        _mod.load_content = real_load
+        _mod.load_packaged_content = real_load
 
     assert plan_result.default_indication_id == before_default
     coverage = mdt.data_quality_summary["biomarker_coverage"]

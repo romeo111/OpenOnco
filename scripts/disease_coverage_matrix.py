@@ -8,7 +8,7 @@ For each Disease in the KB:
   - has_questionnaire (boolean) + is_stub
   - has_workup (boolean)
   - fill_pct: composite % across 8 expected entity types
-  - verified_pct: weighted % of indications with reviewer_signoffs ≥ 2
+  - verified_pct: weighted % of indications with a current eligible content review
   - outcomes_cited_pct: loose %-cited from
     ``scripts/audit_expected_outcomes.disease_outcomes_cited_pct``
     (Phase 2 — Pivotal Trial Outcomes Ingestion Plan). Reuses the
@@ -23,6 +23,7 @@ myeloid heme, solid tumor) for readability.
 from __future__ import annotations
 
 import sys
+from knowledge_base.review_policy import MIN_ELIGIBLE_CONTENT_REVIEWS
 from collections import defaultdict
 from pathlib import Path
 
@@ -299,11 +300,11 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
         ]
         fill_pct = round(100 * sum(fill_components) / len(fill_components))
 
-        # Verified % — weighted by indications with reviewer_signoffs >= 2
+        # Review-recorded % — current authorized, in-scope reviews; no publication quota
         if inds:
             verified = sum(
                 1 for ind in inds
-                if current_review_count(ind, "indications", reviewers, diseases) >= 2
+                if current_review_count(ind, "indications", reviewers, diseases) >= MIN_ELIGIBLE_CONTENT_REVIEWS
             )
             verified_pct = round(100 * verified / len(inds))
         else:

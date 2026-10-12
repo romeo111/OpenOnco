@@ -2,117 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-<!-- openonco-geo-lang:start -->
-<script>
-(function(){
-  try{
-    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
-    var UARE=/^\/ukr(\/|$)/;
-    // Remember an explicit language choice so IP detection never overrides it.
-    document.addEventListener('click',function(e){
-      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
-      if(!a)return;
-      var href=a.getAttribute('href')||'';
-      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
-      try{localStorage.setItem('oo_lang',selected);}catch(_){}
-    },true);
-    var ua=navigator.userAgent||'';
-    // Bots: leave both language trees crawlable — no auto-redirect.
-    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
-    var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
-    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
-    var pageLang=UARE.test(path)?'uk':'en';
-    // Track first real interaction so a slow async lookup never discards typed
-    // input (e.g. the /try.html plan form) by navigating out from under the user.
-    var touched=false,mark=function(){touched=true;};
-    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
-      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
-    });
-    function mirror(){
-      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
-      return p+(location.search||'')+(location.hash||'');
-    }
-    function go(lang){
-      if(lang===pageLang)return;
-      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
-      if(!alternate)return;                         // never guess a missing translated page
-      var target=alternate.href+(location.search||'')+(location.hash||'');
-      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
-      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
-      location.replace(target);
-    }
-    function want(cc){return cc==='UA'?'uk':'en';}
-    // 1) explicit choice wins
-    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
-    if(pref==='uk'||pref==='en'){go(pref);return;}
-    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
-    var cc=null;
-    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
-    if(cc){go(want(cc));return;}
-    // 3) look up country by IP. Third-party surface kept minimal for a medical
-    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
-    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
-    var eps=[
-      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
-    ];
-    (function tryEp(i){
-      if(i>=eps.length)return;                          // all endpoints failed → English default
-      var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
-      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
-        .then(function(r){return r.ok?r.json():Promise.reject();})
-        .then(function(j){
-          if(to)clearTimeout(to);
-          var code=((eps[i][1](j))||'').toString().toUpperCase();
-          if(/^[A-Z]{2}$/.test(code)){
-            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
-          }else{tryEp(i+1);}
-        })
-        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
-    })(0);
-  }catch(_){}
-})();
-</script>
-<!-- openonco-geo-lang:end -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Participer à OpenOnco - OpenOntco</title>
-  
-<!-- openonco-seo:start -->
-<meta name="description" content="Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="ai-summary" content="Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.">
-<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
-<link rel="canonical" href="https://openonco.info/fr/participate.html">
-<link rel="alternate" hreflang="en" href="https://openonco.info/participate.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/participate.html">
-<link rel="alternate" hreflang="es" href="https://openonco.info/es/participate.html">
-<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/participate.html">
-<link rel="alternate" hreflang="de" href="https://openonco.info/de/participate.html">
-<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/participate.html">
-<link rel="alternate" hreflang="it" href="https://openonco.info/it/participate.html">
-<link rel="alternate" hreflang="da" href="https://openonco.info/da/participate.html">
-<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/participate.html">
-<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/participate.html">
-<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/participate.html">
-<link rel="alternate" hreflang="x-default" href="https://openonco.info/participate.html">
-<meta property="og:site_name" content="OpenOnco">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Participer à OpenOnco - OpenOntco">
-<meta property="og:description" content="Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.">
-<meta property="og:url" content="https://openonco.info/fr/participate.html">
-<meta property="og:locale" content="fr">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Participer à OpenOnco - OpenOntco">
-<meta name="twitter:description" content="Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Participer à OpenOnco - OpenOntco","description":"Participer à OpenOnco : développement, évaluation clinique de cas synthétiques et documents de recherche.","url":"https://openonco.info/fr/participate.html","inLanguage":"fr","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/fr/participate.html"}}</script>
-<!-- openonco-seo:end -->
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Participate in OpenOnco - OpenOnco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" media="print" onload="this.media=&#x27;all&#x27;">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></noscript>
@@ -183,7 +75,7 @@
   .kb-facts td { display: block; }
 }
 </style>
-<meta name="translation-review" content="pending_language_review"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="edd20b42c99f67f76440c0c13fa99349036ca7ae9df5dba5a719f19d7daa37fa"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -234,14 +126,14 @@
   </div>
   </div>
 </header>
-  
-  <main class="kb-page">
-<h1>Participer à OpenOnco</h1>
-<p class="kb-lead">Aider à vérifier le code, les traces de preuves et l'utilité pour la discussion oncologique.</p>
-<p class="kb-info-box">Le contenu clinique est provisoire et nécessite une vérification par un oncologue qualifié. Les tests techniques ne sont pas une validation clinique. Utilisez des données synthétiques uniquement dans les rapports publics.</p>
-<h2>Pour les développeurs</h2>
-<ol><li><a href="/fr/try.html">Essayez la démo sans inscription</a> — choisir un exemple synthétique et inspecter ses liens source.</li>
-<li>Pour le développement local: Python 3.12, un environnement et des exigences isolés.lock.</li></ol>
+
+  <main class="kb-page"><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/participate.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
+<h1>Participate in OpenOnco</h1>
+<p class="kb-lead">Help verify the code, evidence traces and usefulness for oncology discussion.</p>
+<p class="kb-info-box">Clinical content is provisional and requires verification by a qualified oncologist. Engineering tests are not clinical validation. Use synthetic data only in public reports.</p>
+<h2>For developers</h2>
+<ol><li><a href="/fr/try.html">Try the demo without signup</a> — choose a synthetic example and inspect its source links.</li>
+<li>For local development: Python 3.12, an isolated environment and requirements.lock.</li></ol>
 <pre><code>git clone https://github.com/romeo111/OpenOnco.git
 cd OpenOnco
 python -m venv .venv
@@ -250,22 +142,22 @@ python -m pip install -r requirements.lock
 python -m pip install --no-build-isolation --no-deps -e .
 python scripts/audit_validator.py --human
 python -m http.server 8000 --directory docs</code></pre>
-<p><a href="https://github.com/romeo111/OpenOnco/blob/master/docs/DEVELOPMENT.md">Guide du développement</a> · <a href="https://github.com/romeo111/OpenOnco/blob/master/mcp_server/README.md">Configuration du MCP</a> · <a href="https://github.com/romeo111/OpenOnco/issues/new">Signaler une question reproductible</a></p>
-<h2>Pour les examinateurs cliniques</h2>
-<p>Commencez par le paquet DLBCL de première ligne : scénarios synthétiques, traces de règles et exportation de retours locaux. Choisissez un scénario dans votre expertise, comparez la sortie avec les sources originales et enregistrez les écarts.</p>
-<p><a class="btn btn-primary" href="/review/dlbcl-1l/index.html">Ouvrez le paquet de révision</a> · <a href="/resources/synthetic-review-template.md" download>Modèle de rapport d'examen</a></p>
-<h2>Discussions avec le médecin et PDF</h2>
-<p>Dans Plan Builder, ouvrez un exemple synthétique ou un plan généré, sélectionnez їPartager avec votre médecin · PDF ), puis їEnregistrer en PDF . Le plan lui-même est imprimé avec ses citations de source. Votre clinicien doit vérifier l'applicabilité; ne changez pas de traitement vous-même.</p>
-<h2>Normes et intégrations</h2>
+<p><a href="https://github.com/romeo111/OpenOnco/blob/master/docs/DEVELOPMENT.md">Development guide</a> · <a href="https://github.com/romeo111/OpenOnco/blob/master/mcp_server/README.md">MCP setup</a> · <a href="https://github.com/romeo111/OpenOnco/issues/new">Report a reproducible issue</a></p>
+<h2>For clinical reviewers</h2>
+<p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original conservé pour vérification">Start with the DLBCL first-line packet: synthetic scenarios, rule traces and local feedback export. Choose a scenario within your expertise, compare the output with original sources and record discrepancies.</span></p>
+<p><a class="btn btn-primary" href="/fr/review/dlbcl-1l/">Open the review packet</a> · <a href="/resources/synthetic-review-template.md" download>Review report template</a></p>
+<h2>Doctor discussion and PDF</h2>
+<p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original conservé pour vérification">In Plan Builder, open a synthetic example or generated plan, select “Share with your doctor · PDF”, then “Save as PDF” in the browser. The plan itself is printed with its source citations. Your clinician must verify applicability; do not change treatment yourself.</span></p>
+<h2>Standards and integrations</h2>
 <p>An initial mCODE/FHIR R4 field mapping and gap analysis is available. A FHIR/OMOP adapter and demonstrated mCODE conformance are pending.</p>
-<p><a href="/resources/interop-gap-analysis.md">Analyse des écarts interop</a> · <a href="https://hl7.org/fhir/us/mcode/">mCODE 4,0,0</a> · <a href="https://ohdsi.github.io/OncologyWG/gettingInvolved.html">OHDSI Oncologie GT</a></p>
-<h2>Groupes de défense et cliniques à ressources limitées</h2>
-<p>A useful initial collaboration is reviewing educational wording and question preparation using synthetic examples. Any pilot needs an accountable clinical reviewer, local context and privacy review. Free code does not imply access to drugs or licensed guidelines.</p>
-<p><a href="https://github.com/romeo111/OpenOnco/issues/new">Proposer un pilote éducatif ou technique spécifique sans données sur le patient</a></p>
-<h2>Publication et lancement public</h2>
-<p><a href="/resources/evaluation-outline.md">Protocole d'évaluation et esquisse du document</a> · <a href="/resources/launch.txt" download>Afficher la copie de lancement HN</a></p>
-<p>Ces documents appuient la préparation du lancement. Les postes et les présentations externes n'ont pas été envoyés; les résultats des études et les auteurs cliniques responsables sont toujours nécessaires pour la publication universitaire.</p>
-<p>Code: MIT. Contenu du projet: CC BY 4.0. Les sources originales conservent leurs propres licences.</p>
+<p><a href="/resources/interop-gap-analysis.md">Interop gap analysis</a> · <a href="https://hl7.org/fhir/us/mcode/">mCODE 4.0.0</a> · <a href="https://ohdsi.github.io/OncologyWG/gettingInvolved.html">OHDSI Oncology WG</a></p>
+<h2>Advocacy groups and resource-constrained clinics</h2>
+<p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original conservé pour vérification">A useful initial collaboration is reviewing educational wording and question preparation using synthetic examples. Any pilot needs an accountable clinical reviewer, local context and privacy review. Free code does not imply access to drugs or licensed guidelines.</span></p>
+<p><a href="https://github.com/romeo111/OpenOnco/issues/new">Propose a specific educational or technical pilot without patient data</a></p>
+<h2>Publication and public launch</h2>
+<p><a href="/resources/evaluation-outline.md">Evaluation protocol and paper outline</a> · <a href="/resources/launch.txt" download>Show HN launch copy</a></p>
+<p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original conservé pour vérification">These materials support launch preparation. External posts and submissions have not been sent; study results and accountable clinical authors are still required for academic publication.</span></p>
+<p>Code: MIT. Project content: CC BY 4.0. Original sources retain their own licenses.</p>
 </main>
 </body>
 </html>

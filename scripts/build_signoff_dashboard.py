@@ -218,18 +218,18 @@ def build_dashboard() -> str:
     md: list[str] = []
     md.append(f"# Clinical Sign-off Status — {today}")
     md.append("")
-    md.append("CHARTER §6.1: any clinical-content change needs ≥2 of three Clinical Co-Lead sign-offs.")
+    md.append("CHARTER §6.1: solo publication has no reviewer quota. Current content reviews are optional and recorded separately.")
     md.append("Coverage below counts only current, in-scope reviews by distinct explicitly authorized human identities. It is content-review coverage, not approval of a patient's plan or an authentication of credentials.")
     md.append("Audit activity remains historical; recorded events do not establish current coverage.")
     md.append("")
     md.append("## Summary")
     md.append("")
-    md.append(f"- Total entities requiring sign-off: **{total}**")
+    md.append(f"- Total clinical entities in review coverage: **{total}**")
     md.append(f"- Raw structured review records retained: **{sum(len(e['raw_signoffs']) for e in entities)}**")
     pct_1 = f"{(with_1/total*100):.1f}" if total else "0.0"
     pct_2 = f"{(with_2/total*100):.1f}" if total else "0.0"
     md.append(f"- Entities with ≥1 sign-off: **{with_1}** ({pct_1}%)")
-    md.append(f"- Entities with ≥2 sign-offs (CHARTER §6.1 minimum): **{with_2}** ({pct_2}%)")
+    md.append(f"- Entities with ≥2 current reviews (additional review history, not a quorum): **{with_2}** ({pct_2}%)")
     md.append(f"- Entities with 0 sign-offs: **{with_0}**")
     md.append("")
 

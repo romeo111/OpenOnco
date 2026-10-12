@@ -1,8 +1,7 @@
 """Structured ReviewerSignoff replaces the legacy int counter.
 
-Per CHARTER §6.1 — every clinical content entity that publishes (Indication,
-Algorithm, Regimen, RedFlag, BiomarkerActionability) needs ≥2 sign-offs
-from distinct Clinical Co-Leads. The legacy schema stored only a counter
+Per CHARTER §6.1 — clinical content publication has no reviewer quorum. Optional reviews
+record actual identity, scope and revision. The legacy schema stored only a counter
 (`reviewer_signoffs: int`); the structured form records *who* signed off,
 *when*, and *why*, so the publish-gate can be audited and per-reviewer
 provenance can be surfaced in the rendered plan.

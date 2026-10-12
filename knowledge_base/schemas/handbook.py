@@ -11,10 +11,10 @@ draft needs clinical merge):
 
   draft          (default)     — no metadata required.
   proposed                     — ≥1 reviewer_signoff + last_reviewed.
-  reviewed                     — ≥2 distinct reviewer_signoffs +
+  reviewed                     — ≥1 recorded reviewer_signoff +
                                   last_reviewed. Mirrors CHARTER §6.1
-                                  two-reviewer publish gate for clinical
-                                  content. (Drafts and proposed content
+                                  optional review-record metadata for educational
+                                  content, not clinical approval. (Drafts and proposed content
                                   remain permissive — does not change
                                   the §6.1 dev-mode exemption.)
   needs_refresh                — last_reviewed required; signoffs from
@@ -74,14 +74,14 @@ def _require_review_metadata(
             f"{entity_id}: review_status='proposed' requires ≥1 reviewer_signoff"
         )
     if review_status == "reviewed":
-        if len(signoffs) < 2:
+        if len(signoffs) < 1:
             raise ValueError(
-                f"{entity_id}: review_status='reviewed' requires ≥2 reviewer_signoffs (CHARTER §6.1)"
+                f"{entity_id}: review_status='reviewed' requires ≥1 recorded reviewer_signoff"
             )
         reviewer_ids = {getattr(s, "reviewer_id", None) for s in signoffs}
-        if len(reviewer_ids) < 2:
+        if not reviewer_ids or None in reviewer_ids:
             raise ValueError(
-                f"{entity_id}: review_status='reviewed' requires signoffs from ≥2 distinct reviewers; "
+                f"{entity_id}: review_status='reviewed' requires an identified reviewer; "
                 f"got {len(signoffs)} signoff(s) from {len(reviewer_ids)} reviewer(s)"
             )
 Difficulty = Literal["intro", "intermediate", "advanced"]

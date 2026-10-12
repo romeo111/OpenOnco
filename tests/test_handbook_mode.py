@@ -136,7 +136,7 @@ def test_build_handbook_writes_index_and_chapter(tmp_path: Path):
 
     index = (tmp_path / "handbook.html").read_text(encoding="utf-8")
     assert (tmp_path / "header.css").exists()
-    assert 'href="/header.css?v=clinical-20261010"' in index
+    assert 'href="/header.css?v=' in index  # A versioned common header, not a frozen date.
     dlbcl_chapter = (tmp_path / "handbook" / "hb-dlbcl-1l.html").read_text(
         encoding="utf-8"
     )
@@ -348,50 +348,14 @@ def test_chapter_draft_status_needs_no_review_metadata():
     assert chapter.reviewer_signoffs == []
 
 
-def test_chapter_reviewed_requires_last_reviewed_and_two_distinct_signoffs():
-    # Missing last_reviewed → reject.
+def test_chapter_declared_review_requires_date_and_a_record():
     with pytest.raises(ValidationError, match="last_reviewed"):
-        _chapter(
-            review_status="reviewed",
-            reviewer_signoffs=[
-                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
-                {"reviewer_id": "REV-B", "timestamp": "2026-01-01"},
-            ],
-        )
-
-    # Only one signoff → reject (need ≥2 per CHARTER §6.1).
-    with pytest.raises(ValidationError, match="≥2 reviewer_signoffs"):
-        _chapter(
-            review_status="reviewed",
-            last_reviewed="2026-05-01",
-            reviewer_signoffs=[
-                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
-            ],
-        )
-
-    # Two signoffs from the *same* reviewer → reject. Distinct reviewer
-    # identities are the whole point of the two-reviewer gate.
-    with pytest.raises(ValidationError, match="distinct reviewers"):
-        _chapter(
-            review_status="reviewed",
-            last_reviewed="2026-05-01",
-            reviewer_signoffs=[
-                {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
-                {"reviewer_id": "REV-A", "timestamp": "2026-02-01"},
-            ],
-        )
-
-    # Two distinct reviewers + last_reviewed → accepted.
-    chapter = _chapter(
-        review_status="reviewed",
-        last_reviewed="2026-05-01",
-        reviewer_signoffs=[
-            {"reviewer_id": "REV-A", "timestamp": "2026-01-01"},
-            {"reviewer_id": "REV-B", "timestamp": "2026-02-01"},
-        ],
-    )
+        _chapter(review_status="reviewed", reviewer_signoffs=[{"reviewer_id":"REV-A","timestamp":"2026-01-01"}])
+    with pytest.raises(ValidationError, match="≥1 recorded reviewer_signoff"):
+        _chapter(review_status="reviewed", last_reviewed="2026-05-01", reviewer_signoffs=[])
+    chapter = _chapter(review_status="reviewed", last_reviewed="2026-05-01", reviewer_signoffs=[{"reviewer_id":"REV-A","timestamp":"2026-01-01"}])
     assert chapter.review_status == "reviewed"
-    assert len(chapter.reviewer_signoffs) == 2
+    assert len(chapter.reviewer_signoffs) == 1  # Declared metadata, not clinical authorization.
 
 
 def test_chapter_proposed_requires_at_least_one_signoff():
@@ -432,12 +396,12 @@ def test_handbook_question_status_rules_match_chapter():
         "source_ids": ["SRC-FAKE"],
     }
     # reviewed without enough signoffs → reject.
-    with pytest.raises(ValidationError, match="≥2 reviewer_signoffs"):
+    with pytest.raises(ValidationError, match="≥1 recorded reviewer_signoff"):
         HandbookQuestion(
             **base,
             review_status="reviewed",
             last_reviewed="2026-05-01",
-            reviewer_signoffs=[{"reviewer_id": "REV-A", "timestamp": "2026-01-01"}],
+            reviewer_signoffs=[],
         )
 
 

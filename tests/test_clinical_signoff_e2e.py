@@ -525,7 +525,7 @@ def test_render_signoff_badge_pending_for_zero_signoffs() -> None:
         "reviewer_signoffs": [],
     })
     assert "signoff-pending" in html
-    assert "Очікує підпису" in html
+    assert "Не записано актуального перегляду" in html
     # Sanity: not the green state
     assert "signoff-complete" not in html
 
@@ -543,6 +543,6 @@ def test_render_signoff_badge_complete_for_two_plus_signoffs() -> None:
         ],
     }, reviewer_profiles=authorized_profiles("REV-TEST-HEME", "REV-TEST-SOLID"))
     assert "signoff-complete" in html
-    assert "перегляди клінічного змісту" in html
+    assert "перегляд клінічного змісту" in html
     assert "Клінічно затверджено" not in html
     assert "signoff-pending" not in html

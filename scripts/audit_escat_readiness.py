@@ -2,7 +2,7 @@
 
 This tool validates provenance and release-readiness metadata.  It never
 assigns an ESCAT tier, changes a BMA, or makes a treatment decision.  Its
-output is deliberately a queue for the two-reviewer clinical workflow.
+output is deliberately a queue for the optional clinical-content review workflow.
 
 Run with ``py -3.12 -m scripts.audit_escat_readiness --help``.
 """
@@ -316,7 +316,7 @@ def render_markdown(report: dict[str, Any], limit_per_severity: int = 20) -> str
         "",
         "1. Clinical co-leads classify scope and ESCAT applicability; they do not accept an inferred tier.",
         "2. Reconcile taxonomy/evidence-ID warnings against primary sources and the relevant tumour context.",
-        "3. Record a clinician-authored dossier, then collect two independent sign-offs pinned to `last_verified`.",
+        "3. Record a clinician-authored dossier, then record an authorized independent content review pinned to `last_verified`.",
         "4. Re-run this audit before release; treatment-track selection remains independent of ESCAT.",
         "",
     ])

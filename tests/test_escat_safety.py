@@ -70,8 +70,11 @@ def test_release_gate_requires_current_distinct_signoffs():
     assert actionability_release_readiness(data, reviewer_profiles=profiles).ready is True
     data["reviewer_signoffs"][1]["entity_version"] = "2026-08-02"
     result = actionability_release_readiness(data, reviewer_profiles=profiles)
+    assert result.ready is True  # The first current authorized review still exists.
+    data["reviewer_signoffs"][0]["entity_version"] = "2026-08-02"
+    result = actionability_release_readiness(data, reviewer_profiles=profiles)
     assert result.ready is False
-    assert any("fewer than two current" in reason for reason in result.reasons)
+    assert any("no current, in-scope authorized" in reason for reason in result.reasons)
     assert "review is not pinned to the current content revision" in result.reasons
 
 

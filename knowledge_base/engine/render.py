@@ -25,6 +25,8 @@ treatment-Plan-not-applicable disclaimer surfaced above the fold.
 
 from __future__ import annotations
 
+from knowledge_base.review_policy import MIN_ELIGIBLE_CONTENT_REVIEWS
+
 import functools
 import html
 import re
@@ -198,21 +200,14 @@ def _render_signoff_badge(entity_data: Optional[dict], *, reviewer_profiles: Opt
     if n == 0:
         return (
             '<span class="signoff-badge signoff-pending">'
-            '⚠ Очікує підпису Clinical Co-Lead</span>'
-        )
-    if n == 1:
-        rid = sigs[0]["reviewer_id"]
-        return (
-            '<span class="signoff-badge signoff-partial">'
-            f'🟡 Підписано (1/2): {_h(_signoff_label(rid, reviewer_profiles))}'
-            '</span>'
+            'Не записано актуального перегляду клінічного змісту</span>'
         )
     names = ", ".join(_signoff_label(s["reviewer_id"], reviewer_profiles) for s in sigs[:3])
     if n > 3:
         names += f" + {n - 3}"
     return (
         '<span class="signoff-badge signoff-complete">'
-        f'✓ Записано необхідні перегляди клінічного змісту: {_h(names)}'
+        f'Записано перегляд клінічного змісту: {_h(names)}'
         '</span>'
     )
 
@@ -225,15 +220,10 @@ def _render_signoff_badge_patient(entity_data: Optional[dict], *, target_lang: s
         return ""
     sigs = _usable_signoffs(entity_data, reviewer_profiles, disease_lineage=disease_lineage)
     n = len(sigs)
-    if n >= 2:
+    if n >= MIN_ELIGIBLE_CONTENT_REVIEWS:
         return (
             f'<span class="patient-badge patient-good signoff-complete" data-review-scope="clinical-content" data-review-count="{n}">'
-            + ('Required clinical-content reviews recorded' if target_lang == 'en' else 'Записано необхідні перегляди клінічного змісту') + '</span>'
-        )
-    if n == 1:
-        return (
-            '<span class="patient-badge patient-warn signoff-partial" data-review-scope="clinical-content" data-review-count="1">'
-            + ('Clinical content review pending (1 of 2 eligible reviews recorded)' if target_lang == 'en' else 'Перегляд клінічного змісту очікується (записано 1 із 2 допустимих переглядів)') + '</span>'
+            + ('Current clinical-content review recorded' if target_lang == 'en' else 'Записано актуальний перегляд клінічного змісту') + '</span>'
         )
     return (
         '<span class="patient-badge patient-emergency signoff-pending" data-review-scope="clinical-content" data-review-count="0">'
@@ -2996,7 +2986,7 @@ def _render_variant_actionability(
                 else ""
             )
             # A BMA retains its historical ESCAT label for audit visibility,
-            # but must carry an explicit dossier and two current sign-offs
+            # but must carry an explicit dossier and a current authorized sign-off
             # before it is shown as clinically reviewed context.
             review_badge_html = (
                 ""

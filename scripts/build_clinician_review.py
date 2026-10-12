@@ -201,7 +201,7 @@ def _index(report: dict) -> str:
 <section class="review-tools" aria-label="Review controls"><label>Scenario group<select id="category"><option value="all">All scenarios</option>{''.join(f'<option>{_e(c)}</option>' for c in sorted({x['category'] for x in report['cases']}))}</select></label><button id="export-review" type="button">Export my review (JSON)</button><button id="clear-review" type="button">Clear local review</button><a href="report.json" download>Technical report</a><a href="review-template.json" download>Blank review template</a><a href="provenance.json" download>Provenance</a><p id="save-status" role="status">Review comments stay in this browser. Export to retain a copy. No upload occurs.</p></section>
 <div class="review-grid">{''.join(cards)}</div>
 <section><h2>Sources referenced by the generated plans</h2><p>Listed as recorded in the KB. Applicability and currency remain review questions.</p><div class="table-scroll"><table><thead><tr><th>ID</th><th>Title</th><th>Last verified (recorded)</th><th>Link</th></tr></thead><tbody>{source_rows}</tbody></table></div></section>
-<footer><p>Generated {_e(report['generated_at'])} · KB SHA-256 <code>{_e(report['kb_snapshot']['sha256'])}</code></p><p>Assessment notes are feedback only. They do not grant the repository's two-reviewer sign-off or change clinical content.</p></footer>
+<footer><p>Generated {_e(report['generated_at'])} · KB SHA-256 <code>{_e(report['kb_snapshot']['sha256'])}</code></p><p>Assessment notes are feedback only. They do not authenticate reviewers, confer clinical-content approval or change clinical content.</p></footer>
 </main><script id="review-config" type="application/json">{payload}</script><script src="review.js" defer></script></body></html>'''
 
 

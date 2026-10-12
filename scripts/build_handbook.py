@@ -74,6 +74,8 @@ def _chapter_cards(load) -> list[dict[str, Any]]:
 
 
 def _render_badge(text: str, class_name: str = "") -> str:
+    if text == "reviewed":
+        text = "Declared editorial review"
     cls = "hb-badge" + (f" {class_name}" if class_name else "")
     return f'<span class="{cls}">{_esc(text)}</span>'
 

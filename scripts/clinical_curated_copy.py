@@ -346,6 +346,7 @@ def messages_for(locale):
         catalog.update(privacy_messages(locale))
         catalog.update(offline_messages(locale))
         catalog.update(regulatory_messages(locale))
+        catalog.update(content_review_messages(locale))
         return catalog
     title = NSCLC[locale]
     status = {
@@ -373,6 +374,7 @@ def messages_for(locale):
         'Записано необхідні перегляди клінічного змісту': 'Required clinical-content reviews recorded',
         'Цей статус описує перегляди змісту бази знань, а не схвалення плану для вас.': 'This status describes reviews of the knowledge-base content, not approval of a plan for you.',
     }
+    catalog.update(content_review_messages(locale))
     catalog.update({source: catalog[english] for source, english in review_aliases.items()})
     catalog['Інтерпретація потребує клінічного перегляду'] = catalog['Interpretation requires clinical review']
     catalog.update(safety_notices_for(locale))
@@ -394,3 +396,11 @@ def messages_for(locale):
     catalog.update(privacy_messages(locale))
     catalog.update(regulatory_messages(locale))
     return catalog
+
+
+def content_review_messages(locale):
+    locales = ('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi')
+    index = locales.index(locale)
+    review = ('Revisión actual del contenido clínico registrada', 'Revisão atual do conteúdo clínico registada', 'Aktuelle Prüfung des klinischen Inhalts dokumentiert', 'Relecture actuelle du contenu clinique consignée', 'Revisione attuale del contenuto clinico registrata', 'Aktuel gennemgang af klinisk indhold registreret', 'Aktuell granskning av kliniskt innehåll registrerad', 'Aktuell gjennomgang av klinisk innhold registrert', 'Kliinisen sisällön ajantasainen arviointi kirjattu')[index]
+    editorial = ('Revisión editorial declarada', 'Revisão editorial declarada', 'Angegebene redaktionelle Prüfung', 'Relecture éditoriale déclarée', 'Revisione editoriale dichiarata', 'Erklæret redaktionel gennemgang', 'Angiven redaktionell granskning', 'Oppgitt redaksjonell gjennomgang', 'Ilmoitettu toimituksellinen arviointi')[index]
+    return {'Current clinical-content review recorded': review, 'Записано актуальний перегляд клінічного змісту': review, 'Declared editorial review': editorial}

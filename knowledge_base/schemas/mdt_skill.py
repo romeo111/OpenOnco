@@ -4,7 +4,7 @@
 Migrated from `_SKILL_REGISTRY` in mdt_orchestrator.py per skill candidate
 #7a. Living in the KB (rather than as a Python dict) lets clinical
 co-leads bump version, add sign-offs, and register sources via the
-two-reviewer flow described in CHARTER §6.1 / ADR-0002 — same governance
+solo workflow and optional review records described in CHARTER §6.1 — same governance
 as Indications and RedFlags.
 
 The orchestrator's `get_skill(role_id)` reads from the KB by `role_id`,

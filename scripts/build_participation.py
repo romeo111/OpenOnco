@@ -112,7 +112,7 @@ Independent second review / adjudication:
 
 Do not include names, dates of birth, real clinical records or identifiers.
 Use the DLBCL packet's local export for structured feedback. Clinical KB
-recommendation changes still require two-reviewer approval.
+recommendation changes retain traceable sources and declared limitations; publication has no reviewer quota.
 """
 
 
