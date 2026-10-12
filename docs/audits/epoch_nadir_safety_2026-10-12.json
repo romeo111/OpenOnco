@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-12",
+  "scope": "DA-EPOCH-R scheduled nadir monitoring, correct dose-level distinctions and growth-factor support",
+  "clinical_approval": false,
+  "change": "DA-EPOCH-R gets scheduled twice-weekly nadir monitoring and its own infusion assessments. Corrects one/two versus three/more low ANC interpretation, platelet rule and cyclophosphamide-only adjustment below level 1. Adds missing G-CSF support without HIV-only restriction. Removes unsupported universal six-cycle/CNS recipe and CALGB outcome claim. PMBCL NCI 2013 EFS is no longer labelled PFS. Initial chemotherapy dose numbers and administration schedules unchanged.",
+  "source_urls": [
+    "https://www.eviq.org.au/haematology/lymphoma/other-b-cell-lymphoma/783-da-r-epoch-dose-adjusted-rituximab-etoposide",
+    "https://pubmed.ncbi.nlm.nih.gov/23574119/"
+  ],
+  "source_semantic_changes": {
+    "knowledge_base/hosted/content/regimens/da_epoch_r.yaml": [
+      "clinical_claims",
+      "components",
+      "dose_adjustments",
+      "last_reviewed",
+      "mandatory_supportive_care",
+      "monitoring_schedule_id",
+      "name",
+      "name_ua",
+      "notes",
+      "notes_ua",
+      "review_status",
+      "total_cycles"
+    ],
+    "knowledge_base/hosted/content/indications/ind_pmbcl_1l_da_epoch_r.yaml": [
+      "clinical_claims",
+      "expected_outcomes",
+      "last_reviewed",
+      "review_status"
+    ]
+  },
+  "verification": [
+    "9 targeted tests passed",
+    "4253 entities: 0 schema/ref/contract errors; 396 warnings",
+    "242 pages and 110 final reader/source hashes verified",
+    "Exactly four core members and one PMBCL indication changed; all changed bytes equal canonical current source; 89 other disease archives byte-identical",
+    "Exactly two semantic search rows per language changed; all other rows and counts preserved",
+    "ZIP/TAR identity, bundle versions, preferred transfer budget and nine-language stale/offline cache checks passed",
+    "Actual Node WASM loads EPOCH-specific nadir/G-CSF context and corrected EFS/PFS distinction; prior synthetic states preserved; zero network attempts; not clinical or actual browser offline validation"
+  ],
+  "case_ids": [
+    "bma-bma-myc-rearrangement-burkitt",
+    "burkitt-high-risk",
+    "verified-burkitt-l2-rdhap-burkitt",
+    "burkitt-low-risk",
+    "bma-bma-bcl2-rearrangement-hgbl-dh",
+    "hgbl-double-hit",
+    "hgbl-primary-refractory",
+    "pmbcl-bulky-svc",
+    "pmbcl-relapsed-post-rchop",
+    "pmbcl-typical"
+  ],
+  "open_risks": [
+    "All changed clinical records and Ukrainian text pending human clinical signoff",
+    "Reference dose-level descriptions are not an executable individualized dose calculator",
+    "Disease eligibility, risk-adapted Burkitt schedule and CNS/RT decisions require separate protocol audits",
+    "Other PMBCL response/survival estimates and Deauville-to-RT rule remain unreviewed",
+    "CODOX-M/IVAC and CHOEP-alloSCT still inherit R-CHOP monitoring and need separate audits",
+    "Actual browser offline behavior not established by Node WASM"
+  ],
+  "bundle": {
+    "core_version": "15c4a083e5f2",
+    "core_compressed_version": "36ace6ed7698",
+    "changed_disease_archives": [
+      "DIS-PMBCL"
+    ],
+    "retained_disease_archives": 89
+  }
+}

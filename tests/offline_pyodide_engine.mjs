@@ -218,4 +218,28 @@ assert 'time to treatment failure' in mcl_track.indication_data['expected_outcom
 json.dumps({'regimen':mcl_reg['id'],'cisplatin':cis[0],'monitoring':mcl_track.monitoring_data['id'],'clinicalApproval':False})
 `));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,environment:'Node WASM, not browser'}));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-PMBCL'])).buffer,'zip');
+const epochExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='pmbcl-typical');
+assert(epochExample, 'Synthetic PMBCL fixture missing');
+py.globals.set('_epoch_json',JSON.stringify(epochExample.json));
+const epochState=JSON.parse(await py.runPythonAsync(`
+assert apply_disease_module(KB,disease_id='DIS-PMBCL')['ok']
+epoch_result=generate_plan(json.loads(_epoch_json),kb_root=KB)
+epoch_track=next(t for t in epoch_result.plan.tracks if (t.regimen_data or {}).get('id')=='REG-DA-EPOCH-R')
+assert epoch_track.monitoring_data['id']=='MON-DA-EPOCH-R-REGIMEN'
+assert any('twice weekly, three days apart' in p['window'] for p in epoch_track.monitoring_data['phases'])
+epoch=epoch_track.regimen_data
+assert 'SUP-GCSF-NEUTROPENIA' in epoch['mandatory_supportive_care']
+assert 'retain the previous dose level' in epoch['dose_adjustments'][1]['modification']
+assert 'below starting level 1, only cyclophosphamide' in epoch['dose_adjustments'][2]['modification']
+assert 'not restricted to HIV-positive' in epoch['dose_adjustments'][4]['modification']
+for lang,needle in [('en','During every cycle: CBC twice weekly'),('uk','Під час кожного циклу: загальний аналіз крові двічі на тиждень')]:
+    epoch_html=render_plan_html(epoch_result,target_lang=lang)
+    assert needle in epoch_html and 'MON-DA-EPOCH-R-REGIMEN' in epoch_html
+assert (KB/'sources/src_eviq_da_r_epoch_783.yaml').is_file()
+assert 'not a verified PFS' in epoch_track.indication_data['expected_outcomes']['progression_free_survival']
+assert (KB/'sources/src_dunleavy_pmbcl_daepoch_2013.yaml').is_file()
+json.dumps({'monitoring':epoch_track.monitoring_data['id'],'clinicalApproval':False})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,environment:'Node WASM, not browser'}));
