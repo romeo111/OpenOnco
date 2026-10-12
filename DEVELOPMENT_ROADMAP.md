@@ -4,6 +4,12 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Daily/weekly schedule fidelity in translated dynamic reports (2026-10-12)
+
+The build-time lexical guard now requires daily/weekly cadence evidence in all nine clinical display editions, including ES/PT/DE/FR, and rejects a translated weekly instruction that adds a daily instruction. The browser applies the same patterns to loaded catalogs before translating generated reports; an unproven cadence retains the complete original. Numeric inputs, engine output and medical source records are unchanged. This is a conservative display guard, not semantic or clinical validation. Mixed schedules, explicit frequency counts and pretranslated static prose still require a broader audit.
+
+77 targeted language/terminology tests and a Node runtime test passed; Python/JS pattern data match. Runtime versioning excludes protected report prefixes before reading, retains their previous runtime assets, and leaves medical catalog bytes untouched. Deployment and live runtime fingerprint verification are part of delivery.
+
 ### HTTP JSON decoder failures (2026-10-12)
 
 Both Vercel HTTP entrypoints now return HTTP 400 for JSON decoder ValueError (including Python's integer digit limit) and RecursionError, before clinical processing, quota or provider calls. Existing size, UTF-8, top-level object and non-finite guards are retained. Real malformed JSON, a 10000-digit integer, and 6000 nested arrays are exercised through each HTTP handler; a valid nested object still reaches processing unchanged. 41 targeted HTTP/profile/language tests passed. No medical sources, treatment logic, catalogs or protected reports changed. Production accepted 6000 levels on a different Python runtime, so a shared string-aware scanner now enforces a maximum of 256 object/array nesting levels before decoding; quoted/escaped brackets do not count. 42 tests passed after this change. First production probe used a synthetic empty case, returned needs_clarification and consumed one anonymous question; no model call. Final production verification remains part of delivery.

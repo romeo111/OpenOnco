@@ -53,7 +53,11 @@ WEEKLY_TRANSLATION = {
     'nb': re.compile(r'\b(?:ukentlig\w*|hver uke)\b', re.I),
     'fi': re.compile(r'\b(?:viikoittain|kerran viikossa|joka viikko)\b', re.I),
 }
-ADDITIONAL_DAILY_TRANSLATION = {
+DAILY_TRANSLATION = {
+    'es': re.compile(r'\b(?:diari\w*|cada d[ií]a|al d[ií]a)\b', re.I),
+    'pt': re.compile(r'\b(?:di[aá]ri\w*|diariamente|cada dia|por dia|ao dia)\b', re.I),
+    'de': re.compile(r'\b(?:t[aä]glich\w*|jeden tag|pro tag)\b', re.I),
+    'fr': re.compile(r'\b(?:quotidien\w*|chaque jour|par jour)\b', re.I),
     'it': re.compile(r'\b(?:ogni giorno|al giorno|quotidianamente|giornalier\w*)\b', re.I),
     'da': re.compile(r'\b(?:daglig\w*|hver dag)\b', re.I),
     'sv': re.compile(r'\b(?:daglig\w*|varje dag)\b', re.I),
@@ -136,11 +140,14 @@ def acceptable_draft(source, translated, locale, drug_pattern=None):
     if DAILY_EN.search(source) and not WEEKLY_EN.search(source):
         if weekly_form is None or weekly_form.search(translated):
             return False
-        daily_form = ADDITIONAL_DAILY_TRANSLATION.get(locale)
-        if daily_form is not None and not daily_form.search(translated):
+        daily_form = DAILY_TRANSLATION.get(locale)
+        if daily_form is None or not daily_form.search(translated):
             return False
-    if locale in ADDITIONAL_DAILY_TRANSLATION and WEEKLY_EN.search(source):
+    if WEEKLY_EN.search(source) and not DAILY_EN.search(source):
         if weekly_form is None or not weekly_form.search(translated):
+            return False
+        daily_form = DAILY_TRANSLATION.get(locale)
+        if daily_form is not None and daily_form.search(translated):
             return False
     alternation_form = ALTERNATION_TRANSLATION.get(locale)
     if ALTERNATE_INJECTION_SITE.search(source) and (alternation_form is None or not alternation_form.search(translated)):

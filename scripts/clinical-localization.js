@@ -38,11 +38,28 @@
     originalLabels[code] = copy.original;
     counters[code] = copy.counters;
   }
+  // BEGIN dosing schedule guard: retain original when cadence is unproven.
+  const schedulePatterns = {"es":{"daily":"\\b(?:diari\\w*|cada d[ií]a|al d[ií]a)\\b","weekly":"\\b(?:una|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b"},"pt":{"daily":"\\b(?:di[aá]ri\\w*|diariamente|cada dia|por dia|ao dia)\\b","weekly":"\\b(?:uma|1)\\s+vez\\s+por\\s+semana\\b|\\bsemanal(?:mente)?\\b"},"de":{"daily":"\\b(?:t[aä]glich\\w*|jeden tag|pro tag)\\b","weekly":"\\bwöchentlich\\b|\\beinmal\\s+pro\\s+woche\\b"},"fr":{"daily":"\\b(?:quotidien\\w*|chaque jour|par jour)\\b","weekly":"\\b(?:une|1)\\s+(?:seule\\s+)?fois\\s+par\\s+semaine\\b|\\bhebdomadaire\\b"},"it":{"daily":"\\b(?:ogni giorno|al giorno|quotidianamente|giornalier\\w*)\\b","weekly":"\\b(?:settimana|settimanale|settimanalmente)\\b"},"da":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ugentlig\\w*|hver uge)\\b"},"sv":{"daily":"\\b(?:daglig\\w*|varje dag)\\b","weekly":"\\b(?:veckovis|varje vecka|en gång i veckan)\\b"},"nb":{"daily":"\\b(?:daglig\\w*|hver dag)\\b","weekly":"\\b(?:ukentlig\\w*|hver uke)\\b"},"fi":{"daily":"\\b(?:päivittäin|kerran päivässä|joka päivä)\\b","weekly":"\\b(?:viikoittain|kerran viikossa|joka viikko)\\b"}};
+  const preserveSchedule = (source, translated, language) => {
+    if (source === translated) return true;
+    const daily = /\b(?:once daily|every day|daily)\b/i.test(source);
+    const weekly = /\b(?:once weekly|every week|weekly)\b/i.test(source);
+    if (daily === weekly) return true;
+    const forms = schedulePatterns[language];
+    if (!forms) return false;
+    const hasDaily = new RegExp(forms.daily, 'i').test(translated);
+    const hasWeekly = new RegExp(forms.weekly, 'i').test(translated);
+    return daily ? hasDaily && !hasWeekly : hasWeekly && !hasDaily;
+  };
+  // END dosing schedule guard.
   fetch(catalogURL).then(response => {
     if (!response.ok) throw new Error('Translation catalog unavailable');
     return response.json();
   }).then(catalog => {
     Object.assign(catalog, contentReviewCopy[locale] || {});
+    for (const [source, translated] of Object.entries(catalog)) {
+      if (!preserveSchedule(source, translated, locale)) catalog[source] = source;
+    }
     window.OPENONCO_REPORT_LOCALE = locale;
     // Native curated text is an identity entry too. Retained source prose
     // receives a neutral original-text label. Catalog keys can contain
