@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="72cca68736e5064386fe460dd22a518d8525d463adfa86a9139eb437f3f1f784"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="cd4b8f510792fe8c3ecdf8aba8bf123d2d0f2ec869ab46dd05cad36b32abec89"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -1162,7 +1162,22 @@ function unlockAllFields() {
   hideExampleLockBanner();
 }
 
+function normalizeQuestionnaire(quest) {
+  if (!quest) return quest;
+  // Older cached payloads appended duplicate screening controls. Preserve
+  // authored questions (including their enums/defaults) in every group.
+  const screeningTitle = 'General screening (optional)';
+  const authored = new Set((quest.groups || [])
+    .filter(group => group.title !== screeningTitle)
+    .flatMap(group => (group.questions || []).map(question => question.field)));
+  const groups = (quest.groups || []).map(group => group.title === screeningTitle
+    ? { ...group, questions: (group.questions || []).filter(question => !authored.has(question.field)) }
+    : group);
+  return { ...quest, groups };
+}
+
 function renderForm(quest) {
+  quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
   answers = {};
   questGroups.innerHTML = '';
