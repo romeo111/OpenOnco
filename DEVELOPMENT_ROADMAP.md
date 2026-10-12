@@ -4,6 +4,12 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Typed clinical-question requests and bounded locale audit metadata (2026-10-12)
+
+The HTTP boundary rejects non-string/non-null case_text and locale fields with HTTP 400 before quota principal lookup, accounting or clinical/model processing. Unknown language roots are rejected instead of silently selecting a different answer language. All eleven supported language roots and existing regional tags remain supported; original string text, optional null/empty defaults and valid-request quota behavior are preserved. Audit locale values are now an allowlisted language root or unknown, so arbitrary locale strings/objects cannot enter operational logs.
+
+101 request-contract, endpoint, API-language, HTTP JSON and profile-boundary tests passed, with forbidden quota/provider hooks proving invalid requests stop early. Added contract tests to normal CI. Medical sources, offline engine, static pages and protected reports are unchanged. Standard Git/Pages and existing Vercel API deployment plus production invalid-request checks are required.
+
 ### Static schedule prose recovery (2026-10-12)
 
 Read-only audit of the 380 retained-original catalog entries covered all nine locale trees, excluding protected case prefixes before reading. Each proposed recovery was matched to a unique original fragment on the corresponding English page. 318 pages / 543 fragments were confirmed (ES 51/69, PT 51/71, DE 114/213, FR 102/190); the five newer languages had no exact static matches. No ambiguous matches were found among this audited set.

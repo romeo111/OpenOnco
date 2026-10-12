@@ -1480,9 +1480,11 @@ def _write_ask_audit_log(
     if path is None:
         return
     case_text = str(body.get("case_text") or "")
+    locale_value = body.get("locale") or "uk"
+    locale_code = locale_value.lower().split("-")[0] if isinstance(locale_value, str) else "unknown"
     row: dict[str, Any] = {
         "ts": datetime.now(timezone.utc).isoformat(),
-        "locale": str(body.get("locale") or "uk"),
+        "locale": locale_code if locale_code in ANSWER_LANGUAGES else "unknown",
         "http_status": http_status,
         "status": response.get("status"),
         "questions_used": response.get("questions_used"),
@@ -1525,7 +1527,16 @@ def handle_json_request(
         return _finalize_json_request(400, _cors_headers(), {
             "status": "error", "message": "JSON request contains invalid numeric data.",
         }, body={}, request_meta=request_meta)
-    locale = str(body.get("locale") or "uk")
+    for field in ("case_text", "locale"):
+        if body.get(field) is not None and not isinstance(body[field], str):
+            return _finalize_json_request(400, _cors_headers(), {
+                "status": "error", "message": f"{field} must be a string or null.",
+            }, body={}, request_meta=request_meta)
+    locale = body.get("locale") or "uk"
+    if locale.lower().split("-")[0] not in ANSWER_LANGUAGES:
+        return _finalize_json_request(400, _cors_headers(), {
+            "status": "error", "message": "Unsupported locale.",
+        }, body={}, request_meta=request_meta)
     principal = _quota_principal(request_meta)
     used = _quota_usage(principal, time.monotonic())
     if used >= MAX_QUESTIONS_PER_IP:
@@ -1541,7 +1552,7 @@ def handle_json_request(
     # would let callers evade the limiter by repeatedly causing failures.
     questions_used = _record_quota_usage(principal, used, time.monotonic())
     try:
-        case_text = str(body.get("case_text") or "")
+        case_text = body.get("case_text") or ""
         # Do not retain generated answers or patient profiles in process memory.
         result = answer_clinical_question(case_text, locale=locale)
         result["questions_used"] = questions_used
