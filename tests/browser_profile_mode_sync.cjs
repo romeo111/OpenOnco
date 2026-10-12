@@ -19,7 +19,7 @@ function fixture() {
     formPane: {}, jsonPane: {},
     saveDraft: () => calls.saves.push(textarea.value), updateRunBtnEnabled: () => calls.updates++,
   });
-  vm.runInContext('let mode="form",activeQuest={fixed_fields:fixed};' + code, context);
+  vm.runInContext('let formProfileBase=null,removedProfileFields=new Set(),mode="form",activeQuest={fixed_fields:fixed};' + code, context);
   return { context, textarea, fixed, calls, run: s => vm.runInContext(s, context) };
 }
 let f = fixture();

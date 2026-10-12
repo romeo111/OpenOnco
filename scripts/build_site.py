@@ -5219,6 +5219,8 @@ let uiBusy = false;          // true while a user-triggered async load is
 let previewToken = 0;        // bumped on each runLivePreview start AND on
                              // runEngine start; stale results are discarded
 let answers = {{}};          // {{dotted_path: value}}
+let formProfileBase = null;  // Full imported profile, including fields outside the questionnaire
+let removedProfileFields = new Set();
 let mode = 'form';           // 'form' | 'json'
 let evalDebounceTimer = null;    // preview debounce
 let whatIfDebounceTimer = null;  // what-if debounce — separate + longer so
@@ -5746,6 +5748,8 @@ function saveDraft() {{
       answers,
       mode,
       jsonText: textarea.value,
+      formProfileBase,
+      removedProfileFields: Array.from(removedProfileFields),
     }}));
   }} catch (e) {{ /* private mode etc — silent fail */ }}
 }}
@@ -5756,6 +5760,8 @@ function findAnswerControl(field) {{
 }}
 
 function applyDraftFields(draft) {{
+  formProfileBase = draft.formProfileBase && !profileInputError(draft.formProfileBase) ? draft.formProfileBase : null;
+  removedProfileFields = new Set((Array.isArray(draft.removedProfileFields) ? draft.removedProfileFields : []).filter(field => findAnswerControl(field)));
   for (const [field, value] of Object.entries(draft.answers || {{}})) {{
     const input = findAnswerControl(field);
     if (!input) continue;
@@ -5910,6 +5916,8 @@ function questionnaireDescription(group) {{
 function renderForm(quest) {{
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
+  formProfileBase = null;
+  removedProfileFields = new Set();
   answers = {{}};
   questGroups.innerHTML = '';
   hideExampleLockBanner();
@@ -6099,6 +6107,8 @@ function onAnswerChange(ev) {{
     if (inp.type === 'number' && (inp.value !== '' || inp.validity.badInput)) answers[field] = inp.value;
     else delete answers[field];
   }} else answers[field] = val;
+  if (inp.value === '' && !inp.validity.badInput) removedProfileFields.add(field);
+  else removedProfileFields.delete(field);
   markPlanDirty();
   saveDraft();
   updateRunBtnEnabled();
@@ -6132,7 +6142,16 @@ function pauseEvalForToolbar() {{
 }}
 
 // ── Mode switch ───────────────────────────────────────────────────────────
-function setMode(newMode, {{ syncFromForm = false }} = {{}}) {{
+function setMode(newMode, {{ syncFromForm = false, syncFromJson = false }} = {{}}) {{
+  if (newMode === 'form' && syncFromJson && mode === 'json') {{
+    const imported = buildProfile();
+    if (!imported) return;
+    const index = findQuestionnaireForProfile(imported);
+    if (!activeQuest || index < 0 || QUESTIONNAIRES_MANIFEST[index].id !== activeQuest.id || !populateFormFromProfile(activeQuest, imported)) {{
+      setError(profileInputCopy.transfer);
+      return;
+    }}
+  }}
   // Capture form values before buildProfile switches to reading the JSON pane.
   // Draft/example/QR loaders supply their own JSON and must retain it verbatim.
   const syncProfile = newMode === 'json' && syncFromForm && mode === 'form' && activeQuest;
@@ -6176,7 +6195,13 @@ function buildProfile() {{
   }}
   if (!activeQuest || !validateNumericInputs()) return null;
   // Deep-merge fixed_fields + expand dotted-path answers
-  const profile = JSON.parse(JSON.stringify(activeQuest.fixed_fields || {{}}));
+  const profile = JSON.parse(JSON.stringify(formProfileBase || activeQuest.fixed_fields || {{}}));
+  for (const path of removedProfileFields) {{
+    const parts = path.split('.');
+    let parent = profile;
+    for (const seg of parts.slice(0, -1)) parent = parent && typeof parent === 'object' && Object.hasOwn(parent, seg) ? parent[seg] : null;
+    if (parent && typeof parent === 'object') delete parent[parts.at(-1)];
+  }}
   for (const [path, val] of Object.entries(answers)) {{
     if (val === undefined || val === null) continue;
     const parts = path.split('.');
@@ -7532,30 +7557,39 @@ function findQuestionnaireForProfile(profile) {{
 function getByPath(obj, dotted) {{
   let cur = obj;
   for (const seg of dotted.split('.')) {{
-    if (cur === null || typeof cur !== 'object') return undefined;
+    if (cur === null || typeof cur !== 'object' || !Object.hasOwn(cur, seg)) return undefined;
     cur = cur[seg];
   }}
   return cur;
 }}
 
 function populateFormFromProfile(quest, profile) {{
-  // Walk every form question and try to read its dotted-path value
-  // out of the example profile. Unset inputs stay empty (will count as
-  // not-filled so user can finish anything missing).
-  for (const group of quest.groups || []) {{
-    for (const q of group.questions || []) {{
-      const path = q.field;
-      if (!path) continue;
-      const val = getByPath(profile, path);
-      if (val === undefined || val === null) continue;
-      const inp = findAnswerControl(path);
-      if (!inp) continue;
-      if (q.type === 'boolean') inp.value = String(val);
-      else if (q.type === 'enum') inp.value = JSON.stringify(val);
-      else inp.value = val;
-      answers[path] = val;
-    }}
+  if (profileInputError(profile)) return false;
+  const fields = (quest.groups || []).flatMap(group => group.questions || []);
+  // Validate before changing any control. No coercion of imported clinical values.
+  for (const q of fields) {{
+    const val = getByPath(profile, q.field);
+    if (val === undefined || val === null) continue;
+    if (!findAnswerControl(q.field)) return false;
+    if ((q.type === 'integer' || q.type === 'float') &&
+        (typeof val !== 'number' || !Number.isFinite(val) || (q.type === 'integer' && !Number.isSafeInteger(val)))) return false;
+    if (q.type === 'boolean' && typeof val !== 'boolean') return false;
+    if (q.type === 'enum' && !(q.options || []).some(option => JSON.stringify(option.value) === JSON.stringify(val))) return false;
+    if ((!q.type || q.type === 'text') && typeof val !== 'string') return false;
   }}
+  formProfileBase = JSON.parse(JSON.stringify(profile));
+  removedProfileFields = new Set();
+  answers = {{}};
+  for (const q of fields) {{
+    const inp = findAnswerControl(q.field);
+    if (!inp) continue;
+    const val = getByPath(profile, q.field);
+    inp.value = '';
+    if (val === undefined || val === null) continue;
+    inp.value = q.type === 'enum' ? JSON.stringify(val) : q.type === 'boolean' ? String(val) : val;
+    answers[q.field] = val;
+  }}
+  return true;
 }}
 
 exampleSelect.addEventListener('change', async () => {{
@@ -7575,7 +7609,13 @@ exampleSelect.addEventListener('change', async () => {{
       renderForm(fullList[qIdx]);
       repopulateExamples(qIdx);
       exampleSelect.value = i;
-      populateFormFromProfile(fullList[qIdx], ex.json);
+      if (!populateFormFromProfile(fullList[qIdx], ex.json)) {{
+        textarea.value = JSON.stringify(ex.json, null, 2);
+        setMode('json');
+        setError(profileInputCopy.transfer);
+        clearPlanState();
+        return;
+      }}
       setMode('form');
       // Lock filled fields and reveal the personalize banner so the user
       // can opt-in to editing the example's data.
@@ -7618,7 +7658,7 @@ personalizeBtn && personalizeBtn.addEventListener('click', () => {{
   setStatus('{"Fields unlocked — edit anything. Click «Generate» when you are ready." if target_lang == "en" else "Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий."}', 'ok');
 }});
 
-modeFormBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('form'); }});
+modeFormBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('form', {{ syncFromJson: true }}); }});
 modeJsonBtn.addEventListener('click', () => {{ if (!isInteractionLocked()) setMode('json', {{ syncFromForm: true }}); }});
 formatBtn && formatBtn.addEventListener('click', () => {{
   if (isInteractionLocked()) return;
@@ -7688,7 +7728,12 @@ async function loadFromUrlHash() {{
       const fullList = await ensureQuestionnaires();
       renderForm(fullList[qIdx]);
       repopulateExamples(qIdx);
-      populateFormFromProfile(fullList[qIdx], patient);
+      if (!populateFormFromProfile(fullList[qIdx], patient)) {{
+        textarea.value = JSON.stringify(patient, null, 2);
+        setMode('json');
+        setError(profileInputCopy.transfer);
+        return;
+      }}
       setMode('form');
       lockFilledFields();
       showExampleLockBanner();

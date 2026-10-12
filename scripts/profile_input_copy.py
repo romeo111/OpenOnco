@@ -14,3 +14,19 @@ VALUES = {
  'fi': ('Anna kelvollinen JSON.', 'Profiilin on oltava JSON-objekti.', 'Profiili sisältää luvun, joka ei ole äärellinen.', 'Tämän profiilin osan on oltava objekti tai null:'),
 }
 COPY = {locale: dict(zip(KEYS, values)) for locale, values in VALUES.items()}
+
+TRANSFER = {
+'en': 'Keep this profile in JSON mode: select the matching disease form and use values supported by its fields. Your JSON has been preserved.',
+'uk': 'Залиште цей профіль у режимі JSON: виберіть анкету відповідної хвороби та значення, які підтримують її поля. Ваш JSON збережено.',
+'es': 'Mantenga este perfil en modo JSON: seleccione el formulario de la enfermedad correspondiente y valores compatibles con sus campos. Su JSON se conserva.',
+'pt': 'Mantenha este perfil no modo JSON: selecione o formulário da doença correspondente e valores compatíveis com os campos. O seu JSON foi preservado.',
+'de': 'Belassen Sie dieses Profil im JSON-Modus: Wählen Sie das passende Krankheitsformular und unterstützte Feldwerte. Ihr JSON bleibt erhalten.',
+'fr': 'Gardez ce profil en mode JSON : choisissez le formulaire de la maladie correspondante et des valeurs prises en charge. Votre JSON est conservé.',
+'it': 'Mantieni questo profilo in modalità JSON: scegli il modulo della malattia corrispondente e valori supportati dai campi. Il JSON è conservato.',
+'da': 'Behold profilen i JSON-tilstand: Vælg formularen for den rette sygdom og værdier, som felterne understøtter. Din JSON er bevaret.',
+'sv': 'Behåll profilen i JSON-läge: Välj formuläret för rätt sjukdom och värden som fälten stöder. Din JSON har bevarats.',
+'nb': 'Behold profilen i JSON-modus: Velg skjemaet for riktig sykdom og verdier som feltene støtter. Din JSON er bevart.',
+'fi': 'Pidä profiili JSON-tilassa: valitse vastaavan sairauden lomake ja kenttien tukemat arvot. JSON on säilytetty.',
+}
+for locale, message in TRANSFER.items():
+    COPY[locale]['transfer'] = message

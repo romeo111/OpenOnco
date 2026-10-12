@@ -32,6 +32,7 @@ const context = vm.createContext({ console, profileInputCopy:JSON.parse(html.mat
   resetBtn:button(), formatBtn:button(), diseaseSelect:button(), exampleSelect:button(), modeFormBtn:button(), modeJsonBtn:button(), personalizeBtn:button(),
 });
 vm.runInContext(`let mode='form',planSource='generated',reportReady=true,planDirty=true;
+let formProfileBase=null,removedProfileFields=new Set();
 let answers={'findings.virtual_integer':61,'findings.virtual_float':0.836,'findings.virtual_boolean':false};
 const activeQuest={fixed_fields:{patient_id:'VIRTUAL-NUMERIC-001'},groups:[{questions:[
 {field:'findings.virtual_integer',label:'Integer',impact:'critical'},
