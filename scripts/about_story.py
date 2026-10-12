@@ -20,7 +20,7 @@ ENGLISH = {
     'Вкладена робота': 'The work behind it',
     'Найбільше зусиль — не в красивій відповіді, а в тому, щоб вона була обґрунтованою': 'The main effort goes into making results well supported',
     'База знань замість довільного тексту': 'A structured knowledge base',
-    'Команда описує хвороби, схеми лікування, індикації, застереження та джерела як окремі пов’язані сутності. Так зміни не губляться в абзацах, а проходять через версії й перевірки.': 'The team records diseases, regimens, indications, warnings and sources as separate linked entities. Changes can then be versioned and checked, rather than getting lost in paragraphs.',
+    'Автор проєкту описує хвороби, схеми лікування, індикації, застереження та джерела як окремі пов’язані сутності. Так зміни не губляться в абзацах, а проходять через версії й перевірки.': 'The project maintainer records diseases, regimens, indications, warnings and sources as separate linked entities. Changes can then be versioned and checked, rather than getting lost in paragraphs.',
     'Перевірюваність на кожному кроці': 'Traceability at every step',
     'Для клінічних тверджень фіксується походження. Правила, результат і публічні приклади можна переглянути, а не просто прийняти «на віру».': 'Clinical claims have recorded provenance. Rules, results and public examples can be inspected rather than taken on trust.',
     'Безпека як межа, а не примітка дрібним шрифтом': 'Safety defines the boundaries',

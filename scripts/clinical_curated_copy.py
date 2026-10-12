@@ -327,6 +327,7 @@ SHOWCASE_TITLES = {
 
 
 def messages_for(locale):
+    from scripts.privacy_copy import messages_for as privacy_messages
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
         import json
         from pathlib import Path
@@ -340,6 +341,7 @@ def messages_for(locale):
             catalog.update({name: name for name in json.loads(protected.read_text(encoding='utf-8'))})
         catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
         catalog.update(STAGING_LABELS[locale])
+        catalog.update(privacy_messages(locale))
         return catalog
     title = NSCLC[locale]
     status = {
@@ -385,4 +387,5 @@ def messages_for(locale):
             'Advanced ovarian cancer: HRD/BRCA first-line maintenance reasoning': 'Cancer de l’ovaire avancé : raisonnement sur le traitement d’entretien HRD/BRCA en première ligne',
         })
     catalog['✗ Not registered in UA'] = AVAILABILITY_LABELS[locale]
+    catalog.update(privacy_messages(locale))
     return catalog

@@ -30,8 +30,9 @@ Layout produced:
     disease/openonco-<slug>.zip    # per-disease KB modules (lazy-loaded)
     examples.json                  # dropdown payload for try.html
 
-No real patient data ever flows here — only synthetic seed cases under
-examples/, guarded by CHARTER §9.3.
+The builder ships synthetic seed cases under examples/, guarded by CHARTER
+§9.3. Visitor-entered data follows each tool's data flow; server-backed tools
+must not receive identifying patient information.
 
 Usage:
 
@@ -56,6 +57,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+from scripts import privacy_copy
 
 from knowledge_base.engine import (
     generate_diagnostic_brief,
@@ -1578,10 +1581,8 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "sources": "Cited sources",
             "perf": "Per profile",
         }
-        trust = (
-            "Rules-first, not an LLM — no drug or dose is ever invented. Patient data stays "
-            "in your browser. A qualified clinician is always the final authority."
-        )
+        from scripts.privacy_copy import HOME
+        trust = HOME['en']
         note = (
             "Open-data inputs: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA and "
             "NCCN/ESMO/EHA/BSH guidelines. No LLM chooses treatment — plans are rules-first "
@@ -1605,7 +1606,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "плани лікування поруч — стандартний і агресивніший. Лікарю це пришвидшує "
             "підготовку туморборду, хворому — допомагає зрозуміти призначене лікування і "
             "скласти питання до онколога, фармацевту — перевірити взаємодії та корекції доз. "
-            "Без реєстрації, дані лишаються у вашому браузері.",
+            "Без реєстрації; правила оцінюються у браузері, а Туморборд передає текст серверу.",
         )
         primary = "Спробувати конструктор плану"
         diseases_href = "/ukr/diseases.html"
@@ -1698,11 +1699,8 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
             "sources": "Цитованих джерел",
             "perf": "На профіль",
         }
-        trust = (
-            "Конструктор плану працює за явними правилами у вашому браузері. "
-            "Туморборд надсилає введений текст на сервер для аналізу. "
-            "Використовуйте синтетичні приклади; фінальне рішення завжди за лікарем."
-        )
+        from scripts.privacy_copy import HOME
+        trust = HOME['uk']
         note = (
             "Відкриті джерела: CIViC (CC0), ClinicalTrials.gov, PubMed, DailyMed/openFDA і "
             "настанови NCCN/ESMO/EHA/BSH. План збирається за правилами "
@@ -1893,14 +1891,10 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             "No LLM decides what to prescribe — clinical logic runs in a declarative "
             "rule engine."
         )
-        trust_2_strong = "No external LLM calls"
-        trust_2_text = (
-            "when a plan is built. Every algorithm is open and auditable line-by-line on "
-            "GitHub."
-        )
-        trust_3_strong = "only to scientific databases"
-        trust_3_text_pre = "Lookups go"
-        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC (CC0), NCCN/ESMO/EHA/ASH/BSH, MoH."
+        from scripts.privacy_copy import LOCAL_TITLE, LOCAL_BODY, TRANSFER_TITLE, TRANSFER_BODY
+        trust_2_strong, trust_2_text = LOCAL_TITLE['en'], LOCAL_BODY['en']
+        trust_3_strong = TRANSFER_TITLE['en']
+        trust_3_text_pre, trust_3_text_post = '', ' ' + TRANSFER_BODY['en']
         df_aria = "OpenOnco — data flow from patient profile to two treatment plans"
         df1_title = "Patient profile"
         df1_body = (
@@ -2036,14 +2030,10 @@ def render_landing_legacy(stats, *, target_lang: str = "en") -> str:
             "LLM не вирішує, що призначати — клінічну логіку виконує декларативний "
             "rule engine."
         )
-        trust_2_strong = "Жодних викликів зовнішніх LLM"
-        trust_2_text = (
-            "у момент побудови плану. Усі алгоритми відкриті, перевіряються "
-            "рядок-за-рядком на GitHub."
-        )
-        trust_3_strong = "лише в наукові бази"
-        trust_3_text_pre = "Запити йдуть"
-        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC (CC0), NCCN/ESMO/EHA/ASH/BSH, МОЗ."
+        from scripts.privacy_copy import LOCAL_TITLE, LOCAL_BODY, TRANSFER_TITLE, TRANSFER_BODY
+        trust_2_strong, trust_2_text = LOCAL_TITLE['uk'], LOCAL_BODY['uk']
+        trust_3_strong = TRANSFER_TITLE['uk']
+        trust_3_text_pre, trust_3_text_post = '', ' ' + TRANSFER_BODY['uk']
         df_aria = "OpenOnco — потік даних від профілю пацієнта до двох планів лікування"
         df1_title = "Профіль пацієнта"
         df1_body = (
@@ -4275,6 +4265,7 @@ def render_ask(*, target_lang: str = "en") -> str:
       <h1>{html.escape(title)}</h1>
       <p class="lead">{lead}</p>
       <p class="ask-muted">{safety}</p>
+      <p class="ask-muted" data-data-flow="server">{html.escape(privacy_copy.TRANSFER_BODY['en' if is_en else 'uk'])}</p>
       <p class="ask-muted ask-patient-note">{patient_welcome}</p>
       <p class="ask-patient-safety">{patient_safety}</p>
     </div>
@@ -10175,7 +10166,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "To show the interface in your language, your browser looks up your country from your IP via a third-party service "
              "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, with "
              "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a> as fallback). Only your IP is sent, with no "
-             "referrer; we run no server and keep no logs of our own. The detected country and your manual EN/UA choice are stored only "
+             "referrer. These direct geo requests do not use the OpenOnco API; the providers determine their own logging and retention policies. The detected country and your manual language choice are stored only "
              "in your browser (localStorage) and the manual switch always overrides the IP guess. Ukrainian is shown only for Ukrainian "
              "IP addresses; English everywhere else. By using the site you consent to this country lookup — to avoid it, pick a language "
              "manually and your choice is remembered."),
@@ -10238,7 +10229,7 @@ def render_specs(stats, *, target_lang: str = "en") -> str:
              "Щоб показати інтерфейс вашою мовою, браузер визначає країну за вашою IP-адресою через сторонній сервіс "
              "(<a href=\"https://www.geojs.io/\" target=\"_blank\" rel=\"noopener\">GeoJS</a>, резерв — "
              "<a href=\"https://ipapi.co/\" target=\"_blank\" rel=\"noopener\">ipapi.co</a>). Передається лише ваш IP, без referrer; "
-             "ми не маємо власного сервера й не ведемо логів. Визначена країна та ваш ручний вибір EN/UA зберігаються лише у вашому "
+             "ці прямі геозапити не використовують API OpenOnco; постачальники визначають власні політики журналювання та зберігання. Визначена країна та ваш ручний вибір мови зберігаються лише у вашому "
              "браузері (localStorage), а ручний перемикач завжди перекриває визначення за IP. Українська показується тільки для "
              "українських IP-адрес; в усіх інших випадках — англійська. Користуючись сайтом, ви погоджуєтесь на це визначення країни — "
              "щоб його уникнути, оберіть мову вручну, і ваш вибір запам'ятається."),
@@ -10479,7 +10470,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
     <div class="about-effort-grid">
       <article>
         <h3>База знань замість довільного тексту</h3>
-        <p>Команда описує хвороби, схеми лікування, індикації, застереження та джерела як окремі пов’язані сутності. Так зміни не губляться в абзацах, а проходять через версії й перевірки.</p>
+        <p>Автор проєкту описує хвороби, схеми лікування, індикації, застереження та джерела як окремі пов’язані сутності. Так зміни не губляться в абзацах, а проходять через версії й перевірки.</p>
       </article>
       <article>
         <h3>Перевірюваність на кожному кроці</h3>
@@ -10563,6 +10554,11 @@ def render_about(stats, *, target_lang: str = "en") -> str:
 
   <section class="about-link-grid">
 {cards_html}
+  </section>
+
+  <section class="about-split" data-data-flow="tools">
+    <div><h2>{privacy_copy.LOCAL_TITLE['en' if is_en else 'uk']}</h2><p>{privacy_copy.LOCAL_BODY['en' if is_en else 'uk']}</p></div>
+    <div><h2>{privacy_copy.TRANSFER_TITLE['en' if is_en else 'uk']}</h2><p>{privacy_copy.TRANSFER_BODY['en' if is_en else 'uk']}</p></div>
   </section>
 
   <section class="about-split">

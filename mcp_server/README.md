@@ -120,8 +120,11 @@ schema is documented in
 [`specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md`](../specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md)
 and the in-browser builder at [openonco.info/try.html](https://openonco.info/try.html).
 
-**Do not send identifiable patient data** to a hosted LLM. Run the engine
-locally (this server) or de-identify first.
+**Do not send identifiable patient data** to a hosted LLM. This server executes
+the engine locally, but the connected assistant/client may forward prompts,
+profiles or returned results to its provider. Local engine execution does not
+guarantee local handling by that client. Use synthetic examples and review the
+client, hosting and provider settings before use.
 
 ---
 
