@@ -11370,7 +11370,11 @@ def build_one_case(case: CaseEntry, output_dir: Path,
             experimental_search_fn=search_trials,
             experimental_cache_root=CTGOV_CACHE,
         )
-        if result.plan is None or (not result.plan.tracks and not result.plan.knowledge_base_state.get("histology_selection_withheld")):
+        applicability_withheld = result.plan is not None and any(
+            result.plan.knowledge_base_state.get(key)
+            for key in ('histology_selection_withheld', 'profile_selection_withheld')
+        )
+        if result.plan is None or (not result.plan.tracks and not applicability_withheld):
             raise RuntimeError(f"Example {case.case_id} generated no treatment plan")
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
         html = render_plan_html(result, mdt=mdt, target_lang=target_lang)

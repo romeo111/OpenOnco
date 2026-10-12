@@ -245,9 +245,14 @@ assert.equal(networkAttempts,0);
 py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-BURKITT'])).buffer,'zip');
 const codoxExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='burkitt-high-risk');
 assert(codoxExample, 'Synthetic Burkitt fixture missing');
-py.globals.set('_codox_json',JSON.stringify(codoxExample.json));
+py.globals.set('_codox_original_json',JSON.stringify(codoxExample.json));
+const codoxConfirmedProfile=structuredClone(codoxExample.json);
+codoxConfirmedProfile.findings.cns_involvement=false;
+py.globals.set('_codox_json',JSON.stringify(codoxConfirmedProfile));
 const codoxState=JSON.parse(await py.runPythonAsync(`
 assert apply_disease_module(KB,disease_id='DIS-BURKITT')['ok']
+original_codox=generate_plan(json.loads(_codox_original_json),kb_root=KB)
+assert original_codox.default_indication_id is None and not original_codox.plan.tracks
 codox_result=generate_plan(json.loads(_codox_json),kb_root=KB)
 codox_track=next(t for t in codox_result.plan.tracks if (t.regimen_data or {}).get('id')=='REG-CODOX-M-IVAC')
 a,b=[p['components'] for p in codox_track.regimen_data['phases']]
@@ -261,7 +266,7 @@ for lang,needle in [('en','Assess neurological function before each ifosfamide d
     codox_html=render_plan_html(codox_result,target_lang=lang)
     assert needle in codox_html and 'DRUG-MESNA' in codox_html
 assert (KB/'sources/src_eviq_burkitt_ivac_4490.yaml').is_file()
-json.dumps({'monitoring':codox_track.monitoring_data['id'],'clinicalApproval':False,'selectionAuditPending':True})
+json.dumps({'monitoring':codox_track.monitoring_data['id'],'clinicalApproval':False,'protocolScopeGuard':True,'broaderEligibilityAuditPending':True})
 `));
 assert.equal(networkAttempts,0);
 console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,environment:'Node WASM, not browser'}));

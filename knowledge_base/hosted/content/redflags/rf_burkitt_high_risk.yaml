@@ -1,44 +1,39 @@
 id: RF-BURKITT-HIGH-RISK
-definition: "Burkitt lymphoma high-risk features: HIV+ AND CD4 <100 OR ECOG ≥3 OR LDH >3× ULN OR CNS involvement
-  OR bulky abdominal disease — selects more intensive CODOX-M/IVAC over DA-EPOCH-R"
-definition_ua: "Burkitt з ознаками високого ризику: ВІЛ+ AND CD4 <100 АБО ECOG ≥3 АБО LDH >3× ULN АБО
-  ураження ЦНС АБО bulky абдомінальна хвороба — обирає інтенсивніший CODOX-M/IVAC замість DA-EPOCH-R"
-
+definition: Legacy Burkitt high-risk trigger for algorithm review. A fired flag alone does not establish
+  eligibility for the encoded high-risk/no-proven-CNS CODOX/IVAC reference.
+definition_ua: Застарілий тригер високого ризику Беркіта для перегляду алгоритму. Спрацювання прапорця
+  саме по собі не підтверджує придатність закодованого довідкового CODOX/IVAC високого ризику без доведеного
+  ураження ЦНС.
 trigger:
   type: composite_clinical
   any_of:
-  - finding: "burkitt_high_risk"
+  - finding: burkitt_high_risk
     value: true
-  - finding: "cns_involvement"
+  - finding: cns_involvement
     value: true
-  - finding: "ldh_above_3x_uln"
+  - finding: ldh_above_3x_uln
     value: true
-  - finding: "leukemic_phase"
+  - finding: leukemic_phase
     value: true
-  - finding: "bulky_abdominal"
+  - finding: bulky_abdominal
     value: true
-
 clinical_direction: intensify
-
 category: high-risk-biology
 priority: 60
-relevant_diseases: [DIS-BURKITT]
-shifts_algorithm: [ALGO-BURKITT-1L]
-
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-BURKITT-2024]
-last_reviewed: "2026-04-25"
-notes: >
-  CALGB 10002 / CALGB 50202 evidence that DA-EPOCH-R is sufficient for
-  most adult Burkitt INCLUDING HIV-associated, but high-risk features
-  push to CODOX-M/IVAC (Magrath) or hyper-CVAD/MA. CNS involvement is
-  mandatory CODOX-M/IVAC (HD-MTX dose-intense regimen).
-notes_ua: >
-  Критерії «Burkitt що відрізняється від BL» за NCCN/WHO: вік >40, ЦНС-ураження, локалізація кісткового
-  мозку, ECOG ≥2, LDH >4×ULN — всі виштовхують до CODOX-M/IVAC або DA-EPOCH-R. Педіатричні особливості
-  (BFM) надійніші у молодших пацієнтів: ≤25 частка проміжного ризику достатня для A-схеми. Дорослий «высокий
-  ризик» включає більшість пацієнтів, оскільки Burkitt рідкісний у дорослих за відсутності ЦНС/кістковомозкового
-  ураження. DA-EPOCH-R дедалі більше використовується як альтернатива CODOX-M/IVAC у дорослих через прийнятну
-  токсичність. СТАБ — потребує підпису клінічного співкерівника.
+relevant_diseases:
+- DIS-BURKITT
+shifts_algorithm:
+- ALGO-BURKITT-1L
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-BURKITT-2024
+last_reviewed: null
+notes: Trigger logic is retained for legacy trace compatibility, not validated as a complete risk classifier.
+  The indication separately requires explicit high-risk and CNS-negative confirmation; CNS involvement
+  requires a separate protocol. This flag does not mandate CODOX/IVAC or choose an automatic alternative.
+notes_ua: Логіку тригера збережено для сумісності трасування; це не перевірений повний класифікатор ризику.
+  Показання окремо вимагає явного підтвердження високого ризику та ЦНС-негативного стану; ураження ЦНС
+  потребує окремого протоколу. Прапорець не наказує застосувати CODOX/IVAC чи автоматичну альтернативу.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_09
 draft_revision: 2

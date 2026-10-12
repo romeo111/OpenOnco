@@ -15,7 +15,12 @@ KB = ROOT / 'knowledge_base/hosted/content'
 def results():
     examples = json.loads((ROOT / 'docs/examples.json').read_text(encoding='utf-8'))
     ids = {'bma-bma-myc-rearrangement-burkitt', 'burkitt-high-risk', 'burkitt-low-risk'}
-    return [generate_plan(e['json'], kb_root=KB) for e in examples if e['case_id'] in ids]
+    # Positive synthetic protocol-scope fixtures; original low-risk/CNS cases
+    # are separately tested for withholding in test_burkitt_protocol_scope.py.
+    profiles = [json.loads(json.dumps(e['json'])) for e in examples if e['case_id'] in ids]
+    for profile in profiles:
+        profile['findings'].update(burkitt_high_risk=True, cns_involvement=False)
+    return [generate_plan(profile, kb_root=KB) for profile in profiles]
 
 
 def test_actual_phase_and_legacy_views_retain_missing_drug_and_uroprotection(results):
@@ -56,7 +61,7 @@ def test_separate_routes_and_clocks_do_not_collapse_into_one_methotrexate_recipe
     assert 'days 1 and 9' in next(c for c in a if c['drug_id'] == 'DRUG-RITUXIMAB')['schedule']
     assert 'days 3 and 7' in next(c for c in b if c['drug_id'] == 'DRUG-RITUXIMAB')['schedule']
     assert 'LMB-style' not in regimen['alternate_names']
-    assert 'selection requires a separate audit' in regimen['notes']
+    assert 'broader eligibility, ranking and other protocol variants' in regimen['notes']
     assert regimen['last_reviewed'] is None
 
 

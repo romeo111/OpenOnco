@@ -12,7 +12,12 @@ KB = ROOT / 'knowledge_base/hosted/content'
 @pytest.mark.parametrize('case_id', ['hgbl-double-hit', 'pmbcl-typical', 'burkitt-high-risk'])
 def test_actual_epoch_tracks_resolve_their_own_nadir_monitoring(case_id):
     examples = json.loads((ROOT / 'docs/examples.json').read_text(encoding='utf-8'))
-    result = generate_plan(next(e['json'] for e in examples if e['case_id'] == case_id), kb_root=KB)
+    profile = json.loads(json.dumps(next(e['json'] for e in examples if e['case_id'] == case_id)))
+    if case_id == 'burkitt-high-risk':
+        # The original CNS-positive fixture is withheld by the protocol-scope
+        # guard. Monitor verification uses a separate CNS-negative fixture.
+        profile['findings']['cns_involvement'] = False
+    result = generate_plan(profile, kb_root=KB)
     tracks = [t for t in result.plan.tracks if (t.regimen_data or {}).get('id') == 'REG-DA-EPOCH-R']
     assert tracks
     for track in tracks:

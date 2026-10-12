@@ -5,19 +5,26 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-    - biomarker_id: BIO-CD20-IHC
-      required: true
-      value_constraint: positive
-    - biomarker_id: BIO-MYC-REARRANGEMENT
-      required: true
-      value_constraint: positive
-    - biomarker_id: BIO-HIV-STATUS
-      required: true
-      value_constraint: any value valid (categorical etiology gate; substantial subset of adult Burkitt is HIV-associated; HIV+ → cART throughout, mandatory CNS prophylaxis regardless of risk score, integrase-inhibitor backbone preferred to avoid ritonavir-vincristine interaction)
+  - biomarker_id: BIO-CD20-IHC
+    required: true
+    value_constraint: positive
+  - biomarker_id: BIO-MYC-REARRANGEMENT
+    required: true
+    value_constraint: positive
+  - biomarker_id: BIO-HIV-STATUS
+    required: true
+    value_constraint: any value valid (categorical etiology gate; substantial subset of adult Burkitt
+      is HIV-associated; HIV+ → cART throughout, mandatory CNS prophylaxis regardless of risk score, integrase-inhibitor
+      backbone preferred to avoid ritonavir-vincristine interaction)
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
     age_max: 60
+  confirmed_profile_values:
+    findings.burkitt_high_risk:
+    - true
+    findings.cns_involvement:
+    - false
 recommended_regimen: REG-CODOX-M-IVAC
 concurrent_therapy: []
 followed_by: []
@@ -30,65 +37,70 @@ expected_outcomes:
   progression_free_survival: Median PFS ~5 years for fit younger high-risk
   overall_survival_5y: ~75-85%
 hard_contraindications:
-  - CI-HBV-NO-PROPHYLAXIS
-  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+- CI-HBV-NO-PROPHYLAXIS
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
 red_flags_triggering_alternative: []
 required_tests:
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - TEST-LDH
-  - TEST-URIC-ACID
-  - TEST-CD20-IHC
-  - TEST-FISH-PANEL
-  - TEST-PET-CT
-  - TEST-WHOLE-BODY-MRI
-  - TEST-BM-ASPIRATE
-  - TEST-BM-TREPHINE
-  - TEST-LN-EXCISIONAL-BIOPSY
-  - TEST-HBV-SEROLOGY
-  - TEST-HCV-ANTIBODY
-  - TEST-HIV-SEROLOGY
-  - TEST-ECHO
-  - TEST-PREGNANCY
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-URIC-ACID
+- TEST-CD20-IHC
+- TEST-FISH-PANEL
+- TEST-PET-CT
+- TEST-WHOLE-BODY-MRI
+- TEST-BM-ASPIRATE
+- TEST-BM-TREPHINE
+- TEST-LN-EXCISIONAL-BIOPSY
+- TEST-HBV-SEROLOGY
+- TEST-HCV-ANTIBODY
+- TEST-HIV-SEROLOGY
+- TEST-ECHO
+- TEST-PREGNANCY
 desired_tests: []
-rationale: 'CODOX-M/IVAC (Magrath protocol, R-modified) for fit younger Burkitt with high-risk features: CNS involvement, leukemic phase, LDH >3× ULN, bulky abdominal disease (RF-BURKITT-HIGH-RISK fired). HD-MTX provides CNS-penetrant therapy; HiDAC + cytarabine deliver intensive marrow + CNS effect. Substantial toxicity demands experienced center + ECOG ≤2 + age ≤60 typically.
-
-  '
-rationale_ua: >
-  CODOX-M/IVAC (протокол Magrath, R-модифікований) показаний для фізично збережених молодших
-  пацієнтів з лімфомою Беркіта підвищеного ризику: ураження ЦНС, лейкемічна фаза,
-  ЛДГ >3× ВМН, масивне абдомінальне захворювання (активується RF-BURKITT-HIGH-RISK).
-  HD-MTX забезпечує цитотоксичну терапію з проникненням у ЦНС; HiDAC + цитарабін (cytarabine)
-  забезпечують інтенсивний вплив на кістковий мозок та ЦНС. Суттєва токсичність вимагає
-  досвідченого центру + ECOG ≤2 + вік ≤60 як правило. КРИТИЧНО: при наявності плевральної/
-  асцитичної рідини без дренування HD-MTX кліренс подовжується фатально.
-  Показаний при лімфомі Беркіта підвищеного ризику (high-risk) з ознаками ЦНС-ураження.
-  Для пацієнтів із захворюванням високого ризику (high-risk).
+rationale: The encoded eviQ 4489/4490 reference is restricted to explicitly confirmed high-risk Burkitt
+  WITHOUT proven CNS disease. Missing, conflicting, low-risk or CNS-positive context must not expose this
+  schedule or automatically choose a replacement. Proven CNS disease and low-risk disease use separate
+  protocol variants. This applicability guard is not a complete eligibility or treatment-ranking audit.
+rationale_ua: Закодований довідковий протокол eviQ 4489/4490 обмежено явно підтвердженою лімфомою Беркіта
+  високого ризику БЕЗ доведеного ураження ЦНС. Відсутній, суперечливий, низькоризиковий або ЦНС-позитивний
+  контекст не має відкривати цей розклад чи автоматично обирати заміну. Доведене ураження ЦНС і низький
+  ризик потребують окремих варіантів протоколу. Ця перевірка не є повним аудитом придатності чи вибору
+  лікування.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_06
 draft_revision: 2
-
 sources:
-  - source_id: SRC-NCCN-BCELL-2025
-    position: supports
-  - source_id: SRC-ESMO-LYMPHOMA-2025
-    position: supports
-    relevant_quote_paraphrase: ESMO 2024 endorses DA-EPOCH-R for low-risk Burkitt; intensive CODOX-M/IVAC or hyper-CVAD for high-risk; CNS prophylaxis mandatory
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+- source_id: SRC-ESMO-LYMPHOMA-2025
+  position: supports
+  relevant_quote_paraphrase: ESMO 2024 endorses DA-EPOCH-R for low-risk Burkitt; intensive CODOX-M/IVAC
+    or hyper-CVAD for high-risk; CNS prophylaxis mandatory
+- source_id: SRC-EVIQ-BURKITT-OVERVIEW-3727
+  position: supports
+  relevant_quote_paraphrase: Distinct low-risk, high-risk and high-risk with proven CNS pathways; the
+    encoded high-risk regimen is not interchangeable across these groups.
 known_controversies: []
 do_not_do:
-  - Не призначати при наявності pleural/ascites fluid без drainage — HD-MTX clearance подовжується смертельно.
-  - Не комбінувати з NSAIDs / PPIs / penicillins під час HD-MTX phase — clearance reduction.
-  - Не пропускати leucovorin rescue + serial MTX levels q24h до <0.1 µM.
-  - Не використовувати при age >60 OR ECOG >2 — токсичність переважає benefit; route до DA-EPOCH-R.
-  - Не пропускати CrCl <60 dose adjustment — HD-MTX renally cleared.
+- Не застосовуйте цей розклад високого ризику без доведеного ураження ЦНС при низькому ризику, доведеному
+  ураженні ЦНС чи непідтвердженому/суперечливому ризику та стані ЦНС.
+- Не вважайте відсутнє обстеження чи попередньо вибрану відповідь підтвердженням відсутності ураження
+  ЦНС.
+- Не обирайте автоматично іншу схему, якщо ця перевірка контексту протоколу не пройшла.
+- Перевірте функцію органів, рідину в третіх просторах, взаємодії та порятунок фолінатом за протоколом
+  спеціаліста; ця перевірка не визначає дозу чи вікову заміну.
 do_not_do_en:
-  - "Do not prescribe with pleural/ascites fluid present without drainage — HD-MTX clearance is prolonged fatally."
-  - "Do not combine with NSAIDs / PPIs / penicillins during HD-MTX phase — clearance reduction."
-  - "Do not skip leucovorin rescue + serial MTX levels q24h until <0.1 µM."
-  - "Do not use at age >60 OR ECOG >2 — toxicity outweighs benefit; route to DA-EPOCH-R."
-  - "Do not skip CrCl <60 dose adjustment — HD-MTX renally cleared."
+- Do not apply this high-risk/no-proven-CNS schedule to low-risk, proven-CNS or unconfirmed/conflicting
+  risk/CNS profiles.
+- Do not infer absence of CNS involvement from a missing assessment or preselected questionnaire answer.
+- Do not automatically promote another regimen when this protocol-scope check fails.
+- Verify individualized organ-function, third-space fluid, medication interactions and folinate rescue
+  with the specialist protocol; this guard does not determine a dose or age-only alternative.
 time_critical: false
-last_reviewed: '2026-04-27'
+last_reviewed: null
 reviewer_signoffs: 0
-notes: STUB.
+notes: Positive risk/CNS confirmation guard only. Demographic eligibility, biomarkers, efficacy estimates,
+  current-line ranking and CNS-specific or low-risk protocol implementation remain unreviewed.
+review_status: pending_clinical_signoff

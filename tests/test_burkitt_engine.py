@@ -27,9 +27,9 @@ def test_burkitt_low_risk_routes_to_daepochr():
     assert plan.default_indication_id == "IND-BURKITT-1L-DAEPOCHR"
 
 
-def test_burkitt_high_risk_routes_to_codoxm_ivac():
+def test_burkitt_proven_cns_does_not_use_no_cns_reference():
     plan = generate_plan(_patient("patient_burkitt_high_risk.json"), kb_root=KB_ROOT)
-    assert plan.default_indication_id == "IND-BURKITT-1L-CODOXM-IVAC"
+    assert plan.default_indication_id is None and not plan.plan.tracks
 
 
 def test_da_epoch_r_includes_etoposide():
@@ -43,7 +43,9 @@ def test_da_epoch_r_includes_etoposide():
 
 
 def test_codoxm_ivac_includes_methotrexate():
-    plan = generate_plan(_patient("patient_burkitt_high_risk.json"), kb_root=KB_ROOT)
+    profile = _patient("patient_burkitt_high_risk.json")
+    profile['findings']['cns_involvement'] = False
+    plan = generate_plan(profile, kb_root=KB_ROOT)
     aggressive = next(t for t in plan.plan.tracks if t.track_id == "aggressive")
     drug_ids = {c["drug_id"] for c in aggressive.regimen_data["components"]}
     assert "DRUG-METHOTREXATE" in drug_ids  # HD-MTX for CNS

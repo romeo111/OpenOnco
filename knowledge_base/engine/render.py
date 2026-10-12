@@ -3192,6 +3192,18 @@ def render_plan_html(
         if plan_result.plan.knowledge_base_state.get('profile_selection_withheld'):
             title = 'Treatment applicability requires confirmation' if english else 'Потрібне підтвердження відповідності лікування'
             explanation = ('No medicine plan has been selected. The profile has unconfirmed, conflicting or excluded values. Check metastatic stage, driver status, functional status, the chosen chemotherapy partner and clinical exclusions before selecting this route. No automatic substitute was selected.' if english else 'План препаратів не обрано. Профіль містить непідтверджені, суперечливі або виключені значення. Перед вибором цього маршруту перевірте метастатичну стадію, драйверний статус, функціональний стан, обраний компонент хіміотерапії та клінічні виключення. Автоматичну заміну не обрано.')
+            if plan_result.plan.algorithm_id == 'ALGO-BURKITT-1L':
+                explanation = (
+                    'No medicine plan has been selected. Confirm the documented Burkitt risk '
+                    'and CNS status. The encoded reference covers high-risk disease without '
+                    'proven CNS involvement; different or unconfirmed context requires a '
+                    'separate specialist-reviewed protocol. No automatic substitute was selected.'
+                    if english else
+                    'План препаратів не обрано. Підтвердьте документовану групу ризику Беркіта '
+                    'та стан ЦНС. Закодований довідковий розклад охоплює високий ризик без '
+                    'доведеного ураження ЦНС; інший або непідтверджений контекст потребує '
+                    'окремого протоколу, перевіреного спеціалістом. Автоматичну заміну не обрано.'
+                )
         details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
             f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
         ) + '</ul>'

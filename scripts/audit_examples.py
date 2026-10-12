@@ -68,10 +68,19 @@ def _audit_case(case: CaseEntry, *, examples_dir: Path, kb_root: Path) -> dict[s
             result = generate_plan(profile, kb_root=kb_root)
             plan = result.plan
             histology_withheld = bool(plan and plan.knowledge_base_state.get('histology_selection_withheld') is True)
+            profile_withheld = bool(plan and plan.knowledge_base_state.get('profile_selection_withheld') is True)
             if histology_withheld and (plan.tracks or plan.sequencing_tracks or result.default_indication_id):
                 record['issues'].append('histology-withheld output still contains a treatment selection')
+            if profile_withheld and (plan.tracks or plan.sequencing_tracks or result.default_indication_id):
+                record['issues'].append('profile-withheld output still contains a treatment selection')
             if plan is None or not plan.tracks:
-                if (histology_withheld and case.scenario_type == 'molecular'
+                if (profile_withheld and not plan.sequencing_tracks
+                        and result.default_indication_id is None
+                        and plan.knowledge_base_state.get('unconfirmed_profile_fields')
+                        and any('Treatment applicability checks failed' in warning for warning in result.warnings)):
+                    record['status'] = 'withheld'
+                    record['withheld_reason'] = 'Required profile/protocol context not confirmed; no automatic substitute.'
+                elif (histology_withheld and case.scenario_type == 'molecular'
                         and not plan.sequencing_tracks and result.default_indication_id is None
                         and any('Histology applicability' in warning for warning in result.warnings)):
                     record['status'] = 'withheld'
