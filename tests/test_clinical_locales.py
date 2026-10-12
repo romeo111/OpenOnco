@@ -565,7 +565,7 @@ def test_committed_catalogs_preserve_numeric_claims():
     index = json.loads((repository / 'docs/kb_search_index.json').read_text(encoding='utf-8'))
     drugs = {entry['title'] for entry in index['entries'] if entry.get('kind_key') == 'drugs' and len(entry['title']) < 70}
     pattern = re.compile(r'(?<!\w)(?:' + '|'.join(re.escape(name) for name in sorted(drugs, key=len, reverse=True)) + r')(?!\w)', re.I)
-    for locale in ('es', 'pt', 'de', 'fr'):
+    for locale in ('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi'):
         path = root / f'clinical.{locale}.json'
         if not path.exists():
             continue
