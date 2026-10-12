@@ -14,7 +14,7 @@ async function check(page,draft,kind){
   ensureQuestionnaires:async()=>{fetches++;throw Error('VIRTUAL-NETWORK-UNAVAILABLE');},
   renderForm:q=>vm.runInContext('activeQuest='+JSON.stringify(q),context)});
  vm.runInContext('let mode="form",activeQuest=null,answers={},formProfileBase=null,removedProfileFields=new Set();'+
-  ['loadDraft','restoreJsonDraft','setMode','saveDraft','loadAssets'].map(n=>fn(page,n)).join('\n'),context);
+  ['loadDraft','restoreJsonDraft','setMode','saveDraft','loadQuestionnaire','loadAssets'].map(n=>fn(page,n)).join('\n'),context);
  await vm.runInContext('loadAssets()',context);
  if(draft.mode==='json'){
   assert.equal(context.textarea.value,draft.jsonText,'Restore exact bytes, including unfinished JSON');

@@ -7227,6 +7227,23 @@ async function ensureQuestionnaires() {{
   }}
   return _questionnairesPromise;
 }}
+async function loadQuestionnaire(index) {{
+  const expected = Number.isInteger(index) && QUESTIONNAIRES_MANIFEST[index];
+  if (!expected) throw new Error(profileInputCopy.questionnaireUnavailable);
+  const payload = await ensureQuestionnaires();
+  const matches = Array.isArray(payload) ? payload.filter(item => item && item.id === expected.id) : [];
+  const quest = matches.length === 1 ? matches[0] : null;
+  if (!quest || !Array.isArray(quest.groups) || quest.disease_id !== expected.disease_id ||
+      quest.groups.some(group => !group || !Array.isArray(group.questions) || group.questions.some(q =>
+        !q || typeof q.field !== 'string' ||
+        q.field.split('.').some(part => !part || ['__proto__', 'prototype', 'constructor'].includes(part)) ||
+        !['text','integer','float','boolean','enum'].includes(q.type) ||
+        (q.type === 'enum' && (!Array.isArray(q.options) || q.options.some(option => !option || option.value === undefined)))))) {{
+    throw new Error(profileInputCopy.questionnaireUnavailable);
+  }}
+  return normalizeQuestionnaire(quest);
+}}
+
 async function ensureExamples() {{
   if (examples) return examples;
   if (!_examplesPromise) {{
@@ -7330,8 +7347,8 @@ async function loadAssets() {{
             diseaseSelect.value = idx;
             setLoadingProgress(82);
             // Draft restore needs full data — lazy-fetch now
-            const fullList = await ensureQuestionnaires();
-            renderForm(fullList[idx]);
+            const quest = await loadQuestionnaire(idx);
+            renderForm(quest);
           repopulateExamples(idx);
           applyDraftFields(draft);
           setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
@@ -7528,28 +7545,42 @@ if (diseaseSearch) {{
   }});
 }}
 
-diseaseSelect.addEventListener('change', async () => {{
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
-    const i = diseaseSelect.value;
-    // Switching disease invalidates whatever plan was on screen — there is
-    // no longer any example or generated plan that matches the new form.
-    clearPlanState();
-    if (i === '') {{
-      renderForm(null);
-      repopulateExamples(null);
+async function changeDisease() {{
+  const previous = activeQuest ? QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === activeQuest.id) : -1;
+  try {{
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {{
+      const selected = diseaseSelect.value;
+      if (selected === '') {{
+        clearPlanState();
+        renderForm(null);
+        repopulateExamples(null);
+        saveDraft();
+        updateRunBtnEnabled();
+        return;
+      }}
+      const index = Number(selected);
+      // Resolve and verify the requested identity before replacing any state.
+      const quest = await loadQuestionnaire(index);
+      clearPlanState();
+      renderForm(quest);
+      repopulateExamples(index);
+      exampleSelect.value = '';
+      setError(null);
+      saveDraft();
       updateRunBtnEnabled();
-      return;
-    }}
-    const idx = parseInt(i, 10);
-    const fullList = await ensureQuestionnaires();
-    renderForm(fullList[idx]);
-    repopulateExamples(idx);
-    exampleSelect.value = '';
-    saveDraft();
+      updateImpactPanelLocal();
+    }});
+  }} catch (error) {{
+    // A search can hide the previous option; rebuild before restoring it.
+    if (diseaseSearch) diseaseSearch.value = '';
+    renderDiseaseOptions();
+    diseaseSelect.value = previous >= 0 ? String(previous) : '';
+    setError(profileInputCopy.switchFailed);
     updateRunBtnEnabled();
-    updateImpactPanelLocal();
-  }});
-}});
+  }}
+}}
+
+diseaseSelect.addEventListener('change', changeDisease);
 
 function findQuestionnaireForProfile(profile) {{
   // Match by explicit disease_id first, then ICD-O-3 morphology. The
@@ -7619,11 +7650,11 @@ exampleSelect.addEventListener('change', async () => {{
     const qIdx = findQuestionnaireForProfile(ex.json);
     if (qIdx >= 0) {{
       diseaseSelect.value = qIdx;
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[qIdx]);
+      const quest = await loadQuestionnaire(qIdx);
+      renderForm(quest);
       repopulateExamples(qIdx);
       exampleSelect.value = i;
-      if (!populateFormFromProfile(fullList[qIdx], ex.json)) {{
+      if (!populateFormFromProfile(quest, ex.json)) {{
         textarea.value = JSON.stringify(ex.json, null, 2);
         setMode('json');
         setError(profileInputCopy.transfer);
@@ -7739,10 +7770,10 @@ async function loadFromUrlHash() {{
     const qIdx = findQuestionnaireForProfile(patient);
     if (qIdx >= 0) {{
       diseaseSelect.value = qIdx;
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[qIdx]);
+      const quest = await loadQuestionnaire(qIdx);
+      renderForm(quest);
       repopulateExamples(qIdx);
-      if (!populateFormFromProfile(fullList[qIdx], patient)) {{
+      if (!populateFormFromProfile(quest, patient)) {{
         textarea.value = JSON.stringify(patient, null, 2);
         setMode('json');
         setError(profileInputCopy.transfer);

@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="1a5063fc07fcf7e8e86ebcc3e0075f9ec5e98a18bd814640914012e380d097d7"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="d0d83ed724d124e926adfa9ff80960db9899e67cc1c2e1ff042c67da153d8ca7"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -469,7 +469,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Inserisci un numero valido.", "integer": "Inserisci un numero intero.", "range": "Usa un valore entro questi limiti:", "summary": "Correggi i campi numerici evidenziati prima di generare il piano o aprire JSON.", "sync": "Inserisci di nuovo questo numero per confermarlo."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Inserisci JSON valido.", "object": "Il profilo deve essere un oggetto JSON.", "finite": "Il profilo contiene un numero non finito.", "section": "Questa sezione del profilo deve essere un oggetto o null:", "transfer": "Mantieni questo profilo in modalità JSON: scegli il modulo della malattia corrispondente e valori supportati dai campi. Il JSON è conservato.", "restored": "Bozza JSON ripristinata. Controllala prima di generare un rapporto.", "restoreLimited": "Bozza JSON ripristinata; impossibile caricare il questionario. Puoi continuare in modalità JSON."};
+const profileInputCopy = {"json": "Inserisci JSON valido.", "object": "Il profilo deve essere un oggetto JSON.", "finite": "Il profilo contiene un numero non finito.", "section": "Questa sezione del profilo deve essere un oggetto o null:", "transfer": "Mantieni questo profilo in modalità JSON: scegli il modulo della malattia corrispondente e valori supportati dai campi. Il JSON è conservato.", "restored": "Bozza JSON ripristinata. Controllala prima di generare un rapporto.", "restoreLimited": "Bozza JSON ripristinata; impossibile caricare il questionario. Puoi continuare in modalità JSON.", "questionnaireUnavailable": "Il questionario selezionato non è disponibile o non corrisponde a questa malattia.", "switchFailed": "Impossibile caricare il modulo selezionato. Il modulo, le risposte e il rapporto precedenti sono conservati. Riprova."};
 const questionnaireNoticeCopy = {"defaults": "Inserisci le informazioni note. I dati mancanti restano sconosciuti e possono limitare il rapporto.", "starter": "Modulo iniziale generato automaticamente: potrebbero mancare informazioni importanti. Verifica valori, dati mancanti e fonti con un professionista sanitario qualificato prima delle decisioni assistenziali.", "unknown": "I campi di screening non compilati restano sconosciuti. Alcuni controlli di sicurezza potrebbero non essere valutati; la completezza da sola non dimostra l’adeguatezza clinica."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -2558,6 +2558,23 @@ async function ensureQuestionnaires() {
   }
   return _questionnairesPromise;
 }
+async function loadQuestionnaire(index) {
+  const expected = Number.isInteger(index) && QUESTIONNAIRES_MANIFEST[index];
+  if (!expected) throw new Error(profileInputCopy.questionnaireUnavailable);
+  const payload = await ensureQuestionnaires();
+  const matches = Array.isArray(payload) ? payload.filter(item => item && item.id === expected.id) : [];
+  const quest = matches.length === 1 ? matches[0] : null;
+  if (!quest || !Array.isArray(quest.groups) || quest.disease_id !== expected.disease_id ||
+      quest.groups.some(group => !group || !Array.isArray(group.questions) || group.questions.some(q =>
+        !q || typeof q.field !== 'string' ||
+        q.field.split('.').some(part => !part || ['__proto__', 'prototype', 'constructor'].includes(part)) ||
+        !['text','integer','float','boolean','enum'].includes(q.type) ||
+        (q.type === 'enum' && (!Array.isArray(q.options) || q.options.some(option => !option || option.value === undefined)))))) {
+    throw new Error(profileInputCopy.questionnaireUnavailable);
+  }
+  return normalizeQuestionnaire(quest);
+}
+
 async function ensureExamples() {
   if (examples) return examples;
   if (!_examplesPromise) {
@@ -2661,8 +2678,8 @@ async function loadAssets() {
             diseaseSelect.value = idx;
             setLoadingProgress(82);
             // Draft restore needs full data — lazy-fetch now
-            const fullList = await ensureQuestionnaires();
-            renderForm(fullList[idx]);
+            const quest = await loadQuestionnaire(idx);
+            renderForm(quest);
           repopulateExamples(idx);
           applyDraftFields(draft);
           setStatus('Draft restored ✓ Click «Generate» when you are ready.', 'ok');
@@ -2859,28 +2876,42 @@ if (diseaseSearch) {
   });
 }
 
-diseaseSelect.addEventListener('change', async () => {
-  await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {
-    const i = diseaseSelect.value;
-    // Switching disease invalidates whatever plan was on screen — there is
-    // no longer any example or generated plan that matches the new form.
-    clearPlanState();
-    if (i === '') {
-      renderForm(null);
-      repopulateExamples(null);
+async function changeDisease() {
+  const previous = activeQuest ? QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === activeQuest.id) : -1;
+  try {
+    await withUiLock(UI_LOCK_TEXT.loadingTitle, UI_LOCK_TEXT.loadingLead, UI_LOCK_TEXT.diseaseHint, async () => {
+      const selected = diseaseSelect.value;
+      if (selected === '') {
+        clearPlanState();
+        renderForm(null);
+        repopulateExamples(null);
+        saveDraft();
+        updateRunBtnEnabled();
+        return;
+      }
+      const index = Number(selected);
+      // Resolve and verify the requested identity before replacing any state.
+      const quest = await loadQuestionnaire(index);
+      clearPlanState();
+      renderForm(quest);
+      repopulateExamples(index);
+      exampleSelect.value = '';
+      setError(null);
+      saveDraft();
       updateRunBtnEnabled();
-      return;
-    }
-    const idx = parseInt(i, 10);
-    const fullList = await ensureQuestionnaires();
-    renderForm(fullList[idx]);
-    repopulateExamples(idx);
-    exampleSelect.value = '';
-    saveDraft();
+      updateImpactPanelLocal();
+    });
+  } catch (error) {
+    // A search can hide the previous option; rebuild before restoring it.
+    if (diseaseSearch) diseaseSearch.value = '';
+    renderDiseaseOptions();
+    diseaseSelect.value = previous >= 0 ? String(previous) : '';
+    setError(profileInputCopy.switchFailed);
     updateRunBtnEnabled();
-    updateImpactPanelLocal();
-  });
-});
+  }
+}
+
+diseaseSelect.addEventListener('change', changeDisease);
 
 function findQuestionnaireForProfile(profile) {
   // Match by explicit disease_id first, then ICD-O-3 morphology. The
@@ -2950,11 +2981,11 @@ exampleSelect.addEventListener('change', async () => {
     const qIdx = findQuestionnaireForProfile(ex.json);
     if (qIdx >= 0) {
       diseaseSelect.value = qIdx;
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[qIdx]);
+      const quest = await loadQuestionnaire(qIdx);
+      renderForm(quest);
       repopulateExamples(qIdx);
       exampleSelect.value = i;
-      if (!populateFormFromProfile(fullList[qIdx], ex.json)) {
+      if (!populateFormFromProfile(quest, ex.json)) {
         textarea.value = JSON.stringify(ex.json, null, 2);
         setMode('json');
         setError(profileInputCopy.transfer);
@@ -3070,10 +3101,10 @@ async function loadFromUrlHash() {
     const qIdx = findQuestionnaireForProfile(patient);
     if (qIdx >= 0) {
       diseaseSelect.value = qIdx;
-      const fullList = await ensureQuestionnaires();
-      renderForm(fullList[qIdx]);
+      const quest = await loadQuestionnaire(qIdx);
+      renderForm(quest);
       repopulateExamples(qIdx);
-      if (!populateFormFromProfile(fullList[qIdx], patient)) {
+      if (!populateFormFromProfile(quest, patient)) {
         textarea.value = JSON.stringify(patient, null, 2);
         setMode('json');
         setError(profileInputCopy.transfer);

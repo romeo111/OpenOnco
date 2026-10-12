@@ -46,3 +46,19 @@ RESTORE = {
 }
 for locale, messages in RESTORE.items():
     COPY[locale]['restored'], COPY[locale]['restoreLimited'] = messages
+
+QUESTIONNAIRE_LOAD = {
+'en': ('The selected questionnaire is unavailable or does not match this disease.', 'Could not load the selected disease form. Your previous form, answers and report have been retained. Try again.'),
+'uk': ('Вибрана анкета недоступна або не відповідає цій хворобі.', 'Не вдалося завантажити анкету вибраної хвороби. Попередню анкету, відповіді та звіт збережено. Спробуйте ще раз.'),
+'es': ('El cuestionario seleccionado no está disponible o no corresponde a esta enfermedad.', 'No se pudo cargar el formulario seleccionado. Se conservan el formulario, las respuestas y el informe anteriores. Inténtelo de nuevo.'),
+'pt': ('O questionário selecionado está indisponível ou não corresponde a esta doença.', 'Não foi possível carregar o formulário selecionado. O formulário, as respostas e o relatório anteriores foram preservados. Tente novamente.'),
+'de': ('Der ausgewählte Fragebogen ist nicht verfügbar oder passt nicht zu dieser Krankheit.', 'Das ausgewählte Formular konnte nicht geladen werden. Das bisherige Formular, die Antworten und der Bericht bleiben erhalten. Versuchen Sie es erneut.'),
+'fr': ('Le questionnaire sélectionné est indisponible ou ne correspond pas à cette maladie.', 'Impossible de charger le formulaire sélectionné. Le formulaire, les réponses et le rapport précédents sont conservés. Réessayez.'),
+'it': ('Il questionario selezionato non è disponibile o non corrisponde a questa malattia.', 'Impossibile caricare il modulo selezionato. Il modulo, le risposte e il rapporto precedenti sono conservati. Riprova.'),
+'da': ('Det valgte spørgeskema er utilgængeligt eller passer ikke til denne sygdom.', 'Den valgte formular kunne ikke indlæses. Din tidligere formular, svar og rapport er bevaret. Prøv igen.'),
+'sv': ('Det valda frågeformuläret är inte tillgängligt eller motsvarar inte denna sjukdom.', 'Det valda formuläret kunde inte läsas in. Ditt tidigare formulär, svar och rapport har bevarats. Försök igen.'),
+'nb': ('Det valgte spørreskjemaet er utilgjengelig eller passer ikke til denne sykdommen.', 'Det valgte skjemaet kunne ikke lastes inn. Ditt tidligere skjema, svar og rapport er bevart. Prøv igjen.'),
+'fi': ('Valittu kyselylomake ei ole saatavilla tai ei vastaa tätä sairautta.', 'Valittua lomaketta ei voitu ladata. Aiempi lomake, vastaukset ja raportti on säilytetty. Yritä uudelleen.'),
+}
+for locale, messages in QUESTIONNAIRE_LOAD.items():
+    COPY[locale]['questionnaireUnavailable'], COPY[locale]['switchFailed'] = messages

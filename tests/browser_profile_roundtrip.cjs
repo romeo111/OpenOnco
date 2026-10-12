@@ -39,7 +39,7 @@ assert.deepEqual(plain(run('buildProfile()')),missing,'Missing fields stay missi
 for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/','fi/']){
  const page=fs.readFileSync('docs/'+prefix+'try.html','utf8');for(const name of names)assert.equal(fn(page,name),fn(html,name));
  assert(page.includes("setMode('form', { syncFromJson: true })"));
- assert(page.includes('if (!populateFormFromProfile(fullList[qIdx], ex.json))'));
- assert(page.includes('if (!populateFormFromProfile(fullList[qIdx], patient))'));
+ assert(page.includes('if (!populateFormFromProfile(quest, ex.json))'));
+ assert(page.includes('if (!populateFormFromProfile(quest, patient))'));
 }
 console.log('Full JSON/form/draft round trips preserve unmapped fields, null/zero/false, missing data and edits; incompatible imports remain JSON; all eleven clients match');
