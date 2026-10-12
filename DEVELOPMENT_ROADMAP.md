@@ -4,6 +4,14 @@ Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-
 
 ## Mission and operating priorities
 
+### Dated primary-publication identity observations (2026-10-12)
+
+Selected KEYNOTE-189, KEYNOTE-407, FLAURA, FLAURA2 and CheckMate-067 source records were compared with official PubMed primary records and publisher metadata. Titles, DOI, PMID, publication year and recorded URL binding match. FLAURA's issue year is 2018 even though its electronic publication was in 2017. Search-result references to another article were not treated as the primary record; an official indexed record was used where direct PubMed returned a challenge.
+
+Published report: `docs/audits/publication_identity_2026-10-12.json`, with primary links, collection method and limited scope. The offline checker only detects inconsistencies with these dated observations; a refresh requires renewed primary-source inspection. It does not establish clinical validity, current guidance, dose correctness, efficacy claims or patient applicability, and does not alter currency/review metadata. No clinical source, engine, catalog or protected report changed.
+
+28 bibliography/source-reference tests passed; the consistency tests are included in normal CI. Previous full CI 38251401169 succeeded. Current-source observations cover five distinct publications; remaining bibliography and clinical evidence validity remain open. Standard commit/push/Pages delivery and public report verification are required.
+
 ### Typed clinical-question requests and bounded locale audit metadata (2026-10-12)
 
 The HTTP boundary rejects non-string/non-null case_text and locale fields with HTTP 400 before quota principal lookup, accounting or clinical/model processing. Unknown language roots are rejected instead of silently selecting a different answer language. All eleven supported language roots and existing regional tags remain supported; original string text, optional null/empty defaults and valid-request quota behavior are preserved. Audit locale values are now an allowlisted language root or unknown, so arbitrary locale strings/objects cannot enter operational logs.
