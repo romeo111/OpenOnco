@@ -242,4 +242,26 @@ assert (KB/'sources/src_dunleavy_pmbcl_daepoch_2013.yaml').is_file()
 json.dumps({'monitoring':epoch_track.monitoring_data['id'],'clinicalApproval':False})
 `));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,environment:'Node WASM, not browser'}));
+py.unpackArchive(Uint8Array.from(fs.readFileSync('docs/'+index.diseases['DIS-BURKITT'])).buffer,'zip');
+const codoxExample=JSON.parse(fs.readFileSync('docs/examples.json')).find(x=>x.case_id==='burkitt-high-risk');
+assert(codoxExample, 'Synthetic Burkitt fixture missing');
+py.globals.set('_codox_json',JSON.stringify(codoxExample.json));
+const codoxState=JSON.parse(await py.runPythonAsync(`
+assert apply_disease_module(KB,disease_id='DIS-BURKITT')['ok']
+codox_result=generate_plan(json.loads(_codox_json),kb_root=KB)
+codox_track=next(t for t in codox_result.plan.tracks if (t.regimen_data or {}).get('id')=='REG-CODOX-M-IVAC')
+a,b=[p['components'] for p in codox_track.regimen_data['phases']]
+assert codox_track.regimen_data['components']==a+b
+assert any(c['drug_id']=='DRUG-IFOSFAMIDE' and 'IVAC blocks only' in c['schedule'] for c in b)
+assert len([c for c in b if c['drug_id']=='DRUG-MESNA'])==2
+assert {c['route'] for c in a if c['drug_id']=='DRUG-METHOTREXATE'}=={'IV','IT'}
+assert any('36 hours after IV methotrexate START' in c['schedule'] for c in a if c['drug_id']=='DRUG-LEUCOVORIN')
+assert codox_track.monitoring_data['id']=='MON-CODOX-IVAC-REGIMEN'
+for lang,needle in [('en','Assess neurological function before each ifosfamide dose'),('uk','Оцініть неврологічний стан перед кожною дозою іфосфаміду')]:
+    codox_html=render_plan_html(codox_result,target_lang=lang)
+    assert needle in codox_html and 'DRUG-MESNA' in codox_html
+assert (KB/'sources/src_eviq_burkitt_ivac_4490.yaml').is_file()
+json.dumps({'monitoring':codox_track.monitoring_data['id'],'clinicalApproval':False,'selectionAuditPending':True})
+`));
+assert.equal(networkAttempts,0);
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,environment:'Node WASM, not browser'}));

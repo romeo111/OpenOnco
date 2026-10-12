@@ -1,157 +1,207 @@
 id: REG-CODOX-M-IVAC
-name: "CODOX-M / IVAC alternating × 4 (Magrath protocol)"
-name_ua: "CODOX-M / IVAC по черзі × 4 циклів (протокол Магратa)"
-alternate_names: ["Magrath", "LMB-style"]
-
-# Components listed are the core agents — actual schedule is alternating
-# CODOX-M and IVAC blocks; details encoded in phase components per block.
-components: []  # phases supersede; kept empty for back-compat with downstream
-                # consumers that still iterate `components` directly. PR3 of
-                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
-
+name: 'Dose-modified R-CODOX-M / R-IVAC: high-risk reference without proven CNS disease (eviQ 4489/4490)'
+name_ua: 'Модифікований R-CODOX-M / R-IVAC: довідковий протокол високого ризику без доведеного ураження
+  ЦНС (eviQ 4489/4490)'
+alternate_names:
+- dm R-CODOX-M / R-IVAC (eviQ reference)
+components: []
 phases:
-  # Block A — CODOX-M
 - name: alternating_block_a
-  purpose_ua: "блок A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-методreксат
-    з IT-CNS-профілактикою; з ритуксимабом для CD20+; чергує з блоком B (IVAC) × 4
-    разом"
-  purpose_en: "block A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-MTX
-    with IT-CNS prophylaxis; with rituximab for CD20+; alternates with block B (IVAC)
-    × 4 total"
-  duration: "21 days per CODOX-M block × 2 (cycles 1, 3 of 4 alternating)"
-  timing_relative_to: "absolute"
+  purpose_ua: Довідковий блок CODOX-M для лімфоми Беркіта високого ризику без доведеного ураження ЦНС;
+    цикли 1 і 3. Придатність має перевірити спеціаліст.
+  purpose_en: Reference CODOX-M block for high-risk Burkitt without proven CNS disease; cycles 1 and 3.
+    Requires specialist verification of applicability.
+  duration: Cycles 1 and 3; minimum 21 days between blocks and recovery required
+  timing_relative_to: absolute
   optional: false
   components:
-  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)",
-    schedule: "IV per CODOX-M block", route: IV}
-  - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV
-      per CODOX-M block", route: IV}
-  - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per
-      CODOX-M block", route: IV}
-  - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 +
-      day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
-      # Shared — applies to all blocks
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)",
-    schedule: "IV", route: IV}
-  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each
-      block until ANC recovery", route: SC}
+  - drug_id: DRUG-RITUXIMAB
+    dose: 375 mg/m²
+    schedule: IV days 1 and 9 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-DOXORUBICIN
+    dose: 40 mg/m²
+    schedule: IV day 1 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-VINCRISTINE
+    dose: 1.5 mg/m² (maximum 2 mg)
+    schedule: IV days 1 and 8 of CODOX-M blocks only; NEVER intrathecal
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: 800 mg/m²
+    schedule: IV day 1 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: 200 mg/m² per day
+    schedule: IV days 2-5 of CODOX-M blocks only
+    route: IV
+  - drug_id: DRUG-CYTARABINE
+    dose: 70 mg per dose
+    schedule: Intrathecal days 1 and 3 of CODOX-M blocks only, under separate local intrathecal procedure
+    route: IT
+  - drug_id: DRUG-METHOTREXATE
+    dose: 300 mg/m² followed by 2700 mg/m²
+    schedule: 'IV day 10: first portion over 1 hour, then second portion over 23 hours; record infusion
+      START for rescue clock'
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg/m² per dose
+    schedule: IV rescue starts 36 hours after IV methotrexate START; every 3 hours during hours 36-48,
+      then every 6 hours until methotrexate <0.1 micromol/L; adjust for delayed clearance per protocol
+    route: IV
+  - drug_id: DRUG-FILGRASTIM
+    dose: 5 micrograms/kg per day
+    schedule: SC from day 13 of CODOX-M blocks until neutrophil recovery
+    route: SC
+  - drug_id: DRUG-METHOTREXATE
+    dose: 12 mg
+    schedule: Intrathecal day 15 of CODOX-M blocks only; clinician may change IT day under local protocol
+    route: IT
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg once
+    schedule: PO 24 hours after INTRATHECAL methotrexate; separate from IV rescue clock
+    route: PO
   sources:
-  - SRC-NCCN-BCELL-2025
-  # Block B — IVAC
+  - SRC-EVIQ-BURKITT-CODOX-4489
 - name: alternating_block_b
-  purpose_ua: "блок B (IVAC): ifosfamide + HD-cytarabine + etoposide; з ритуксимабом
-    для CD20+; чергує з блоком A (CODOX-M) × 4 разом"
-  purpose_en: "block B (IVAC): ifosfamide + HD-cytarabine + etoposide; with rituximab
-    for CD20+; alternates with block A (CODOX-M) × 4 total"
-  duration: "21 days per IVAC block × 2 (cycles 2, 4 of 4 alternating)"
-  timing_relative_to: "previous_phase_completion"
+  purpose_ua: Довідковий блок IVAC для лімфоми Беркіта високого ризику без доведеного ураження ЦНС; цикли
+    2 і 4. Іфосфамід потребує месни та гідратації.
+  purpose_en: Reference IVAC block for high-risk Burkitt without proven CNS disease; cycles 2 and 4. Mesna
+    and hydration are required with ifosfamide.
+  duration: Cycles 2 and 4; minimum 21 days between blocks and recovery required
+  timing_relative_to: previous_phase_completion
   optional: false
   components:
-  - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV
-      per IVAC block", route: IV}
-  - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per
-      IVAC block", route: IV}
-      # Shared — applies to all blocks
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)",
-    schedule: "IV", route: IV}
-  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each
-      block until ANC recovery", route: SC}
+  - drug_id: DRUG-CYTARABINE
+    dose: 2000 mg/m² per dose
+    schedule: IV over 3 hours, twice daily 12 hours apart on days 1 and 2 of IVAC blocks (four doses)
+    route: IV
+  - drug_id: DRUG-ETOPOSIDE
+    dose: 60 mg/m² per day
+    schedule: IV days 1-5 of IVAC blocks only
+    route: IV
+  - drug_id: DRUG-MESNA
+    dose: 360 mg/m²
+    schedule: IV loading dose day 1, 60 minutes before first ifosfamide; reference schedule, institutional
+      protocols may differ
+    route: IV
+  - drug_id: DRUG-IFOSFAMIDE
+    dose: 1500 mg/m² per day
+    schedule: IV over 2 hours on days 1-5 of IVAC blocks only, with mesna and hydration
+    route: IV
+  - drug_id: DRUG-MESNA
+    dose: 1500 mg/m² per day
+    schedule: IV over 24 hours on days 1-5 of IVAC blocks; reference schedule, verify continued uroprotection
+      under institutional protocol
+    route: IV
+  - drug_id: DRUG-RITUXIMAB
+    dose: 375 mg/m²
+    schedule: IV days 3 and 7 of IVAC blocks only
+    route: IV
+  - drug_id: DRUG-METHOTREXATE
+    dose: 12 mg
+    schedule: Intrathecal day 5 of IVAC blocks only; clinician may change IT day under local protocol
+    route: IT
+  - drug_id: DRUG-LEUCOVORIN
+    dose: 15 mg once
+    schedule: PO 24 hours after INTRATHECAL methotrexate (reference day 6); not the CODOX-M IV rescue
+      schedule
+    route: PO
+  - drug_id: DRUG-FILGRASTIM
+    dose: 5 micrograms/kg per day
+    schedule: SC from day 7 of IVAC blocks until neutrophil recovery
+    route: SC
   sources:
-  - SRC-NCCN-BCELL-2025
-
+  - SRC-EVIQ-BURKITT-IVAC-4490
 cycle_length_days: 21
-total_cycles: "4 alternating blocks (CODOX-M, IVAC, CODOX-M, IVAC)"
+total_cycles: 'Reference high-risk/no-proven-CNS course: CODOX-M, IVAC, CODOX-M, IVAC; recovery and specialist
+  protocol review before each block. Low-risk and proven-CNS schedules are separate.'
 toxicity_profile: very-high
-
 premedication:
-- "Standard rituximab premedications"
-- "Aggressive TLS prophylaxis with rasburicase for high-burden"
-- "HD-MTX prep: hydration 3 L/m²/day, urine pH alkalinization, leucovorin rescue starting
-  24h post"
-- "Cytarabine eye drops + cerebellar exam during IVAC HiDAC"
+- Verify local rituximab premedication, antiemetics and tumour-lysis prevention.
+- Before HD-MTX, confirm hydration, alkalinization, urine pH >7 and the protocol-specific folinate rescue
+  clock.
+- IVAC requires mesna/uroprotection and hydration; neurological assessment before ifosfamide and cerebellar
+  assessment before cytarabine.
 mandatory_supportive_care:
 - SUP-PJP-PROPHYLAXIS
 - SUP-TLS-PROPHYLAXIS
 - SUP-ANTIEMETIC-PREMED
 - SUP-GCSF-NEUTROPENIA
-monitoring_schedule_id: MON-R-CHOP-REGIMEN
-
+monitoring_schedule_id: MON-CODOX-IVAC-REGIMEN
 dose_adjustments:
-- condition: "Pleural effusion / ascites"
-  modification: "Drain BEFORE HD-MTX — 3rd-space fluid prolongs clearance to lethal
-    levels"
-- condition: "Concomitant NSAIDs / PPIs / penicillins"
-  modification: "Hold during HD-MTX phase — reduces clearance"
-- condition: "Age >65"
-  modification: "Generally NOT eligible; route to DA-EPOCH-R; consider hyper-CVAD/MA
-    selectively"
-- condition: "CrCl <60"
-  modification: "Reduce HD-MTX or omit; reduce cytarabine"
-
-ukraine_availability: {all_components_registered: true, 
-    all_components_reimbursed: true}
-sources: [SRC-NCCN-BCELL-2025]
-
-# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
-# CODOX-M / IVAC for Burkitt lymphoma. High-intensity inpatient
-# regimen with TLS risk + cytopenia + mucositis dominating. CNS
-# prophylaxis via IT methotrexate. STUB pending §6.1 signoff.
+- condition: Low-risk disease, proven CNS involvement, uncertain risk or missing clinical context
+  modification: Do not treat this high-risk/no-proven-CNS reference as an applicable individualized prescription.
+    Use the separate disease-risk/CNS protocol after specialist review; current track selection remains
+    unaudited.
+- condition: Older age, frailty, organ dysfunction or toxicity
+  modification: Review the selected protocol dose modifications, including methotrexate, cytarabine, ifosfamide
+    and mesna. No automatic switch to DA-EPOCH-R based on age alone and no universal CrCl dose recipe.
+- condition: Third-space fluid, interacting medications or impaired/delayed methotrexate clearance
+  modification: Assess third-space fluid, kidney function and drug interactions before HD-MTX. Delayed
+    clearance or acute kidney injury requires urgent specialist management and protocol-specific rescue;
+    do not apply one fixed folinate schedule regardless of clearance.
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+sources:
+- SRC-EVIQ-BURKITT-CODOX-4489
+- SRC-EVIQ-BURKITT-IVAC-4490
+- SRC-EVIQ-BURKITT-OVERVIEW-3727
+- SRC-NCCN-BCELL-2025
 between_visit_watchpoints:
-- trigger_ua: "Виражена втома, що триває тижнями між циклами"
-  action_ua: "Очікувано — кістковий мозок відновлюється повільно"
+- trigger_ua: Виражена втома, що триває тижнями між циклами
+  action_ua: Очікувано — кістковий мозок відновлюється повільно
   urgency: log_at_next_visit
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Мукозит, болі і виразки в порожнині рота"
-  action_ua: "Поширене на HD-MTX/HiDAC — полоскання порожнини рота, м'яка їжа"
+- trigger_ua: Мукозит, болі і виразки в порожнині рота
+  action_ua: Поширене на HD-MTX/HiDAC — полоскання порожнини рота, м'яка їжа
   urgency: log_at_next_visit
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Поколювання або оніміння в кистях/стопах"
-  action_ua: "Вінкристин може спричиняти нейропатію — занотовуйте"
+- trigger_ua: Поколювання або оніміння в кистях/стопах
+  action_ua: Вінкристин може спричиняти нейропатію — занотовуйте
   urgency: log_at_next_visit
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Біль у спині, головний біль після інтратекальної ін'єкції"
-  action_ua: "Зустрічається — лежіть рівно після пункції, пийте багато води; занотовуйте
-    інтенсивність"
+- trigger_ua: Біль у спині, головний біль після інтратекальної ін'єкції
+  action_ua: Зустрічається — лежіть рівно після пункції, пийте багато води; занотовуйте інтенсивність
   urgency: log_at_next_visit
   sources:
   - SRC-NCCN-BCELL-2025
-- trigger_ua: "Зменшення кількості сечі, набряки"
-  action_ua: "Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок"
+- trigger_ua: Зменшення кількості сечі, набряки
+  action_ua: Подзвоніть у клініку того ж дня — HD-MTX потребує контролю функції нирок
   urgency: call_clinic_same_day
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Лихоманка вище 38°C"
-  action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису"
+- trigger_ua: Лихоманка вище 38°C
+  action_ua: Звертайтесь у лікарню негайно — глибока тривала нейтропенія, ризик сепсису
   urgency: er_now
   sources:
   - SRC-NCCN-BCELL-2025
   - SRC-CTCAE-V5
-- trigger_ua: "Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у
-    перші дні циклу 1"
-  action_ua: "Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду
-    пухлини"
+- trigger_ua: Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах — у перші дні циклу 1
+  action_ua: Звертайтесь у лікарню негайно — Burkitt дає високий ризик синдрому розпаду пухлини
   urgency: er_now
-  cycle_day_window: "Day 1-7 of cycle 1"
+  cycle_day_window: Day 1-7 of cycle 1
   sources:
   - SRC-NCCN-BCELL-2025
-
-last_reviewed: "2026-04-25"
-notes: >
-  Magrath original protocol modified with rituximab (R-CODOX-M/R-IVAC).
-  Used for fit younger high-risk Burkitt: CNS+, leukemic phase, LDH
-  >3× ULN, bulky abdomen. ~80-85% sustained CR in fit younger adults.
-  Substantial myelosuppression + mucositis + HD-MTX management complexity
-  demand experienced center.
-notes_ua: >
-  Оригінальний протокол Magrath, модифікований з ритуксимабом (R-CODOX-M/R-IVAC).
-  Застосовується у молодих пацієнтів у задовільному стані при лімфомі Беркіта
-  високого ризику: ЦНС-ураження, лейкозна фаза, ЛДГ >3× ВМН, масивне ураження
-  черевної порожнини. Стійка повна відповідь ~80-85% у молодих дорослих. Значна
-  мієлосупресія, мукозит та складне ведення HD-MTX вимагають досвідченого центру.
+last_reviewed: null
+notes: 'Scoped reference schedule repair based on eviQ 4489 v1 and 4490 v2, for high-risk Burkitt WITHOUT
+  proven CNS disease. This is not original Magrath or LMB and not a universal Burkitt/CNS prescription.
+  The engine currently exposes this record in low-risk as well as high-risk tracks: selection requires
+  a separate audit. Age, fitness, efficacy, availability and patient watchpoints are not validated by
+  this repair. Mesna schedules may vary by institution. Intrathecal procedures must remain separate from
+  IV drug administration; vincristine must NEVER be administered intrathecally.'
+notes_ua: 'Довідковий розклад виправлено за eviQ 4489 v1 та 4490 v2 для лімфоми Беркіта високого ризику
+  БЕЗ доведеного ураження ЦНС. Це не оригінальний Magrath чи LMB і не універсальний протокол для Беркіта/ЦНС.
+  Двигун наразі показує цей запис також у треках низького ризику: вибір потребує окремого аудиту. Вік,
+  придатність, ефективність, доступність і пацієнтські симптоми цим виправленням не перевірені. Розклади
+  месни можуть відрізнятися між закладами. Інтратекальні процедури проводять окремо від внутрішньовенних
+  введень; вінкристин НІКОЛИ не вводять інтратекально.'
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_11
 draft_revision: 2
+review_status: pending_clinical_signoff
