@@ -125,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="bb4ab218f56fbeaf60e470aa315642babbf36ef17a496825b2960ada3f961063"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="e146920c1e9664f72ac9ed827619104b06a9f362740c071cb989765033855224"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -232,6 +232,7 @@
     <div class="quest-readiness-critical" id="readinessCriticalText">
       Scegli una malattia per iniziare.
     </div>
+    <div class="error" id="numericInputSummary" hidden role="alert"></div>
     <div class="quest-fired-redflags" id="firedRedflagsList"></div>
   </div>
 
@@ -465,6 +466,9 @@ const modeClinicianBtn = document.getElementById('modeClinicianBtn');
 const modePatientBtn = document.getElementById('modePatientBtn');
 const modalHtmlBtn = document.getElementById('modalHtmlBtn');
 const formPane = document.getElementById('formPane');
+const numericInputSummary = document.getElementById('numericInputSummary');
+const numericInputCopy = {"number": "Inserisci un numero valido.", "integer": "Inserisci un numero intero.", "range": "Usa un valore entro questi limiti:", "summary": "Correggi i campi numerici evidenziati prima di generare il piano o aprire JSON."};
+const numericInputErrors = new Map();
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
 const questIntro = document.getElementById('questIntro');
@@ -1102,7 +1106,8 @@ function updateWorkflowControls() {
   const planFresh = reportReady && planSource !== null && !planDirty;
   const hasPlan = planSource !== null && reportReady;
 
-  runBtn.disabled = locked || !hasInput || planFresh;
+  const numericValid = validateNumericInputs();
+  runBtn.disabled = locked || !hasInput || planFresh || !numericValid;
   viewPlanBtn.disabled = locked || !hasPlan;
   pdfBtn.disabled = locked || !hasPlan;
   modalPdfBtn.disabled = locked || !hasPlan;
@@ -1251,10 +1256,10 @@ function renderQuestion(q) {
   switch (q.type) {
     case 'integer':
     case 'float':
-      inputHtml = `<input type="number" id="${fieldId}" data-field="${q.field}"
+      inputHtml = `<input type="number" id="${fieldId}" data-field="${q.field}" data-type="${q.type}"
         ${q.range_min !== undefined ? `min="${q.range_min}"` : ''}
         ${q.range_max !== undefined ? `max="${q.range_max}"` : ''}
-        ${q.type === 'float' ? 'step="0.1"' : 'step="1"'}
+        ${q.type === 'float' ? 'step="any"' : 'step="1"'}
         ${placeholder ? `placeholder="${placeholder}"` : ''}>`;
       break;
     case 'boolean':
@@ -1283,6 +1288,7 @@ function renderQuestion(q) {
       <span class="impact-pill impact-${impact}">${IMPACT_LABEL[impact] || impact}</span>
     </div>
     ${inputHtml}
+    <p class="quest-helper quest-field-error" id="${fieldId}-error" hidden></p>
     ${q.units ? `<span class="quest-units">${escHtml(q.units)}</span>` : ''}
     ${q.helper ? `<p class="quest-helper">${escHtml(q.helper)}</p>` : ''}
     ${triggers ? `<div class="quest-triggers">${triggers}</div>` : ''}
@@ -1296,9 +1302,73 @@ function renderQuestion(q) {
     else inp.value = q.default_value;
     answers[q.field] = q.default_value;
   }
+  inp.setAttribute('aria-describedby', fieldId + '-error');
   inp.addEventListener('input', onAnswerChange);
   inp.addEventListener('change', onAnswerChange);
   return wrap;
+}
+
+function parseNumericValue(value, type) {
+  if (typeof value !== 'string' && typeof value !== 'number') return undefined;
+  const text = String(value).trim();
+  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(text)) return undefined;
+  const number = Number(text);
+  if (!Number.isFinite(number)) return undefined;
+  const [mantissa, exponentText = '0'] = text.toLowerCase().split('e');
+  const digits = mantissa.replace('+', '').replace('-', '').replace('.', '');
+  // Reject nonzero values that silently underflow to zero.
+  if (number === 0 && /[1-9]/.test(digits)) return undefined;
+  if (type === 'integer') {
+    if (!Number.isSafeInteger(number)) return undefined;
+    const fractionLength = (mantissa.split('.')[1] || '').length - Number(exponentText);
+    if (fractionLength > 0 && /[1-9]/.test(digits.slice(-fractionLength))) return undefined;
+  }
+  return number;
+}
+
+function numericValueError(value, type, minimum, maximum) {
+  if (value === undefined || value === null || value === '') return '';
+  const number = parseNumericValue(value, 'float');
+  if (number === undefined) return 'number';
+  if (type === 'integer' && !Number.isSafeInteger(number)) return Number.isInteger(number) ? 'number' : 'integer';
+  if (type === 'integer' && parseNumericValue(value, 'integer') === undefined) return 'integer';
+  const min = parseNumericValue(minimum, 'float'), max = parseNumericValue(maximum, 'float');
+  if ((min !== undefined && number < min) || (max !== undefined && number > max)) return 'range';
+  return '';
+}
+
+function numericInputError(input) {
+  if (input.validity && input.validity.badInput) return 'number';
+  if (input.value === '' && answers[input.dataset.field] !== undefined &&
+      answers[input.dataset.field] !== null && answers[input.dataset.field] !== '') return 'number';
+  const type = input.dataset.type || (input.step === 'any' || input.step === '0.1' ? 'float' : 'integer');
+  return numericValueError(input.value, type, input.min, input.max);
+}
+
+function validateNumericInputs() {
+  numericInputErrors.clear();
+  if (mode !== 'form') { if (numericInputSummary) numericInputSummary.hidden = true; return true; }
+  for (const input of formPane.querySelectorAll('input[type="number"][data-field]')) {
+    const issue = numericInputError(input);
+    let message = issue ? numericInputCopy[issue] : '';
+    if (issue === 'range') {
+      const min = parseNumericValue(input.min, 'float'), max = parseNumericValue(input.max, 'float');
+      const limits = min !== undefined && max !== undefined ? min + '–' + max : min !== undefined ? '≥' + min : '≤' + max;
+      message += ' ' + limits;
+    }
+    if (issue) numericInputErrors.set(input.dataset.field, issue);
+    input.setCustomValidity(message);
+    input.setAttribute('aria-invalid', issue ? 'true' : 'false');
+    input.style.borderColor = issue ? '#b91c1c' : '';
+    const wrapper = input.closest('.quest-q');
+    const error = wrapper && wrapper.querySelector('.quest-field-error');
+    if (error) { error.textContent = message; error.hidden = !issue; error.style.color = '#b91c1c'; }
+  }
+  if (numericInputSummary) {
+    numericInputSummary.hidden = numericInputErrors.size === 0;
+    numericInputSummary.textContent = numericInputErrors.size ? numericInputCopy.summary : '';
+  }
+  return numericInputErrors.size === 0;
 }
 
 function readValue(input, type) {
@@ -1308,8 +1378,8 @@ function readValue(input, type) {
     case 'boolean': return v === 'true';
     case 'enum':
       try { return JSON.parse(v); } catch { return v; }
-    case 'integer': return parseInt(v, 10);
-    case 'float': return parseFloat(v);
+    case 'integer':
+    case 'float': return parseNumericValue(v, type);
     default: return v;
   }
 }
@@ -1319,10 +1389,12 @@ function onAnswerChange(ev) {
   const field = inp.dataset.field;
   if (!field) return;
   const type = inp.dataset.type
-    || (inp.type === 'number' ? (inp.step === '0.1' ? 'float' : 'integer') : 'text');
+    || (inp.type === 'number' ? (inp.step === '0.1' || inp.step === 'any' ? 'float' : 'integer') : 'text');
   const val = readValue(inp, type);
-  if (val === undefined) delete answers[field];
-  else answers[field] = val;
+  if (val === undefined) {
+    if (inp.type === 'number' && (inp.value !== '' || inp.validity.badInput)) answers[field] = inp.value;
+    else delete answers[field];
+  } else answers[field] = val;
   markPlanDirty();
   saveDraft();
   updateRunBtnEnabled();
@@ -1359,8 +1431,10 @@ function pauseEvalForToolbar() {
 function setMode(newMode, { syncFromForm = false } = {}) {
   // Capture form values before buildProfile switches to reading the JSON pane.
   // Draft/example/QR loaders supply their own JSON and must retain it verbatim.
-  const formJson = newMode === 'json' && syncFromForm && mode === 'form' && activeQuest
-    ? JSON.stringify(buildProfile(), null, 2) : null;
+  const syncProfile = newMode === 'json' && syncFromForm && mode === 'form' && activeQuest;
+  const profile = syncProfile ? buildProfile() : null;
+  if (syncProfile && profile === null) return;
+  const formJson = syncProfile ? JSON.stringify(profile, null, 2) : null;
   mode = newMode;
   modeFormBtn.classList.toggle('active', mode === 'form');
   modeJsonBtn.classList.toggle('active', mode === 'json');
@@ -1376,7 +1450,7 @@ function buildProfile() {
   if (mode === 'json') {
     try { return JSON.parse(textarea.value); } catch { return null; }
   }
-  if (!activeQuest) return null;
+  if (!activeQuest || !validateNumericInputs()) return null;
   // Deep-merge fixed_fields + expand dotted-path answers
   const profile = JSON.parse(JSON.stringify(activeQuest.fixed_fields || {}));
   for (const [path, val] of Object.entries(answers)) {
@@ -1631,7 +1705,7 @@ function updateImpactPanelLocal() {
     for (const q of group.questions || []) {
       total++;
       const val = answers[q.field];
-      const isFilled = val !== undefined && val !== null && val !== '';
+      const isFilled = val !== undefined && val !== null && val !== '' && !numericInputErrors.has(q.field);
       if (isFilled) filled++;
       else if (q.impact === 'critical') {
         missing.push({ label: q.label, group: group.title || '' });

@@ -12,7 +12,8 @@ function fixture() {
     'findings.virtual_boolean': false, 'findings.virtual_measurement': 12.34 };
   const textarea = { value: '{"patient_id":"VIRTUAL-OLD","demographics":{"ecog":3}}' };
   const calls = { saves: [], updates: 0 };
-  const context = vm.createContext({ fixed, answers, textarea,
+  const context = vm.createContext({
+    validateNumericInputs: () => true, fixed, answers, textarea,
     modeFormBtn: { classList: { toggle() {} } }, modeJsonBtn: { classList: { toggle() {} } },
     formPane: {}, jsonPane: {},
     saveDraft: () => calls.saves.push(textarea.value), updateRunBtnEnabled: () => calls.updates++,

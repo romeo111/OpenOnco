@@ -330,3 +330,27 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   field preservation also needs a separate audit. Address input validity and
   unsupported safe-default claims without treating unknown values as negative
   findings or altering authored clinical rules.
+
+- 2026-10-12: Actual published browser confirmed c797c9c94d transfers edited
+  synthetic profile VIRTUAL-MODE-CHECK from form to JSON (age 61, ECOG 0,
+  active_tb false) and retains an unfinished JSON draft on repeated clicks.
+- 2026-10-12: Added guided numeric-input validation in all eleven editions.
+  Strict decimal parsing rejects partial numeric text, nonfinite values,
+  unsafe integers, fractional integer entries (including binary-rounding edge
+  cases) and nonzero values underflowing to zero. Authored min/max bounds are
+  enforced without changing or clamping values. Float controls use step=any
+  because the schema declares floating values without decimal-step precision.
+  Invalid exposed numeric edits remain in drafts, do not count as filled, and block
+  generation/form-to-JSON assembly until corrected; empty optional fields stay
+  unknown. Field-specific accessible errors and summary use scoped native copy
+  for all 11 languages. Readiness/input shape checks are not clinical validation.
+  Language/layout checks passed (28 tests), new shipped-client parser/gating/
+  persistence/correction regression and existing loading/export/form/cache/
+  version Node suites plus critical lint passed. Medical YAML, rules, doses,
+  sources and engine bundles are unchanged. Actual deployed numeric-control
+  behavior remains pending at this commit. Direct JSON/API numeric validation,
+  bidirectional profile reconstruction, unsupported safe-default assurances,
+  full offline browser generation, PDF proof and medical translation review
+  remain open.
+
+- Numeric draft boundary: browser-native transient badInput tokens may expose an empty input.value, so their literal text cannot be serialized/restored; they remain blocked while displayed. This does not claim preservation of every malformed keystroke or validate direct JSON/API input.

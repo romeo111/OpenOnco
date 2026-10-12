@@ -137,3 +137,12 @@ corrupt or unreadable retained files count as incomplete. Native copy for all
 11 languages is scoped in `scripts/runtime_cache_copy.py`, without changing
 clinical catalogs or engine inputs. This status proves retained runtime files
 at inspection time, not complete browser offline generation or printing.
+
+Guided numeric input (2026-10-12): field and summary errors use scoped native
+`scripts/numeric_input_copy.py` copy in all eleven editions. Integers are never
+silently truncated; finite decimal precision and authored ranges are checked
+before form generation or JSON transfer. Float controls permit unrestricted
+fractional precision within their authored bounds. Exposed invalid numeric draft values
+remain visible, while cleared optional inputs remain unknown. The control-flow
+regression executes the shipped functions across every locale. These checks
+cover guided form input, not direct JSON/API schemas or clinical adequacy.

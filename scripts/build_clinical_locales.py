@@ -184,6 +184,8 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
     if path == "try.html":
         from scripts.runtime_cache_copy import COPY
         page = re.sub(r"^const runtimeCacheCopy = .*;$", lambda _: "const runtimeCacheCopy = " + json.dumps(COPY[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
+        from scripts.numeric_input_copy import COPY as numeric_copy
+        page = re.sub(r"^const numericInputCopy = .*;$", lambda _: "const numericInputCopy = " + json.dumps(numeric_copy[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
     active = path.split('/')[0].removesuffix('.html')
     active = {'cases': 'gallery', 'disease': 'diseases', 'plans': 'try'}.get(active, active)
     page = re.sub(r'(<body\b[^>]*>)', lambda m: m.group() + render_top_bar(active, locale, page_path=path), page, count=1)

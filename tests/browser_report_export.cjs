@@ -31,6 +31,7 @@ const frame = {
   removeEventListener: type => events.delete(type),
 };
 const context = vm.createContext({
+    validateNumericInputs: () => true,
   resultFrame: frame, Blob, Date,
   setTimeout: fn => { const id = ++nextTimer; timers.set(id, fn); return id; },
   clearTimeout: id => timers.delete(id), setError: error => { if (error) errors.push(error); },
