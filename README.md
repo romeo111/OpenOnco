@@ -77,7 +77,7 @@ python -m pytest tests/test_kb_wiki.py tests/test_site_head_faq.py tests/test_si
 python -m http.server 8000 --directory docs
 ```
 
-Open [localhost:8000](http://localhost:8000/). To regenerate into a separate preview, run `python -m scripts.build_site --output build/site-preview`, then serve `build/site-preview`. Run the broader suite with `python -m pytest tests/`; some integrations use optional dependencies or fixtures. See [development and deployment](docs/DEVELOPMENT.md) for CI gates.
+Open [localhost:8000](http://localhost:8000/). To regenerate into a separate preview, run `python -m scripts.build_site --output build/site-preview`, then serve `build/site-preview`. For selected clinical pages, use the manifest-based `python -m scripts.finalize_partial_site` workflow in [development and deployment](docs/DEVELOPMENT.md#partial-clinical-releases). Run the broader suite with `python -m pytest tests/`; some integrations use optional dependencies or fixtures. See [development and deployment](docs/DEVELOPMENT.md) for CI gates.
 
 ## Use the engine through MCP
 

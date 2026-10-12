@@ -25,6 +25,21 @@ This builds into a separate directory. To prepare the published output, use `pyt
 
 The shared navigation is in `scripts/site_nav.py`, styles in `scripts/site_header.css`, Wiki in `scripts/build_kb_wiki.py`, Handbook in `scripts/build_handbook.py`, and discovery metadata in `scripts/site_head.py`. Daily rebuilds use the same sources.
 
+### Partial clinical releases
+
+After generating a selected group of clinical pages, finalize that exact group before committing. Create a JSON manifest of relative HTML paths, including every changed original and its translated editions, for example `["cases/example.html", "ukr/cases/example.html", "fi/cases/example.html"]`.
+
+```bash
+python -m scripts.finalize_partial_site --output docs --manifest .tmp/release-pages.json
+python -m scripts.finalize_partial_site --output docs --manifest .tmp/release-pages.json --write
+node tests/browser_translation_cache.cjs
+node tests/browser_bundle_versions.cjs
+```
+
+The first command is a dry run. Output is normalized to LF line endings, so an initial run can report formatting changes in a Windows checkout. The second applies the verified batch: shared navigation, discovery metadata, the existing versioned geographic-language asset, and reader fingerprints bound to final originals. It validates the whole batch before replacing files, preserves clinical bodies, rejects preserved pages and paths outside the output, and restores already-replaced pages if a write fails. Keep the normal shared header and language assets in the output; this command does not regenerate them. It also does not rebuild engine archives, search indexes, sitemaps or API packages: verify those separately when their source data changes.
+
+The default path inventory comes from committed `docs/` filenames plus the manifest. For a separate preview with additional destinations, pass `--inventory .tmp/preview-paths.json`, a JSON list of available relative HTML paths. Reader originals outside the manifest must be inventoried; they remain unchanged. A synchronized fingerprint proves source identity, not translation accuracy or clinical approval.
+
 ## Publish
 
 GitHub Pages serves branch **`master`**, directory **`/docs`**, at **https://openonco.info/**. Push reviewed generated output and its source changes to the deployment branch through the repository's authorized delivery flow. The standard **pages build and deployment** run must succeed; inspect the live pages afterward. The [Daily Site Refresh](../.github/workflows/daily-site-refresh.yml) rebuilds from current KB content and commits changed output.
