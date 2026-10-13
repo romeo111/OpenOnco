@@ -2,6 +2,21 @@
 
 Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-10-12.
 
+
+## Current delivery and next priorities (2026-10-13)
+
+Work continues in `.tmp/treatment-line-delivery` on `codex/treatment-line-terminology`, draft PR #669. The preferred `.tmp/dlbcl-review-readiness` checkout contains unrelated uncommitted workflow/localization changes on another branch; those files are preserved. Production publication remains pending the existing automatic-review rejection of a direct master push. This is source-grounded draft engineering work, not clinical approval or proven survival benefit.
+
+Latest BV-CHP correction adds the adult baseline maximum of 180 mg without calculating an individual dose, removes the shared fixed six-cycle default, and displays source-specific course context in clinician/patient reports. Confirmed canonical adult age at least 18 and CD30 are required for this reference; failed selected scope withholds treatment without an automatic substitute. Source-specific duration examples are information, not a cycle selector. Clinical, region and organ-function eligibility still require review.
+
+The preceding BV neuropathy/contact correction is committed and its CI succeeded (38325339511). The current course correction passes 87 related tests, schema/reference validation of 4,273 entities, all 448 public examples (445 plans/3 intentional holds), 25 browser-code checks and pinned Node WASM with zero network attempts. It verifies 352 selected pages, 160 reader bindings, all changed source copies and 87 unchanged disease archives. The existing live navigation check passes 88 pages plus 11 menu destinations; that read-only HTTP/HTML check does not verify the unpublished course correction or browser behavior.
+
+Next priorities:
+1. Make medication interaction/applicability screening explicit; surfaced free-form contraindications are currently references, not an executable screen.
+2. Separate reviewed histology/protocol/region selection from CD30 positivity; preserve ALCL evidence without assuming PTCL-NOS/AITL benefit or source equivalence.
+3. Audit remaining organ-function, cardiac/HBV/test and availability assertions, and reconcile canonical versus alias input conflicts.
+4. Continue export/accessibility/performance checks and honest discovery metadata. Clinical/language review remains pending; no outreach, paid providers or financial commitments are authorized.
+
 ## Mission and operating priorities
 
 ### Positive NSCLC histology applicability and no automatic substitute (2026-10-12)

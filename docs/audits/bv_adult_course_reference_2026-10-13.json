@@ -1,0 +1,244 @@
+{
+  "status": "implemented_adult_bv_cap_and_explicit_course_context_pending_review",
+  "clinical_approval": false,
+  "baseline": "f34c505902e0788d00317068773e2a8ba3c35dee",
+  "changes": [
+    "Adult baseline BV reference states 1.8 mg/kg maximum 180 mg; no individualized dose calculation is performed.",
+    "Shared six-cycle default and fixed component course removed. Frequency remains 21 days. US/eviQ 6–8 reference and systemic ALCL ESMO contexts are displayed separately as course information, not an automatic patient selection.",
+    "Typed EN/UA course context renders escaped, original-source text in clinician/patient views. Other regimen duration behavior is unchanged when fields are absent.",
+    "Two first-line BV indications require canonical adult age at least 18 in addition to CD30. Missing, malformed or younger age blocks a selected reference without automatically promoting another treatment."
+  ],
+  "primary_sources": [
+    {
+      "url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629",
+      "locator": "Table 1: adult previously untreated systemic ALCL/other CD30-expressing PTCL; weight/cap footnote"
+    },
+    {
+      "url": "https://www.eviq.org.au/haematology/lymphoma/nk-cell-and-t-cell-lymphoma/4038-peripheral-t-cell-lymphoma-bv-chp",
+      "version": "v3",
+      "locator": "Treatment schedule: maximum dose, 21-day frequency and overall 6–8 course; cycle-1-to-6 heading is not universal duration"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12059256/",
+      "doi": "10.1002/hem3.70128",
+      "locator": "Recommendations: systemic ALCL limited favorable non-bulky IPI 0–1 versus other chemotherapy-eligible patients"
+    }
+  ],
+  "verification": {
+    "initial_related_tests": 87,
+    "final_broader_render_phase_tests": 181,
+    "schema_entities": 4273,
+    "schema_errors": 0,
+    "reference_errors": 0,
+    "contract_errors": 0,
+    "warnings": 396,
+    "critical_lint": "passed",
+    "public_examples": {
+      "passed": 445,
+      "intentional_holds": 3,
+      "total": 448,
+      "unregistered_bma": 0
+    },
+    "ci_browser_code_checks": 25,
+    "node_wasm": {
+      "runtime": "0.26.4",
+      "network_attempts": 0,
+      "status": "passed adult missing-age hold, cap and unselected course context plus previous synthetic checks",
+      "limitation": "Node WASM, not actual browser offline or clinical approval"
+    },
+    "pages_verified": 352,
+    "reader_bindings": 160,
+    "bundle_proof": {
+      "core_changed_members": [
+        "knowledge_base/engine/render.py",
+        "knowledge_base/hosted/content/regimens/chp_bv.yaml",
+        "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml",
+        "knowledge_base/hosted/content/sources/src_esmo_eha_ptcl_2025.yaml",
+        "knowledge_base/hosted/content/sources/src_eviq_bv_chp_4038.yaml",
+        "knowledge_base/schemas/regimen.py"
+      ],
+      "disease_changed_members": {
+        "DIS-AITL": [
+          "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml"
+        ],
+        "DIS-ALCL": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ],
+        "DIS-PTCL-NOS": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ]
+      },
+      "retained_disease_archives": [
+        "DIS-ADRENOCORTICAL-CARCINOMA",
+        "DIS-AML",
+        "DIS-ANAL-SCC",
+        "DIS-APL",
+        "DIS-ATLL",
+        "DIS-B-ALL",
+        "DIS-BCC",
+        "DIS-BREAST",
+        "DIS-BURKITT",
+        "DIS-CERVICAL",
+        "DIS-CHL",
+        "DIS-CHOLANGIOCARCINOMA",
+        "DIS-CHONDROSARCOMA",
+        "DIS-CLL",
+        "DIS-CML",
+        "DIS-CRC",
+        "DIS-DLBCL-NOS",
+        "DIS-EATL",
+        "DIS-ENDOMETRIAL",
+        "DIS-EPITHELIOID-SARCOMA",
+        "DIS-ESOPHAGEAL",
+        "DIS-ET",
+        "DIS-FL",
+        "DIS-GASTRIC",
+        "DIS-GBM",
+        "DIS-GI-NET",
+        "DIS-GIST",
+        "DIS-GLIOMA-LOW-GRADE",
+        "DIS-GRANULOSA-CELL",
+        "DIS-HCC",
+        "DIS-HCL",
+        "DIS-HCV-MZL",
+        "DIS-HGBL-DH",
+        "DIS-HNSCC",
+        "DIS-HSTCL",
+        "DIS-IFS",
+        "DIS-IMT",
+        "DIS-JMML",
+        "DIS-KAPOSI",
+        "DIS-LAM",
+        "DIS-LARYNGEAL",
+        "DIS-MASTOCYTOSIS",
+        "DIS-MCL",
+        "DIS-MDS-HR",
+        "DIS-MDS-LR",
+        "DIS-MELANOMA",
+        "DIS-MENINGIOMA",
+        "DIS-MESOTHELIOMA",
+        "DIS-MF-SEZARY",
+        "DIS-MM",
+        "DIS-MPNST",
+        "DIS-MTC",
+        "DIS-NK-T-NASAL",
+        "DIS-NLPBL",
+        "DIS-NODAL-MZL",
+        "DIS-NPC",
+        "DIS-NSCLC",
+        "DIS-OSTEOSARCOMA",
+        "DIS-OVARIAN",
+        "DIS-PARATHYROID-CARCINOMA",
+        "DIS-PCNSL",
+        "DIS-PDAC",
+        "DIS-PENILE-SCC",
+        "DIS-PHEOCHROMOCYTOMA",
+        "DIS-PITUITARY-ADENOMA",
+        "DIS-PMBCL",
+        "DIS-PMF",
+        "DIS-PNET",
+        "DIS-PROSTATE",
+        "DIS-PTLD",
+        "DIS-PV",
+        "DIS-RCC",
+        "DIS-RETINOBLASTOMA",
+        "DIS-SALIVARY",
+        "DIS-SCLC",
+        "DIS-SOFT-TISSUE-SARCOMA",
+        "DIS-SPLENIC-MZL",
+        "DIS-T-ALL",
+        "DIS-T-PLL",
+        "DIS-TESTICULAR-GCT",
+        "DIS-TGCT",
+        "DIS-THYROID-ANAPLASTIC",
+        "DIS-THYROID-PAPILLARY",
+        "DIS-UROTHELIAL",
+        "DIS-VULVAR-VAGINAL-SCC",
+        "DIS-WILMS",
+        "DIS-WM"
+      ],
+      "pages_verified": 352,
+      "reader_verification": {
+        "checked": 160,
+        "updated": 0,
+        "preserved": 0
+      },
+      "core_version": "a39049002c84",
+      "core_compressed_version": "66a56a8605db"
+    },
+    "canonical_source_copy_proof": {
+      "knowledge_base/engine/render.py": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "9492d9114ead716ec7c6b1d6b613b709809a65ef10b6205ea179310dffef3138"
+      },
+      "knowledge_base/schemas/regimen.py": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "65a21d6004096bee8ddda7a330c770ec136fd605a8963996810be24f97dd9f6e"
+      },
+      "knowledge_base/hosted/content/regimens/chp_bv.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "d00ac4f818801f6df9a26e65c398331d43cebb289cf3e6a5113fd6350d3d1966"
+      },
+      "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-alcl.zip",
+          "disease/openonco-dis-ptcl-nos.zip"
+        ],
+        "sha256": "cc19b06eab50e310bd23af937c2d5d9fd9dd0070650a8f15784db4dc089b9c6e"
+      },
+      "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-aitl.zip"
+        ],
+        "sha256": "c6cec71dd131ab30ad68a90ec263cd68a22094ac749954bd6c1fa33790f25bc0"
+      },
+      "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "730264b4373318bd552643448768596acb8c002c93036c88fd2d3be3a0d27ddc"
+      },
+      "knowledge_base/hosted/content/sources/src_eviq_bv_chp_4038.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "46192594dfbd727ff83a1f469e69ca8177a962acc6d97c88945139cfb9f46de4"
+      },
+      "knowledge_base/hosted/content/sources/src_esmo_eha_ptcl_2025.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "f32b60b08ac6408d18447398359b767ce62d14a2163457012cfdec104bf4d8d8"
+      }
+    },
+    "preferred_core_bytes": 2657652,
+    "core_budget_bytes": 4250000,
+    "live_navigation": {
+      "base_url": "https://openonco.info/",
+      "public_pages_checked": 88,
+      "navigation_destinations_checked": 11,
+      "failures": [],
+      "scope": "HTTP and static HTML only; not browser or clinical validation"
+    },
+    "sitemap": "No new pages; existing discovery inventory unchanged."
+  },
+  "scope_limits": [
+    "Caller-provided age/CD30 confirmation is not independently verified clinical data. Alias reconciliation and other profile conflicts remain open.",
+    "No clinical eligibility, individual dose/course, response/toxicity decision, pediatric/off-label care or current local authorization approval.",
+    "Weight examples test reference fidelity and input non-mutation; there is no numerical dosing calculator enforcing the cap here.",
+    "Contraindication medication triggers remain displayed references rather than automated medication screening.",
+    "Baseline organ-function, other cardiac/HBV/test/access assertions and histology/regional default selection remain under review.",
+    "Clinical/language signoff pending; source context remains protected original prose in other languages.",
+    "Live HTTP navigation checks only the currently deployed website, not these unpublished clinical changes or actual browser operation."
+  ],
+  "workspace": "Preferred dlbcl-review-readiness checkout has unrelated uncommitted workflow/localization changes; current isolated delivery checkout retained and those files preserved.",
+  "previous_goal_turn_classification": "progress: BV-specific neuropathy, contraindication and contact timing repair committed/pushed; CI 38325339511 now success",
+  "production": "not deployed; existing approval boundary retained",
+  "next_action": "Design and verify explicit medication-interaction/applicability screening and histology/protocol/region choice contract, preserving safe withholding and review requirements."
+}

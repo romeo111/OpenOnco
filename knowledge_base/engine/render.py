@@ -937,6 +937,16 @@ def _format_cycle_window(cycle_len, total_cycles, target_lang: str = "uk") -> st
     return base
 
 
+def _course_context_html(regimen, target_lang="uk"):
+    key = 'course_context_note_ua' if target_lang == 'uk' else 'course_context_note'
+    note = regimen.get(key)
+    if not isinstance(note, str) or not note.strip():
+        return ''
+    locale = 'uk' if target_lang == 'uk' else 'en'
+    return (f'<span class="course-context" lang="{locale}" data-original-source '
+            f'data-source-id="{_h(regimen.get("id", ""))}">{_h(note)}</span>')
+
+
 def _localize_html(html_text: str, target_lang: str) -> str:
     """Post-process a fully-rendered UA HTML document into another language
     by targeted UI-label substitution. The render layer always produces UA
@@ -1903,6 +1913,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
                 '<div class="tl-phase tl-phase--induction">'
                 f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—"))}</div>'
                 f'<div class="window">{_h(window)}</div>'
+                f'{_course_context_html(reg, target_lang)}'
                 '</div>'
             )
 
@@ -3193,15 +3204,15 @@ def render_plan_html(
         if plan_result.plan.knowledge_base_state.get('profile_selection_withheld'):
             title = 'Treatment applicability requires confirmation' if english else 'Потрібне підтвердження відповідності лікування'
             explanation = ('No medicine plan has been selected. The profile has unconfirmed, conflicting or excluded values. Check metastatic stage, driver status, functional status, the chosen chemotherapy partner and clinical exclusions before selecting this route. No automatic substitute was selected.' if english else 'План препаратів не обрано. Профіль містить непідтверджені, суперечливі або виключені значення. Перед вибором цього маршруту перевірте метастатичну стадію, драйверний статус, функціональний стан, обраний компонент хіміотерапії та клінічні виключення. Автоматичну заміну не обрано.')
-            if plan_result.plan.algorithm_id in {'ALGO-PTCL-1L', 'ALGO-AITL-1L', 'ALGO-ALCL-1L'} and 'biomarkers.BIO-CD30-IHC' in plan_result.plan.knowledge_base_state.get('unconfirmed_profile_fields', []):
+            if plan_result.plan.algorithm_id in {'ALGO-PTCL-1L', 'ALGO-AITL-1L', 'ALGO-ALCL-1L'} and {'biomarkers.BIO-CD30-IHC', 'demographics.age'}.intersection(plan_result.plan.knowledge_base_state.get('unconfirmed_profile_fields', [])):
                 explanation = (
                     'No medicine plan has been selected. Confirm the documented CD30 result '
-                    'and resolve conflicting profile values with the clinical team before '
+                    'and adult age, and resolve conflicting profile values with the clinical team before '
                     'considering BV-CHP. Confirmation does not establish individual eligibility '
                     'or local approval. No automatic substitute was selected.'
                     if english else
                     'План препаратів не обрано. Підтвердьте документований результат CD30 '
-                    'та узгодьте суперечливі значення профілю з лікарем перед розглядом BV-CHP. '
+                    'і вік дорослого пацієнта та узгодьте суперечливі значення профілю з лікарем перед розглядом BV-CHP. '
                     'Підтвердження не встановлює індивідуальної відповідності лікуванню '
                     'або місцевого регуляторного дозволу. Автоматичну заміну не обрано.'
                 )
@@ -3786,9 +3797,11 @@ def _regimen_schedule_ua(regimen_data: Optional[dict], *, target_lang: str = "uk
             return f"{t_int} cycle(s) of {c} days"
         return f"{t_int} цикл(и) по {c} днів"
     if c:
+        context = _course_context_html(regimen_data, target_lang)
+        suffix = f'; {context}' if context else ''
         if target_lang == 'en':
-            return f"Cycle — {c} days"
-        return f"Цикл — {c} днів"
+            return f"Cycle — {c} days{suffix}"
+        return f"Цикл — {c} днів{suffix}"
     if t_int:
         if target_lang == 'en':
             return f"{t_int} cycle(s)"

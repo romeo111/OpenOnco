@@ -1,14 +1,14 @@
 id: REG-CHP-BV
-name: Brentuximab vedotin + CHP (CHP-Bv), 6 cycles (CD30+ T-cell lymphomas)
-name_ua: Брентуксимаб ведотин + CHP (CHP-Bv), 6 циклів (CD30+ T-клітинні лімфоми)
+name: Brentuximab vedotin + CHP (BV-CHP), adult source-specific reference
+name_ua: Брентуксимаб ведотин + CHP (BV-CHP), довідковий запис для дорослих за конкретним джерелом
 alternate_names:
 - A+CHP
 - Bv-CHP
 - ECHELON-2
 components:
 - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
-  dose: 1.8 mg/kg
-  schedule: IV day 1 each 21-day cycle × 6
+  dose: 1.8 mg/kg (maximum 180 mg)
+  schedule: IV day 1 of each 21-day cycle; course requires source-specific confirmation
   route: IV
 - drug_id: DRUG-CYCLOPHOSPHAMIDE
   dose: 750 mg/m²
@@ -23,7 +23,7 @@ components:
   schedule: PO days 1-5 each cycle
   route: PO
 cycle_length_days: 21
-total_cycles: '6'
+total_cycles: null
 toxicity_profile: moderate-high
 premedication:
 - Antihistamine + acetaminophen before brentuximab
@@ -72,6 +72,7 @@ sources:
 - SRC-ADCETRIS-US-LABEL
 - SRC-EVIQ-BV-CHP-4038
 - SRC-EVIQ-BV-CHP-PATIENT-4038
+- SRC-ESMO-EHA-PTCL-2025
 between_visit_watchpoints:
 - trigger_ua: Поколювання, оніміння або біль у кистях чи стопах
   action_ua: Повідомте лікаря або медсестру, зокрема якщо симптоми заважають повсякденним справам.
@@ -148,15 +149,15 @@ notes: Neuropathy modifications preserve separate US adult 1.8 mg/kg every-3-wee
   and eviQ 4038 v3 rules. They are clinician reference text, not automatic dose decisions or
   baseline eligibility approval; other schedules, monotherapy and pediatric rules are distinct.
   The US label does not require the eviQ recovery delay in the same row. Histology-specific
-  benefit, regional approval and the remaining six-cycle schedule require separate review.
+  benefit, regional approval and other dosing/eligibility context require separate review.
 notes_ua: Правила нейропатії окремо відображають американську інструкцію для дорослих на 1,8
   мг/кг кожні 3 тижні з хіміотерапією та eviQ 4038 v3. Це довідковий текст для лікаря, а не
   автоматичні рішення щодо дози чи початкової придатності; інші розклади, монотерапія та педіатричні
   правила відрізняються. Американська інструкція не встановлює в цьому рядку відстрочку до відновлення,
-  описану eviQ. Користь за підтипом, регіональний дозвіл і наявний шестицикловий розклад потребують
-  окремого перегляду.
+  описану eviQ. Користь за підтипом, регіональний дозвіл та інший контекст дозування й придатності
+  потребують окремого перегляду.
 ukrainian_review_status: pending_clinical_signoff
-draft_revision: 3
+draft_revision: 4
 review_status: pending_clinical_signoff
 clinical_claims:
 - claim_id: tcell-regimen-specific-monitoring
@@ -182,3 +183,13 @@ clinical_claims:
     brentuximab regimens or individualized administration timing.
   source_locator: US ADCETRIS label sections 2.4 and 5.3; eviQ 4038 schedule note, growth-factor
     section and haematological toxicity.
+course_context_note: No course is selected by this shared reference. US adult label and eviQ
+  4038 describe 6–8 doses/cycles. ESMO–EHA 2025 for systemic ALCL recommends 6 cycles for other
+  chemotherapy-eligible patients and permits 3–4 in selected favorable limited-stage, non-bulky
+  disease (IPI 0–1). Your clinical team confirms histology, stage, response, toxicity and applicable
+  protocol; these are not automatic patient defaults.
+course_context_note_ua: Цей спільний довідковий запис не обирає тривалість курсу. Американська
+  інструкція для дорослих і eviQ 4038 описують 6–8 введень/циклів. ESMO–EHA 2025 для системної
+  ALCL рекомендує 6 циклів для інших придатних до хіміотерапії пацієнтів та допускає 3–4 у вибраних
+  сприятливих випадках обмеженої стадії без великих пухлинних мас (IPI 0–1). Лікар підтверджує
+  гістологію, стадію, відповідь, токсичність і застосовний протокол; це не автоматичні призначення.

@@ -99,3 +99,10 @@ First-line BV-CHP indications surface `CI-BRENTUXIMAB-BLEOMYCIN` from US ADCETRI
 Keep US adult 1.8 mg/kg every-three-week chemotherapy Table 2 separate from eviQ 4038 v3. Preserve sensory versus motor grade and the eviQ recovery delay; monotherapy, AVD, pediatric and other schedules have different rules. The entries are clinician reference text and never modify patient dose inputs. The reference remains incomplete for full dosing, organ function, cycle selection and clinical eligibility.
 
 BV-CHP patient contact points use their own eviQ patient-information source. Fever/contact urgency must not be limited to a presumed nadir window; infusion reactions are not restricted to cycle 1 or being physically in the clinic. Report neuropathy without inventing a next-visit delay or a self-adjustment instruction. English pairs retain source fingerprints and draft status. Run `python -m pytest tests/test_bv_neuropathy_safety.py tests/test_patient_watchpoint_translations.py` and pinned Node WASM checks.
+
+
+### BV-CHP adult dose and course context
+
+The shared BV-CHP reference states `1.8 mg/kg (maximum 180 mg)` and retains a 21-day frequency, without calculating an individual dose. Its `total_cycles` is unset: label/eviQ 6–8 references and the ESMO-EHA systemic-ALCL contexts are not interchangeable patient defaults. Typed `course_context_note` / `course_context_note_ua` fields render escaped, original-source text in both clinician and patient views; absent fields preserve other regimen behavior. Source context is information, not an automatic cycle selector.
+
+Both first-line BV indications require confirmed canonical adult age (at least 18) in addition to confirmed CD30. A failed selected applicability check withholds all treatment without promoting an alternative. This is not whole-patient eligibility, pediatric/off-label care, organ-function review or regulatory approval. Biomarker/age alias reconciliation and explicit protocol-region selection remain separate work. Run `python -m pytest tests/test_bv_course_context.py tests/test_cd30_confirmation.py` and the pinned Node WASM check after changing these contracts.

@@ -191,6 +191,15 @@ assert tcell_result.plan.tracks[0].indication_data['nccn_category'] is None
 assert 'CI-BRENTUXIMAB-BLEOMYCIN' in {ci['id'] for ci in tcell_result.plan.tracks[0].contraindications_data}
 assert 'CI-BORTEZOMIB-SEVERE-NEUROPATHY' not in {ci['id'] for ci in tcell_result.plan.tracks[0].contraindications_data}
 bv_reg=tcell_result.plan.tracks[0].regimen_data
+assert bv_reg['total_cycles'] is None
+assert next(c for c in bv_reg['components'] if c['drug_id']=='DRUG-BRENTUXIMAB-VEDOTIN')['dose']=='1.8 mg/kg (maximum 180 mg)'
+assert '6–8' in bv_reg['course_context_note'] and '3–4' in bv_reg['course_context_note']
+adult_unconfirmed=json.loads(_tcell_json)
+adult_unconfirmed['demographics']['age']=None
+adult_withheld=generate_plan(adult_unconfirmed,kb_root=KB)
+assert not adult_withheld.plan.tracks and not adult_withheld.plan.sequencing_tracks
+assert 'demographics.age' in adult_withheld.plan.knowledge_base_state['unconfirmed_profile_fields']
+assert 'adult age' in render_plan_html(adult_withheld,target_lang='en',mode='patient')
 bv_points=bv_reg['between_visit_watchpoints']
 assert len(bv_points)==12 and not any(w.get('cycle_day_window') for w in bv_points)
 assert sum(w['urgency']=='contact_clinic_now' for w in bv_points)==7
@@ -201,6 +210,7 @@ assert any(r['condition'].startswith('eviQ') and 'grade 2 motor' in r['condition
 bv_patient=render_plan_html(tcell_result,target_lang='en',mode='patient')
 assert 'do not change the dose yourself' in bv_patient
 assert 'Temperature 38°C or higher' in bv_patient
+assert 'No course is selected by this shared reference' in bv_patient
 for lang in ['en','uk']:
     tcell_html=render_plan_html(tcell_result,target_lang=lang)
     assert 'MON-R-CHOP-REGIMEN' not in tcell_html

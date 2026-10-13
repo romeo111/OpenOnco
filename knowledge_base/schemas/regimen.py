@@ -174,6 +174,8 @@ class Regimen(Base):
     components: list[RegimenComponent]
     cycle_length_days: Optional[int] = None
     total_cycles: Optional[str] = None  # "6", "6-8", "until progression"
+    course_context_note: Optional[str] = None
+    course_context_note_ua: Optional[str] = None
 
     # Phase-aware fields (added 2026-04-29). See module docstring.
     phases: list[RegimenPhase] = Field(default_factory=list)
