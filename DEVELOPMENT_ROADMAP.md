@@ -1,6 +1,6 @@
 # OpenOnco development roadmap
 
-Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-10-12.
+Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-10-13.
 
 
 ## Current delivery and next priorities (2026-10-13)
@@ -16,6 +16,14 @@ Next priorities:
 2. Separate reviewed histology/protocol/region selection from CD30 positivity; preserve ALCL evidence without assuming PTCL-NOS/AITL benefit or source equivalence.
 3. Audit remaining organ-function, cardiac/HBV/test and availability assertions, and reconcile canonical versus alias input conflicts.
 4. Continue export/accessibility/performance checks and honest discovery metadata. Clinical/language review remains pending; no outreach, paid providers or financial commitments are authorized.
+
+### Medication-screen contract reproduction (2026-10-13, evening)
+
+`python -m scripts.audit_bv_medication_screen --output <report.json>` uses only three public synthetic BV examples and seven candidate medication-input shapes. The dated report `docs/audits/bv_medication_screen_open_2026-10-13.json` records 21 observations, immutable input checks and canonical source hashes. All 18 non-baseline probes retain REG-CHP-BV, including drug identifiers for bleomycin and a malformed boolean medication value. These candidate fields are not a supported medication API: the observation demonstrates missing executable screening, not validation of a proposed field contract. The surfaced contraindication remains a reference; no individual safety clearance is established. US ADCETRIS label section 4 was inspected again on this date and prohibits concomitant bleomycin because of pulmonary toxicity.
+
+Next implementation must first define typed active concomitant medicines, distinguish unknown from an explicitly reconciled empty list, match authored drug IDs with proposed regimen components, and withhold confirmed prohibited combinations without automatic therapeutic substitution. Historical exposure, alias resolution, incomplete screening, both report modes, questionnaire/API/browser/WASM compatibility and clinician review must be addressed explicitly. This audit does not change clinical routing or clinical-review status and must not be used to freeze the current unsafe absence of screening as a passing regression.
+
+CI 38355999609 for the BV course correction completed successfully. The independent collapsed-parameters UI change was delivered through PR #673 as master commit 56299655; PR/master CI 38400546413 and 38400968863 succeeded, as did Pages deployment 38400967188. Evening read-only live navigation again checked 88 pages and 11 destinations with no failures; this HTTP/HTML check does not validate unpublished clinical changes. PR #669 remains draft and production publication remains subject to the existing approval boundary.
 
 ## Mission and operating priorities
 
