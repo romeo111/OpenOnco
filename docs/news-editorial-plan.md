@@ -2,6 +2,21 @@
 
 Companion to `docs/news-comments-setup.md`, which covers the mechanics.
 
+## Current editorial status (2026-10-13)
+
+The public index now has 28 posts. Three October project updates lead it:
+the question-page redesign, English-source fallbacks for unsafe translation
+drafts, and the searchable disease Wiki. Older explainers remain in an
+accessible archive. Full articles are in English and Ukrainian; the nine other
+interface languages show localized headlines and summaries with that limit
+stated explicitly.
+
+Publish the next project note only when a shipped change has a reader-facing
+effect that can be linked to a merged PR. Publish a new clinical explainer only
+after checking primary sources and the exact claim against current evidence.
+Keep event and publication dates distinct when writing retrospectively. The
+July schedule below is historical planning context, not a current queue.
+
 ## Two kinds of post
 
 Set `kind:` in the YAML. It defaults to `project`.

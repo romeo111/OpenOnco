@@ -618,56 +618,88 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
                       top_bar_html: str) -> str:
     is_en = target_lang == "en"
     page_title = "News" if is_en else "Новини"
-    h1 = "Project news" if is_en else "Новини проєкту"
+    h1 = "What changed. What it means." if is_en else "Що змінилося. Що це означає."
+    kicker = "OpenOnco / News" if is_en else "OpenOnco / Новини"
     if is_en:
         lead = (
-            "Release notes, knowledge-base milestones and governance decisions. "
-            "Every post is open for comment."
+            "Fresh project updates and source-cited explainers, written for "
+            "people who want to see the evidence and the limits."
         )
         empty = "No posts yet."
-        read_more = "Read"
+        read_more = "Read the story"
         footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
         count_word = "posts"
+        latest_label = "Just shipped"
+        explain_label = "Worth understanding"
+        explain_note = "Source-cited background, not treatment advice."
+        archive_label = "Browse the archive"
+        archive_note = "Earlier releases and explainers, newest first"
+        project_label = "Project update"
+        kind_label = "Explainer"
+        language_note = "Full articles are available in English and Ukrainian."
     else:
         lead = (
-            "Нотатки до релізів, віхи бази знань і рішення governance. "
-            "Кожен допис відкритий для коментарів."
+            "Свіжі зміни проєкту й пояснення з джерелами — для тих, "
+            "хто хоче бачити докази та межі їх застосування."
         )
         empty = "Дописів поки немає."
-        read_more = "Читати"
+        read_more = "Читати матеріал"
         footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         count_word = "дописів"
+        latest_label = "Щойно на сайті"
+        explain_label = "Варто розібратися"
+        explain_note = "Пояснення з джерелами, а не порада щодо лікування."
+        archive_label = "Архів матеріалів"
+        archive_note = "Попередні зміни й пояснення, від нових до давніх"
+        project_label = "Оновлення проєкту"
+        kind_label = "Пояснення"
+        language_note = "Повні тексти доступні англійською та українською."
+
+    def card(entry: dict[str, Any], *, featured: bool = False) -> str:
+        kind = kind_label if entry["kind"] == "explainer" else project_label
+        classes = "case-card news-card news-feature" if featured else "case-card news-card"
+        return f"""      <a class="{classes}" href="{article_path(entry['slug'], target_lang)}">
+        <div class="news-card-meta">
+          <span>{_esc(kind)}</span>
+          <time datetime="{entry['date'].isoformat()}">{_esc(_format_date(entry['date'], target_lang))}</time>
+        </div>
+        <h3>{_esc(entry['title'][target_lang])}</h3>
+        <p>{_esc(entry['summary'][target_lang])}</p>
+        <span class="news-card-link">{_esc(read_more)} <span aria-hidden="true">↗</span></span>
+      </a>"""
 
     if entries:
-        kind_label = "Explainer" if is_en else "Пояснення"
-        cards = "\n".join(
-            f"""      <a class="case-card news-card" href="{article_path(e['slug'], target_lang)}">
-        <div class="case-badge-row">
-          <span class="case-badge bdg-plan">{_esc(_format_date(e['date'], target_lang))}</span>
-{f'          <span class="case-badge bdg-diag">{_esc(kind_label)}</span>' if e['kind'] == 'explainer' else ''}
-{_render_tags(e['tags'])}
-        </div>
-        <h3>{_esc(e['title'][target_lang])}</h3>
-        <p>{_esc(e['summary'][target_lang])}</p>
-        <div class="case-foot">{_esc(read_more)} →</div>
-      </a>"""
-            for e in entries
-        )
-        listing = f"""    <div class="case-grid">
-{cards}
-    </div>"""
+        feature = card(entries[0], featured=True)
+        recent = entries[1:3]
+        explainers = [e for e in entries[1:] if e["kind"] == "explainer"][:3]
+        visible_slugs = {e["slug"] for e in [entries[0], *recent, *explainers]}
+        archive = [e for e in entries if e["slug"] not in visible_slugs]
+        recent_html = f"""    <section class="news-group" aria-labelledby="news-latest">
+      <div class="news-group-head"><h2 id="news-latest">{_esc(latest_label)}</h2></div>
+      <div class="news-grid">{''.join(card(e) for e in recent)}</div>
+    </section>""" if recent else ""
+        explain_html = f"""    <section class="news-group" aria-labelledby="news-explainers">
+      <div class="news-group-head"><h2 id="news-explainers">{_esc(explain_label)}</h2>
+        <p>{_esc(explain_note)}</p></div>
+      <div class="news-grid">{''.join(card(e) for e in explainers)}</div>
+    </section>""" if explainers else ""
+        archive_html = f"""    <details class="news-archive">
+      <summary>{_esc(archive_label)} <span>{len(archive)}</span></summary>
+      <p>{_esc(archive_note)}</p>
+      <div class="news-archive-list">{''.join(card(e) for e in archive)}</div>
+    </details>""" if archive else ""
+        listing = f"""{feature}
+{recent_html}
+{explain_html}
+{archive_html}"""
     else:
         listing = f'    <div class="case-empty">{_esc(empty)}</div>'
 
-    main_html = f"""  <section class="info-page">
-    <p class="home-kicker">OpenOnco</p>
+    main_html = f"""  <section class="info-page news-index">
+    <p class="home-kicker">{_esc(kicker)}</p>
     <h1>{_esc(h1)}</h1>
     <p class="lead">{_esc(lead)}</p>
-
-    <div class="case-list-header">
-      <h2>{_esc(page_title)}</h2>
-      <span class="case-list-count">{len(entries)} {_esc(count_word)}</span>
-    </div>
+    <p class="news-count"><span>{len(entries)}</span> <span>{_esc(count_word)}</span> · <span>{_esc(language_note)}</span></p>
 {listing}
   </section>"""
 

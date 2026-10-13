@@ -7,8 +7,11 @@ site, so the suite stays fast enough to run on every change.
 from __future__ import annotations
 
 import html
+import gzip
 import json
+import re
 import sys
+from xml.etree import ElementTree
 from datetime import date
 from pathlib import Path
 
@@ -159,6 +162,60 @@ def test_index_lists_every_post(news_dir: Path):
         # Escaped, not raw: a title containing an apostrophe or angle bracket
         # must reach the page encoded.
         assert html.escape(entry["title"]["en"], quote=True) in index
+
+
+def test_news_index_prioritizes_recent_work_and_keeps_archive_accessible(news_dir: Path):
+    en = (news_dir / "news.html").read_text(encoding="utf-8")
+    uk = (news_dir / "ukr" / "news.html").read_text(encoding="utf-8")
+    assert 'class="case-card news-card news-feature"' in en
+    assert en.index('href="/news/ask-a-clearer-question.html"') < en.index("Just shipped")
+    assert 'href="/news/translation-safety-net.html"' in en
+    assert 'href="/news/wiki-finds-the-source.html"' in en
+    assert '<details class="news-archive">' in en
+    assert "Every post is open for comment" not in en
+    assert "Щойно на сайті" in uk
+    assert '<details class="news-archive">' in uk
+
+
+def test_new_project_updates_link_to_existing_site_pages():
+    slugs = {
+        "ask-a-clearer-question",
+        "translation-safety-net",
+        "wiki-finds-the-source",
+    }
+    entries = {entry["slug"]: entry for entry in load_news_entries()}
+    for slug in slugs:
+        for language in ("en", "uk"):
+            for block in entries[slug]["body"][language]:
+                for target in re.findall(r"\]\((/[^)]+)\)", block.get("text", "")):
+                    assert (REPO_ROOT / "docs" / target.lstrip("/")).is_file(), target
+
+
+def test_published_news_indexes_show_recent_story_in_every_language():
+    for locale in ("", "ukr/", "es/", "pt/", "de/", "fr/", "it/", "da/", "sv/", "nb/", "fi/"):
+        page = (REPO_ROOT / "docs" / locale / "news.html").read_text(encoding="utf-8")
+        prefix = "/ukr/news/" if locale == "ukr/" else "/news/"
+        assert f'href="{prefix}ask-a-clearer-question.html"' in page
+        assert f'href="{prefix}translation-safety-net.html"' in page
+        assert f'href="{prefix}wiki-finds-the-source.html"' in page
+        assert '<details class="news-archive">' in page
+
+
+def test_new_articles_are_finalized_and_discoverable():
+    sitemap_urls = set()
+    namespace = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+    for shard in (REPO_ROOT / "docs").glob("sitemap-part-*.xml.gz"):
+        xml = ElementTree.fromstring(gzip.decompress(shard.read_bytes()))
+        sitemap_urls.update(
+            loc.text for loc in xml.findall(f"{namespace}url/{namespace}loc")
+        )
+    for slug in ("ask-a-clearer-question", "translation-safety-net", "wiki-finds-the-source"):
+        for prefix in ("news", "ukr/news"):
+            page = REPO_ROOT / "docs" / prefix / f"{slug}.html"
+            markup = page.read_text(encoding="utf-8")
+            assert '<meta name="description"' in markup
+            assert '<link rel="canonical"' in markup
+            assert f"https://openonco.info/{prefix}/{slug}.html" in sitemap_urls
 
 
 def test_article_lang_switch_points_at_mirror(news_dir: Path):
@@ -446,4 +503,4 @@ def test_article_description_uses_its_own_summary():
 
 def test_news_index_has_its_own_description():
     description = _description_for("news.html", "OpenOnco · News", "en")
-    assert "release notes" in description.lower()
+    assert "project updates" in description.lower()
