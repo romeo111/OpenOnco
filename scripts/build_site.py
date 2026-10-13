@@ -1927,6 +1927,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
   </section>
 
+  <section class="site-dedication" aria-labelledby="home-dedication-title">
+    <h2 id="home-dedication-title">{'In memory of Danya' if is_en else 'Пам’яті Дані'}</h2>
+    <p>{'I dedicate all my work on OpenOnco to my friend Danya, who died of lymphoma in August 2026.' if is_en else 'Усю працю, яку я вкладаю в OpenOnco, присвячую моєму другові Дані, який помер від лімфоми у серпні 2026 року.'}</p>
+  </section>
+
   <footer class="page-foot">
     {'Open source · MIT' if is_en else 'Відкритий код · MIT'} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
@@ -11230,6 +11235,11 @@ def render_about(stats, *, target_lang: str = "en") -> str:
   </section>
 
 {cta_html}
+
+  <section class="site-dedication" aria-labelledby="about-dedication-title">
+    <h2 id="about-dedication-title">{'In memory of Danya' if is_en else 'Пам’яті Дані'}</h2>
+    <p>{'I dedicate all my work on OpenOnco to my friend Danya, who died of lymphoma in August 2026.' if is_en else 'Усю працю, яку я вкладаю в OpenOnco, присвячую моєму другові Дані, який помер від лімфоми у серпні 2026 року.'}</p>
+  </section>
 
   <footer class="page-foot">
     {footer_meta} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
