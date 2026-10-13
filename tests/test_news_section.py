@@ -30,6 +30,8 @@ from scripts.build_news import (  # noqa: E402
     render_comments,
 )
 from scripts import site_head  # noqa: E402
+from scripts.build_public_locales import localize_public_page  # noqa: E402
+from scripts.site_translation_catalog import LANGUAGES  # noqa: E402
 from scripts.build_site import _render_top_bar, write_service_worker  # noqa: E402
 from scripts.site_head import _description_for, _schema_type  # noqa: E402
 
@@ -75,6 +77,22 @@ def test_repo_news_content_is_valid():
             assert entry["title"][lang].strip()
             assert entry["summary"][lang].strip()
             assert entry["body"][lang], f"{entry['slug']} has no {lang} body"
+
+
+def test_retrospective_archive_is_dated_honestly():
+    archive = [e for e in load_news_entries() if "archive" in e["tags"]]
+    assert len(archive) >= 20
+    for entry in archive:
+        assert entry["published"] > entry["date"]
+        assert "https://github.com/romeo111/OpenOnco/commit/" in entry["body"]["en"][-1]["text"]
+
+
+@pytest.mark.parametrize("locale", LANGUAGES)
+def test_public_capabilities_link_to_existing_gap_dashboard(locale):
+    source = '<html lang="en"><head></head><body><main><a href="/clinical-gaps.html">Gap dashboard</a></main></body></html>'
+    output = localize_public_page(source, locale, "capabilities.html", {"clinical-gaps.html"}, {})
+    assert 'href="/clinical-gaps.html"' in output
+    assert f'href="/{locale}/clinical-gaps.html"' not in output
 
 
 def test_entries_sorted_newest_first():

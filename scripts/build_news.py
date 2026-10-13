@@ -637,6 +637,7 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         project_label = "Project update"
         kind_label = "Explainer"
         language_note = "Full articles are available in English and Ukrainian."
+        retro_label = "Retrospective"
     else:
         lead = (
             "Свіжі зміни проєкту й пояснення з джерелами — для тих, "
@@ -654,14 +655,19 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         project_label = "Оновлення проєкту"
         kind_label = "Пояснення"
         language_note = "Повні тексти доступні англійською та українською."
+        retro_label = "Ретроспектива"
 
     def card(entry: dict[str, Any], *, featured: bool = False) -> str:
         kind = kind_label if entry["kind"] == "explainer" else project_label
         classes = "case-card news-card news-feature" if featured else "case-card news-card"
+        retro_badge = (
+            f'\n          <span>{_esc(retro_label)}</span>'
+            if entry.get("published") and entry["published"] > entry["date"] else ""
+        )
         return f"""      <a class="{classes}" href="{article_path(entry['slug'], target_lang)}">
         <div class="news-card-meta">
           <span>{_esc(kind)}</span>
-          <time datetime="{entry['date'].isoformat()}">{_esc(_format_date(entry['date'], target_lang))}</time>
+          <time datetime="{entry['date'].isoformat()}">{_esc(_format_date(entry['date'], target_lang))}</time>{retro_badge}
         </div>
         <h3>{_esc(entry['title'][target_lang])}</h3>
         <p>{_esc(entry['summary'][target_lang])}</p>
@@ -669,10 +675,14 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
       </a>"""
 
     if entries:
-        feature = card(entries[0], featured=True)
-        recent = entries[1:3]
-        explainers = [e for e in entries[1:] if e["kind"] == "explainer"][:3]
-        visible_slugs = {e["slug"] for e in [entries[0], *recent, *explainers]}
+        # Backfilled release notes belong in the archive, even when their
+        # event date matches a current story. Do not let a batch of historical
+        # notes displace the editorial front page.
+        fresh = [e for e in entries if "archive" not in e["tags"]] or entries
+        feature = card(fresh[0], featured=True)
+        recent = fresh[1:3]
+        explainers = [e for e in fresh[1:] if e["kind"] == "explainer"][:3]
+        visible_slugs = {e["slug"] for e in [fresh[0], *recent, *explainers]}
         archive = [e for e in entries if e["slug"] not in visible_slugs]
         recent_html = f"""    <section class="news-group" aria-labelledby="news-latest">
       <div class="news-group-head"><h2 id="news-latest">{_esc(latest_label)}</h2></div>

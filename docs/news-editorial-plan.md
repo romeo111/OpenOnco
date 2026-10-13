@@ -1,5 +1,14 @@
 # News: length, cadence, and what to publish next
 
+> **Current publishing schedule (2026-10-13):** The owner requested an
+> automated check every three days, alternating a source-checked research
+> reality check with a plain-language platform feature. The monthly cadence
+> below is the original editorial baseline, not the current scheduler setting.
+> A scheduled run may skip publication when primary evidence, translation,
+> build checks, or deployment verification are insufficient. Retrospective
+> notes use the event date in `date:` and the actual posting date in
+> `published:`; they stay in the archive rather than displacing current news.
+
 Companion to `docs/news-comments-setup.md`, which covers the mechanics.
 
 ## Current editorial status (2026-10-13)
