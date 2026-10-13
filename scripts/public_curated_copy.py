@@ -263,6 +263,26 @@ ADDITIONAL_COPY = {
 }
 
 
+DEDICATION_COPY = {
+    'In memory of Danya': (
+        'En memoria de Danya', 'Em memória de Danya', 'In Gedenken an Danya',
+        'À la mémoire de Danya', 'In memoria di Danya', 'Til minde om Danya',
+        'Till minne av Danya', 'Til minne om Danya', 'Danyan muistolle',
+    ),
+    'I dedicate all my work on OpenOnco to my friend Danya, who died of lymphoma in August 2026.': (
+        'Dedico todo mi trabajo en OpenOnco a mi amigo Danya, que falleció de linfoma en agosto de 2026.',
+        'Dedico todo o meu trabalho no OpenOnco ao meu amigo Danya, que morreu de linfoma em agosto de 2026.',
+        'Meine gesamte Arbeit an OpenOnco widme ich meinem Freund Danya, der im August 2026 an einem Lymphom verstorben ist.',
+        'Je dédie tout mon travail sur OpenOnco à mon ami Danya, décédé d’un lymphome en août 2026.',
+        'Dedico tutto il mio lavoro su OpenOnco al mio amico Danya, morto di linfoma nell’agosto 2026.',
+        'Jeg dedikerer alt mit arbejde med OpenOnco til min ven Danya, som døde af lymfom i august 2026.',
+        'Jag tillägnar allt mitt arbete med OpenOnco min vän Danya, som avled av lymfom i augusti 2026.',
+        'Jeg tilegner alt arbeidet mitt med OpenOnco til min venn Danya, som døde av lymfom i august 2026.',
+        'Omistan kaiken työni OpenOncon parissa ystävälleni Danyalle, joka kuoli lymfoomaan elokuussa 2026.',
+    ),
+}
+
+
 def messages_for(locale):
     from scripts.news_archive_copy import messages_for as archive_messages
     from scripts.regulatory_copy import messages_for as regulatory_messages
@@ -271,6 +291,7 @@ def messages_for(locale):
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
         index = ('it', 'da', 'sv', 'nb', 'fi').index(locale)
         return {**{source: values[index] for source, values in ADDITIONAL_COPY.items()},
+                **{source: values[index + 4] for source, values in DEDICATION_COPY.items()},
                 **archive_messages(locale),
                 **privacy_messages(locale),
                 **offline_messages(locale),
@@ -279,6 +300,7 @@ def messages_for(locale):
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {
         **{source: values[index] for source, values in COPY.items()},
+        **{source: values[index] for source, values in DEDICATION_COPY.items()},
         **archive_messages(locale),
         **privacy_messages(locale),
         **regulatory_messages(locale),
