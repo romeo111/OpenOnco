@@ -42,7 +42,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="68651757aefd2d50886bf39b9c6583b3e9b64330f061ad8becd35ce70ac0b763"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="b247cd44f5679a353b336b35afabf2eca428fb3b5cef9ee7c36fe54bbbd42362"></head>
 <body><!-- shared-site-header:start --><div data-shared-site-header data-locale="fr" data-page="kb/redflags/rf-rcc-imdc-intermediate-poor-risk.html" data-active="kb" data-missing="[]"><nav aria-label="OpenOnco"><a href="/fr/">OpenOnco</a> · <a href="/fr/kb.html">Onco Wiki</a> · <a href="/fr/try.html">Plan Builder</a></nav></div><link rel="stylesheet" href="/header.css?v=layout-20261011"><script src="/shared-site-header.js" defer></script><!-- shared-site-header:end -->
 
   <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traduction provisoire : vérification clinique en attente.</strong> <a href="/kb/redflags/rf-rcc-imdc-intermediate-poor-risk.html" lang="en" hreflang="en" data-original-source>Consulter l’original en anglais</a></aside>
@@ -93,6 +93,7 @@
   "type": "risk_score"
 }</pre>
   <h2>Notes</h2><p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texte original conservé pour vérification">Trigger fires on the categorical `imdc_risk` field (favorable / intermediate / poor) when present, or as a fall-back on `imdc_risk_factors_count &gt;= 1` (any IMDC adverse factor). Aggregate computation from raw inputs (KPS, hemoglobin, calcium, neutrophils, platelets, time-to-tx) is left to upstream questionnaire scoring; this RF consumes the already-derived risk category. Conflict-resolution: if RF-RCC-FRAILTY-AGE fires alongside (de-escalate), frailty wins by direction-precedence (de-escalate &gt; intensify? — note: actually intensify &gt; de-escalate in current matrix, so this RF would dominate; reviewers may prefer to add explicit frail-disqualifies-IO logic at algorithm level rather than reordering severity matrix). Brief authoring for W5c chunk 2026-04-30; engine smoke covered by patient_rcc_imdc_int_nivo_ipi.json (intermediate, expects nivo+ipi) and patient_rcc_imdc_fav_axi_pembro.json (favorable, expects pembro+axi).</span></p>
+
   <h2>Utilisé par</h2>
 <h3>Algorithmes</h3><ul><li><code>ALGO-RCC-METASTATIC-1L</code> - ALGO-RCC-METASTATIC-1L</li></ul>
 </main>

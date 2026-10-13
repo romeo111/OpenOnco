@@ -142,6 +142,7 @@
   &quot;type&quot;: &quot;clinical_precondition&quot;
 }</pre>
   <h2>Notes</h2><p>Models the narrative&#x27;s hard requirement that &quot;adequate preoperative alpha-blockade ... is MANDATORY before surgery to prevent intraoperative hypertensive crisis&quot; as an explicit engine-visible safety gate (clinical_direction: hold) rather than free prose. Wired onto IND-PHEO-LOCALIZED-1L-ALPHA-BLOCKADE-ADRENALECTOMY via red_flags_triggering_alternative -- firing this RedFlag means surgery must be HELD, not redirected to a different regimen (the KB schema has no dedicated &quot;required precondition&quot; field on Indication, so red_flags_triggering_alternative is repurposed here for a hold-type gate, consistent with clinical_direction: hold already existing elsewhere in this KB for similar organ-readiness gates, e.g. RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS). No specific numeric duration or target BP/HR threshold is asserted -- &quot;adequate&quot; blockade is intentionally left as a clinical-judgment finding (preop_alpha_blockade_adequate), not an invented number, per CHARTER §8.3. draft:true pending clinical co-lead signoff (CHARTER §6.1, dev-mode-exempted).</p>
+
   <h2>Used By</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-PHEO-1L</code> - ALGO-PHEO-1L</li></ul>
 <h3>Disease</h3><ul><li><a href="/kb/diseases/dis-pheochromocytoma.html"><code>DIS-PHEOCHROMOCYTOMA</code></a> - Pheochromocytoma and paraganglioma (PPGL)</li></ul>

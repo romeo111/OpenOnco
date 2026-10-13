@@ -203,6 +203,7 @@
   &quot;type&quot;: &quot;stage_classification&quot;
 }</pre>
   <h2>Нотатки</h2><p>W5c RF authoring. Converts free-text `{condition: &quot;Stage I-III (early)&quot;}` in ALGO-BREAST-1L step 2 (HER2+ branch) into a formal RF entity. The trigger uses a positive stage group match (I/II/III with substages) combined with a negative M0 check. The `any_of: [stage_group: &quot;I&quot;...]` covers TNM 8th-edition staging codes; the `any_of: [stage_group ≠ &quot;IV&quot;, distant_metastasis: false]` adds belt-and-suspenders exclusion of M1. Note: The `value_not` field is non-standard — the engine team should confirm whether this negation syntax is supported. If not, use the positive stage_group values as the sole trigger (stages I, II, III) without the M0 negation check. The M0 confirmation is belt-and-suspenders. ALGO-BREAST-1L step 2 routes: if_true (RF fires = early stage): IND-BREAST-HER2-POS-EARLY-NEOADJUVANT if_false (RF doesn&#x27;t fire = metastatic/unknown): IND-BREAST-HER2-POS-MET-1L-THP CHARTER §6.1: Two-reviewer clinical co-lead signoff required before removing draft: true.</p>
+
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-BREAST-1L</code> - ALGO-BREAST-1L</li></ul>
 </main>

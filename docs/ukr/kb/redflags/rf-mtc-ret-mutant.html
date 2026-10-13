@@ -195,6 +195,7 @@
   &quot;type&quot;: &quot;biomarker_status&quot;
 }</pre>
   <h2>Нотатки</h2><p>W5c RF authoring. Converts free-text `{condition: &quot;RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)&quot;}` in ALGO-MTC-1L step 1 into a formal RF entity. Clinical rationale: LIBRETTO-531 (Wirth NEJM 2024, PMID 39133858, NCT04211337) enrolled 291 patients with advanced RET-mutant MTC (both somatic and germline variants; all genotypes). Primary endpoint PFS: HR 0.28 (95% CI 0.16-0.48; p&lt;0.001); median PFS NR vs 16.8 months. ORR 69% vs 38% (p&lt;0.001). Grade 3+ AEs 36% vs 55%. All subgroups benefited; M918T (somatic, highest-risk MEN2B) and germline C634x (MEN2A) are both covered by selpercatinib label. Trigger scope: This RF covers all activating RET mutations. The class- level `ret_mutation_status` findings are the primary triggers when individual variant annotation is not available in the patient record; specific variant triggers (M918T, C634R, etc.) are secondary precision matches for when molecular report specifies the codon. This allows the engine to fire on either a structured biomarker status report or a free-text extraction result. Note: RET fusions (distinct from point mutations) driving NSCLC/thyroid PTC are covered by separate RF entities (RF-N...</p>
+
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-MTC-1L</code> - ALGO-MTC-1L</li></ul>
 </main>

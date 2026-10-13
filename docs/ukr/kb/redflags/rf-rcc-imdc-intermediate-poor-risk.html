@@ -160,6 +160,7 @@
   &quot;type&quot;: &quot;risk_score&quot;
 }</pre>
   <h2>Нотатки</h2><p>Тригер спрацьовує по категоріальному полю `imdc_risk` (favorable / intermediate / poor) при наявності або як запасний варіант по `imdc_risk_factors_count &gt;= 1` (будь-який несприятливий фактор IMDC). Агрегатне обчислення з сирих вхідних даних (KPS, гемоглобін, кальцій, нейтрофіли, тромбоцити, час до лікування) залишене для оцінки на рівні опитувальника; цей RF споживає вже виведену категорію ризику. Авторовано для W5c chunk 2026-04-30; smoke-тести двигуна покриті patient_rcc_imdc_int_nivo_ipi.json (intermediate, очікує ніво+іпі) та patient_rcc_imdc_fav_axi_pembro.json (favorable, очікує пембро+акситиніб). Конфлікт: якщо одночасно спрацьовує RF-RCC-FRAILTY-AGE (de-escalate), слабкість перекриває; для точнішої логіки — на рівні алгоритму.</p>
+
   <h2>Де використовується</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-RCC-METASTATIC-1L</code> - ALGO-RCC-METASTATIC-1L</li></ul>
 </main>

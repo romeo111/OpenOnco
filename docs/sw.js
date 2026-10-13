@@ -7,7 +7,7 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l4-1788e272bf52';
+const CACHE_NAME = 'openonco-bundle-l4-85210dc45c03';
 const CORE_STREAM_VERSION = '517b5f8f395a';
 const WORKSPACE_DATA_PATHS = ['/questionnaires.json', '/examples.json'];
 const PLAN_PAGE_PATHS = ["/try.html", "/ukr/try.html", "/es/try.html", "/pt/try.html", "/de/try.html", "/fr/try.html", "/it/try.html", "/da/try.html", "/sv/try.html", "/nb/try.html", "/fi/try.html"];
