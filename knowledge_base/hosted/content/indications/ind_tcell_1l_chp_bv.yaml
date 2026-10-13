@@ -1,76 +1,75 @@
 id: IND-TCELL-1L-CHP-BV
-plan_track: aggressive  # engine slot; not a validated cross-histology preference
-
+plan_track: aggressive
 applicable_to:
-  disease_id: DIS-ALCL  # primary; PTCL NOS + AITL also use this if CD30+
+  disease_id: DIS-ALCL
   line_of_therapy: 1
   confirmed_profile_values:
-    biomarkers.BIO-CD30-IHC: [positive]
+    biomarkers.BIO-CD30-IHC:
+    - positive
   excluded_profile_values:
-    findings.cd30_positive: [false]
+    findings.cd30_positive:
+    - false
   stage_requirements: []
   biomarker_requirements_required:
-    - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive"}
+  - biomarker_id: BIO-CD30-IHC
+    required: true
+    value_constraint: positive
   biomarker_requirements_excluded: []
-  demographic_constraints: {ecog_max: 3}
-
+  demographic_constraints:
+    ecog_max: 3
 recommended_regimen: REG-CHP-BV
 concurrent_therapy: []
 followed_by: []
-
 evidence_level: null
 strength_of_recommendation: null
 nccn_category: null
-
 expected_outcomes:
   progression_free_survival:
-    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year PFS: A+CHP 51.4% versus
-      CHOP 43.0%; predominantly systemic ALCL, not a PTCL-NOS/AITL estimate or individual
-      prognosis.'
+    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year PFS: A+CHP 51.4% versus CHOP 43.0%;
+      predominantly systemic ALCL, not a PTCL-NOS/AITL estimate or individual prognosis.'
     source: SRC-ECHELON-2-FIVE-YEAR-2022
     confidence_interval: '95% CI: A+CHP 42.8–59.4%; CHOP 35.8–50.0%'
   overall_survival_5y:
-    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year OS: A+CHP 70.1% versus
-      CHOP 61.0%; not a subtype-specific estimate or individual prognosis.'
+    value: 'ECHELON-2 pooled ITT cohort, exploratory 5-year OS: A+CHP 70.1% versus CHOP 61.0%;
+      not a subtype-specific estimate or individual prognosis.'
     source: SRC-ECHELON-2-FIVE-YEAR-2022
     confidence_interval: '95% CI: A+CHP 63.3–75.9%; CHOP 54.0–67.3%'
-
-hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+hard_contraindications:
+- CI-HBV-NO-PROPHYLAXIS
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+- CI-BRENTUXIMAB-BLEOMYCIN
 red_flags_triggering_alternative: []
-
 required_tests:
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - TEST-LDH
-  - TEST-NGS-LYMPHOID-PANEL
-  - TEST-PET-CT
-  - TEST-BM-ASPIRATE
-  - TEST-BM-TREPHINE
-  - TEST-LN-EXCISIONAL-BIOPSY
-  - TEST-FLOW-CYTOMETRY
-  - TEST-HBV-SEROLOGY
-  - TEST-HCV-ANTIBODY
-  - TEST-HIV-SEROLOGY
-  - TEST-ECHO
-  - TEST-PREGNANCY
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-NGS-LYMPHOID-PANEL
+- TEST-PET-CT
+- TEST-BM-ASPIRATE
+- TEST-BM-TREPHINE
+- TEST-LN-EXCISIONAL-BIOPSY
+- TEST-FLOW-CYTOMETRY
+- TEST-HBV-SEROLOGY
+- TEST-HCV-ANTIBODY
+- TEST-HIV-SEROLOGY
+- TEST-ECHO
+- TEST-PREGNANCY
 desired_tests: []
-
-rationale: BV-CHP evidence and recommendations differ by histology. ESMO-EHA 2025 recommends BV-CHP
-  for systemic ALCL in the specified chemotherapy-eligible context; this cannot establish universal
-  PTCL-NOS/AITL preference. US labeling includes other CD30-expressing PTCL. The pooled ECHELON-2
-  results are not subtype-specific outcomes, and the trial compared with CHOP, not CHOEP. Subtype
-  and regional selection require separate review; transplantation is not an automatic consequence
-  of this reference.
-rationale_ua: Докази та рекомендації щодо BV-CHP відрізняються за гістологією. ESMO-EHA 2025 рекомендує
-  BV-CHP для системної ALCL у визначеному контексті придатності до хіміотерапії; це не встановлює
-  універсальної переваги для PTCL-NOS/AITL. Американська інструкція включає інші CD30-позитивні
-  PTCL. Загальні результати ECHELON-2 не є результатами окремих підтипів; порівняння проводили
-  з CHOP, а не CHOEP. Вибір за підтипом і регіоном потребує окремого перегляду; трансплантація
-  не є автоматичним наслідком цього довідкового запису.
-
+rationale: BV-CHP evidence and recommendations differ by histology. ESMO-EHA 2025 recommends
+  BV-CHP for systemic ALCL in the specified chemotherapy-eligible context; this cannot establish
+  universal PTCL-NOS/AITL preference. US labeling includes other CD30-expressing PTCL. The pooled
+  ECHELON-2 results are not subtype-specific outcomes, and the trial compared with CHOP, not
+  CHOEP. Subtype and regional selection require separate review; transplantation is not an automatic
+  consequence of this reference.
+rationale_ua: Докази та рекомендації щодо BV-CHP відрізняються за гістологією. ESMO-EHA 2025
+  рекомендує BV-CHP для системної ALCL у визначеному контексті придатності до хіміотерапії;
+  це не встановлює універсальної переваги для PTCL-NOS/AITL. Американська інструкція включає
+  інші CD30-позитивні PTCL. Загальні результати ECHELON-2 не є результатами окремих підтипів;
+  порівняння проводили з CHOP, а не CHOEP. Вибір за підтипом і регіоном потребує окремого перегляду;
+  трансплантація не є автоматичним наслідком цього довідкового запису.
 ukrainian_review_status: pending_clinical_signoff
-draft_revision: 4
+draft_revision: 5
 sources:
 - source_id: SRC-ECHELON-2-FIVE-YEAR-2022
   position: supports
@@ -84,30 +83,34 @@ sources:
   position: supports
   relevant_quote_paraphrase: Histology-specific recommendations distinguish systemic ALCL from
     PTCL-NOS/TFHL.
-
 known_controversies: []
-
 do_not_do:
-  - "НЕ комбінувати brentuximab з bleomycin — летальна пульмонарна токсичність."
-  - "Підтвердьте CD30. Поріг ≥10% був критерієм включення ECHELON-2, а не універсальним порогом дозволу; не визначайте регіон за мовою інтерфейсу."
-  - "НЕ пропускати baseline LVEF ≥50% (anthracycline)."
-  - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
-  - "НЕ ігнорувати pre-existing neuropathy — Grade ≥2 baseline = absolute CI."
-
+- 'Не поєднуйте брентуксимаб із блеоміцином: це протипоказано через легеневу токсичність.'
+- Підтвердьте CD30. Поріг ≥10% був критерієм включення ECHELON-2, а не універсальним порогом
+  дозволу; не визначайте регіон за мовою інтерфейсу.
+- НЕ пропускати baseline LVEF ≥50% (anthracycline).
+- НЕ пропускати HBV скринінг + entecavir prophylaxis.
+- Оцініть сенсорні та моторні симптоми нейропатії до початку й перед кожним введенням. Не переносіть
+  протипоказання бортезомібу на брентуксимаб; початковий 2-й ступінь потребує клінічного перегляду,
+  а не універсальної абсолютної заборони.
 do_not_do_en:
-  - "Do NOT combine brentuximab with bleomycin — lethal pulmonary toxicity."
-  - "Confirm CD30. The ≥10% threshold was an ECHELON-2 enrollment criterion, not a universal label cutoff; do not infer region from interface language."
-  - "Do NOT skip baseline LVEF ≥50% (anthracycline)."
-  - "Do NOT skip HBV screening + entecavir prophylaxis."
-  - "Do NOT ignore pre-existing neuropathy — Grade ≥2 baseline = absolute CI."
+- 'Do not combine brentuximab with bleomycin: this is contraindicated because of pulmonary toxicity.'
+- Confirm CD30. The ≥10% threshold was an ECHELON-2 enrollment criterion, not a universal label
+  cutoff; do not infer region from interface language.
+- Do NOT skip baseline LVEF ≥50% (anthracycline).
+- Do NOT skip HBV screening + entecavir prophylaxis.
+- Assess sensory and motor neuropathy before treatment and each administration. Do not inherit
+  bortezomib exclusions; baseline grade 2 needs clinical review, not a universal absolute prohibition.
 time_critical: false
 last_reviewed: null
 reviewer_signoffs: 0
-notes: Evidence wording corrected; regimen choice, safety assertions and regional authorization still require separate review. Clinical and language signoff pending.
-
-profile_confirmation_note: >
-  Planning requires the canonical biomarkers.BIO-CD30-IHC value positive;
+notes: Evidence wording corrected; regimen choice, safety assertions and regional authorization
+  still require separate review. Clinical and language signoff pending.
+profile_confirmation_note: 'Planning requires the canonical biomarkers.BIO-CD30-IHC value positive;
   unknown, absent, numeric, Boolean and structured values are not interpreted as confirmation.
-  A conflicting or malformed findings.cd30_positive value blocks this candidate.
-  This input guard does not establish treatment eligibility, subtype-specific benefit or local approval.
-  US ADCETRIS labeling section 1.5 supports CD30-expressing PTCL scope; no universal percentage cutoff is inferred.
+  A conflicting or malformed findings.cd30_positive value blocks this candidate. This input
+  guard does not establish treatment eligibility, subtype-specific benefit or local approval.
+  US ADCETRIS labeling section 1.5 supports CD30-expressing PTCL scope; no universal percentage
+  cutoff is inferred.
+
+  '

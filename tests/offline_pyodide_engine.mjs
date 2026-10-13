@@ -188,6 +188,19 @@ assert 'AITL subgroup' in aitl_outcomes['progression_free_survival']['value']
 assert aitl_outcomes['progression_free_survival']['source']=='SRC-ECHELON-2-FIVE-YEAR-2022'
 assert '95% CI' in aitl_outcomes['progression_free_survival']['confidence_interval']
 assert tcell_result.plan.tracks[0].indication_data['nccn_category'] is None
+assert 'CI-BRENTUXIMAB-BLEOMYCIN' in {ci['id'] for ci in tcell_result.plan.tracks[0].contraindications_data}
+assert 'CI-BORTEZOMIB-SEVERE-NEUROPATHY' not in {ci['id'] for ci in tcell_result.plan.tracks[0].contraindications_data}
+bv_reg=tcell_result.plan.tracks[0].regimen_data
+bv_points=bv_reg['between_visit_watchpoints']
+assert len(bv_points)==12 and not any(w.get('cycle_day_window') for w in bv_points)
+assert sum(w['urgency']=='contact_clinic_now' for w in bv_points)==7
+assert any('38°C' in w['trigger_ua'] and w['urgency']=='contact_clinic_now' for w in bv_points)
+assert all(w['sources']==['SRC-EVIQ-BV-CHP-PATIENT-4038'] for w in bv_points)
+assert any(r['condition'].startswith('US') and 'grade 2 sensory' in r['condition'] and 'Same-dose' in r['modification'] for r in bv_reg['dose_adjustments'])
+assert any(r['condition'].startswith('eviQ') and 'grade 2 motor' in r['condition'] and 'Delay until grade 1 or baseline' in r['modification'] for r in bv_reg['dose_adjustments'])
+bv_patient=render_plan_html(tcell_result,target_lang='en',mode='patient')
+assert 'do not change the dose yourself' in bv_patient
+assert 'Temperature 38°C or higher' in bv_patient
 for lang in ['en','uk']:
     tcell_html=render_plan_html(tcell_result,target_lang=lang)
     assert 'MON-R-CHOP-REGIMEN' not in tcell_html
