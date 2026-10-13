@@ -11,6 +11,8 @@ COPY = {
     'October 12, 2026': ('12 de octubre de 2026', '12 de outubro de 2026', '12. Oktober 2026', '12 octobre 2026'),
     'October 11, 2026': ('11 de octubre de 2026', '11 de outubro de 2026', '11. Oktober 2026', '11 octobre 2026'),
     'October 10, 2026': ('10 de octubre de 2026', '10 de outubro de 2026', '10. Oktober 2026', '10 octobre 2026'),
+    'July 15, 2026': ('15 de julio de 2026', '15 de julho de 2026', '15. Juli 2026', '15 juillet 2026'),
+    'May 21, 2026': ('21 de mayo de 2026', '21 de maio de 2026', '21. Mai 2026', '21 mai 2026'),
     'What changed. What it means.': (
         'Qué cambió. Qué significa.', 'O que mudou. O que significa.',
         'Was sich geändert hat. Was das bedeutet.', 'Ce qui a changé. Ce que cela signifie.',
@@ -37,6 +39,7 @@ COPY = {
         'Actualités et explications précédentes, de la plus récente à la plus ancienne',
     ),
     'Project update': ('Actualización del proyecto', 'Atualização do projeto', 'Projektupdate', 'Actualité du projet'),
+    'Retrospective': ('Retrospectiva', 'Retrospetiva', 'Rückblick', 'Rétrospective'),
     'Explainer': ('Explicación', 'Explicação', 'Erklärung', 'Explication'),
     'Read the story': ('Leer el artículo', 'Ler o artigo', 'Artikel lesen', 'Lire l’article'),
     'A better question starts before the text box': (
@@ -148,6 +151,8 @@ ADDITIONAL_COPY = {
     'October 12, 2026': ('12 ottobre 2026', '12. oktober 2026', '12 oktober 2026', '12. oktober 2026', '12. lokakuuta 2026'),
     'October 11, 2026': ('11 ottobre 2026', '11. oktober 2026', '11 oktober 2026', '11. oktober 2026', '11. lokakuuta 2026'),
     'October 10, 2026': ('10 ottobre 2026', '10. oktober 2026', '10 oktober 2026', '10. oktober 2026', '10. lokakuuta 2026'),
+    'July 15, 2026': ('15 luglio 2026', '15. juli 2026', '15 juli 2026', '15. juli 2026', '15. heinäkuuta 2026'),
+    'May 21, 2026': ('21 maggio 2026', '21. maj 2026', '21 maj 2026', '21. mai 2026', '21. toukokuuta 2026'),
     'The Tumor Board page now explains what the draft can do, who will review it, and where the information goes before anyone types a case.': (
         'La pagina del gruppo oncologico spiega che cosa può fare la bozza, chi deve verificarla e dove vanno i dati prima di descrivere un caso.',
         'Tumorboard-siden forklarer nu, hvad udkastet kan, hvem der skal gennemgå det, og hvor oplysningerne sendes hen, før en sag beskrives.',
@@ -207,6 +212,7 @@ ADDITIONAL_COPY = {
         'Aiemmat päivitykset ja selitykset, uusimmat ensin',
     ),
     'Project update': ('Aggiornamento del progetto', 'Projektopdatering', 'Projektuppdatering', 'Prosjektoppdatering', 'Projektipäivitys'),
+    'Retrospective': ('Retrospettiva', 'Tilbageblik', 'Tillbakablick', 'Tilbakeblikk', 'Jälkikatsaus'),
     'Explainer': ('Spiegazione', 'Forklaring', 'Förklaring', 'Forklaring', 'Selitys'),
     'Read the story': ('Leggi l’articolo', 'Læs artiklen', 'Läs artikeln', 'Les artikkelen', 'Lue artikkeli'),
     'A better question starts before the text box': (
@@ -258,12 +264,14 @@ ADDITIONAL_COPY = {
 
 
 def messages_for(locale):
+    from scripts.news_archive_copy import messages_for as archive_messages
     from scripts.regulatory_copy import messages_for as regulatory_messages
     from scripts.privacy_copy import messages_for as privacy_messages
     from scripts.offline_ui_copy import messages_for as offline_messages
     if locale in ('it', 'da', 'sv', 'nb', 'fi'):
         index = ('it', 'da', 'sv', 'nb', 'fi').index(locale)
         return {**{source: values[index] for source, values in ADDITIONAL_COPY.items()},
+                **archive_messages(locale),
                 **privacy_messages(locale),
                 **offline_messages(locale),
                 **regulatory_messages(locale),
@@ -271,6 +279,7 @@ def messages_for(locale):
     index = ('es', 'pt', 'de', 'fr').index(locale)
     return {
         **{source: values[index] for source, values in COPY.items()},
+        **archive_messages(locale),
         **privacy_messages(locale),
         **regulatory_messages(locale),
         **{literal: literal for literal in TECHNICAL_LITERALS},
