@@ -42,5 +42,6 @@ def write_clinical_assets(output_dir, locale):
     for name in ('clinical-translations.json', 'clinical-ui-translations.json'):
         directory = output_dir / locale
         payload = (directory / name).read_text(encoding='utf-8').encode('utf-8')
-        result[name] = f'/{locale}/' + write_asset(directory, name, payload, retain_previous=name == 'clinical-ui-translations.json')
+        # Cached editions and retained original pages can still reference old hashes.
+        result[name] = f'/{locale}/' + write_asset(directory, name, payload, retain_previous=True)
     return result

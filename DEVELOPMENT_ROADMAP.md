@@ -57,6 +57,12 @@ Full integration CI 38565172164 succeeded for 39fc001ab7. PR #669 then showed co
 
 Next: confirm final merge-commit CI and GitHub mergeability, then finish the publication decision under the existing approval boundary. No production clinical deployment or clinical approval is implied. Continue medication-entry UI/safe extraction and the remaining clinical applicability review after this delivery milestone.
 
+### Immutable translation dependency repair (2026-10-14)
+
+Final merge CI 38570347078 exposed one publication dependency failure after 1,273 other Python tests passed: the translated clients referenced prior hashed medical catalogs that master regeneration had pruned. Nine exact prior catalogs are restored from the verified feature commit, with filename SHA-256 prefixes checked. The publisher now retains earlier medical catalogs as it already retained UI catalogs/runtime versions, so cached editions and retained original pages keep their immutable dependencies. No translation value, clinical rule, core package or protected page changed.
+
+Two mandatory localization regressions now require client runtime/catalog references to be Git-tracked (local leftover files cannot mask missing deployment assets), and verify published old catalogs survive a later catalog revision while the canonical paths update. All 111 localization/asset tests pass, the actual translation-cache Node scenario passes, and critical lint is clean. Windows raw-byte hash checks use canonical Git LF content; missing sparse-checkout fixtures and sandbox Temp permission errors were resolved with unchanged tracked fixtures and a checked workspace test directory. No tests were weakened. Repeat final CI after this focused repair; publication authorization remains the final external action.
+
 ## Mission and operating priorities
 
 ### Positive NSCLC histology applicability and no automatic substitute (2026-10-12)
