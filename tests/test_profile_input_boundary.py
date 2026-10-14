@@ -113,3 +113,88 @@ def test_historical_exposure_is_not_active_medication():
 def test_non_object_profile_rejected(profile):
     with pytest.raises(ValueError):
         parse_medication_input(profile, DRUGS)
+
+
+# Candidate source-specific evaluator only; these tests do not change routing.
+import yaml
+from scripts.medication_interaction_reference import evaluate_bv_bleomycin_reference
+
+
+@pytest.fixture
+def medication_reference_records():
+    kb = Path(__file__).resolve().parents[1] / "knowledge_base/hosted/content"
+    reg = yaml.safe_load((kb / "regimens/chp_bv.yaml").read_text(encoding="utf-8"))
+    contra = yaml.safe_load((kb / "contraindications/ci_brentuximab_bleomycin.yaml").read_text(encoding="utf-8"))
+    drugs = {c["drug_id"] for c in reg["components"]} | {"DRUG-BLEOMYCIN"}
+    return reg, contra, drugs
+
+
+@pytest.mark.parametrize("status", ["partial", "complete"])
+def test_medication_reference_blocks_known_pair_without_mutation(status, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    profile = {"concomitant_medications": {"status": status, "drug_ids": ["DRUG-BLEOMYCIN"]}}
+    before = copy.deepcopy((profile, reg, contra, drugs))
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == "blocked"
+    assert result.contraindication_ids == ("CI-BRENTUXIMAB-BLEOMYCIN",)
+    assert result.source_ids == ("SRC-ADCETRIS-US-LABEL",)
+    assert (profile, reg, contra, drugs) == before
+
+
+@pytest.mark.parametrize("profile,expected", [({}, "unknown"), ({"concomitant_medications": None}, "unknown"), ({"concomitant_medications": {"status": "partial", "drug_ids": []}}, "incomplete"), ({"concomitant_medications": {"status": "complete", "drug_ids": []}}, "not_detected_in_reported_list"), ({"concomitant_medications": {"status": "complete", "drug_ids": []}, "medications": ["bleomycin"]}, "unsupported_input"), ({"prior_therapies": ["DRUG-BLEOMYCIN"]}, "unknown")])
+def test_medication_reference_never_calls_missing_or_unsupported_data_clear(profile, expected, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == expected
+    assert not result.contraindication_ids
+    assert result.source_ids == ("SRC-ADCETRIS-US-LABEL",)
+
+
+def test_medication_reference_positive_match_survives_conflicting_unsupported_alias(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    profile = {"concomitant_medications": {"status": "partial", "drug_ids": ["DRUG-BLEOMYCIN"]}, "medications": []}
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == "blocked" and result.unsupported_paths == ("medications",)
+
+
+def test_medication_reference_detects_pair_inside_proposed_regimen(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    reg["components"].append({"drug_id": "DRUG-BLEOMYCIN"})
+    assert evaluate_bv_bleomycin_reference({}, reg, contra, drugs).status == "blocked"
+
+
+@pytest.mark.parametrize("field,value", [("id", "CI-OTHER"), ("severity", "relative"), ("sources", []), ("affects_regimens", ["REG-OTHER"]), ("trigger", {"type": "drug_drug_interaction", "logic": "AND", "conditions": [{"condition": "clinical prose"}]}), ("trigger", {"type": "drug_drug_interaction", "logic": "OR", "conditions": [{"concomitant_drugs": ["DRUG-BRENTUXIMAB-VEDOTIN", "DRUG-BLEOMYCIN"]}]})])
+def test_medication_reference_rejects_unrecognized_source_grammar(field, value, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    contra[field] = value
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({}, reg, contra, drugs)
+
+
+@pytest.mark.parametrize("value", [True, [], {"status": "complete", "drug_ids": ["bleomycin"]}])
+def test_medication_reference_malformed_input_cannot_be_clear(value, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({"concomitant_medications": value}, reg, contra, drugs)
+
+
+def test_medication_reference_does_not_screen_unencoded_regimens(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    reg["id"] = "REG-CHOEP"
+    result = evaluate_bv_bleomycin_reference({}, reg, contra, drugs)
+    assert result.status == "out_of_scope" and not result.source_ids
+
+
+@pytest.mark.parametrize("defect", ["missing_component", "unknown_component", "missing_pair_catalog", "extra_trigger_grammar"])
+def test_medication_reference_rejects_invalid_reference_components(defect, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    if defect == "missing_component":
+        reg["components"] = [c for c in reg["components"] if c["drug_id"] != "DRUG-BRENTUXIMAB-VEDOTIN"]
+    elif defect == "unknown_component":
+        reg["components"].append({"drug_id": "DRUG-UNKNOWN"})
+    elif defect == "missing_pair_catalog":
+        drugs.remove("DRUG-BLEOMYCIN")
+    else:
+        contra["trigger"]["any_of"] = [{"condition": "unsupported"}]
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({}, reg, contra, drugs)

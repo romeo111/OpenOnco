@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-14",
+  "scope": "Synthetic source-specific reference evaluator only. Not integrated into engine/API/questionnaire/reports; not clinical approval, safety clearance or production behavior.",
+  "clinical_approval": false,
+  "network_calls": 0,
+  "source": {
+    "id": "SRC-ADCETRIS-US-LABEL",
+    "url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629",
+    "section": "4",
+    "inspected": "2026-10-14"
+  },
+  "source_sha256": {
+    "scripts/medication_input_contract.py": "4abad780035b75c45d807408f35906519d60c5309001d7a6ee987940c680e20c",
+    "scripts/medication_interaction_reference.py": "596e6aa2aee5ea1ffe23dbb38068a48ddb27cbf4170b897572a271749311f772",
+    "knowledge_base/hosted/content/regimens/chp_bv.yaml": "d00ac4f818801f6df9a26e65c398331d43cebb289cf3e6a5113fd6350d3d1966",
+    "knowledge_base/hosted/content/contraindications/ci_brentuximab_bleomycin.yaml": "6fc0a4ee453bef54e03c3c6861298d7da62b6e769b65ebaf1dd78b0192987168"
+  },
+  "observations": [
+    {
+      "scenario": "absent",
+      "status": "unknown",
+      "contraindication_ids": [],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "partial_empty",
+      "status": "incomplete",
+      "contraindication_ids": [],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "complete_empty",
+      "status": "not_detected_in_reported_list",
+      "contraindication_ids": [],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "partial_bleomycin",
+      "status": "blocked",
+      "contraindication_ids": [
+        "CI-BRENTUXIMAB-BLEOMYCIN"
+      ],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "complete_bleomycin",
+      "status": "blocked",
+      "contraindication_ids": [
+        "CI-BRENTUXIMAB-BLEOMYCIN"
+      ],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "competing_alias",
+      "status": "unsupported_input",
+      "contraindication_ids": [],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": [
+        "medications"
+      ]
+    },
+    {
+      "scenario": "historical_exposure_only",
+      "status": "unknown",
+      "contraindication_ids": [],
+      "source_ids": [
+        "SRC-ADCETRIS-US-LABEL"
+      ],
+      "unsupported_paths": []
+    },
+    {
+      "scenario": "malformed",
+      "status": "rejected",
+      "error": "concomitant_medications requires only status and drug_ids."
+    }
+  ],
+  "next": "Integrate candidate gate with explicit incomplete-data notices, selected-track withholding and no automatic substitution across engine, form/JSON round trips, API and WASM. Other regimens and interactions remain unevaluated."
+}
