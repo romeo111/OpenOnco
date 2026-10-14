@@ -1,0 +1,86 @@
+{
+  "scope": "Source engine and EN/UK renderer only; synthetic inputs; no network, production API or patient data.",
+  "clinical_approval": false,
+  "production_verified": false,
+  "source_sha256": {
+    "knowledge_base/engine/experimental_options.py": "158880f97bd70d6d7a122a0c4501270f0b75d40292876832b650b1a00eb240b5",
+    "knowledge_base/engine/render.py": "9f35b69c64d8100f3e6c93af0f9ddea00191b55fe866382cb0cb0a63b9ff5d09",
+    "knowledge_base/schemas/experimental_option.py": "f494fe658485814c8c9b51000b42085812bb66c4b6f834bbffd40e143cb6e43b"
+  },
+  "observations": [
+    {
+      "scenario": "not_configured",
+      "injected_search_calls": 0,
+      "trial_count": 0,
+      "last_synced": "2026-10-14",
+      "notes": "ctgov search not configured — pass search_fn to enumerate trials.",
+      "rendered_html": {
+        "en": "<section class=\"experimental-track experimental-track--empty\"><h2>Experimental options (clinical trials)</h2><div class=\"section-sub\">Last synced: 2026-10-14 · ctgov.</div><p class=\"empty-state\">ctgov search not configured — pass search_fn to enumerate trials.</p></section>",
+        "uk": "<section class=\"experimental-track experimental-track--empty\"><h2>Експериментальні опції (клінічні дослідження)</h2><div class=\"section-sub\">Останнє оновлення: 2026-10-14 · ctgov.</div><p class=\"empty-state\">ctgov search not configured — pass search_fn to enumerate trials.</p></section>"
+      },
+      "findings": [
+        "unsuccessful_search_has_successful_sync_date"
+      ]
+    },
+    {
+      "scenario": "request_failed",
+      "injected_search_calls": 1,
+      "trial_count": 0,
+      "last_synced": "2026-10-14",
+      "notes": "ctgov search failed: synthetic registry failure",
+      "rendered_html": {
+        "en": "<section class=\"experimental-track experimental-track--empty\"><h2>Experimental options (clinical trials)</h2><div class=\"section-sub\">Last synced: 2026-10-14 · ctgov.</div><p class=\"empty-state\">ctgov search failed: synthetic registry failure</p></section>",
+        "uk": "<section class=\"experimental-track experimental-track--empty\"><h2>Експериментальні опції (клінічні дослідження)</h2><div class=\"section-sub\">Останнє оновлення: 2026-10-14 · ctgov.</div><p class=\"empty-state\">ctgov search failed: synthetic registry failure</p></section>"
+      },
+      "findings": [
+        "unsuccessful_search_has_successful_sync_date"
+      ]
+    },
+    {
+      "scenario": "successful_empty",
+      "injected_search_calls": 1,
+      "trial_count": 0,
+      "last_synced": "2026-10-14",
+      "notes": null,
+      "rendered_html": {
+        "en": "<section class=\"experimental-track experimental-track--empty\"><h2>Experimental options (clinical trials)</h2><div class=\"section-sub\">Last synced: 2026-10-14 · ctgov.</div><p class=\"empty-state\">No active trials matched this scenario in ctgov.</p></section>",
+        "uk": "<section class=\"experimental-track experimental-track--empty\"><h2>Експериментальні опції (клінічні дослідження)</h2><div class=\"section-sub\">Останнє оновлення: 2026-10-14 · ctgov.</div><p class=\"empty-state\">Жодного активного трайла для цього сценарію в ctgov не знайдено.</p></section>"
+      },
+      "findings": []
+    },
+    {
+      "scenario": "successful_results",
+      "injected_search_calls": 1,
+      "trial_count": 1,
+      "last_synced": "2026-10-14",
+      "notes": null,
+      "rendered_html": {
+        "en": "<section class=\"experimental-track\"><h2>Experimental options (clinical trials)</h2><div class=\"section-sub\">Third plan track — open-enrollment trials from ClinicalTrials.gov. Render-time metadata; engine selection is not affected by this block (CHARTER §8.3). Last synced: 2026-10-14.</div><table class=\"trials-table\"><thead><tr><th>NCT</th><th>Title</th><th>Phase</th><th>Status</th><th>Sponsor</th><th>UA</th><th>Signals</th><th>Eligibility (excerpt)</th></tr></thead><tbody><tr><td class=\"trial-nct\"><a href=\"https://clinicaltrials.gov/study/NCT00000001\" target=\"_blank\" rel=\"noopener\">NCT00000001</a></td><td class=\"trial-title\">Synthetic audit fixture</td><td class=\"trial-phase\">—</td><td class=\"trial-status\">RECRUITING</td><td class=\"trial-sponsor\">—</td><td class=\"trial-ua\">—</td><td class=\"trial-outlook\">—</td><td class=\"trial-elig\"></td></tr></tbody></table><p class=\"trial-disclaimer\">Verify recruitment status directly with the trial site. ctgov data can lag behind current UA-site status.</p></section>",
+        "uk": "<section class=\"experimental-track\"><h2>Експериментальні опції (клінічні дослідження)</h2><div class=\"section-sub\">Третій трек плану — open-enrollment trials з ClinicalTrials.gov. Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3). Останнє оновлення: 2026-10-14.</div><table class=\"trials-table\"><thead><tr><th>NCT</th><th>Назва</th><th>Фаза</th><th>Статус</th><th>Спонсор</th><th>UA</th><th>Сигнали</th><th>Включення (фрагмент)</th></tr></thead><tbody><tr><td class=\"trial-nct\"><a href=\"https://clinicaltrials.gov/study/NCT00000001\" target=\"_blank\" rel=\"noopener\">NCT00000001</a></td><td class=\"trial-title\">Synthetic audit fixture</td><td class=\"trial-phase\">—</td><td class=\"trial-status\">RECRUITING</td><td class=\"trial-sponsor\">—</td><td class=\"trial-ua\">—</td><td class=\"trial-outlook\">—</td><td class=\"trial-elig\"></td></tr></tbody></table><p class=\"trial-disclaimer\">Перевіряти статус набору безпосередньо у дослідницькому центрі. Дані ctgov можуть відставати від поточного статусу UA-сайтів.</p></section>"
+      },
+      "findings": []
+    },
+    {
+      "scenario": "legacy_empty_unknown_execution",
+      "injected_search_calls": 0,
+      "trial_count": 0,
+      "last_synced": "2000-01-01",
+      "notes": null,
+      "rendered_html": {
+        "en": "<section class=\"experimental-track experimental-track--empty\"><h2>Experimental options (clinical trials)</h2><div class=\"section-sub\">Last synced: 2000-01-01 · ctgov.</div><p class=\"empty-state\">No active trials matched this scenario in ctgov.</p></section>",
+        "uk": "<section class=\"experimental-track experimental-track--empty\"><h2>Експериментальні опції (клінічні дослідження)</h2><div class=\"section-sub\">Останнє оновлення: 2000-01-01 · ctgov.</div><p class=\"empty-state\">Жодного активного трайла для цього сценарію в ctgov не знайдено.</p></section>"
+      },
+      "findings": [
+        "legacy_empty_without_execution_provenance_claims_negative_search"
+      ]
+    }
+  ],
+  "finding_count": 3,
+  "required_followup": [
+    "Persist explicit search execution state, including unknown for legacy cache payloads.",
+    "Set successful synchronization date only after a successful registry response; retain the real cached date.",
+    "Distinguish not searched, request failed and successfully empty results in English and Ukrainian reports.",
+    "A successful empty filtered response describes this query only, never the global absence of trials or patient eligibility.",
+    "Verify cache round trips, API and offline bundles before publication; preserve clinical treatment selection."
+  ]
+}

@@ -558,3 +558,9 @@ Do not add paid dependencies to core access, purchase advertising, contact peopl
   clinical schema/semantic validation (including numeric strings and JSON
   precision), clinical translation review, browser offline/PDF proof and
   unsupported safe-default claims remain open.
+
+### Trial-search provenance audit (2026-10-14, evening)
+
+The reproducible `python -m scripts.audit_trial_search_provenance --output <report.json>` audit uses five synthetic source-engine scenarios and the English/Ukrainian renderer. It makes no registry/API calls and does not inspect real patient data. The committed report `docs/audits/trial_search_provenance_2026-10-14.json` records source hashes and three reporting findings: both an unconfigured search and a failed request receive today's `last_synced`; a legacy empty payload without execution provenance renders a negative trial-search claim. Existing notes explain the first two failures, but their freshness dates still imply a successful synchronization. Successful empty and nonempty responses serve as controls. The audit intentionally exits 1 while findings remain; it is not a passing regression that freezes these defects.
+
+Next focused implementation: add explicit search execution state with an unknown legacy default, reserve successful sync dates for successful responses, localize not-searched/error/empty-result messages, and verify disk/in-process cache round trips. Empty successful results must describe only the actual query and never imply that no trials exist or that a person is eligible. Preserve treatment selection. Rebuild and verify API/offline bundles and affected reports before claiming delivery of that fix. This commit is diagnostic only and changes no clinical routing, generated core or live report. PR #669's preceding implementation remains CI-green (38573472178), draft and pending explicit human production-publication authorization after the prior automatic-review rejection.
