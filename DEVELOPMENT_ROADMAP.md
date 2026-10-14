@@ -1,6 +1,6 @@
 # OpenOnco development roadmap
 
-Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-10-13.
+Owner: ongoing engineering work in the OpenOnco development chat. Updated: 2026-10-14.
 
 
 ## Current delivery and next priorities (2026-10-13)
@@ -24,6 +24,12 @@ Next priorities:
 Next implementation must first define typed active concomitant medicines, distinguish unknown from an explicitly reconciled empty list, match authored drug IDs with proposed regimen components, and withhold confirmed prohibited combinations without automatic therapeutic substitution. Historical exposure, alias resolution, incomplete screening, both report modes, questionnaire/API/browser/WASM compatibility and clinician review must be addressed explicitly. This audit does not change clinical routing or clinical-review status and must not be used to freeze the current unsafe absence of screening as a passing regression.
 
 CI 38355999609 for the BV course correction completed successfully. The independent collapsed-parameters UI change was delivered through PR #673 as master commit 56299655; PR/master CI 38400546413 and 38400968863 succeeded, as did Pages deployment 38400967188. Evening read-only live navigation again checked 88 pages and 11 destinations with no failures; this HTTP/HTML check does not validate unpublished clinical changes. PR #669 remains draft and production publication remains subject to the existing approval boundary.
+
+### Candidate active-medication input contract (2026-10-14)
+
+`scripts/medication_input_contract.py` is a pure, immutable prototype, not integrated into engine selection, questionnaire, API or rendered safety claims. Candidate input is `concomitant_medications: {status: unknown|partial|complete, drug_ids: [...]}`. Missing/null input remains unknown; an explicitly complete empty list is distinguishable from absence. Completeness is caller-reported, not independently verified medication reconciliation or safety clearance. Entries must be exact existing drug IDs supplied by the trusted catalog; duplicates, non-list values, unknown/aliased IDs, invalid states and extra fields are rejected. Known drugs cannot have unknown status. Historical treatment is not inferred to be active concomitant use. Unsupported legacy medication shapes are surfaced as paths and prevent `reported_complete`, even beside an empty canonical list; they are never guessed or silently merged.
+
+Synthetic contract tests cover explicit states, input immutability, immutable results, malformed data, unsupported competing shapes and historical exposure. The cases are included in the existing mandatory profile-input boundary test file; the CI workflow is unchanged. GitHub rejected a workflow-file push because the OAuth token lacks workflow scope, so the unpublished commit was revised to use the already-required test file. Next: review this interface against JSON/form round trips and extraction, then implement source-specific combination screening with unknown/partial notices and selected-track withholding without automatic substitution. Production routing and clinical approval remain unchanged. Audit CI 38446452659 succeeded; read-only live navigation again passed 88 pages and 11 destinations with no failures. Preferred checkout could not be used as a working tree during this run; isolated delivery checkout and all unrelated files were preserved.
 
 ## Mission and operating priorities
 
