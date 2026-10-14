@@ -1,6 +1,7 @@
 """Observe medication-input handling using public synthetic examples only.
 
-Candidate input shapes are probes, not a supported medication API contract.
+Legacy input shapes are probes, not supported medication API fields.
+The canonical concomitant_medications contract is assessed for REG-CHP-BV only.
 This audit never changes clinical content or turns observations into approval.
 """
 import argparse
@@ -16,6 +17,9 @@ KB = ROOT / "knowledge_base/hosted/content"
 CASES = ("ptcl-cd30-positive", "aitl-cd30-positive", "alcl-alk-negative")
 PROBES = {
     "absent": {},
+    "canonical_partial_bleomycin": {"concomitant_medications": {"status": "partial", "drug_ids": ["DRUG-BLEOMYCIN"]}},
+    "canonical_complete_bleomycin": {"concomitant_medications": {"status": "complete", "drug_ids": ["DRUG-BLEOMYCIN"]}},
+    "canonical_complete_empty": {"concomitant_medications": {"status": "complete", "drug_ids": []}},
     "top_level_medications": {"medications": ["DRUG-BLEOMYCIN"]},
     "top_level_concomitant_drugs": {"concomitant_drugs": ["DRUG-BLEOMYCIN"]},
     "finding_concomitant_drugs": {"findings": {"concomitant_drugs": ["DRUG-BLEOMYCIN"]}},
@@ -43,7 +47,8 @@ def audit():
                 row = {
                     "case": case, "probe": name, "accepted": True,
                     "regimens": [track.regimen_data.get("id") for track in result.plan.tracks],
-                    "selection_withheld": bool(result.plan.knowledge_base_state.get("profile_selection_withheld")),
+                    "selection_withheld": bool(result.plan.knowledge_base_state.get("medication_selection_withheld")),
+                    "medication_screens": result.plan.knowledge_base_state.get("medication_screens", []),
                     "surfaced_contraindications": sorted({ci.get("id") for track in result.plan.tracks for ci in track.contraindications_data if ci.get("id")}),
                 }
             except ValueError as error:
@@ -51,24 +56,23 @@ def audit():
             if profile != before:
                 raise AssertionError("Audit input was mutated")
             rows.append(row)
-    files = ["knowledge_base/engine/plan.py", "knowledge_base/engine/profile_input.py",
+    files = ["knowledge_base/engine/medication_input.py", "knowledge_base/engine/medication_screen.py", "knowledge_base/engine/render.py", "knowledge_base/engine/plan.py", "knowledge_base/engine/profile_input.py",
              "knowledge_base/hosted/content/contraindications/ci_brentuximab_bleomycin.yaml",
              "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml",
              "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml"]
     return {
         "scope": "Source engine only; synthetic public examples; no network or production API calls.",
         "clinical_approval": False,
-        "candidate_fields_are_supported_contract": False,
-        "primary_source": {"url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629", "section": "4", "observed_date": "2026-10-13"},
+        "legacy_probe_fields_are_supported_contract": False,
+        "canonical_contract": "concomitant_medications: {status: unknown|partial|complete, drug_ids: exact catalog IDs}",
+        "primary_source": {"url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629", "section": "4", "observed_date": "2026-10-14"},
         "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes().replace(b"\r\n", b"\n")).hexdigest() for name in files},
         "observations": rows,
-        "required_next_contract": [
-            "Define a typed, explicit concomitant-medication input and unknown/completeness state before claiming screening.",
-            "Do not infer an empty medication list from absent input, or combine historical exposure with active concomitant use.",
-            "Match authored drug identifiers and proposed regimen components; do not guess aliases or free text.",
-            "For a confirmed source-specific prohibited combination, withhold the selected track without automatically selecting a substitute.",
-            "Unknown or malformed data must not be described as cleared; surface the incomplete screen in both report modes.",
-            "Retain unrelated emergency signals; validate source, questionnaire, browser, API and WASM contracts together.",
+        "remaining_limits": [
+            "Only REG-CHP-BV and the explicit authored BV/bleomycin reference are assessed; other regimens/interactions remain unevaluated.",
+            "Canonical JSON input is supported and retained by form/draft round trips; no medication picker or free-text extraction is claimed.",
+            "Caller-reported completeness is not independently verified medication reconciliation or individual eligibility approval.",
+            "Clinical/language review and production publication remain pending; this audit runs the draft source engine, not production API.",
         ],
     }
 

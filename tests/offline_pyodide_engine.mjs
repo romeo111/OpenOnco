@@ -381,5 +381,35 @@ finally:
     bundle_module.load_packaged_content=original_loader
 json.dumps({'forcedHistoricalSelectionWithheld':True,'ordinaryRoutesPreserved':True,'clinicalApproval':False})
 `));
+const medicationState=JSON.parse(await py.runPythonAsync(`
+med_profile=json.loads(_ptcl_json)
+med_profile.setdefault('demographics',{})['age']=60
+med_profile.setdefault('biomarkers',{})['BIO-CD30-IHC']='positive'
+med_profile.setdefault('findings',{})['cd30_positive']=True
+med_before=copy.deepcopy(med_profile)
+med_unknown=generate_plan(med_profile,kb_root=KB)
+assert med_unknown.plan.tracks[0].regimen_data['id']=='REG-CHP-BV'
+assert med_unknown.plan.knowledge_base_state['medication_screens'][0]['status']=='unknown'
+assert 'data-medication-screen="unknown"' in render_plan_html(med_unknown,target_lang='en',mode='patient')
+assert med_profile==med_before
+for medication_status in ['partial','complete']:
+    med_profile['concomitant_medications']={'status':medication_status,'drug_ids':['DRUG-BLEOMYCIN']}
+    med_blocked=generate_plan(med_profile,kb_root=KB)
+    assert med_blocked.plan.knowledge_base_state['medication_selection_withheld']
+    assert not med_blocked.plan.tracks and not med_blocked.plan.sequencing_tracks
+    assert med_blocked.default_indication_id is None
+    for render_mode in ['patient','clinician']:
+        for render_lang in ['en','uk']:
+            assert 'data-medication-screen="blocked"' in render_plan_html(med_blocked,target_lang=render_lang,mode=render_mode)
+med_profile['concomitant_medications']={'status':'complete','drug_ids':[]}
+med_not_detected=generate_plan(med_profile,kb_root=KB)
+assert med_not_detected.plan.tracks[0].regimen_data['id']=='REG-CHP-BV'
+assert med_not_detected.plan.knowledge_base_state['medication_screens'][0]['status']=='not_detected_in_reported_list'
+med_profile['medications']=['bleomycin']
+med_unsupported=generate_plan(med_profile,kb_root=KB)
+assert med_unsupported.plan.knowledge_base_state['medication_selection_withheld']
+assert not med_unsupported.plan.tracks
+json.dumps({'knownPairWithheld':True,'noAutomaticSubstitute':True,'unknownExplicit':True,'competingInputWithheld':True,'clinicalApproval':False})
+`));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,medicationState,environment:'Node WASM, not browser'}));

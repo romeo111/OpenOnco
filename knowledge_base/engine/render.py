@@ -3153,7 +3153,46 @@ def _track_citation_dd(
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
-def render_plan_html(
+def _medication_screen_notice(plan_result, target_lang):
+    state = plan_result.plan.knowledge_base_state if plan_result.plan else {}
+    rows = state.get("medication_screens") or []
+    if not rows:
+        return ""
+    statuses = {row["status"] for row in rows}
+    order = ["blocked", "invalid_input_or_reference", "unsupported_input", "unknown", "incomplete", "not_detected_in_reported_list"]
+    status = next((name for name in order if name in statuses), "unknown")
+    english = target_lang == "en"
+    messages = {
+        "blocked": ("The proposed BV-CHP reference and reported active medicines contain brentuximab and bleomycin. This combination is contraindicated in the US ADCETRIS label because of pulmonary toxicity. Review current medicines with the treating team.", "Запропонований довідковий BV-CHP та вказані одночасні препарати містять брентуксимаб і блеоміцин. Ця комбінація протипоказана за американською інструкцією ADCETRIS через легеневу токсичність. Узгодьте поточні препарати з лікарем."),
+        "invalid_input_or_reference": ("The medication data or encoded reference could not be assessed. Review the entered information and source record with the treating team.", "Не вдалося оцінити дані про препарати або закодований запис. Перевірте введені дані та джерело разом із лікарем."),
+        "unsupported_input": ("Medication information uses unsupported or competing fields. It has not been treated as a reconciled list. Review active medicines before considering BV-CHP.", "Дані про препарати містять непідтримувані або конкуруючі поля. Їх не визнано узгодженим списком. Перевірте одночасні препарати перед розглядом BV-CHP."),
+        "unknown": ("The active medication list is unknown. The brentuximab/bleomycin combination has not been excluded. Review current medicines before considering BV-CHP.", "Список одночасних препаратів невідомий. Комбінацію брентуксимабу з блеоміцином не виключено. Перевірте поточні препарати перед розглядом BV-CHP."),
+        "incomplete": ("The active medication list is partial. No brentuximab/bleomycin combination was found in the reported entries, but missing medicines remain unassessed.", "Список одночасних препаратів неповний. У вказаних записах комбінацію брентуксимабу з блеоміцином не виявлено, але відсутні препарати залишаються неоціненими."),
+        "not_detected_in_reported_list": ("The brentuximab/bleomycin pair was not detected in the caller-reported complete list. Completeness has not been independently verified.", "Пару брентуксимаб/блеоміцин не виявлено у списку, який користувач позначив повним. Повноту не перевірено незалежно."),
+    }
+    title = "BV-CHP medication review" if english else "Перевірка препаратів для BV-CHP"
+    limit = ("Only this encoded pair is assessed. Other interactions and individual treatment eligibility remain unassessed. Do not change medicines yourself." if english else "Оцінено лише цю закодовану пару. Інші взаємодії та індивідуальна відповідність лікуванню залишаються неоціненими. Не змінюйте препарати самостійно.")
+    message = messages[status][0 if english else 1]
+    lang = "en" if english else "uk"
+    return ('<aside class="medication-screen-notice" data-original-source lang="' + lang + '" data-medication-screen="' + status + '" style="margin:16px;padding:16px;border:2px solid #b45309;border-radius:8px">'
+            '<h2>' + _h(title) + '</h2><p>' + _h(message) + '</p><p>' + _h(limit) + '</p>'
+            '<a href="https://labeling.pfizer.com/ShowLabeling.aspx?id=20629">ADCETRIS — ' + ("US label, section 4" if english else "інструкція США, розділ 4") + '</a></aside>')
+
+
+def render_plan_html(plan_result: PlanResult, mdt: Optional[MDTOrchestrationResult] = None, *,
+                     target_lang: str = "uk", mode: str = "clinician",
+                     strict_citation_guard: bool = False, sibling_link: Optional[str] = None) -> str:
+    page = _render_plan_without_medication_notice(plan_result, mdt=mdt,
+        target_lang=target_lang, mode=mode, strict_citation_guard=strict_citation_guard,
+        sibling_link=sibling_link)
+    notice = _medication_screen_notice(plan_result, target_lang)
+    if notice:
+        import re
+        page = re.sub(r"<body[^>]*>", lambda match: match.group(0) + notice, page, count=1)
+    return page
+
+
+def _render_plan_without_medication_notice(
     plan_result: PlanResult,
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
@@ -3191,7 +3230,7 @@ def render_plan_html(
     so unsourced content cannot reach the patient. STRICT is the
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
-    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld") or plan_result.plan.knowledge_base_state.get('planning_selection_withheld')):
+    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld") or plan_result.plan.knowledge_base_state.get('planning_selection_withheld') or plan_result.plan.knowledge_base_state.get("medication_selection_withheld")):
         english = target_lang == 'en'
         title = 'Histology-specific selection required' if english else 'Потрібен вибір з урахуванням гістології'
         explanation = (
@@ -3231,6 +3270,9 @@ def render_plan_html(
         if plan_result.plan.knowledge_base_state.get('planning_selection_withheld'):
             title = 'Clinical reference withheld from planning' if english else 'Клінічний запис виключено з планування'
             explanation = ('This reference has been withheld pending source and clinical review. No medicine plan or automatic substitute has been selected. Discuss an appropriate, independently verified route with your clinical team.' if english else 'Цей запис виключено з планування до перевірки джерел і клінічного перегляду. План препаратів та автоматичну заміну не обрано. Обговоріть із лікарем відповідний, окремо перевірений маршрут.')
+        if plan_result.plan.knowledge_base_state.get("medication_selection_withheld"):
+            title = "Medication review required" if english else "Потрібна перевірка препаратів"
+            explanation = ("The selected route is withheld because the scoped medication review found a prohibited combination or could not assess the supplied data. No medicine plan or automatic substitute has been selected. Review active medicines and source information with the treating team." if english else "Обраний маршрут утримано: вузька перевірка препаратів виявила заборонену комбінацію або не змогла оцінити надані дані. План препаратів та автоматичну заміну не обрано. Перевірте одночасні препарати та джерело разом із лікарем.")
         details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
             f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
         ) + '</ul>'

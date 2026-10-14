@@ -15,7 +15,7 @@ const context=vm.createContext({textarea:{value:''},profileInputCopy:JSON.parse(
  QUESTIONNAIRES_MANIFEST:[{id:'QUEST-VIRTUAL'}],quest:{id:'QUEST-VIRTUAL',fixed_fields:{demographics:{age:60},line_of_therapy:1},groups:[{questions:fields}]}});
 vm.runInContext('let mode="json",answers={},activeQuest=quest,formProfileBase=null,removedProfileFields=new Set();'+names.map(n=>fn(html,n)).join('\n'),context);
 const run=s=>vm.runInContext(s,context),plain=v=>JSON.parse(JSON.stringify(v));
-const profile={patient_id:'VIRTUAL-ROUNDTRIP-001',disease:{id:'DIS-VIRTUAL',custom:'preserved'},demographics:{age:61,ecog:0,unmapped:0},findings:{active_tb:false,anc:0.836},metadata:{synthetic:true,list:[false,0,null]},line_of_therapy:3,unknown:null};
+const profile={patient_id:'VIRTUAL-ROUNDTRIP-001',disease:{id:'DIS-VIRTUAL',custom:'preserved'},demographics:{age:61,ecog:0,unmapped:0},findings:{active_tb:false,anc:0.836},metadata:{synthetic:true,list:[false,0,null]},line_of_therapy:3,unknown:null,concomitant_medications:{status:'partial',drug_ids:['DRUG-BLEOMYCIN']}};
 context.textarea.value=JSON.stringify(profile);
 run('setMode("form",{syncFromJson:true})');
 assert.equal(run('mode'),'form');assert.deepEqual(plain(run('buildProfile()')),profile);
