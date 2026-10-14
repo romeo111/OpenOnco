@@ -25,6 +25,13 @@ def safe_public_translation(source, translated, locale):
 
 class PublicHTML(LocalizedHTML):
     """Translate display copy without changing the component tree or its CSS."""
+    def link(self, value, *, localized=False):
+        # The gap dashboard is generated only in English and Ukrainian. A
+        # language-prefixed link on the other public editions would be a 404.
+        if value.split('#', 1)[0].split('?', 1)[0] == '/clinical-gaps.html':
+            return value
+        return super().link(value, localized=localized)
+
     def text(self, value):
         key = normalize(html.unescape(value))
         target = self.catalog.get(key)

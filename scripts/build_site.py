@@ -1927,6 +1927,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
   </section>
 
+  <section class="site-dedication" aria-labelledby="home-dedication-title">
+    <h2 id="home-dedication-title">{'In memory of Danya' if is_en else 'Пам’яті Дані'}</h2>
+    <p>{'I dedicate all my work on OpenOnco to my friend Danya, who died of lymphoma in August 2026.' if is_en else 'Усю працю, яку я вкладаю в OpenOnco, присвячую моєму другові Дані, який помер від лімфоми у серпні 2026 року.'}</p>
+  </section>
+
   <footer class="page-foot">
     {'Open source · MIT' if is_en else 'Відкритий код · MIT'} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
@@ -6105,6 +6110,7 @@ function questionnaireDescription(group) {{
   return description;
 }}
 
+const questionnaireAdditionalTitle = ({{"en": "Additional parameters", "uk": "Додаткові параметри", "es": "Parámetros adicionales", "pt": "Parâmetros adicionais", "de": "Zusätzliche Parameter", "fr": "Paramètres supplémentaires", "it": "Parametri aggiuntivi", "da": "Yderligere parametre", "sv": "Ytterligare parametrar", "nb": "Tilleggsparametere", "fi": "Lisäparametrit"}})[document.documentElement.lang.split('-')[0]] || 'Additional parameters';
 function renderForm(quest) {{
   quest = normalizeQuestionnaire(quest);
   activeQuest = quest;
@@ -6128,10 +6134,11 @@ function renderForm(quest) {{
     questIntro.hidden = true;
   }}
   for (const group of quest.groups || []) {{
-    const groupEl = document.createElement('div');
+    const additional = group.title === 'Additional parameters';
+    const groupEl = document.createElement(additional ? 'details' : 'div');
     groupEl.className = 'quest-group';
     groupEl.innerHTML = `
-      <h3>${{escHtml(group.title || '')}}</h3>
+      ${{additional ? `<summary style="cursor:pointer;font-weight:700;padding:12px 0">${{escHtml(questionnaireAdditionalTitle)}}</summary>` : `<h3>${{escHtml(group.title || '')}}</h3>`}}
       ${{group.description ? `<p class="quest-group-desc">${{escHtml(questionnaireDescription(group))}}</p>` : ''}}
     `;
     for (const q of group.questions || []) {{
@@ -6269,6 +6276,10 @@ function validateNumericInputs() {{
       message += ' ' + limits;
     }}
     if (issue) numericInputErrors.set(input.dataset.field, issue);
+    if (issue) {{
+      const details = input.closest('details');
+      if (details && details.tagName === 'DETAILS') details.open = true;
+    }}
     input.setCustomValidity(message);
     input.setAttribute('aria-invalid', issue ? 'true' : 'false');
     input.style.borderColor = issue ? '#b91c1c' : '';
@@ -11247,6 +11258,11 @@ def render_about(stats, *, target_lang: str = "en") -> str:
   </section>
 
 {cta_html}
+
+  <section class="site-dedication" aria-labelledby="about-dedication-title">
+    <h2 id="about-dedication-title">{'In memory of Danya' if is_en else 'Пам’яті Дані'}</h2>
+    <p>{'I dedicate all my work on OpenOnco to my friend Danya, who died of lymphoma in August 2026.' if is_en else 'Усю працю, яку я вкладаю в OpenOnco, присвячую моєму другові Дані, який помер від лімфоми у серпні 2026 року.'}</p>
+  </section>
 
   <footer class="page-foot">
     {footer_meta} · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>

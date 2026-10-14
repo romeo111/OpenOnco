@@ -337,9 +337,9 @@ def _description_for(path: str, title: str, locale: str) -> str:
         )
     if normalized.endswith("news.html"):
         return (
-            "OpenOnco release notes, knowledge-base milestones and governance decisions, open for comment."
+            "Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible."
             if not is_uk else
-            "Нотатки до релізів OpenOnco, віхи бази знань і рішення governance, відкриті для коментарів."
+            "Свіжі зміни OpenOnco та пояснення з джерелами: докази й обмеження видно читачеві."
         )
     if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
         slug = _news_slug_for(normalized)

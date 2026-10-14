@@ -539,6 +539,25 @@ body.home-page {
   text-underline-offset: 3px;
 }
 
+.site-dedication {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 22px 24px;
+  border-top: 1px solid var(--gray-200);
+}
+.site-dedication h2 {
+  margin: 0 0 8px;
+  color: var(--green-900);
+  font: 600 23px/1.2 var(--font-display);
+}
+.site-dedication p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--gray-700);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 @media (max-width: 860px) {
   .home-doors-grid { grid-template-columns: 1fr; }
   .home-doors-h { font-size: 26px; }
@@ -2768,6 +2787,189 @@ body.home-page .home-carousel {
 }
 
 /* ── News section ──────────────────────────────────────────────────────── */
+/* A small editorial front page: one lead story, a few clear entry points,
+   and the complete older catalogue behind a native, keyboard-friendly details. */
+.news-index {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.news-index > .home-kicker {
+  margin-bottom: 12px;
+}
+.news-index > h1 {
+  max-width: 760px;
+}
+.news-index > .lead {
+  max-width: 760px;
+  margin-bottom: 8px;
+}
+.news-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gray-500);
+  margin: 0 0 28px;
+}
+.news-feature {
+  position: relative;
+  min-height: 280px;
+  padding: clamp(26px, 5vw, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #f7f7ed;
+  background: linear-gradient(125deg, #103c32, #155d48 64%, #32745c);
+  border: 1px solid #155d48;
+  box-shadow: 0 16px 35px rgba(18, 58, 46, .14);
+}
+.news-feature::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  right: -70px;
+  top: -120px;
+  border: 1px solid rgba(255, 255, 255, .17);
+  border-radius: 50%;
+  box-shadow: 0 0 0 55px rgba(255, 255, 255, .035);
+  pointer-events: none;
+}
+.news-feature:hover,
+.news-feature:focus-visible {
+  border-color: #70c8a0;
+  box-shadow: 0 20px 38px rgba(18, 58, 46, .2);
+}
+.news-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .02em;
+  color: var(--gray-500);
+  margin-bottom: 18px;
+}
+.news-card-meta span:first-child {
+  font-weight: 700;
+  color: var(--green-700);
+}
+.news-feature .news-card-meta,
+.news-feature .news-card-meta span:first-child {
+  color: #c9e5d3;
+}
+.news-feature h3 {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  font-size: clamp(27px, 4vw, 42px);
+  line-height: 1.13;
+  color: #fffdf4;
+}
+.news-feature p {
+  position: relative;
+  z-index: 1;
+  max-width: 630px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #e2f2e8;
+}
+.news-card-link {
+  display: inline-block;
+  margin-top: auto;
+  padding-top: 14px;
+  color: var(--green-700);
+  font-size: 12px;
+  font-weight: 700;
+}
+.news-feature .news-card-link {
+  color: #dbf6c7;
+}
+.news-group {
+  margin-top: 46px;
+}
+.news-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 18px;
+}
+.news-group-head h2 {
+  margin: 0;
+  font: 700 24px/1.2 var(--font-display);
+  color: var(--green-900);
+}
+.news-group-head p {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: 12px;
+}
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr));
+  gap: 16px;
+}
+.news-grid .news-card {
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  min-height: 210px;
+}
+.news-grid .news-card h3 {
+  font-size: 21px;
+  line-height: 1.23;
+}
+.news-grid .news-card p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+.news-archive {
+  margin-top: 46px;
+  padding: 18px 0;
+  border-top: 1px solid var(--gray-200);
+}
+.news-archive summary {
+  cursor: pointer;
+  width: fit-content;
+  color: var(--green-900);
+  font: 700 19px var(--font-display);
+}
+.news-archive summary:focus-visible,
+.news-card:focus-visible {
+  outline: 3px solid var(--green-600);
+  outline-offset: 4px;
+}
+.news-archive summary span {
+  margin-left: 8px;
+  color: var(--gray-500);
+  font: 12px var(--font-mono);
+}
+.news-archive > p {
+  color: var(--gray-500);
+  font-size: 13px;
+}
+.news-archive-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.news-archive-list .news-card {
+  padding: 17px 19px;
+}
+.news-archive-list .news-card h3 {
+  font-size: 17px;
+}
+.news-archive-list .news-card p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .news-feature { min-height: 320px; }
+  .news-index > h1 { font-size: clamp(30px, 8vw, 42px); }
+  .news-group { margin-top: 36px; }
+}
 /* The list reuses .case-grid / .case-card; only the dateline colour and the
    article body need rules of their own. .info-section deliberately styles
    only h2 and p, so long-form prose gets its own block here. */

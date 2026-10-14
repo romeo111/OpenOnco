@@ -1,6 +1,30 @@
 # News: length, cadence, and what to publish next
 
+> **Current publishing schedule (2026-10-13):** The owner requested an
+> automated check every three days, alternating a source-checked research
+> reality check with a plain-language platform feature. The monthly cadence
+> below is the original editorial baseline, not the current scheduler setting.
+> A scheduled run may skip publication when primary evidence, translation,
+> build checks, or deployment verification are insufficient. Retrospective
+> notes use the event date in `date:` and the actual posting date in
+> `published:`; they stay in the archive rather than displacing current news.
+
 Companion to `docs/news-comments-setup.md`, which covers the mechanics.
+
+## Current editorial status (2026-10-13)
+
+The public index now has 28 posts. Three October project updates lead it:
+the question-page redesign, English-source fallbacks for unsafe translation
+drafts, and the searchable disease Wiki. Older explainers remain in an
+accessible archive. Full articles are in English and Ukrainian; the nine other
+interface languages show localized headlines and summaries with that limit
+stated explicitly.
+
+Publish the next project note only when a shipped change has a reader-facing
+effect that can be linked to a merged PR. Publish a new clinical explainer only
+after checking primary sources and the exact claim against current evidence.
+Keep event and publication dates distinct when writing retrospectively. The
+July schedule below is historical planning context, not a current queue.
 
 ## Two kinds of post
 

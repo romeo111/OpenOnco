@@ -155,6 +155,7 @@
   &quot;type&quot;: &quot;stage_resection_composite&quot;
 }</pre>
   <h2>Notes</h2><p>Engine wiring: when resected-stage-III biology is detected on a patient profile that lacks `disease_state` (so the metastatic-1L algorithm is the only line=1 algorithm available by load-order fallback), this RedFlag fires inside ALGO-MELANOMA-METASTATIC-1L step 0 to redirect the engine to the adjuvant indication (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III) instead of the metastatic-1L default. Once curated patient JSONs migrate to set `disease_state: &quot;adjuvant&quot;`, ALGO-MELANOMA-ADJUVANT-1L picks them up directly and this step 0 becomes redundant (still safe — it&#x27;s additive). KEYNOTE-054 BRAF-WT and BRAF-mut both eligible — adjuvant pembro is the standard-track default; aggressive-track substitution to dabra+trame (COMBI-AD) is BRAF-mut subgroup only.</p>
+
   <h2>Used By</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-MELANOMA-ADJUVANT-1L</code> - ALGO-MELANOMA-ADJUVANT-1L</li><li><code>ALGO-MELANOMA-METASTATIC-1L</code> - ALGO-MELANOMA-METASTATIC-1L</li></ul>
 </main>

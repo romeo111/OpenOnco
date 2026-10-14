@@ -42,7 +42,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/clinical-styles/ae01cd68efb8dde362a3333f818400d408503100bf04139114adbf8000403002.css">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="30f9a47c289db8d269c7905fec64f6154c8fec500365597489f54bb16aaa36ca"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="58416ca33a7e0903b8a8403449b125a50a172ee1abded827ba0fff8a77a8b234"></head>
 <body><!-- shared-site-header:start --><div data-shared-site-header data-locale="es" data-page="kb/redflags/rf-breast-tnbc.html" data-active="kb" data-missing="[]"><nav aria-label="OpenOnco"><a href="/es/">OpenOnco</a> · <a href="/es/kb.html">Onco Wiki</a> · <a href="/es/try.html">Plan Builder</a></nav></div><link rel="stylesheet" href="/header.css?v=layout-20261011"><script src="/shared-site-header.js" defer></script><!-- shared-site-header:end -->
 
   <main class="kb-page kb-entity"><aside class="translation-notice" role="note"><strong>Traducción preliminar: revisión clínica pendiente.</strong> <a href="/kb/redflags/rf-breast-tnbc.html" lang="en" hreflang="en" data-original-source>Consultar el original en inglés</a></aside>
@@ -132,6 +132,7 @@
   "type": "receptor_status_composite"
 }</pre>
   <h2>Notas</h2><p><span class="translation-original-fragment" lang="en" data-original-source data-label="Texto original conservado para verificación">W5c RF authoring. Converts free-text `{condition: "ER &lt;1% AND PR &lt;1% (TNBC)"}` in ALGO-BREAST-1L step 3 into a formal RF entity. The trigger uses an `all_of` composite with ER-negative, PR-negative, and HER2-negative conditions. Each receptor check uses an `any_of` to accommodate multiple finding key naming conventions (er_status, er_ihc, BIO-ESTROGEN-RECEPTOR). In ALGO-BREAST-1L sequential logic, step 1 first gates HER2+ via RF-BREAST-HER2-AMP-ACTIONABLE. Patients reaching step 3 are HER2-negative by definition. The HER2-negative component of this RF is included for standalone use but is not strictly required within the sequential algo. KEYNOTE-522 (Schmid NEJM 2022, PMID 35294803): early TNBC pembro+chemo — pCR 64.8% vs 51.2%, regardless of PD-L1; EFS benefit maintained at 5yr. KEYNOTE-355 (Cortes NEJM 2020, PMID 31789049): metastatic TNBC CPS ≥10 — pembro+chemo mPFS 9.7 vs 5.6 mo. ER/PR thresholds: ASCO/CAP 2020 guideline: ER or PR positive ≥1% nuclear staining. Values &lt;1% are ER-negative or PR-negative respectively. This RF fires when BOTH ER and PR are below the 1% threshold. CHARTER §6.1: Two-reviewer clinical co-lead signoff required before removing draft: true.</span></p>
+
   <h2>Utilizado por</h2>
 <h3>Algoritmos</h3><ul><li><code>ALGO-BREAST-1L</code> - ALGO-BREAST-1L</li></ul>
 </main>

@@ -155,6 +155,7 @@
   &quot;type&quot;: &quot;biomarker_status&quot;
 }</pre>
   <h2>Notes</h2><p>W5c RF authoring. Converts free-text `{condition: &quot;KIT D816V positive&quot;}` in ALGO-ADVSM-1L step 1 (all_of composite) into a formal RF entity. The step uses all_of: [biomarker gate, platelet-count gate] — this RF formalizes the biomarker half; the platelet-count condition (≥50 ×10⁹/L) remains a free-text MDT-evaluated condition in the algo (no platelet- threshold RF entity in current KB design). Clinical rationale: Avapritinib has superior molecular response depth vs midostaurin (KIT D816V VAF reduction in BM; Gotlib JCO 2023 PATHFINDER cohort). Platelet threshold of ≥50 ×10⁹/L is from avapritinib prescribing information due to risk of intracranial hemorrhage in severe thrombocytopenia. Midostaurin does NOT have this platelet restriction — rationale for algo step 2 fallback. Important KIT D816V disambiguation: This RF is for SYSTEMIC MASTOCYTOSIS (DIS-MASTOCYTOSIS). KIT mutations in GIST are exon 11/9/13/17, not the same D816V codon; imatinib is active against GIST KIT exon 11/9 but NOT D816V. This RF must NOT be triggered in GIST patients. The `relevant_diseases: [DIS-MASTOCYTOSIS]` constraint ensures disease-scoped routing. BMA-KIT-D816V-MASTOCYTOSIS (ESCAT IA): confirms evidence...</p>
+
   <h2>Used By</h2>
 <h3>Algorithms</h3><ul><li><code>ALGO-ADVSM-1L</code> - ALGO-ADVSM-1L</li></ul>
 </main>
