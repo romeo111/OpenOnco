@@ -433,5 +433,19 @@ assert legacy_search.search_status=='unknown'
 assert 'Search execution is unconfirmed' in _render_experimental_options(legacy_search,target_lang='en')
 json.dumps({'notRunExplicit':True,'failedNotFresh':True,'emptyQueryScoped':True,'legacyUnknown':True})
 `));
+const accessProvenanceState=JSON.parse(await py.runPythonAsync(`
+from knowledge_base.engine.render import _render_access_matrix
+from knowledge_base.schemas.plan import AccessMatrix, AccessMatrixRow
+access_fixture=AccessMatrix(generated_at='2001-02-03T04:05:06Z',rows=[AccessMatrixRow(track_id='standard',track_label='Synthetic reference',registered_in_ua=None,reimbursed_nszu=None,cost_last_updated='1999-01-01',cost_is_stale=True)])
+access_before=access_fixture.model_dump()
+access_en=_render_access_matrix(access_fixture,target_lang='en')
+access_uk=_render_access_matrix(access_fixture,target_lang='uk')
+assert 'Table assembled: 2001-02-03' in access_en
+assert 'Status updated:' not in access_en and 'does not verify registration' in access_en
+assert 'Таблицю сформовано: 2001-02-03' in access_uk
+assert 'Статус оновлено:' not in access_uk and 'не підтверджує перевірку реєстрації' in access_uk
+assert access_fixture.model_dump()==access_before
+json.dumps({'assemblyNotVerification':True,'storedMetadataUnchanged':True})
+`));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,medicationState,trialProvenanceState,environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,medicationState,trialProvenanceState,accessProvenanceState,environment:'Node WASM, not browser'}));

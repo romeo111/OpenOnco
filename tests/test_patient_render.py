@@ -1533,3 +1533,32 @@ def test_successful_trial_cache_preserves_execution_and_actual_date(tmp_path):
         assert not calls
     finally:
         clear_cache()
+
+
+@pytest.mark.parametrize("registered", [True, False, None])
+@pytest.mark.parametrize("assembled", ["2001-02-03T04:05:06Z", None])
+def test_access_matrix_assembly_date_is_not_a_verification_date(registered, assembled):
+    from knowledge_base.engine.render import _render_access_matrix
+    from knowledge_base.schemas.plan import AccessMatrix, AccessMatrixRow
+
+    matrix = AccessMatrix(
+        generated_at=assembled,
+        rows=[AccessMatrixRow(
+            track_id="standard", track_label="Synthetic reference",
+            registered_in_ua=registered, reimbursed_nszu=registered,
+            cost_last_updated="1999-01-01", cost_is_stale=True,
+        )],
+    )
+    before = matrix.model_dump()
+    for lang, old_label, assembled_label, caveat, missing in [
+        ("en", "Status updated:", "Table assembled:", "does not verify registration", "assembly date is not recorded"),
+        ("uk", "Статус оновлено:", "Таблицю сформовано:", "не підтверджує перевірку реєстрації", "Дату формування таблиці не зафіксовано"),
+    ]:
+        html = _render_access_matrix(matrix, target_lang=lang)
+        assert old_label not in html
+        assert caveat in html
+        if assembled:
+            assert assembled_label in html and "2001-02-03" in html
+        else:
+            assert missing in html and assembled_label not in html
+    assert matrix.model_dump() == before

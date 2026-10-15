@@ -736,7 +736,10 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "matrix_cost_label_selfpay":   {"uk": "самооплата:", "en": "self-pay:"},
     "matrix_disclaimer":           {"uk": "Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті.",
                                     "en": "Cost information is orientation. Verify with a specific pharmacy / foundation / trial site."},
-    "matrix_status_updated":       {"uk": "Статус оновлено:", "en": "Status updated:"},
+    "matrix_assembled_at":         {"uk": "Таблицю сформовано:", "en": "Table assembled:"},
+    "matrix_assembly_unknown":     {"uk": "Дату формування таблиці не зафіксовано.", "en": "Table assembly date is not recorded."},
+    "matrix_provenance_caveat":    {"uk": "Дата формування таблиці не підтверджує перевірку реєстрації, покриття НСЗУ або цін. Актуальність цих даних потрібно перевірити окремо.",
+                                    "en": "Table assembly does not verify registration, NSZU coverage or prices. Check the currency of these data separately."},
     # ── MDT orchestrator strings ──────────────────────────────────────────
     # The orchestrator (knowledge_base/engine/mdt_orchestrator.py) emits
     # role `reason`s and OpenQuestion `question`/`rationale` strings as
@@ -2400,7 +2403,11 @@ def _render_access_matrix(matrix, target_lang: str = "uk") -> str:
         f'</table>'
         f'<p class="matrix-disclaimer">'
         f'{_h(_t("matrix_disclaimer", target_lang))} '
-        f'{_h(_t("matrix_status_updated", target_lang))} {_h((matrix.generated_at or "")[:10])}.'
+        + (
+            f'{_h(_t("matrix_assembled_at", target_lang))} {_h(matrix.generated_at[:10])}. '
+            if matrix.generated_at else f'{_h(_t("matrix_assembly_unknown", target_lang))} '
+        )
+        + f'{_h(_t("matrix_provenance_caveat", target_lang))}'
         f'</p>'
         f'</details>'
         f'</section>'
