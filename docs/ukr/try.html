@@ -488,7 +488,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Введіть коректне число.", "integer": "Введіть ціле число.", "range": "Введіть значення в цих межах:", "summary": "Виправте виділені числові поля перед генерацією або відкриттям JSON.", "sync": "Введіть це число повторно, щоб підтвердити його."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Введіть коректний JSON.", "object": "Профіль має бути JSON-об’єктом.", "finite": "Профіль містить нескінченне або нечислове значення.", "section": "Цей розділ профілю має бути об’єктом або null:", "transfer": "Залиште цей профіль у режимі JSON: виберіть анкету відповідної хвороби та значення, які підтримують її поля. Ваш JSON збережено.", "restored": "Чернетку JSON відновлено. Перевірте її перед створенням звіту.", "restoreLimited": "Чернетку JSON відновлено; анкету завантажити не вдалося. Можна продовжити в режимі JSON.", "questionnaireUnavailable": "Вибрана анкета недоступна або не відповідає цій хворобі.", "switchFailed": "Не вдалося завантажити анкету вибраної хвороби. Попередню анкету, відповіді та звіт збережено. Спробуйте ще раз.", "exampleUnavailable": "Вибраний приклад недоступний або його профіль не відповідає вибраній хворобі.", "exampleFailed": "Не вдалося завантажити вибраний приклад. Поточні дані та звіт збережено. Спробуйте ще раз.", "exampleReportFailed": "Профіль прикладу завантажено, але його звіт недоступний. Можна створити новий звіт.", "exampleLoaded": "Профіль прикладу завантажено. Перевірте його дані та джерела перед використанням.", "reportInvalid": "Завантажена сторінка не є доступним для читання звітом OpenOnco. Спробуйте створити звіт заново.", "readinessUnknown": "Заповненість невідома: введіть коректний JSON і виберіть анкету відповідної хвороби.", "readinessComplete": "Критичні поля анкети введено; значення ще потребують перевірки."};
+const profileInputCopy = {"json": "Введіть коректний JSON.", "object": "Профіль має бути JSON-об’єктом.", "finite": "Профіль містить нескінченне або нечислове значення.", "section": "Цей розділ профілю має бути об’єктом або null:", "transfer": "Залиште цей профіль у режимі JSON: виберіть анкету відповідної хвороби та значення, які підтримують її поля. Ваш JSON збережено.", "restored": "Чернетку JSON відновлено. Перевірте її перед створенням звіту.", "restoreLimited": "Чернетку JSON відновлено; анкету завантажити не вдалося. Можна продовжити в режимі JSON.", "questionnaireUnavailable": "Вибрана анкета недоступна або не відповідає цій хворобі.", "switchFailed": "Не вдалося завантажити анкету вибраної хвороби. Попередню анкету, відповіді та звіт збережено. Спробуйте ще раз.", "exampleUnavailable": "Вибраний приклад недоступний або його профіль не відповідає вибраній хворобі.", "exampleFailed": "Не вдалося завантажити вибраний приклад. Поточні дані та звіт збережено. Спробуйте ще раз.", "exampleReportFailed": "Профіль прикладу завантажено, але його звіт недоступний. Можна створити новий звіт.", "exampleLoaded": "Профіль прикладу завантажено. Перевірте його дані та джерела перед використанням.", "reportInvalid": "Завантажена сторінка не є доступним для читання звітом OpenOnco. Спробуйте створити звіт заново.", "readinessUnknown": "Заповненість невідома: введіть коректний JSON і виберіть анкету відповідної хвороби.", "readinessComplete": "Критичні поля анкети введено; значення ще потребують перевірки.", "duplicate": "Повторені назви полів JSON не дозволені. Приберіть повторене поле; початковий JSON збережено."};
 const questionnaireNoticeCopy = {"defaults": "Введіть відому інформацію. Відсутні дані залишаються невідомими й можуть обмежувати звіт.", "starter": "Автоматично створена початкова анкета: важлива інформація може бути відсутня. Перед рішеннями щодо лікування перевірте введені значення, пропущені дані та джерела з кваліфікованим лікарем.", "unknown": "Незаповнені поля скринінгу залишаються невідомими. Перевірки безпеки можуть бути неоціненими; сама повнота анкети не визначає клінічну достатність."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1663,7 +1663,32 @@ function setMode(newMode, { syncFromForm = false, syncFromJson = false, persist 
 }
 
 // ── Profile assembly + live preview ───────────────────────────────────────
-function profileInputError(profile) {
+function profileInputError(profile, rawJson = null) {
+  // JSON.parse validates syntax first. Inspect decoded object keys before any
+  // parsed profile is used; formatting must never silently keep the last key.
+  if (typeof rawJson === 'string') {
+    const stack = [];
+    for (let i = 0; i < rawJson.length; i++) {
+      const ch = rawJson[i];
+      if (ch === '"') {
+        const start = i;
+        for (i++; i < rawJson.length; i++) {
+          if (rawJson.charCodeAt(i) === 92) i++;
+          else if (rawJson[i] === '"') break;
+        }
+        const current = stack.at(-1);
+        if (current && current.expectKey) {
+          const key = JSON.parse(rawJson.slice(start, i + 1));
+          if (current.keys.has(key)) return profileInputCopy.duplicate;
+          current.keys.add(key);
+          current.expectKey = false;
+        }
+      } else if (ch === '{') stack.push({ keys: new Set(), expectKey: true });
+      else if (ch === '[') stack.push(null);
+      else if (ch === '}' || ch === ']') stack.pop();
+      else if (ch === ',' && stack.at(-1)) stack.at(-1).expectKey = true;
+    }
+  }
   if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return profileInputCopy.object;
   for (const name of ['disease','demographics','findings','biomarkers','clinician_confirmations']) {
     const section = profile[name];
@@ -1685,7 +1710,7 @@ function buildProfile() {
   if (mode === 'json') {
     try {
       const profile = JSON.parse(textarea.value);
-      const error = profileInputError(profile);
+      const error = profileInputError(profile, textarea.value);
       if (error) { setError(error); return null; }
       return profile;
     } catch { setError(profileInputCopy.json); return null; }
@@ -1953,7 +1978,7 @@ function updateImpactPanelLocal() {
   let jsonProfile = null;
   if (mode === 'json') {
     try { jsonProfile = JSON.parse(textarea.value); } catch (error) { /* unfinished drafts remain editable */ }
-    const index = jsonProfile && !profileInputError(jsonProfile) ? findQuestionnaireForProfile(jsonProfile) : -1;
+    const index = jsonProfile && !profileInputError(jsonProfile, textarea.value) ? findQuestionnaireForProfile(jsonProfile) : -1;
     if (!activeQuest || index < 0 || QUESTIONNAIRES_MANIFEST[index].id !== activeQuest.id) {
       setProgress(0, 0);
       if (readinessCriticalText) {
@@ -3229,12 +3254,17 @@ personalizeBtn && personalizeBtn.addEventListener('click', () => {
 
 modeFormBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('form', { syncFromJson: true }); });
 modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json', { syncFromForm: true }); });
-formatBtn && formatBtn.addEventListener('click', () => {
+function formatProfileJson() {
   if (isInteractionLocked()) return;
-  setError(null);
-  try { textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }
-  catch (e) { setError('Невалідний JSON: ' + e.message); }
-});
+  try {
+    const profile = JSON.parse(textarea.value);
+    const error = profileInputError(profile, textarea.value);
+    if (error) { setError(error); return; }
+    textarea.value = JSON.stringify(profile, null, 2);
+    setError('');
+  } catch (e) { setError(profileInputCopy.json); }
+}
+formatBtn && formatBtn.addEventListener('click', formatProfileJson);
 textarea.addEventListener('input', () => {
   markPlanDirty();
   saveDraft();
