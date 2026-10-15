@@ -815,21 +815,24 @@ function closePlanModal(options = {}) {
   else if (!runBtn.disabled) runBtn.focus();
 }
 
+function reportPrintError() {
+  const messages = {"en": "Could not open printing. Try again or save the report as HTML.", "uk": "Не вдалося відкрити друк. Спробуйте ще раз або збережіть звіт як HTML.", "es": "No se pudo abrir la impresión. Inténtelo de nuevo o guarde el informe como HTML.", "pt": "Não foi possível abrir a impressão. Tente novamente ou guarde o relatório como HTML.", "de": "Der Druckdialog konnte nicht geöffnet werden. Versuchen Sie es erneut oder speichern Sie den Bericht als HTML.", "fr": "Impossible d’ouvrir l’impression. Réessayez ou enregistrez le rapport au format HTML.", "it": "Impossibile aprire la stampa. Riprova o salva il rapporto come HTML.", "da": "Udskrivning kunne ikke åbnes. Prøv igen, eller gem rapporten som HTML.", "sv": "Det gick inte att öppna utskriften. Försök igen eller spara rapporten som HTML.", "nb": "Kunne ikke åpne utskrift. Prøv igjen eller lagre rapporten som HTML.", "fi": "Tulostusta ei voitu avata. Yritä uudelleen tai tallenna raportti HTML-muodossa."};
+  return messages[document.documentElement.lang] || messages.en;
+}
+
 function downloadPdf() {
-  // Browser-native print → "Save as PDF" works on every modern browser.
-  // The render layer ships A4-print-friendly CSS (@page + @media print)
-  // so the iframe content paginates cleanly without any extra deps.
+  // Open the browser print dialog; opening it does not prove a PDF was saved.
   if (uiBusy || generating) return;
   if (planSource == null || !reportReady || planDirty) return;
-  // Modal must be visible so iframe contentWindow is fully laid out and
-  // print() picks up the right document.
-  const wasHidden = planModal && planModal.hidden;
-  if (wasHidden) openPlanModal({ force: true });
   try {
-    resultFrame.contentWindow.focus();
-    resultFrame.contentWindow.print();
+    if (planModal && planModal.hidden) openPlanModal({ force: true });
+    const reportWindow = resultFrame.contentWindow;
+    if (!reportWindow || typeof reportWindow.print !== 'function') throw new Error('Printing unavailable');
+    reportWindow.focus();
+    reportWindow.print();
+    setError('');
   } catch (e) {
-    setError('Print failed: ' + (e.message || e));
+    setError(reportPrintError());
   }
 }
 

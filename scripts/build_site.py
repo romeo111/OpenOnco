@@ -4829,6 +4829,7 @@ def render_try(
     examples_manifest: list = None,
 ) -> str:
     from scripts.report_export_copy import ERRORS as report_export_errors
+    from scripts.report_export_copy import PRINT_ERRORS as report_print_errors
     from scripts.runtime_cache_copy import COPY as runtime_copy
     from scripts.numeric_input_copy import COPY as numeric_copy
     from scripts.profile_input_copy import COPY as profile_copy
@@ -5553,21 +5554,24 @@ function closePlanModal(options = {{}}) {{
   else if (!runBtn.disabled) runBtn.focus();
 }}
 
+function reportPrintError() {{
+  const messages = {json.dumps(report_print_errors, ensure_ascii=False)};
+  return messages[document.documentElement.lang] || messages.en;
+}}
+
 function downloadPdf() {{
-  // Browser-native print → "Save as PDF" works on every modern browser.
-  // The render layer ships A4-print-friendly CSS (@page + @media print)
-  // so the iframe content paginates cleanly without any extra deps.
+  // Open the browser print dialog; opening it does not prove a PDF was saved.
   if (uiBusy || generating) return;
   if (planSource == null || !reportReady || planDirty) return;
-  // Modal must be visible so iframe contentWindow is fully laid out and
-  // print() picks up the right document.
-  const wasHidden = planModal && planModal.hidden;
-  if (wasHidden) openPlanModal({{ force: true }});
   try {{
-    resultFrame.contentWindow.focus();
-    resultFrame.contentWindow.print();
+    if (planModal && planModal.hidden) openPlanModal({{ force: true }});
+    const reportWindow = resultFrame.contentWindow;
+    if (!reportWindow || typeof reportWindow.print !== 'function') throw new Error('Printing unavailable');
+    reportWindow.focus();
+    reportWindow.print();
+    setError('');
   }} catch (e) {{
-    setError('Print failed: ' + (e.message || e));
+    setError(reportPrintError());
   }}
 }}
 
