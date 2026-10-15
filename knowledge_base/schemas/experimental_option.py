@@ -126,6 +126,8 @@ class ExperimentalOption(Base):
     stage_stratum: Optional[str] = None
     line_of_therapy: Optional[int] = None
     trials: list[ExperimentalTrial] = Field(default_factory=list)
+    # Legacy payloads lack execution provenance; an empty list is not a negative search.
+    search_status: Literal["unknown", "not_run", "failed", "completed"] = "unknown"
     last_synced: Optional[str] = None
     notes: Optional[str] = None
     sources: list[str] = Field(default_factory=lambda: ["SRC-CTGOV"])

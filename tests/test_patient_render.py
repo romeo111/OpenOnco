@@ -1452,3 +1452,84 @@ def test_first_use_expansion_skips_when_key_absent():
     assert "вірус гепатиту" not in out
     # Sentinel still appended.
     assert "abbrev-expanded" in out
+
+
+@pytest.mark.parametrize("scenario, expected_status", [
+    ("not_configured", "not_run"), ("failed", "failed"),
+    ("invalid_response", "failed"), ("empty", "completed"),
+])
+def test_trial_search_provenance_distinguishes_unavailable_from_empty(scenario, expected_status):
+    from knowledge_base.engine.experimental_options import enumerate_experimental_options
+    from knowledge_base.engine.render import _render_experimental_options
+
+    def search(**_):
+        if scenario == "failed":
+            raise RuntimeError("private synthetic error detail")
+        return None if scenario == "invalid_response" else []
+
+    option = enumerate_experimental_options(
+        disease_id="DIS-AUDIT", disease_term="Synthetic condition", cache=False,
+        search_fn=None if scenario == "not_configured" else search,
+    )
+    assert option.search_status == expected_status
+    assert bool(option.last_synced) == (expected_status == "completed")
+    for lang, date_label, negative in [
+        ("en", "Last synced:", "The completed search returned no studies"),
+        ("uk", "Останнє оновлення:", "Завершений пошук не повернув досліджень"),
+    ]:
+        html = _render_experimental_options(option, target_lang=lang)
+        assert (negative in html) == (expected_status == "completed")
+        assert (date_label in html) == (expected_status == "completed")
+        assert "private synthetic error detail" not in html
+
+
+def test_legacy_empty_trial_cache_does_not_claim_negative_search():
+    from knowledge_base.schemas.experimental_option import ExperimentalOption
+    from knowledge_base.engine.render import _render_experimental_options
+
+    option = ExperimentalOption.model_validate({
+        "id": "EXPER-LEGACY", "disease_id": "DIS-AUDIT",
+        "trials": [], "last_synced": "2000-01-01",
+    })
+    assert option.search_status == "unknown"
+    assert option.last_synced == "2000-01-01"
+    html = _render_experimental_options(option, target_lang="en")
+    assert "Search execution is unconfirmed" in html
+    assert "Last synced:" not in html
+    assert "completed search returned no studies" not in html
+
+
+def test_successful_trial_cache_preserves_execution_and_actual_date(tmp_path):
+    from knowledge_base.engine.experimental_options import (
+        TrialQuery, _write_disk_cache, clear_cache, enumerate_experimental_options,
+    )
+    from knowledge_base.schemas.experimental_option import ExperimentalOption
+
+    query = TrialQuery(disease_term="Synthetic condition")
+    original = ExperimentalOption(
+        id="EXPER-CACHED", disease_id="DIS-AUDIT", search_status="completed",
+        last_synced="2000-01-01", trials=[],
+    )
+    _write_disk_cache(tmp_path, query.signature(), original)
+    calls = []
+
+    def forbidden_search(**_):
+        calls.append(True)
+        raise AssertionError("Valid cache should not query")
+
+    clear_cache()
+    try:
+        first = enumerate_experimental_options(
+            disease_id="DIS-AUDIT", disease_term="Synthetic condition",
+            search_fn=forbidden_search, cache_root=tmp_path,
+        )
+        second = enumerate_experimental_options(
+            disease_id="DIS-AUDIT", disease_term="Synthetic condition",
+            search_fn=forbidden_search, cache_root=tmp_path,
+        )
+        assert first is second
+        assert first.search_status == "completed"
+        assert first.last_synced == "2000-01-01"
+        assert not calls
+    finally:
+        clear_cache()

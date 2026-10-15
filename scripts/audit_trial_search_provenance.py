@@ -45,7 +45,7 @@ def audit() -> dict:
         trials=[], last_synced="2000-01-01",
     )
     findings = []
-    if "No active trials matched" in _render_experimental_options(legacy, target_lang="en"):
+    if "Search execution is unconfirmed" not in _render_experimental_options(legacy, target_lang="en"):
         findings.append("legacy_empty_without_execution_provenance_claims_negative_search")
     observations.append(_observe("legacy_empty_unknown_execution", legacy, 0, findings))
     files = (
@@ -76,6 +76,7 @@ def _observe(scenario, option, calls, findings):
         "injected_search_calls": calls,
         "trial_count": len(option.trials),
         "last_synced": option.last_synced,
+        "search_status": option.search_status,
         "notes": option.notes,
         "rendered_html": {lang: _render_experimental_options(option, target_lang=lang) for lang in ("en", "uk")},
         "findings": findings,

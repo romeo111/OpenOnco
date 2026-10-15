@@ -671,8 +671,14 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                           "Pass experimental_search_fn to generate_plan() "
                                           "or sync offline (per ua-ingestion plan §3.3)."},
     "exp_last_synced_prefix":      {"uk": "Останнє оновлення:", "en": "Last synced:"},
-    "exp_empty_default":           {"uk": "Жодного активного трайла для цього сценарію в ctgov не знайдено.",
-                                    "en": "No active trials matched this scenario in ctgov."},
+    "exp_empty_default":           {"uk": "Завершений пошук не повернув досліджень, що відповідають цьому запиту й фільтрам. Це не означає, що інших досліджень немає.",
+                                    "en": "The completed search returned no studies matching this query and its filters. This does not establish that no other trials exist."},
+    "exp_not_run":                 {"uk": "Пошук у ClinicalTrials.gov не виконувався. Наявність відповідних досліджень невідома.",
+                                    "en": "ClinicalTrials.gov search was not run. Matching trial availability is unknown."},
+    "exp_failed":                  {"uk": "Пошук у ClinicalTrials.gov не вдалося завершити. Наявність відповідних досліджень невідома; повторіть пошук пізніше.",
+                                    "en": "ClinicalTrials.gov search could not be completed. Matching trial availability is unknown; retry later."},
+    "exp_search_unknown":          {"uk": "Виконання пошуку для цих збережених даних не підтверджено. Перевірте актуальні дослідження та статус набору безпосередньо в реєстрі.",
+                                    "en": "Search execution is unconfirmed for these stored data. Verify current studies and recruitment status directly in the registry."},
     "exp_table_sub":               {"uk": "Третій трек плану — open-enrollment trials з ClinicalTrials.gov. "
                                           "Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3).",
                                     "en": "Third plan track — open-enrollment trials from ClinicalTrials.gov. "
@@ -2191,17 +2197,22 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
         )
 
     trials = option.trials or []
+    search_status = getattr(option, "search_status", "unknown")
     last_synced = option.last_synced or ""
     last_synced_prefix = _t("exp_last_synced_prefix", target_lang)
+    status_key = {"not_run": "exp_not_run", "failed": "exp_failed"}.get(search_status, "exp_search_unknown")
+    provenance = (
+        f"{last_synced_prefix} {last_synced} · ClinicalTrials.gov."
+        if search_status == "completed" and last_synced
+        else _t(status_key, target_lang)
+    )
 
     if not trials:
-        # `option.notes` is curator-authored UA free-text; only fall back
-        # to the localized default when it is empty.
-        msg = option.notes or _t("exp_empty_default", target_lang)
+        msg = _t("exp_empty_default" if search_status == "completed" else status_key, target_lang)
         return (
             '<section class="experimental-track experimental-track--empty">'
             f'<h2>{_h(heading)}</h2>'
-            f'<div class="section-sub">{_h(last_synced_prefix)} {_h(last_synced)} · ctgov.</div>'
+            f'<div class="section-sub">{_h(provenance)}</div>'
             f'<p class="empty-state">{_h(msg)}</p>'
             '</section>'
         )
@@ -2238,7 +2249,7 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
         f'<h2>{_h(heading)}</h2>'
         '<div class="section-sub">'
         f'{_h(_t("exp_table_sub", target_lang))} '
-        f'{_h(last_synced_prefix)} {_h(last_synced)}.'
+        f'{_h(provenance)}'
         '</div>'
         '<table class="trials-table">'
         '<thead><tr>'

@@ -411,5 +411,27 @@ assert med_unsupported.plan.knowledge_base_state['medication_selection_withheld'
 assert not med_unsupported.plan.tracks
 json.dumps({'knownPairWithheld':True,'noAutomaticSubstitute':True,'unknownExplicit':True,'competingInputWithheld':True,'clinicalApproval':False})
 `));
+const trialProvenanceState=JSON.parse(await py.runPythonAsync(`
+from knowledge_base.engine.experimental_options import enumerate_experimental_options
+from knowledge_base.engine.render import _render_experimental_options
+from knowledge_base.schemas.experimental_option import ExperimentalOption
+no_search=enumerate_experimental_options(disease_id='DIS-AUDIT',disease_term='Synthetic condition',cache=False)
+assert no_search.search_status=='not_run' and no_search.last_synced is None
+for report_lang in ['en','uk']:
+    no_search_html=_render_experimental_options(no_search,target_lang=report_lang)
+    assert 'Last synced:' not in no_search_html and 'Останнє оновлення:' not in no_search_html
+assert 'Matching trial availability is unknown' in _render_experimental_options(no_search,target_lang='en')
+def registry_error(**kwargs):
+    raise RuntimeError('synthetic offline failure')
+failed_search=enumerate_experimental_options(disease_id='DIS-AUDIT',disease_term='Synthetic condition',cache=False,search_fn=registry_error)
+assert failed_search.search_status=='failed' and failed_search.last_synced is None
+empty_search=enumerate_experimental_options(disease_id='DIS-AUDIT',disease_term='Synthetic condition',cache=False,search_fn=lambda **kwargs: [])
+assert empty_search.search_status=='completed' and empty_search.last_synced
+assert 'This does not establish that no other trials exist' in _render_experimental_options(empty_search,target_lang='en')
+legacy_search=ExperimentalOption(id='EXPER-LEGACY',disease_id='DIS-AUDIT',trials=[],last_synced='2000-01-01')
+assert legacy_search.search_status=='unknown'
+assert 'Search execution is unconfirmed' in _render_experimental_options(legacy_search,target_lang='en')
+json.dumps({'notRunExplicit':True,'failedNotFresh':True,'emptyQueryScoped':True,'legacyUnknown':True})
+`));
 assert.equal(networkAttempts,0);
-console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,medicationState,environment:'Node WASM, not browser'}));
+console.log(JSON.stringify({status:'passed',runtime:'0.26.4',networkAttempts,reportCharacters:result.length,profile:'VIRTUAL-OFFLINE-AML-001',histologyStates,bepState,chlState,advancedChlState,tcellState,mclState,epochState,codoxState,cnsState,withdrawalState,medicationState,trialProvenanceState,environment:'Node WASM, not browser'}));
