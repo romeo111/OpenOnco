@@ -1,0 +1,30 @@
+id: CI-BRENTUXIMAB-BLEOMYCIN
+severity: absolute
+trigger:
+  type: drug_drug_interaction
+  conditions:
+  - concomitant_drugs:
+    - DRUG-BRENTUXIMAB-VEDOTIN
+    - DRUG-BLEOMYCIN
+  logic: AND
+description: Concomitant brentuximab vedotin and bleomycin is contraindicated by US ADCETRIS
+  labeling because of pulmonary toxicity.
+description_ua: Одночасне застосування брентуксимабу ведотину та блеоміцину протипоказане за
+  американською інструкцією ADCETRIS через легеневу токсичність.
+alternative_actions:
+- Reconcile concomitant medicines with the treating team; do not combine these drugs. No automatic
+  alternative is encoded.
+affects_indications:
+- IND-TCELL-1L-CHP-BV
+- IND-AITL-1L-CHP-BV
+affects_drugs:
+- DRUG-BRENTUXIMAB-VEDOTIN
+- DRUG-BLEOMYCIN
+affects_regimens:
+- REG-CHP-BV
+sources:
+- SRC-ADCETRIS-US-LABEL
+last_reviewed: null
+notes: Section 4 only. This is a surfaced contraindication reference; free-form medication triggers
+  are not automatic screening or individual eligibility approval. Clinical/translation signoff
+  pending.

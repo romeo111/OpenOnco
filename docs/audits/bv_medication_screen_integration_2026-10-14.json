@@ -1,0 +1,719 @@
+{
+  "scope": "Source engine only; synthetic public examples; no network or production API calls.",
+  "clinical_approval": false,
+  "legacy_probe_fields_are_supported_contract": false,
+  "canonical_contract": "concomitant_medications: {status: unknown|partial|complete, drug_ids: exact catalog IDs}",
+  "primary_source": {
+    "url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629",
+    "section": "4",
+    "observed_date": "2026-10-14"
+  },
+  "source_sha256": {
+    "knowledge_base/engine/medication_input.py": "14afb87d1d16d24c73f28e55ba05e8941ec6ca550a2c2d7804a0523999901ba4",
+    "knowledge_base/engine/medication_screen.py": "c66aeeed98822bbabc241b47c9bd72577e0c51c9f2e3d95b4118273b676d8e38",
+    "knowledge_base/engine/render.py": "9f35b69c64d8100f3e6c93af0f9ddea00191b55fe866382cb0cb0a63b9ff5d09",
+    "knowledge_base/engine/plan.py": "6d4e0be7738e11428935c039b720658dfa36da23db73d766b4704c3e267b3751",
+    "knowledge_base/engine/profile_input.py": "4fdefadb2e5ba723be2de8222c60ffe8c55b412e9fe6359fa387191686ddc509",
+    "knowledge_base/hosted/content/contraindications/ci_brentuximab_bleomycin.yaml": "6fc0a4ee453bef54e03c3c6861298d7da62b6e769b65ebaf1dd78b0192987168",
+    "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml": "cc19b06eab50e310bd23af937c2d5d9fd9dd0070650a8f15784db4dc089b9c6e",
+    "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml": "c6cec71dd131ab30ad68a90ec263cd68a22094ac749954bd6c1fa33790f25bc0"
+  },
+  "observations": [
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "absent",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unknown",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "canonical_partial_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "canonical_complete_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "canonical_complete_empty",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "not_detected_in_reported_list",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "top_level_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "top_level_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "finding_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "explicit_pair",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "named_bleomycin_flag",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.bleomycin_concomitant"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "ptcl-cd30-positive",
+      "probe": "malformed_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "absent",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unknown",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "canonical_partial_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "canonical_complete_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "canonical_complete_empty",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "not_detected_in_reported_list",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "top_level_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "top_level_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "finding_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "explicit_pair",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "named_bleomycin_flag",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.bleomycin_concomitant"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "aitl-cd30-positive",
+      "probe": "malformed_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-AITL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "absent",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unknown",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "canonical_partial_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "canonical_complete_bleomycin",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "blocked",
+          "contraindication_ids": [
+            "CI-BRENTUXIMAB-BLEOMYCIN"
+          ],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "canonical_complete_empty",
+      "accepted": true,
+      "regimens": [
+        "REG-CHP-BV",
+        "REG-CHOEP"
+      ],
+      "selection_withheld": false,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "not_detected_in_reported_list",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": []
+        }
+      ],
+      "surfaced_contraindications": [
+        "CI-BRENTUXIMAB-BLEOMYCIN",
+        "CI-HBV-NO-PROPHYLAXIS",
+        "CI-LVEF-LOW-FOR-ANTHRACYCLINE"
+      ]
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "top_level_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "top_level_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "finding_concomitant_drugs",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "explicit_pair",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.concomitant_drugs"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "named_bleomycin_flag",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "findings.bleomycin_concomitant"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    },
+    {
+      "case": "alcl-alk-negative",
+      "probe": "malformed_medications",
+      "accepted": true,
+      "regimens": [],
+      "selection_withheld": true,
+      "medication_screens": [
+        {
+          "indication_id": "IND-TCELL-1L-CHP-BV",
+          "regimen_id": "REG-CHP-BV",
+          "status": "unsupported_input",
+          "contraindication_ids": [],
+          "source_ids": [
+            "SRC-ADCETRIS-US-LABEL"
+          ],
+          "unsupported_paths": [
+            "medications"
+          ]
+        }
+      ],
+      "surfaced_contraindications": []
+    }
+  ],
+  "remaining_limits": [
+    "Only REG-CHP-BV and the explicit authored BV/bleomycin reference are assessed; other regimens/interactions remain unevaluated.",
+    "Canonical JSON input is supported and retained by form/draft round trips; no medication picker or free-text extraction is claimed.",
+    "Caller-reported completeness is not independently verified medication reconciliation or individual eligibility approval.",
+    "Clinical/language review and production publication remain pending; this audit runs the draft source engine, not production API."
+  ]
+}

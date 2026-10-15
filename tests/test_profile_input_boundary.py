@@ -56,3 +56,228 @@ def test_bad_request_rejected_before_quota_or_model(monkeypatch):
     monkeypatch.setattr(endpoint, '_quota_principal', forbidden)
     status, _, response = handle_json_request({'case_text': 'VIRTUAL ONLY', 'extra': math.inf})
     assert status == 400 and response['status'] == 'error'
+
+
+"""Candidate input contract only; no treatment-selection or safety approval."""
+import copy
+from dataclasses import FrozenInstanceError
+
+import pytest
+
+from scripts.medication_input_contract import parse_medication_input
+
+DRUGS = {"DRUG-BLEOMYCIN", "DRUG-BRENTUXIMAB-VEDOTIN"}
+
+
+@pytest.mark.parametrize("profile", [{}, {"concomitant_medications": None}])
+def test_missing_input_is_unknown_not_empty_reconciliation(profile):
+    value = parse_medication_input(profile, DRUGS)
+    assert value.status == "unknown" and not value.reported_complete
+    assert value.drug_ids == ()
+
+
+@pytest.mark.parametrize("status,drugs", [("unknown", []), ("partial", []), ("partial", ["DRUG-BLEOMYCIN"]), ("complete", []), ("complete", ["DRUG-BLEOMYCIN"])])
+def test_explicit_states_are_preserved_without_mutation(status, drugs):
+    profile = {"concomitant_medications": {"status": status, "drug_ids": drugs}}
+    before = copy.deepcopy(profile)
+    value = parse_medication_input(profile, DRUGS)
+    assert value.status == status and value.drug_ids == tuple(drugs)
+    assert value.reported_complete == (status == "complete")
+    assert profile == before
+    drugs.append("DRUG-BRENTUXIMAB-VEDOTIN")
+    assert value.drug_ids == tuple(before["concomitant_medications"]["drug_ids"])
+    with pytest.raises(FrozenInstanceError):
+        value.status = "complete"
+
+
+@pytest.mark.parametrize("value", [True, False, [], "complete", {}, {"status": "complete"}, {"status": "complete", "drug_ids": [], "clinician_verified": True}, {"status": True, "drug_ids": []}, {"status": "COMPLETE", "drug_ids": []}, {"status": "complete", "drug_ids": None}, {"status": "complete", "drug_ids": ()}, {"status": "complete", "drug_ids": [True]}, {"status": "complete", "drug_ids": ["bleomycin"]}, {"status": "complete", "drug_ids": ["DRUG-UNKNOWN"]}, {"status": "complete", "drug_ids": ["DRUG-BLEOMYCIN "]}, {"status": "complete", "drug_ids": ["DRUG-BLEOMYCIN", "DRUG-BLEOMYCIN"]}, {"status": "unknown", "drug_ids": ["DRUG-BLEOMYCIN"]}])
+def test_malformed_or_ambiguous_input_cannot_be_complete(value):
+    with pytest.raises(ValueError):
+        parse_medication_input({"concomitant_medications": value}, DRUGS)
+
+
+@pytest.mark.parametrize("patch,path", [({"medications": []}, "medications"), ({"concomitant_drugs": None}, "concomitant_drugs"), ({"findings": {"concomitant_drugs": ["DRUG-BLEOMYCIN"]}}, "findings.concomitant_drugs"), ({"findings": {"bleomycin_concomitant": True}}, "findings.bleomycin_concomitant")])
+def test_unsupported_fields_do_not_create_false_complete_state(patch, path):
+    profile = {"concomitant_medications": {"status": "complete", "drug_ids": []}, **patch}
+    value = parse_medication_input(profile, DRUGS)
+    assert value.status == "complete" and not value.reported_complete
+    assert path in value.unsupported_paths
+
+
+def test_historical_exposure_is_not_active_medication():
+    value = parse_medication_input({"prior_therapies": ["DRUG-BLEOMYCIN"]}, DRUGS)
+    assert value.status == "unknown" and not value.drug_ids
+
+
+@pytest.mark.parametrize("profile", [None, True, [], "profile"])
+def test_non_object_profile_rejected(profile):
+    with pytest.raises(ValueError):
+        parse_medication_input(profile, DRUGS)
+
+
+# Candidate source-specific evaluator only; these tests do not change routing.
+import yaml
+from scripts.medication_interaction_reference import evaluate_bv_bleomycin_reference
+
+
+@pytest.fixture
+def medication_reference_records():
+    kb = Path(__file__).resolve().parents[1] / "knowledge_base/hosted/content"
+    reg = yaml.safe_load((kb / "regimens/chp_bv.yaml").read_text(encoding="utf-8"))
+    contra = yaml.safe_load((kb / "contraindications/ci_brentuximab_bleomycin.yaml").read_text(encoding="utf-8"))
+    drugs = {c["drug_id"] for c in reg["components"]} | {"DRUG-BLEOMYCIN"}
+    return reg, contra, drugs
+
+
+@pytest.mark.parametrize("status", ["partial", "complete"])
+def test_medication_reference_blocks_known_pair_without_mutation(status, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    profile = {"concomitant_medications": {"status": status, "drug_ids": ["DRUG-BLEOMYCIN"]}}
+    before = copy.deepcopy((profile, reg, contra, drugs))
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == "blocked"
+    assert result.contraindication_ids == ("CI-BRENTUXIMAB-BLEOMYCIN",)
+    assert result.source_ids == ("SRC-ADCETRIS-US-LABEL",)
+    assert (profile, reg, contra, drugs) == before
+
+
+@pytest.mark.parametrize("profile,expected", [({}, "unknown"), ({"concomitant_medications": None}, "unknown"), ({"concomitant_medications": {"status": "partial", "drug_ids": []}}, "incomplete"), ({"concomitant_medications": {"status": "complete", "drug_ids": []}}, "not_detected_in_reported_list"), ({"concomitant_medications": {"status": "complete", "drug_ids": []}, "medications": ["bleomycin"]}, "unsupported_input"), ({"prior_therapies": ["DRUG-BLEOMYCIN"]}, "unknown")])
+def test_medication_reference_never_calls_missing_or_unsupported_data_clear(profile, expected, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == expected
+    assert not result.contraindication_ids
+    assert result.source_ids == ("SRC-ADCETRIS-US-LABEL",)
+
+
+def test_medication_reference_positive_match_survives_conflicting_unsupported_alias(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    profile = {"concomitant_medications": {"status": "partial", "drug_ids": ["DRUG-BLEOMYCIN"]}, "medications": []}
+    result = evaluate_bv_bleomycin_reference(profile, reg, contra, drugs)
+    assert result.status == "blocked" and result.unsupported_paths == ("medications",)
+
+
+def test_medication_reference_detects_pair_inside_proposed_regimen(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    reg["components"].append({"drug_id": "DRUG-BLEOMYCIN"})
+    assert evaluate_bv_bleomycin_reference({}, reg, contra, drugs).status == "blocked"
+
+
+@pytest.mark.parametrize("field,value", [("id", "CI-OTHER"), ("severity", "relative"), ("sources", []), ("affects_regimens", ["REG-OTHER"]), ("trigger", {"type": "drug_drug_interaction", "logic": "AND", "conditions": [{"condition": "clinical prose"}]}), ("trigger", {"type": "drug_drug_interaction", "logic": "OR", "conditions": [{"concomitant_drugs": ["DRUG-BRENTUXIMAB-VEDOTIN", "DRUG-BLEOMYCIN"]}]})])
+def test_medication_reference_rejects_unrecognized_source_grammar(field, value, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    contra[field] = value
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({}, reg, contra, drugs)
+
+
+@pytest.mark.parametrize("value", [True, [], {"status": "complete", "drug_ids": ["bleomycin"]}])
+def test_medication_reference_malformed_input_cannot_be_clear(value, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({"concomitant_medications": value}, reg, contra, drugs)
+
+
+def test_medication_reference_does_not_screen_unencoded_regimens(medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    reg["id"] = "REG-CHOEP"
+    result = evaluate_bv_bleomycin_reference({}, reg, contra, drugs)
+    assert result.status == "out_of_scope" and not result.source_ids
+
+
+@pytest.mark.parametrize("defect", ["missing_component", "unknown_component", "missing_pair_catalog", "extra_trigger_grammar"])
+def test_medication_reference_rejects_invalid_reference_components(defect, medication_reference_records):
+    reg, contra, drugs = medication_reference_records
+    if defect == "missing_component":
+        reg["components"] = [c for c in reg["components"] if c["drug_id"] != "DRUG-BRENTUXIMAB-VEDOTIN"]
+    elif defect == "unknown_component":
+        reg["components"].append({"drug_id": "DRUG-UNKNOWN"})
+    elif defect == "missing_pair_catalog":
+        drugs.remove("DRUG-BLEOMYCIN")
+    else:
+        contra["trigger"]["any_of"] = [{"condition": "unsupported"}]
+    with pytest.raises(ValueError):
+        evaluate_bv_bleomycin_reference({}, reg, contra, drugs)
+
+
+# Integration checks: canonical medication data now gates only the encoded BV reference.
+import json
+from knowledge_base.engine import render_plan_html
+
+
+def medication_case(case):
+    root = Path(__file__).resolve().parents[1]
+    rows = json.loads((root / "docs/examples.json").read_text(encoding="utf-8"))
+    return copy.deepcopy(next(row["json"] for row in rows if row["case_id"] == case))
+
+
+@pytest.mark.parametrize("case", ["ptcl-cd30-positive", "aitl-cd30-positive", "alcl-alk-negative"])
+@pytest.mark.parametrize("status", ["partial", "complete"])
+def test_engine_bv_medication_pair_withholds_selection_without_substitute(case, status):
+    profile = medication_case(case)
+    profile["concomitant_medications"] = {"status": status, "drug_ids": ["DRUG-BLEOMYCIN"]}
+    before = copy.deepcopy(profile)
+    result = generate_plan(profile)
+    assert result.plan.knowledge_base_state["medication_selection_withheld"]
+    assert not result.plan.tracks and not result.plan.sequencing_tracks
+    assert result.default_indication_id is None
+    assert profile == before
+    for mode in ["patient", "clinician"]:
+        for language in ["en", "uk"]:
+            output = render_plan_html(result, target_lang=language, mode=mode)
+            assert 'data-medication-screen="blocked"' in output
+            assert 'data-original-source' in output
+            assert ("No medicine plan or automatic substitute" if language == "en" else "План препаратів та автоматичну заміну не обрано") in output
+            assert "Check metastatic stage" not in output
+
+
+@pytest.mark.parametrize("value,status", [(None, "unknown"), ({"status": "partial", "drug_ids": []}, "incomplete"), ({"status": "complete", "drug_ids": []}, "not_detected_in_reported_list")])
+def test_engine_bv_medication_unknown_is_not_clearance(value, status):
+    profile = medication_case("aitl-cd30-positive")
+    profile["concomitant_medications"] = value
+    result = generate_plan(profile)
+    assert result.plan.tracks[0].regimen_data["id"] == "REG-CHP-BV"
+    assert not result.plan.knowledge_base_state["medication_selection_withheld"]
+    for mode in ["patient", "clinician"]:
+        for language in ["en", "uk"]:
+            output = render_plan_html(result, target_lang=language, mode=mode)
+            assert f'data-medication-screen="{status}"' in output
+            assert ("Other interactions" if language == "en" else "Інші взаємодії") in output
+
+
+@pytest.mark.parametrize("value", [True, [], {"status": "complete", "drug_ids": ["bleomycin"]}, {"status": "complete", "drug_ids": ["DRUG-UNKNOWN"]}])
+def test_engine_bv_medication_malformed_data_withholds_without_throwing_or_substituting(value):
+    profile = medication_case("ptcl-cd30-positive")
+    profile["concomitant_medications"] = value
+    result = generate_plan(profile)
+    assert result.plan.knowledge_base_state["medication_selection_withheld"]
+    assert not result.plan.tracks and not result.plan.sequencing_tracks
+    assert result.default_indication_id is None
+    assert 'data-medication-screen="invalid_input_or_reference"' in render_plan_html(result, target_lang="en")
+
+
+def test_engine_bv_medication_unsupported_alias_cannot_override_empty_canonical_list():
+    profile = medication_case("aitl-cd30-positive")
+    profile["concomitant_medications"] = {"status": "complete", "drug_ids": []}
+    profile["medications"] = ["bleomycin"]
+    result = generate_plan(profile)
+    assert result.plan.knowledge_base_state["medication_selection_withheld"]
+    assert not result.plan.tracks
+    assert 'data-medication-screen="unsupported_input"' in render_plan_html(result, mode="patient")
+
+
+def test_engine_bv_medication_alternative_dropped_without_changing_selected_choep():
+    profile = medication_case("ptcl-cd30-negative")
+    profile["concomitant_medications"] = {"status": "partial", "drug_ids": ["DRUG-BLEOMYCIN"]}
+    result = generate_plan(profile)
+    assert result.plan.tracks[0].regimen_data["id"] == "REG-CHOEP"
+    assert all(t.regimen_data["id"] != "REG-CHP-BV" for t in result.plan.tracks)
+    assert not result.plan.knowledge_base_state["medication_selection_withheld"]
+
+
+def test_engine_bv_medication_historical_exposure_is_not_current():
+    profile = medication_case("aitl-cd30-positive")
+    profile["prior_therapies"] = ["DRUG-BLEOMYCIN"]
+    result = generate_plan(profile)
+    assert result.plan.tracks[0].regimen_data["id"] == "REG-CHP-BV"
+    assert result.plan.knowledge_base_state["medication_screens"][0]["status"] == "unknown"

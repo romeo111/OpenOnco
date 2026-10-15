@@ -1,107 +1,136 @@
 id: IND-AITL-1L-CHP-BV
 plan_track: aggressive
-
 applicable_to:
   disease_id: DIS-AITL
   line_of_therapy: 1
+  confirmed_profile_values:
+    biomarkers.BIO-CD30-IHC:
+    - positive
+  excluded_profile_values:
+    findings.cd30_positive:
+    - false
   stage_requirements: []
   biomarker_requirements_required:
-    - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive"}
-    - {biomarker_id: BIO-RHOA-G17V, required: false, value_constraint: "RHOA G17V hotspot mutation — AITL hallmark (~60-70% of cases); supports diagnostic certainty when CHP-BV is being considered over CHOEP"}
+  - biomarker_id: BIO-CD30-IHC
+    required: true
+    value_constraint: positive
+  - biomarker_id: BIO-RHOA-G17V
+    required: false
+    value_constraint: RHOA G17V hotspot mutation — AITL hallmark (~60-70% of cases); supports
+      diagnostic certainty when CHP-BV is being considered over CHOEP
   biomarker_requirements_excluded: []
-  demographic_constraints: {ecog_max: 3}
-
+  demographic_constraints:
+    ecog_max: 3
+    age_min: 18
 recommended_regimen: REG-CHP-BV
-concurrent_therapy: [SUP-PJP-PROPHYLAXIS]
-followed_by: []  # autoSCT consolidation considered separately in fit younger CR1
-
-evidence_level: high
-strength_of_recommendation: strong
-nccn_category: "1"
-
+concurrent_therapy:
+- SUP-PJP-PROPHYLAXIS
+followed_by: []
+evidence_level: null
+strength_of_recommendation: null
+nccn_category: null
 expected_outcomes:
-  overall_response_rate: "~80-85%"
-  complete_response: "~60-70%"
-  progression_free_survival: "ECHELON-2 AITL subset signal favorable; full subset PFS ~57% 3y in CD30+ T-cell (driven by ALCL)"
-  overall_survival_5y: "~50-60% (substantial improvement over CHOP-only era for CD30+ AITL)"
-
-hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+  progression_free_survival:
+    value: 'AITL subgroup, exploratory 5-year PFS: A+CHP 26.6% versus CHOP 48.1%; limited subgroup,
+      not evidence of individual benefit or harm.'
+    source: SRC-ECHELON-2-FIVE-YEAR-2022
+    confidence_interval: '95% CI: A+CHP 8.9–48.4%; CHOP 26.6–66.8%'
+  overall_survival_5y:
+    value: 'AITL subgroup, exploratory 5-year OS: A+CHP 67.8% versus CHOP 62.5%; no subtype-specific
+      superiority established.'
+    source: SRC-ECHELON-2-FIVE-YEAR-2022
+    confidence_interval: '95% CI: A+CHP 46.8–81.9%; CHOP 37.7–79.7%'
+hard_contraindications:
+- CI-HBV-NO-PROPHYLAXIS
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+- CI-BRENTUXIMAB-BLEOMYCIN
 red_flags_triggering_alternative: []
-
 required_tests:
-  - TEST-CBC
-  - TEST-CMP
-  - TEST-LFT
-  - TEST-LDH
-  - TEST-B2-MICROGLOBULIN
-  - TEST-NGS-LYMPHOID-PANEL
-  - TEST-PET-CT
-  - TEST-BM-ASPIRATE
-  - TEST-BM-TREPHINE
-  - TEST-LN-EXCISIONAL-BIOPSY
-  - TEST-FLOW-CYTOMETRY
-  - TEST-CD20-IHC  # CD30 IHC mandatory ≥10% per ECHELON-2 — confirmed at biopsy stage
-  - TEST-EBER-ISH  # AITL-specific
-  - TEST-IMMUNOGLOBULINS  # AITL-specific
-  - TEST-DAT-COOMBS  # AITL-specific
-  - TEST-RETICULOCYTE
-  - TEST-HAPTOGLOBIN
-  - TEST-HBV-SEROLOGY
-  - TEST-HCV-ANTIBODY
-  - TEST-HIV-SEROLOGY
-  - TEST-EBV-SEROLOGY
-  - TEST-ECHO
-  - TEST-PREGNANCY
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-B2-MICROGLOBULIN
+- TEST-NGS-LYMPHOID-PANEL
+- TEST-PET-CT
+- TEST-BM-ASPIRATE
+- TEST-BM-TREPHINE
+- TEST-LN-EXCISIONAL-BIOPSY
+- TEST-FLOW-CYTOMETRY
+- TEST-CD20-IHC
+- TEST-EBER-ISH
+- TEST-IMMUNOGLOBULINS
+- TEST-DAT-COOMBS
+- TEST-RETICULOCYTE
+- TEST-HAPTOGLOBIN
+- TEST-HBV-SEROLOGY
+- TEST-HCV-ANTIBODY
+- TEST-HIV-SEROLOGY
+- TEST-EBV-SEROLOGY
+- TEST-ECHO
+- TEST-PREGNANCY
 desired_tests: []
-
-rationale: >
-  CD30+ AITL (≥10% by IHC) — CHP-Bv per ECHELON-2 (Horwitz 2019) which
-  enrolled CD30+ PTCL/AITL/ALCL. Brentuximab REPLACES vincristine
-  (avoids additive MMAE neuropathy) and adds CD30-targeted ADC
-  cytotoxicity. AITL adds same EBV/AIHA/hypogamma workup layer as
-  CHOEP arm. AutoSCT consolidation considered for fit CR1.
-
-rationale_ua: >
-  При CD30+ AITL (≥10% за імуногістохімією) рекомендується схема лікування BV-CHP відповідно до даних дослідження
-  ECHELON-2 (Horwitz 2019), що включало пацієнтів із CD30+ PTCL/AITL/ALCL. Брентуксимаб ведотин
-  (brentuximab vedotin) ЗАМІНЮЄ вінкристин у схемі: усуває кумулятивну нейротоксичність від MMAE та
-  вінкристину, водночас забезпечуючи CD30-спрямовану цитотоксичність через механізм ADC. Для AITL
-  застосовується такий самий додатковий діагностичний протокол, як і в схемі CHOEP: EBER-ISH, визначення
-  IgG та панель виявлення АІГА. Для фізично збережених кандидатів у CR1 розглядається консолідаційна
-  аутологічна трансплантація стовбурових клітин.
+rationale: US labeling includes previously untreated adult CD30-expressing AITL with CHP. This
+  authorization is distinct from evidence of AITL-specific superiority. ECHELON-2 predominantly
+  enrolled systemic ALCL; the limited AITL subgroup does not establish a universal preference.
+  The comparator was CHOP, not CHOEP. The 2025 ESMO-EHA guideline recommends CHOP/CHOP-like
+  treatment for PTCL-NOS/TFHL. Regional selection remains under review.
+rationale_ua: Американська інструкція включає неліковану CD30-позитивну AITL у дорослих у комбінації
+  з CHP. Цей дозвіл відрізняється від доказів переваги саме для AITL. У ECHELON-2 переважала
+  системна ALCL; мала підгрупа AITL не встановлює універсальної переваги. Порівняння проводили
+  з CHOP, а не CHOEP. Настанова ESMO-EHA 2025 рекомендує CHOP або подібне лікування для PTCL-NOS/TFHL.
+  Регіональний вибір потребує окремої перевірки.
 ukrainian_review_status: pending_clinical_signoff
-ukrainian_drafted_by: claude_ua_06
-draft_revision: 2
-sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}, {source_id: SRC-ECHELON-2-HORWITZ-2019, position: supports, relevant_quote_paraphrase: ECHELON-2 trial — see referenced publication for primary outcome data.}]
-known_controversies:
-  - topic: "AutoSCT consolidation in CR1 after CHP-Bv"
-    positions:
-      - position: "Consolidate fit younger CR1 — AITL natural history dismal; transplant remains practice"
-        sources: [SRC-NCCN-BCELL-2025]
-      - position: "Observe — CHP-Bv may be sufficient in selected; await mature follow-up"
-        sources: [SRC-NCCN-BCELL-2025]
-    our_default: "AutoSCT for fit younger CR1 (transplant-eligible)"
-
+draft_revision: 6
+sources:
+- source_id: SRC-ECHELON-2-FIVE-YEAR-2022
+  position: supports
+  relevant_quote_paraphrase: Exploratory pooled and histology-specific follow-up results; not
+    individual prognosis or a BV-CHP versus CHOEP comparison.
+- source_id: SRC-ADCETRIS-US-LABEL
+  position: supports
+  relevant_quote_paraphrase: 'Section 1.5: US adult CD30-expressing PTCL indication; no local
+    access or subgroup superiority claim.'
+- source_id: SRC-ESMO-EHA-PTCL-2025
+  position: supports
+  relevant_quote_paraphrase: Histology-specific recommendations distinguish systemic ALCL from
+    PTCL-NOS/TFHL.
+known_controversies: []
 do_not_do:
-  - "НЕ комбінувати brentuximab з bleomycin — летальна пульмонарна токсичність."
-  - "НЕ призначати без CD30 IHC ≥10% confirmation — ECHELON-2 inclusion criterion."
-  - "НЕ пропускати baseline LVEF ≥50% (anthracycline)."
-  - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
-  - "НЕ пропускати EBER-ISH baseline — surveillance вторинної EBV-driven DLBCL."
-  - "НЕ пропускати IgG + DAT baseline — AITL paraneoplastic phenomena."
-  - "НЕ ігнорувати pre-existing neuropathy — Grade ≥2 baseline = absolute CI до brentuximab."
-  - "НЕ застосовувати CHP-Bv якщо НСЗУ-фінансування brentuximab недоступне і out-of-pocket нереально — fallback CHOEP."
-
+- 'Не поєднуйте брентуксимаб із блеоміцином: це протипоказано через легеневу токсичність.'
+- Підтвердьте CD30. Поріг ≥10% був критерієм включення ECHELON-2, а не універсальним порогом
+  дозволу; не визначайте регіон за мовою інтерфейсу.
+- НЕ пропускати baseline LVEF ≥50% (anthracycline).
+- НЕ пропускати HBV скринінг + entecavir prophylaxis.
+- НЕ пропускати EBER-ISH baseline — surveillance вторинної EBV-driven DLBCL.
+- НЕ пропускати IgG + DAT baseline — AITL paraneoplastic phenomena.
+- Оцініть сенсорні та моторні симптоми нейропатії до початку й перед кожним введенням. Не переносіть
+  протипоказання бортезомібу на брентуксимаб; початковий 2-й ступінь потребує клінічного перегляду,
+  а не універсальної абсолютної заборони.
+- НЕ застосовувати CHP-Bv якщо НСЗУ-фінансування brentuximab недоступне і out-of-pocket нереально
+  — fallback CHOEP.
 do_not_do_en:
-  - "Do not combine brentuximab with bleomycin — lethal pulmonary toxicity."
-  - "Do not prescribe without CD30 IHC ≥10% confirmation — ECHELON-2 inclusion criterion."
-  - "Do not skip baseline LVEF ≥50% (anthracycline)."
-  - "Do not skip HBV screening + entecavir prophylaxis."
-  - "Do not skip baseline EBER-ISH — surveillance for secondary EBV-driven DLBCL."
-  - "Do not skip baseline IgG + DAT — AITL paraneoplastic phenomena."
-  - "Do not ignore pre-existing neuropathy — Grade ≥2 baseline = absolute CI to brentuximab."
-  - "Do not use CHP-Bv if NSZU funding for brentuximab is unavailable and out-of-pocket is unrealistic — fallback CHOEP."
+- 'Do not combine brentuximab with bleomycin: this is contraindicated because of pulmonary toxicity.'
+- Confirm CD30. The ≥10% threshold was an ECHELON-2 enrollment criterion, not a universal label
+  cutoff; do not infer region from interface language.
+- Do not skip baseline LVEF ≥50% (anthracycline).
+- Do not skip HBV screening + entecavir prophylaxis.
+- Do not skip baseline EBER-ISH — surveillance for secondary EBV-driven DLBCL.
+- Do not skip baseline IgG + DAT — AITL paraneoplastic phenomena.
+- Assess sensory and motor neuropathy before treatment and each administration. Do not inherit
+  bortezomib exclusions; baseline grade 2 needs clinical review, not a universal absolute prohibition.
+- Do not use CHP-Bv if NSZU funding for brentuximab is unavailable and out-of-pocket is unrealistic
+  — fallback CHOEP.
 time_critical: false
-last_reviewed: "2026-04-25"
+last_reviewed: null
 reviewer_signoffs: 0
-notes: STUB. AITL-specific CD30+ arm with full EBV/AIHA/hypogamma workup overlay.
+notes: Evidence wording corrected; regimen choice, safety assertions and regional authorization
+  still require separate review. Clinical and language signoff pending.
+profile_confirmation_note: 'Planning requires the canonical biomarkers.BIO-CD30-IHC value positive;
+  unknown, absent, numeric, Boolean and structured values are not interpreted as confirmation.
+  A conflicting or malformed findings.cd30_positive value blocks this candidate. This input
+  guard does not establish treatment eligibility, subtype-specific benefit or local approval.
+  US ADCETRIS labeling section 1.5 supports CD30-expressing PTCL scope; no universal percentage
+  cutoff is inferred.
+
+  '

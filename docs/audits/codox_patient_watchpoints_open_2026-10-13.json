@@ -1,0 +1,78 @@
+{
+  "status": "open_source_confirmed_patient_watchpoint_defects",
+  "review_date": "2026-10-13",
+  "clinical_approval": false,
+  "source_path": "knowledge_base/hosted/content/regimens/codox_m_ivac.yaml",
+  "source_sha256": "ed882e7b92570e0d066427b89c386e72db50a29b08398711ef6a73e25a2169b5",
+  "runtime_proof": {
+    "synthetic_only": true,
+    "profile_scope_override": {
+      "burkitt_high_risk": true,
+      "cns_involvement": false
+    },
+    "selected_tracks": 1,
+    "watchpoints_match_source": true,
+    "patient_html_reproduces_fever_and_headache": true,
+    "original_profile_file_unchanged": true
+  },
+  "primary_sources": [
+    "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4489-burkitt-lymphoma-high-risk-dm-r-codox-m/patient-information",
+    "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4490-burkitt-lymphoma-high-risk-r-ivac/patient-information",
+    "https://www.eviq.org.au/getmedia/65e34ea6-269e-4adb-9974-ff442de20d34/ID-3099-eviQ-PI-Mouth-problems-during-cancer-V-6.pdf.aspx?ext=.pdf"
+  ],
+  "findings": [
+    {
+      "id": "fever_boundary",
+      "current_trigger": "Лихоманка вище 38°C",
+      "problem": "Excludes exactly 38°C; the patient instruction says 38°C or higher.",
+      "required_change": "Include 38°C; retain immediate-help tier.",
+      "source": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4489-burkitt-lymphoma-high-risk-dm-r-codox-m/patient-information",
+      "locator": "When to get help; Infection risk (neutropenia)"
+    },
+    {
+      "id": "headache_severity",
+      "current_urgency": "log_at_next_visit",
+      "problem": "The generic post-intrathecal headache entry has no immediate-help exception for a very bad headache unrelieved by pain medicine.",
+      "required_change": "Separate severe headache requiring immediate help from other symptoms; remove blanket reassurance and unrestricted hydration.",
+      "source": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4489-burkitt-lymphoma-high-risk-dm-r-codox-m/patient-information",
+      "locator": "Headache"
+    },
+    {
+      "id": "ivac_neurological_changes",
+      "problem": "No dedicated immediate-help entry for ifosfamide/cytarabine neurological symptoms.",
+      "required_change": "Explicit immediate-help entry with source-supported confusion, loss of balance, seizures, or slow/slurred speech; do not label these as routine post-puncture symptoms.",
+      "source": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4490-burkitt-lymphoma-high-risk-r-ivac/patient-information",
+      "locator": "Changes in the way your brain works (encephalopathy); Nervous system changes from cytarabine"
+    },
+    {
+      "id": "fatigue_reassurance",
+      "current_urgency": "log_at_next_visit",
+      "problem": "Prolonged marked fatigue is attributed to slow bone-marrow recovery without assessment.",
+      "required_change": "Remove unsupported causal reassurance. Source says to inform doctor/nurse but supplies no same-day threshold; do not invent one.",
+      "source": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4489-burkitt-lymphoma-high-risk-dm-r-codox-m/patient-information",
+      "locator": "Tiredness and lack of energy (fatigue)"
+    },
+    {
+      "id": "mucositis_severity",
+      "current_urgency": "log_at_next_visit",
+      "problem": "Mouth ulcers/pain share an unconditional next-visit tier; eating/swallowing difficulty is not distinguished.",
+      "required_change": "Add immediate treatment-team contact for inability to eat/drink, uncontrolled pain, oral bleeding or difficulty swallowing. If the team cannot be reached, use emergency department fallback. Distinguish these from mild mouth discomfort.",
+      "source": "https://www.eviq.org.au/getmedia/65e34ea6-269e-4adb-9974-ff442de20d34/ID-3099-eviQ-PI-Mouth-problems-during-cancer-V-6.pdf.aspx?ext=.pdf",
+      "locator": "eviQ 3099 v6, page 1, Important"
+    }
+  ],
+  "not_completed": [
+    "Canonical watchpoint correction",
+    "Regenerated eleven-language patient pages and source bindings",
+    "Browser bundles and API package refresh",
+    "Proven-CNS patient source review: current regimen intentionally has no copied watchpoints",
+    "Clinical and translation signoff",
+    "Production publication"
+  ],
+  "scope_limits": [
+    "Primary-source audit only; no clinical records or deployed pages changed.",
+    "The primary instructions reviewed concern high-risk no-proven-CNS protocols 4489/4490; do not transfer them automatically to 4492/4493.",
+    "Patient-source contact advice without a stated interval does not justify an invented same-day threshold.",
+    "Linked eviQ 3099 v6 PDF explicitly supplies immediate-contact criteria for severe mouth/throat problems; these are not invented same-day thresholds."
+  ]
+}

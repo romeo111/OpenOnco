@@ -20,6 +20,35 @@ for (const original of cached) {
   const fields = normalized.groups.flatMap(group => group.questions.map(question => question.field));
   assert.equal(fields.length, new Set(fields).size, original.id);
 }
+const currentBurkitt = current.find(questionnaire => questionnaire.id === 'QUEST-BURKITT-1L-STUB');
+const recentBurkitt = structuredClone(currentBurkitt);
+const scopeFields = ['findings.burkitt_high_risk', 'findings.cns_involvement'];
+for (const group of recentBurkitt.groups) {
+  for (const question of group.questions) {
+    if (scopeFields.includes(question.field)) {
+      question.default_value = question.field === 'findings.burkitt_high_risk';
+      question.impact = 'recommended';
+    }
+  }
+}
+recentBurkitt.groups.find(group => group.title === 'General screening (optional)').questions.push({
+  field: 'findings.cns_involvement', type: 'boolean', default_value: false,
+});
+recentBurkitt.last_reviewed = '2026-04-27';
+recentBurkitt.notes = 'Obsolete cached protocol questions';
+const recentBurkittBefore = JSON.stringify(recentBurkitt);
+context.quest = recentBurkitt;
+const upgradedBurkitt = JSON.parse(JSON.stringify(vm.runInContext('normalizeQuestionnaire(quest)', context)));
+assert.deepEqual(upgradedBurkitt, currentBurkitt, 'Cached scope defaults and duplicates must not bypass current unanswered questions');
+assert.equal(JSON.stringify(recentBurkitt), recentBurkittBefore, 'Cached questionnaire remains unchanged');
+context.quest = upgradedBurkitt;
+assert.deepEqual(JSON.parse(JSON.stringify(vm.runInContext('normalizeQuestionnaire(quest)', context))), currentBurkitt, 'Scope upgrade is idempotent');
+for (const field of scopeFields) {
+  const matching = upgradedBurkitt.groups.flatMap(group => group.questions).filter(question => question.field === field);
+  assert.equal(matching.length, 1);
+  assert.equal(matching[0].impact, 'critical');
+  assert.equal(Object.hasOwn(matching[0], 'default_value'), false);
+}
 const currentNsclc = current.find(questionnaire => questionnaire.id === 'QUEST-NSCLC-1L-STUB');
 const recentNsclc = structuredClone(currentNsclc);
 for (const group of recentNsclc.groups) group.questions = group.questions.filter(question => !['findings.stage','findings.driver_negative','findings.nsclc_taxane_choice'].includes(question.field));

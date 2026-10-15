@@ -327,7 +327,8 @@ def enumerate_experimental_options(
             stage_stratum=stage_stratum,
             line_of_therapy=line_of_therapy,
             trials=[],
-            last_synced=sync_ts,
+            search_status="not_run",
+            last_synced=None,
             notes="ctgov search not configured — pass search_fn to enumerate trials.",
         )
 
@@ -338,6 +339,13 @@ def enumerate_experimental_options(
             status="recruiting",
             max_results=max_results,
         )
+        if not isinstance(raw_studies, list) or any(not isinstance(study, dict) for study in raw_studies):
+            raise ValueError("Invalid registry search response")
+        trials: list[ExperimentalTrial] = []
+        for study in raw_studies:
+            trial = _to_trial(study, sync_ts=sync_ts, biomarker_term=biomarker_profile)
+            if trial is not None:
+                trials.append(trial)
     except Exception as exc:
         return ExperimentalOption(
             id=option_id,
@@ -346,15 +354,10 @@ def enumerate_experimental_options(
             stage_stratum=stage_stratum,
             line_of_therapy=line_of_therapy,
             trials=[],
-            last_synced=sync_ts,
+            search_status="failed",
+            last_synced=None,
             notes=f"ctgov search failed: {exc}",
         )
-
-    trials: list[ExperimentalTrial] = []
-    for study in (raw_studies or []):
-        t = _to_trial(study, sync_ts=sync_ts, biomarker_term=biomarker_profile)
-        if t is not None:
-            trials.append(t)
 
     option = ExperimentalOption(
         id=option_id,
@@ -363,6 +366,7 @@ def enumerate_experimental_options(
         stage_stratum=stage_stratum,
         line_of_therapy=line_of_therapy,
         trials=trials,
+        search_status="completed",
         last_synced=sync_ts,
         notes=None,
     )

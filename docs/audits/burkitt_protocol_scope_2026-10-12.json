@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-12",
+  "scope": "CODOX/IVAC high-risk/no-proven-CNS protocol applicability guard",
+  "clinical_approval": false,
+  "behavior": "The indication requires explicit typed high-risk=true and CNS-involvement=false. If a selected route fails confirmation, no treatment or automatic substitute is selected. Low-risk profiles do not expose the wrong aggressive alternative. The original CNS-positive synthetic case remains CNS-positive and demonstrates withholding.",
+  "questionnaire": "Two critical risk/CNS questions have no defaults; only this questionnaire changes in the deployed JSON.",
+  "static_output": "Explicitly withheld plans render in doctor and patient views with Burkitt-specific explanation; unexpected empty plans remain build failures. Public example audits classify valid withholding separately and reject a withheld flag hiding treatment.",
+  "primary_source": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/3727-burkitt-lymphoma-dm-r-codox-m-r-ivac-overvi",
+  "source_semantic_changes": {
+    "knowledge_base/hosted/content/regimens/codox_m_ivac.yaml": [
+      "notes",
+      "notes_ua"
+    ],
+    "knowledge_base/hosted/content/indications/ind_burkitt_1l_codoxm_ivac.yaml": [
+      "applicable_to",
+      "do_not_do",
+      "do_not_do_en",
+      "last_reviewed",
+      "notes",
+      "rationale",
+      "rationale_ua",
+      "review_status",
+      "sources"
+    ],
+    "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml": [
+      "last_reviewed",
+      "notes",
+      "notes_ua",
+      "purpose",
+      "review_status"
+    ],
+    "knowledge_base/hosted/content/redflags/rf_burkitt_high_risk.yaml": [
+      "definition",
+      "definition_ua",
+      "last_reviewed",
+      "notes",
+      "notes_ua"
+    ],
+    "knowledge_base/hosted/content/questionnaires/quest_burkitt_1l.yaml": [
+      "groups",
+      "last_reviewed",
+      "notes"
+    ]
+  },
+  "verification": [
+    "39 focused tests passed; no critical lint findings",
+    "4257 entities validated: no schema/reference/contract errors; 396 warnings",
+    "All 448 public synthetic examples audited: 445 pass, 3 explicitly withheld, no failures",
+    "121 pages finalized and 55 source-reader identities checked",
+    "Three changed search rows per locale; all other rows/counts unchanged",
+    "Bundled questionnaire contains the two unanswered-by-default fields once each",
+    "Bundle identity/version and nine-language stale/offline translation asset checks passed",
+    "Pinned Node WASM 0.26.4 verifies withholding of the original CNS-positive case and the corrected reference for a separate confirmed CNS-negative fixture; prior synthetic states preserved, zero network attempts. Not browser-offline or clinical validation."
+  ],
+  "artifact_proof": {
+    "core_changed_members": [
+      "knowledge_base/engine/render.py",
+      "knowledge_base/hosted/content/regimens/codox_m_ivac.yaml"
+    ],
+    "disease_changed_members": {
+      "DIS-AML": [
+        "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_codoxm_ivac.yaml",
+        "knowledge_base/hosted/content/redflags/rf_burkitt_high_risk.yaml"
+      ],
+      "DIS-BURKITT": [
+        "knowledge_base/hosted/content/algorithms/algo_burkitt_1l.yaml",
+        "knowledge_base/hosted/content/indications/ind_burkitt_1l_codoxm_ivac.yaml",
+        "knowledge_base/hosted/content/questionnaires/quest_burkitt_1l.yaml",
+        "knowledge_base/hosted/content/redflags/rf_burkitt_high_risk.yaml"
+      ]
+    },
+    "pages_verified": 121,
+    "reader_verification": {
+      "checked": 55,
+      "updated": 0,
+      "preserved": 0
+    },
+    "core_version": "4d6d722bd682",
+    "core_compressed_version": "8301d79d489c"
+  },
+  "unchanged_disease_archives": 88,
+  "duplicate_dependencies": "The existing AML archive also contains three Burkitt dependency records; every packaged copy equals canonical current source. No AML clinical source is modified.",
+  "preferred_core_bytes": 2643552,
+  "open_risks": [
+    "Complete risk classification, demographic/fitness/organ eligibility and treatment ranking remain unreviewed",
+    "CNS-positive and separate low-risk protocol implementation still required; failed selected-route scope yields no automatic replacement",
+    "Other questionnaire defaults, biomarkers, efficacy, availability and patient watchpoints remain unreviewed",
+    "CHOEP-alloSCT monitoring still needs its own audit",
+    "Production publication awaits explicit user approval for updated PR 669",
+    "Some synthetic case titles/summaries still contain stale protocol/efficacy wording and need a separate catalogue cleanup."
+  ],
+  "delivery": "Current branch preparation only; production authorization remains pending."
+}

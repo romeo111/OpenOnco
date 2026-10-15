@@ -1,111 +1,72 @@
 id: ALGO-BURKITT-1L
 applicable_to_disease: DIS-BURKITT
 applicable_to_line_of_therapy: 1
-purpose: >
-  Select default + alternative for first-line Burkitt based on risk
-  profile. Two tracks: DA-EPOCH-R (standard, broader applicability)
-  vs CODOX-M/IVAC (aggressive, fit younger high-risk).
-
+purpose: Draft first-line Burkitt routing. The high-risk/no-proven-CNS CODOX/IVAC reference requires positive
+  risk and CNS-status confirmation; failed selected-route applicability withholds treatment without automatic
+  substitution.
 output_indications:
-  - IND-BURKITT-1L-DAEPOCHR
-  - IND-BURKITT-1L-CODOXM-IVAC
-
+- IND-BURKITT-1L-DAEPOCHR
+- IND-BURKITT-1L-CODOXM-IVAC
+- IND-BURKITT-1L-CODOX-IVAC-PROVEN-CNS
 default_indication: IND-BURKITT-1L-DAEPOCHR
 alternative_indication: IND-BURKITT-1L-CODOXM-IVAC
-
 decision_tree:
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-BURKITT-HIGH-RISK
-    if_true:
-      result: IND-BURKITT-1L-CODOXM-IVAC
-    if_false:
-      next_step: 2
-  - step: 2
-    evaluate:
-      all_of:
-        - clinician_confirmation:
-            id: CC-ALGO-BURKITT-1L-F08C149D5A0C
-            label: "Standard / intermediate risk"
-            legacy_condition: "Standard / intermediate risk"
-        - clinician_confirmation:
-            id: CC-ALGO-BURKITT-1L-E20FD88CF985
-            label: "ECOG ≤ 3"
-            legacy_condition: "ECOG ≤ 3"
-    if_true:
-      result: IND-BURKITT-1L-DAEPOCHR
-    if_false:
-      result: IND-BURKITT-1L-DAEPOCHR
-    notes: "MDT-only after CSD-7A audit — mechanical rewire of the original free-text ECOG gate into finding: \"ecog\" (threshold 3, comparator <=), mirroring RF-BURKITT-FRAILTY-AGE / RF-FITNESS-ECOG-POOR. 'Standard / intermediate risk' clause remains free-text — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies; wireable only via dedicated disease-specific RFs in a future round. Original clinical criteria unchanged."
-
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-BURKITT-2024]
-last_reviewed: "2026-04-27"
-notes: >
-  CODOX-M/IVAC requires fit younger (age ≤60, ECOG ≤2). If high-risk
-  AND not fit younger, falls back to DA-EPOCH-R + supportive care.
-
-  Etiology rails (parallel to indication selection):
-
-  - HIV (HIV-Burkitt — 25-40% of adult Burkitt is HIV-associated) —
-    DA-EPOCH-R is the preferred 1L regimen for HIV-Burkitt per CALGB
-    10002 / Sparano 2010 / AMC 048 — outcomes approach HIV-negative
-    with concurrent ART. CODOX-M/IVAC is reserved for hard high-risk
-    features (CNS+, leukemic phase, LDH>3×ULN, bulky abdomen) regardless
-    of HIV status. RF-BURKITT-HIGH-RISK explicitly includes
-    "HIV+ AND CD4 <100" as one of the intensifiers — this captures the
-    subset where CODOX-M/IVAC may still win. ART continued throughout;
-    integrase-inhibitor backbone preferred (avoid ritonavir-boosted PIs
-    with vincristine + HD-MTX). PJP prophylaxis throughout induction +
-    3-6 mo post. CD4 + HIV-VL pre-cycle.
-
-  - HBV (HBsAg+ OR anti-HBc+) — entecavir prophylaxis before first
-    rituximab dose (DA-EPOCH-R or CODOX-M/IVAC + R) through induction +
-    ≥12 months post. CI-HBV-NO-PROPHYLAXIS hard-blocks both indications.
-
-  - HCV — Treat Burkitt first (extremely rapid disease — Ki67 ~100%);
-    DAA after induction unless CP-A and rapid clearance feasible.
-
-  - EBV (endemic Burkitt EBV+ ~95%; sporadic ~15%) — informational, not
-    treatment-altering. Documented for prognostication.
-
-  All three operate via parallel SUP-* / RF-BURKITT-INFECTION-SCREENING
-  surfaces. BIO-HIV-STATUS, BIO-HBV-STATUS missing — flagged.
-notes_ua: >
-  CODOX-M/IVAC потребує молодих придатних пацієнтів (вік ≤60, ECOG ≤2).
-  При поєднанні високого ризику з непридатністю відбувається повернення
-  до DA-EPOCH-R + підтримуюча терапія.
-
-  Етіологічні рейки (паралельно до вибору показання):
-
-  - ВІЛ (ВІЛ-Burkitt — 25–40% дорослого Burkitt асоційовано з ВІЛ) —
-    DA-EPOCH-R є переважною схемою лікування 1L для ВІЛ-Burkitt згідно CALGB 10002
-    / Sparano 2010 / AMC 048 — результати близькі до ВІЛ-негативних при
-    паралельній АРТ. CODOX-M/IVAC резервується для жорстких ознак
-    високого ризику (ЦНС+, лейкемічна фаза, ЛДГ>3×ВМН, масивний живіт)
-    незалежно від ВІЛ-статусу. RF-BURKITT-HIGH-RISK явно включає
-    «ВІЛ+ ТА CD4 <100» як один із підсилювачів — охоплює підгрупу, де
-    CODOX-M/IVAC може бути кращим. АРТ продовжується протягом усього
-    лікування; перевага — скелет на основі інгібіторів інтегрази
-    (уникати ритонавір-бустованих ІП з вінкристином + HD-MTX). PJP-
-    профілактика протягом усієї індукції + 3–6 міс. після. CD4 +
-    HIV-VL перед кожним циклом.
-
-  - HBV (HBsAg+ АБО anti-HBc+) — профілактика ентекавіром перед першою
-    дозою ритуксимабу (DA-EPOCH-R або CODOX-M/IVAC + R) протягом
-    індукції + ≥12 місяців після. CI-HBV-NO-PROPHYLAXIS жорстко блокує
-    обидва показання.
-
-  - HCV — спочатку лікувати Burkitt (вкрай швидкоплинне захворювання —
-    Ki67 ~100%); DAA після індукції, якщо тільки CP-A і швидке зникнення
-    вірусу не є можливим.
-
-  - EBV (ендемічний Burkitt EBV+ ~95%; спорадичний ~15%) — інформаційний,
-    не впливає на лікування. Документується для прогностики.
-
-  Всі три функціонують через паралельні поверхні SUP-* /
-  RF-BURKITT-INFECTION-SCREENING. BIO-HIV-STATUS, BIO-HBV-STATUS
-  відсутні — відмічено.
+- step: 1
+  evaluate:
+    all_of:
+    - finding: burkitt_protocol_variant
+      value: eviq_proven_cns
+  if_true:
+    result: IND-BURKITT-1L-CODOX-IVAC-PROVEN-CNS
+  if_false:
+    next_step: 2
+  notes: Explicit reference-variant opt-in only. The indication still enforces confirmed high-risk/proven-CNS
+    context; failed applicability produces no automatic replacement.
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-BURKITT-HIGH-RISK
+  if_true:
+    result: IND-BURKITT-1L-CODOXM-IVAC
+  if_false:
+    next_step: 3
+- step: 3
+  evaluate:
+    all_of:
+    - clinician_confirmation:
+        id: CC-ALGO-BURKITT-1L-F08C149D5A0C
+        label: Standard / intermediate risk
+        legacy_condition: Standard / intermediate risk
+    - clinician_confirmation:
+        id: CC-ALGO-BURKITT-1L-E20FD88CF985
+        label: ECOG ≤ 3
+        legacy_condition: ECOG ≤ 3
+  if_true:
+    result: IND-BURKITT-1L-DAEPOCHR
+  if_false:
+    result: IND-BURKITT-1L-DAEPOCHR
+  notes: 'MDT-only after CSD-7A audit — mechanical rewire of the original free-text ECOG gate into finding:
+    "ecog" (threshold 3, comparator <=), mirroring RF-BURKITT-FRAILTY-AGE / RF-FITNESS-ECOG-POOR. ''Standard
+    / intermediate risk'' clause remains free-text — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy),
+    so no pan-disease RF applies; wireable only via dedicated disease-specific RFs in a future round.
+    Original clinical criteria unchanged.'
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-BURKITT-2024
+last_reviewed: null
+notes: The legacy high-risk flag does not establish applicability of the encoded eviQ high-risk/no-proven-CNS
+  schedule. The indication requires burkitt_high_risk=true and cns_involvement=false; missing/conflicting
+  or proven-CNS status prevents materialization. This does not validate risk classification, fitness,
+  HIV-specific ranking or CNS-positive/low-risk protocol choices. A separate eviQ proven-CNS reference
+  is exposed only on explicit variant opt-in plus confirmed matching risk/CNS values; choosing a reference
+  is not complete eligibility or clinical approval.
+notes_ua: Застарілий прапорець високого ризику не підтверджує придатність закодованого довідкового розкладу
+  eviQ без доведеного ураження ЦНС. Показання вимагає burkitt_high_risk=true та cns_involvement=false;
+  відсутній/суперечливий чи ЦНС-позитивний стан блокує матеріалізацію. Це не перевіряє класифікацію ризику,
+  придатність, вибір при ВІЛ чи протоколи для ЦНС-позитивного/низькоризикового захворювання. Окремий довідковий
+  варіант eviQ для доведеного ураження ЦНС доступний лише після явного вибору й підтвердження відповідного
+  ризику/ЦНС; вибір довідкового варіанта не є повною оцінкою придатності чи клінічним погодженням.
 ukrainian_review_status: pending_clinical_signoff
 ukrainian_drafted_by: claude_ua_13
 draft_revision: 2
+review_status: pending_clinical_signoff

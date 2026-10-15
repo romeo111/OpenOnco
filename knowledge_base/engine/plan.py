@@ -29,10 +29,11 @@ Patient profile shape (dict; MVP — we will move to FHIR/mCODE later):
 """
 
 from __future__ import annotations
+from ._planning_status import planning_block_reason
 
 from .profile_input import validate_patient_profile
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import json
 from pathlib import Path
@@ -52,6 +53,7 @@ from ._actionability import find_matching_actionability
 from ._track_filter import is_track_excluded
 from .histology import histology_confirmed
 from .profile_applicability import unconfirmed_profile_fields
+from .medication_screen import evaluate_bv_bleomycin_reference
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
@@ -492,6 +494,8 @@ def _try_generate_prevention_plan(
     matched_indications = _find_prevention_indications(
         fired_rfs, patient_biomarkers, entities
     )
+    matched_indications = [ind for ind in matched_indications
+                           if not planning_block_reason(ind, _resolve(entities, ind.get('recommended_regimen')))]
 
     # Sort prevention indications by plan_track preference so the standard
     # / intervention track is the engine-selected default (is_default=True
@@ -743,6 +747,9 @@ def _materialize_track(
 
     if indication:
         regimen = _resolve(entities, indication.get("recommended_regimen"))
+        blocked = planning_block_reason(indication, regimen)
+        if blocked:
+            raise ValueError(f'Cannot materialize withheld planning record {indication_id}: {blocked}')
         if regimen:
             monitoring = _resolve(entities, regimen.get("monitoring_schedule_id"))
             for sup_id in regimen.get("mandatory_supportive_care") or []:
@@ -1012,6 +1019,43 @@ def generate_plan(
     patient_biomarkers = patient.get("biomarkers") or {}
 
     _ACTIVE_TRACKS = {"standard", "aggressive"}
+    def record_block(indication_id):
+        indication = _resolve(entities, indication_id)
+        return planning_block_reason(indication, _resolve(entities, (indication or {}).get('recommended_regimen')))
+
+    # Only the explicitly authored BV/bleomycin reference is executable.
+    # Unknown/partial medicines do not establish clearance. Unsupported or
+    # invalid input cannot support the selected route; never promote a substitute.
+    medication_screens = {}
+    catalog_drugs = {eid for eid, info in entities.items() if info["type"] == "drugs"}
+    for indication_id in dict.fromkeys(current_candidate_ids + sequencing_candidate_ids):
+        indication = _resolve(entities, indication_id) or {}
+        regimen = _resolve(entities, indication.get("recommended_regimen")) or {}
+        if regimen.get("id") != "REG-CHP-BV":
+            continue
+        try:
+            screen = asdict(evaluate_bv_bleomycin_reference(
+                patient, regimen, _resolve(entities, "CI-BRENTUXIMAB-BLEOMYCIN"), catalog_drugs))
+        except ValueError:
+            screen = {"status": "invalid_input_or_reference", "contraindication_ids": [],
+                      "source_ids": [], "unsupported_paths": []}
+        medication_screens[indication_id] = {"indication_id": indication_id,
+                                             "regimen_id": regimen["id"], **screen}
+    def medication_block(indication_id):
+        return medication_screens.get(indication_id, {}).get("status") in {
+            "blocked", "unsupported_input", "invalid_input_or_reference"}
+    medication_selection_withheld = medication_block(current_default_id)
+    if medication_selection_withheld:
+        result.warnings.append("BV-CHP medication review withheld the selected route. No treatment or automatic substitute selected.")
+        current_candidate_ids = []
+        sequencing_candidate_ids = []
+
+    planning_reason = record_block(current_default_id) or record_block(selected)
+    planning_selection_withheld = bool(planning_reason)
+    if planning_selection_withheld:
+        result.warnings.append(f'Planning record withheld: {planning_reason} No treatment or automatic substitute selected.')
+        current_candidate_ids = []
+        sequencing_candidate_ids = []
     histology_selection_withheld = False
     profile_selection_withheld = False
     unconfirmed_fields = unconfirmed_profile_fields(_resolve(entities, current_default_id) or {}, patient) if current_default_id else []
@@ -1034,6 +1078,12 @@ def generate_plan(
     tracks: list[PlanTrack] = []
     for ind_id in current_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if medication_block(ind_id):
+            result.warnings.append("BV-CHP candidate withheld by scoped medication review.")
+            continue
+        if record_block(ind_id):
+            result.warnings.append(f'track {ind_id} withheld: {record_block(ind_id)}')
+            continue
         if ind and unconfirmed_profile_fields(ind, patient):
             result.warnings.append(f'track {ind_id} withheld: required profile values are not confirmed')
             continue
@@ -1064,6 +1114,11 @@ def generate_plan(
     sequencing_tracks: list[PlanTrack] = []
     for ind_id in sequencing_candidate_ids:
         ind = _resolve(entities, ind_id)
+        if medication_block(ind_id):
+            result.warnings.append("BV-CHP candidate withheld by scoped medication review.")
+            continue
+        if record_block(ind_id):
+            continue
         if ind and unconfirmed_profile_fields(ind, patient):
             continue
         if ind and not histology_confirmed(ind, patient):
@@ -1088,6 +1143,10 @@ def generate_plan(
     # KB state snapshot (per CHARTER §10.2 — immutable audit)
     kb_state = {
         "loaded_entities": len(entities),
+        "medication_selection_withheld": medication_selection_withheld,
+        "medication_screens": list(medication_screens.values()),
+        "planning_selection_withheld": planning_selection_withheld,
+        "planning_withholding_reason": planning_reason,
         "histology_selection_withheld": histology_selection_withheld,
         "profile_selection_withheld": profile_selection_withheld,
         "unconfirmed_profile_fields": unconfirmed_fields,

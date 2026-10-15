@@ -24,7 +24,21 @@ def test_public_example_audit_passes_and_all_bma_profiles_are_registered():
     assert report["summary"]["failed"] == 0
     assert report["summary"]["unregistered_bma_profiles"] == 0
     assert report["summary"]["by_quality_tier"]["molecular"] >= 100
-    assert report['summary']['withheld'] == 2
+    withheld = {record['case_id']: record for record in report['records']
+                if record['status'] == 'withheld'}
+    assert set(withheld) == {
+        'burkitt-high-risk',
+        'bma-bma-nrg1-fusion-nsclc',
+        'bma-bma-ntrk-fusion-nsclc',
+    }
+    assert report['summary']['withheld'] == len(withheld)
+    assert withheld['burkitt-high-risk']['withheld_reason'] == (
+        'Required profile/protocol context not confirmed; no automatic substitute.'
+    )
+    for case_id in ['bma-bma-nrg1-fusion-nsclc', 'bma-bma-ntrk-fusion-nsclc']:
+        assert withheld[case_id]['withheld_reason'] == (
+            'Histology-specific treatment route not confirmed; no automatic substitute.'
+        )
     assert report['summary']['passed'] + report['summary']['withheld'] == report['summary']['checked']
 
 

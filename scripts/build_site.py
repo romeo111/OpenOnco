@@ -4829,6 +4829,7 @@ def render_try(
     examples_manifest: list = None,
 ) -> str:
     from scripts.report_export_copy import ERRORS as report_export_errors
+    from scripts.report_export_copy import PRINT_ERRORS as report_print_errors
     from scripts.runtime_cache_copy import COPY as runtime_copy
     from scripts.numeric_input_copy import COPY as numeric_copy
     from scripts.profile_input_copy import COPY as profile_copy
@@ -4856,6 +4857,11 @@ def render_try(
     from scripts.nsclc_question_copy import messages_for as _nsclc_question_messages
     _nsclc_question_copy_json = json.dumps(_nsclc_question_messages(target_lang), ensure_ascii=False).replace('</', '<\\/')
     _nsclc_required_questions_json = json.dumps([question for group in _nsclc_form['groups'] for question in group['questions'] if question['field'] in {'findings.histology', 'findings.stage', 'findings.driver_negative', 'findings.nsclc_taxane_choice'}], ensure_ascii=False).replace('</', '<\\/')
+    _burkitt_form = _histology_yaml.safe_load((KB_ROOT / "questionnaires" / "quest_burkitt_1l.yaml").read_text(encoding="utf-8"))
+    _burkitt_scope_group = next(group for group in _burkitt_form['groups'] if any(
+        question['field'] == 'findings.cns_involvement' for question in group['questions']))
+    _burkitt_scope_json = json.dumps(_burkitt_scope_group, ensure_ascii=False).replace('</', '<\\/')
+    _burkitt_metadata_json = json.dumps({key: _burkitt_form[key] for key in ('last_reviewed', 'notes')}, ensure_ascii=False).replace('</', '<\\/')
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
@@ -5548,21 +5554,24 @@ function closePlanModal(options = {{}}) {{
   else if (!runBtn.disabled) runBtn.focus();
 }}
 
+function reportPrintError() {{
+  const messages = {json.dumps(report_print_errors, ensure_ascii=False)};
+  return messages[document.documentElement.lang] || messages.en;
+}}
+
 function downloadPdf() {{
-  // Browser-native print → "Save as PDF" works on every modern browser.
-  // The render layer ships A4-print-friendly CSS (@page + @media print)
-  // so the iframe content paginates cleanly without any extra deps.
+  // Open the browser print dialog; opening it does not prove a PDF was saved.
   if (uiBusy || generating) return;
   if (planSource == null || !reportReady || planDirty) return;
-  // Modal must be visible so iframe contentWindow is fully laid out and
-  // print() picks up the right document.
-  const wasHidden = planModal && planModal.hidden;
-  if (wasHidden) openPlanModal({{ force: true }});
   try {{
-    resultFrame.contentWindow.focus();
-    resultFrame.contentWindow.print();
+    if (planModal && planModal.hidden) openPlanModal({{ force: true }});
+    const reportWindow = resultFrame.contentWindow;
+    if (!reportWindow || typeof reportWindow.print !== 'function') throw new Error('Printing unavailable');
+    reportWindow.focus();
+    reportWindow.print();
+    setError('');
   }} catch (e) {{
-    setError('Print failed: ' + (e.message || e));
+    setError(reportPrintError());
   }}
 }}
 
@@ -6076,6 +6085,18 @@ function normalizeQuestionnaire(quest) {{
     const index = groups.findIndex(group => group.title !== screeningTitle);
     if (index >= 0) groups[index] = {{ ...groups[index], questions: [...requiredQuestions, ...(groups[index].questions || [])] }};
     else groups.unshift({{ title: 'Demographics + baseline status', questions: requiredQuestions }});
+  }}
+  if (quest.id === 'QUEST-BURKITT-1L-STUB') {{
+    // Cached scope controls may be absent or have obsolete defaults. Replace
+    // only these controls with the current authored, unanswered questions.
+    const scopeGroup = {_burkitt_scope_json};
+    const requiredFields = new Set(scopeGroup.questions.map(question => question.field));
+    for (let index = groups.length - 1; index >= 0; index--) {{
+      if (groups[index].title === scopeGroup.title) groups.splice(index, 1);
+      else groups[index] = {{ ...groups[index], questions: (groups[index].questions || []).filter(question => !requiredFields.has(question.field)) }};
+    }}
+    groups.splice(Math.min(1, groups.length), 0, scopeGroup);
+    quest = {{ ...quest, ...{_burkitt_metadata_json} }};
   }}
   return {{ ...quest, groups }};
 }}
@@ -11386,7 +11407,11 @@ def build_one_case(case: CaseEntry, output_dir: Path,
             experimental_search_fn=search_trials,
             experimental_cache_root=CTGOV_CACHE,
         )
-        if result.plan is None or (not result.plan.tracks and not result.plan.knowledge_base_state.get("histology_selection_withheld")):
+        applicability_withheld = result.plan is not None and any(
+            result.plan.knowledge_base_state.get(key)
+            for key in ('histology_selection_withheld', 'profile_selection_withheld')
+        )
+        if result.plan is None or (not result.plan.tracks and not applicability_withheld):
             raise RuntimeError(f"Example {case.case_id} generated no treatment plan")
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
         html = render_plan_html(result, mdt=mdt, target_lang=target_lang)

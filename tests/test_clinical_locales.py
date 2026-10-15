@@ -606,3 +606,38 @@ def test_high_risk_dosing_fallback_is_consistent_across_catalog_runtime_and_page
     assert runtime[source] == source
     assert f'data-original-source' in published
     assert escape(source, quote=False) in published
+
+
+def test_versioned_client_dependencies_are_tracked():
+    """Local leftover assets must not hide a missing deployment dependency."""
+    import re
+    import subprocess
+    root = Path(__file__).resolve().parents[1]
+    tracked = set(subprocess.check_output(['git', 'ls-files', '-z'], cwd=root).decode('utf-8').split('\0'))
+    for locale in ['es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi']:
+        markup = (root / 'docs' / locale / 'try.html').read_text(encoding='utf-8')
+        paths = re.findall(r'(?:src|data-catalog|data-ui-catalog)="(/[^"<>]+)"', markup)
+        assets = {path for path in paths if re.search(r'clinical-(?:localization|(?:ui-)?translations)\.[a-f0-9]{12}\.(?:js|json)$', path)}
+        assert len(assets) >= 2, locale
+        for path in assets:
+            relative = 'docs' + path
+            assert relative in tracked, f'{locale}: referenced asset is not committed: {relative}'
+            assert (root / relative).is_file(), relative
+
+
+def test_publication_keeps_immutable_catalogs_for_prior_pages(tmp_path):
+    from scripts.clinical_asset_versions import write_clinical_assets
+    locale = tmp_path / 'es'
+    locale.mkdir()
+    old = {'clinical-translations.json': b'{"source":"first"}\n', 'clinical-ui-translations.json': b'{"label":"first"}\n'}
+    for name, payload in old.items():
+        (locale / name).write_bytes(payload)
+    first = write_clinical_assets(tmp_path, 'es')
+    for name in old:
+        (locale / name).write_bytes(b'{"source":"updated"}\n')
+    second = write_clinical_assets(tmp_path, 'es')
+    for name, payload in old.items():
+        assert first[name] != second[name]
+        assert (tmp_path / first[name].lstrip('/')).read_bytes() == payload
+        assert (tmp_path / second[name].lstrip('/')).is_file()
+        assert (locale / name).read_bytes() == b'{"source":"updated"}\n'

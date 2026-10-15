@@ -1,0 +1,260 @@
+{
+  "status": "implemented_bv_specific_neuropathy_and_contact_reference_repair",
+  "clinical_approval": false,
+  "baseline": "287c48d5cf8faa7a14a67d96aa275ed91d230baf",
+  "changes": [
+    "Removed bortezomib/myeloma contraindication inheritance from two first-line BV-CHP indications and added a BV/bleomycin label-specific contraindication reference.",
+    "Removed universal baseline grade-2 absolute prohibition; retained specialist assessment and distinction from treatment-emergent dose modifications.",
+    "Separated US adult 1.8 mg/kg every-three-week combination sensory/motor grade rules from eviQ 4038 v3 recovery-delay/omission rules. No automatic dose change, monotherapy/AVD/pediatric rule blending or baseline eligibility claim.",
+    "Replaced seven legacy patient points with 12 source-bound BV-CHP points. Neuropathy notification no longer waits until day 14/next visit; fever and infection signs are immediate-contact and not restricted to days 7–14; allergy advice includes after clinic and every cycle; cardiopulmonary and other urgent symptoms retain immediate contact/ED fallback.",
+    "Added 12 complete English draft pairs with full source fingerprints; previous 32 saved pairs retained. No paid translation or provider call.",
+    "Regimen notes no longer repeat unsupported cross-histology superiority, invented ALCL three-year PFS or universal CD30 cutoff."
+  ],
+  "primary_sources": [
+    {
+      "url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629",
+      "alternate": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=3904f8dd-1aef-3490-e48f-bd55f32ed67f",
+      "locators": [
+        "Section 4",
+        "Section 5.1",
+        "Section 2.5 Table 2, adult 1.8 mg/kg every 3 weeks with chemotherapy",
+        "Section 17"
+      ]
+    },
+    {
+      "url": "https://www.eviq.org.au/haematology/lymphoma/nk-cell-and-t-cell-lymphoma/4038-peripheral-t-cell-lymphoma-bv-chp",
+      "version": "v3",
+      "locators": [
+        "Peripheral neuropathy dose modification rows",
+        "Pre-treatment assessment"
+      ]
+    },
+    {
+      "url": "https://www.eviq.org.au/haematology/lymphoma/nk-cell-and-t-cell-lymphoma/4038-peripheral-t-cell-lymphoma-bv-chp/patient-information",
+      "locators": [
+        "Infection risk",
+        "Nerve damage",
+        "Allergic reaction",
+        "Heart/lung problems",
+        "Neurological changes",
+        "Severe rash",
+        "Nausea/diarrhoea",
+        "Fatigue",
+        "Headache",
+        "Mouth symptoms"
+      ]
+    }
+  ],
+  "verification": {
+    "python_tests": 75,
+    "schema_entities": 4273,
+    "schema_errors": 0,
+    "reference_errors": 0,
+    "contract_errors": 0,
+    "warnings": 396,
+    "critical_lint": "passed",
+    "public_examples": {
+      "passed": 445,
+      "intentional_holds": 3,
+      "total": 448,
+      "unregistered_bma": 0
+    },
+    "actual_ci_browser_checks": 25,
+    "node_wasm": {
+      "runtime": "0.26.4",
+      "network_attempts": 0,
+      "status": "passed BV-specific contraindication, separate modification rows, 12 source-bound patient points, urgent fever and marked English drafts; prior scenarios retained",
+      "limitation": "Node WASM, not browser offline or clinical validation"
+    },
+    "pages_verified": 363,
+    "reader_bindings": 165,
+    "bundle_proof": {
+      "core_changed_members": [
+        "knowledge_base/engine/_patient_watchpoint_en.json",
+        "knowledge_base/hosted/content/contraindications/ci_brentuximab_bleomycin.yaml",
+        "knowledge_base/hosted/content/regimens/chp_bv.yaml",
+        "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml",
+        "knowledge_base/hosted/content/sources/src_eviq_bv_chp_4038.yaml",
+        "knowledge_base/hosted/content/sources/src_eviq_bv_chp_patient_4038.yaml"
+      ],
+      "disease_changed_members": {
+        "DIS-AITL": [
+          "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml"
+        ],
+        "DIS-ALCL": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ],
+        "DIS-PTCL-NOS": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ]
+      },
+      "retained_disease_archives": [
+        "DIS-ADRENOCORTICAL-CARCINOMA",
+        "DIS-AML",
+        "DIS-ANAL-SCC",
+        "DIS-APL",
+        "DIS-ATLL",
+        "DIS-B-ALL",
+        "DIS-BCC",
+        "DIS-BREAST",
+        "DIS-BURKITT",
+        "DIS-CERVICAL",
+        "DIS-CHL",
+        "DIS-CHOLANGIOCARCINOMA",
+        "DIS-CHONDROSARCOMA",
+        "DIS-CLL",
+        "DIS-CML",
+        "DIS-CRC",
+        "DIS-DLBCL-NOS",
+        "DIS-EATL",
+        "DIS-ENDOMETRIAL",
+        "DIS-EPITHELIOID-SARCOMA",
+        "DIS-ESOPHAGEAL",
+        "DIS-ET",
+        "DIS-FL",
+        "DIS-GASTRIC",
+        "DIS-GBM",
+        "DIS-GI-NET",
+        "DIS-GIST",
+        "DIS-GLIOMA-LOW-GRADE",
+        "DIS-GRANULOSA-CELL",
+        "DIS-HCC",
+        "DIS-HCL",
+        "DIS-HCV-MZL",
+        "DIS-HGBL-DH",
+        "DIS-HNSCC",
+        "DIS-HSTCL",
+        "DIS-IFS",
+        "DIS-IMT",
+        "DIS-JMML",
+        "DIS-KAPOSI",
+        "DIS-LAM",
+        "DIS-LARYNGEAL",
+        "DIS-MASTOCYTOSIS",
+        "DIS-MCL",
+        "DIS-MDS-HR",
+        "DIS-MDS-LR",
+        "DIS-MELANOMA",
+        "DIS-MENINGIOMA",
+        "DIS-MESOTHELIOMA",
+        "DIS-MF-SEZARY",
+        "DIS-MM",
+        "DIS-MPNST",
+        "DIS-MTC",
+        "DIS-NK-T-NASAL",
+        "DIS-NLPBL",
+        "DIS-NODAL-MZL",
+        "DIS-NPC",
+        "DIS-NSCLC",
+        "DIS-OSTEOSARCOMA",
+        "DIS-OVARIAN",
+        "DIS-PARATHYROID-CARCINOMA",
+        "DIS-PCNSL",
+        "DIS-PDAC",
+        "DIS-PENILE-SCC",
+        "DIS-PHEOCHROMOCYTOMA",
+        "DIS-PITUITARY-ADENOMA",
+        "DIS-PMBCL",
+        "DIS-PMF",
+        "DIS-PNET",
+        "DIS-PROSTATE",
+        "DIS-PTLD",
+        "DIS-PV",
+        "DIS-RCC",
+        "DIS-RETINOBLASTOMA",
+        "DIS-SALIVARY",
+        "DIS-SCLC",
+        "DIS-SOFT-TISSUE-SARCOMA",
+        "DIS-SPLENIC-MZL",
+        "DIS-T-ALL",
+        "DIS-T-PLL",
+        "DIS-TESTICULAR-GCT",
+        "DIS-TGCT",
+        "DIS-THYROID-ANAPLASTIC",
+        "DIS-THYROID-PAPILLARY",
+        "DIS-UROTHELIAL",
+        "DIS-VULVAR-VAGINAL-SCC",
+        "DIS-WILMS",
+        "DIS-WM"
+      ],
+      "pages_verified": 363,
+      "reader_verification": {
+        "checked": 165,
+        "updated": 0,
+        "preserved": 0
+      },
+      "core_version": "3fc62500785e",
+      "core_compressed_version": "58ecc98ac937"
+    },
+    "source_copy_proof": {
+      "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-alcl.zip",
+          "disease/openonco-dis-ptcl-nos.zip"
+        ],
+        "sha256": "66ab08f14bc116840513d1e5d3f6cf350772f5b8bc052c1c461f30a91f7fa2ac"
+      },
+      "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-aitl.zip"
+        ],
+        "sha256": "8f1b919200a17e28db9687bed69653f5654aace62d29146acd2eaa758e3a1594"
+      },
+      "knowledge_base/hosted/content/regimens/chp_bv.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "23074a0d968be5d3a5520afca36283cd62df6eb4ebf92dd21c020f2f58710c0a"
+      },
+      "knowledge_base/hosted/content/contraindications/ci_brentuximab_bleomycin.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "6fc0a4ee453bef54e03c3c6861298d7da62b6e769b65ebaf1dd78b0192987168"
+      },
+      "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "3a5c53fff152d9aa9ddae78292dd4bbad2a7ee7caca9d602a750c3931e22f1bd"
+      },
+      "knowledge_base/hosted/content/sources/src_eviq_bv_chp_4038.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "651ab33d8f68d01feb69c98214a3ac88a37d5cb316f06f98db39327ddb9242d3"
+      },
+      "knowledge_base/hosted/content/sources/src_eviq_bv_chp_patient_4038.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "87ae222d36fc414b9c91e1ccb61a03f842763b2de9c3219c140009f17ea40342"
+      },
+      "knowledge_base/engine/_patient_watchpoint_en.json": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "fc2aa676d0b9a459e8e3d3850dec66912bbb035bb11aa6cfe02af8714a8d8b35"
+      }
+    },
+    "core_transfer_bytes": 2656771,
+    "core_budget_bytes": 4250000,
+    "sitemap": {
+      "existing_urls_preserved": 44379,
+      "new_source_and_contraindication_urls": 33,
+      "total_urls": 44412,
+      "idempotent_final_check": true
+    },
+    "search_rows": "Only two indication rows and shared regimen row updated per locale; no source/contraindication count invented."
+  },
+  "scope_limits": [
+    "Contraindication trigger is displayed free-form reference data, not an automatic interaction screen.",
+    "The original myeloma contraindication is untouched and not validated here.",
+    "Drug components, baseline doses, fixed six-cycle calendar, other dose adjustments, monitoring, supportive care and availability assertions are preserved, not validated by this repair.",
+    "In particular, baseline brentuximab cap/calendar, organ-function eligibility, other hard contraindications, test provenance, access and confirmed-positive regional/histology selection still require review.",
+    "Patient contact points are a selected draft safety guide, not complete supportive care. Grade/modality decisions require clinical assessment; patient advice does not prescribe dose changes.",
+    "Clinical and language signoff pending; no real patient data, provider/model calls or production publication."
+  ],
+  "previous_goal_turn_classification": "progress: evidence/qualification claims corrected and canonical runtime/public references committed, pushed and added to sitemap",
+  "next_action": "Correct and verify baseline BV dose-cap/cycle context and structured regimen interaction checks; retain distinct US/eviQ, histology/region scope and review requirements."
+}

@@ -1,0 +1,40 @@
+{
+  "status": "English_display_drafts_implemented_pending_clinical_language_review_and_production",
+  "clinical_approval": false,
+  "translation_signoff": false,
+  "baseline": "0a8015d491",
+  "scope": "29 whole symptom/action pairs for three source-backed lymphoma regimens; clinical records, urgency selection and clinician reports are unchanged. Two older CODOX watchpoints without scoped eviQ patient sources remain original.",
+  "guard": [
+    "Regimen ID and complete trigger/action/urgency/window/source IDs are fingerprinted",
+    "Unknown extra source conditions invalidate the pair",
+    "Stale or unavailable pair retains both original Ukrainian fragments with a visible fallback label",
+    "English spans retain explicit draft status and source-language markup; downstream static/runtime translators preserve them until separate native translations exist",
+    "No live or paid translation calls"
+  ],
+  "verification": {
+    "python_tests": 128,
+    "final_stale_downstream_catalog_checks": 11,
+    "ci_browser_checks": 25,
+    "critical_lint": "passed",
+    "pinned_node_wasm": "Passed English and Ukrainian patient symptom rendering, earlier synthetic states and zero network attempts; Node WASM, not real-browser offline or clinical validation",
+    "pages": 100,
+    "reader_bindings": 50,
+    "all_90_disease_archives_unchanged": true,
+    "clinical_yaml_records_unchanged": true,
+    "core_changes": [
+      "knowledge_base/engine/_patient_watchpoint_en.json",
+      "knowledge_base/engine/_patient_watchpoint_translations.py",
+      "knowledge_base/engine/render.py"
+    ],
+    "core_version": "b508408b9780",
+    "core_compressed_version": "f96ba5fdea5c",
+    "preferred_core_bytes": 2652907,
+    "clinician_path_isolation": "Actual clinician rendering never invokes patient watchpoint translator; plan data unchanged."
+  },
+  "remaining": [
+    "Clinical and language signoff",
+    "Other English patient sections and unmapped regimens remain partial",
+    "Native symptom/action translations beyond English are not supplied by this change",
+    "Full CI for the new head and production website/API delivery remain pending"
+  ]
+}

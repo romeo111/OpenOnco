@@ -1,0 +1,272 @@
+{
+  "status": "implemented_evidence_scope_correction_pending_clinical_review",
+  "clinical_approval": false,
+  "baseline": "28591946c6f6c5f49b0d4d8a149468da74e8d95f",
+  "historical_audit": "docs/audits/ptcl_bv_histology_preference_open_2026-10-13.json",
+  "changes": [
+    "Two indication records distinguish pooled trial outcomes from exploratory AITL subgroup outcomes, with source IDs and confidence intervals. Unsupported response estimates and cross-histology recommendation grading removed.",
+    "EN/UA rationale distinguishes US authorization from comparative subtype evidence and CHOP comparator from CHOEP. Universal trial cutoff wording and unsupported auto-transplant preference removed.",
+    "CD30 red flag no longer claims automatic treatment qualification, universal outcome superiority or unverified Ukrainian reimbursement. Executable trigger and direction unchanged.",
+    "Five-year follow-up now has its own Annals of Oncology source; original publication notes no longer misattribute it to JCO or assert universal subtype preference.",
+    "Source review notes scoped; reviewer dates and old AI-drafter attribution cleared for revised indication/red-flag prose. No clinical or language signoff asserted."
+  ],
+  "scope_limits": [
+    "No algorithm routing/preference correction for confirmed-positive profiles in this step.",
+    "No regimen dose, biomarker input gate, test list or inherited hard contraindication changed.",
+    "Unreviewed bortezomib-specific contraindication inheritance, grade-2 absolute neuropathy statement, drug availability tooltip and algorithm-source provenance remain open.",
+    "Clinical report rendering exposes sources but does not display all structured outcome values; Wiki/data preserve estimates.",
+    "Limited subgroup estimates do not prove no benefit, harm or individual prognosis.",
+    "Current European/Ukrainian approval and access not verified by a historical guideline or US label.",
+    "Nine additional clinical language drafts may retain marked original prose; no full translation signoff."
+  ],
+  "primary_sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9447792/",
+      "doi": "10.1016/j.annonc.2021.12.002",
+      "locators": [
+        "Study design and patients",
+        "Endpoints and assessments",
+        "Results: pooled and histology-specific PFS/OS"
+      ]
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12059256/",
+      "doi": "10.1002/hem3.70128",
+      "locators": [
+        "First-line PTCL-NOS and TFHL discussion",
+        "Recommendations: PTCL-NOS/TFHL and systemic ALCL"
+      ]
+    },
+    {
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=3904f8dd-1aef-3490-e48f-bd55f32ed67f",
+      "alternate_verified_url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=20629",
+      "locators": [
+        "1.5"
+      ]
+    }
+  ],
+  "verification": {
+    "related_python_tests": 91,
+    "final_evidence_tests": 8,
+    "schema_entities": 4271,
+    "schema_errors": 0,
+    "reference_errors": 0,
+    "contract_errors": 0,
+    "warnings": 396,
+    "critical_lint": "passed",
+    "public_examples": {
+      "passed": 445,
+      "intentionally_withheld": 3,
+      "total": 448,
+      "unregistered_bma": 0
+    },
+    "actual_ci_browser_checks": 25,
+    "node_wasm": {
+      "runtime": "0.26.4",
+      "network_attempts": 0,
+      "status": "passed scoped AITL outcome provenance and confidence interval, null unsupported grade and removed misleading red-flag text; previous synthetic checks retained",
+      "limitation": "Node WASM, not actual browser offline or clinical validation"
+    },
+    "pages_verified": 363,
+    "reader_bindings": 165,
+    "public_case_scope": [
+      "alcl-alk-negative",
+      "ptcl-cd30-negative",
+      "aitl-cd30-positive",
+      "aitl-cd30-negative",
+      "alcl-alk-positive-typical",
+      "alcl-relapsed-bv-naive",
+      "ptcl-cd30-positive",
+      "ptcl-relapsed",
+      "aitl-relapsed-2l",
+      "bma-bma-alk-fusion-alcl",
+      "verified-aitl-l2-belinostat-ptcl",
+      "verified-aitl-l2-romidepsin-ptcl",
+      "verified-alcl-l2-crizotinib-alcl"
+    ],
+    "bundle_proof": {
+      "core_changed_members": [
+        "knowledge_base/hosted/content/redflags/rf_tcell_cd30_positive.yaml",
+        "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml",
+        "knowledge_base/hosted/content/sources/src_echelon2_five_year_2022.yaml",
+        "knowledge_base/hosted/content/sources/src_echelon2_horwitz_2019.yaml",
+        "knowledge_base/hosted/content/sources/src_esmo_eha_ptcl_2025.yaml"
+      ],
+      "disease_changed_members": {
+        "DIS-AITL": [
+          "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml"
+        ],
+        "DIS-ALCL": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ],
+        "DIS-PTCL-NOS": [
+          "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml"
+        ]
+      },
+      "retained_disease_archives": [
+        "DIS-ADRENOCORTICAL-CARCINOMA",
+        "DIS-AML",
+        "DIS-ANAL-SCC",
+        "DIS-APL",
+        "DIS-ATLL",
+        "DIS-B-ALL",
+        "DIS-BCC",
+        "DIS-BREAST",
+        "DIS-BURKITT",
+        "DIS-CERVICAL",
+        "DIS-CHL",
+        "DIS-CHOLANGIOCARCINOMA",
+        "DIS-CHONDROSARCOMA",
+        "DIS-CLL",
+        "DIS-CML",
+        "DIS-CRC",
+        "DIS-DLBCL-NOS",
+        "DIS-EATL",
+        "DIS-ENDOMETRIAL",
+        "DIS-EPITHELIOID-SARCOMA",
+        "DIS-ESOPHAGEAL",
+        "DIS-ET",
+        "DIS-FL",
+        "DIS-GASTRIC",
+        "DIS-GBM",
+        "DIS-GI-NET",
+        "DIS-GIST",
+        "DIS-GLIOMA-LOW-GRADE",
+        "DIS-GRANULOSA-CELL",
+        "DIS-HCC",
+        "DIS-HCL",
+        "DIS-HCV-MZL",
+        "DIS-HGBL-DH",
+        "DIS-HNSCC",
+        "DIS-HSTCL",
+        "DIS-IFS",
+        "DIS-IMT",
+        "DIS-JMML",
+        "DIS-KAPOSI",
+        "DIS-LAM",
+        "DIS-LARYNGEAL",
+        "DIS-MASTOCYTOSIS",
+        "DIS-MCL",
+        "DIS-MDS-HR",
+        "DIS-MDS-LR",
+        "DIS-MELANOMA",
+        "DIS-MENINGIOMA",
+        "DIS-MESOTHELIOMA",
+        "DIS-MF-SEZARY",
+        "DIS-MM",
+        "DIS-MPNST",
+        "DIS-MTC",
+        "DIS-NK-T-NASAL",
+        "DIS-NLPBL",
+        "DIS-NODAL-MZL",
+        "DIS-NPC",
+        "DIS-NSCLC",
+        "DIS-OSTEOSARCOMA",
+        "DIS-OVARIAN",
+        "DIS-PARATHYROID-CARCINOMA",
+        "DIS-PCNSL",
+        "DIS-PDAC",
+        "DIS-PENILE-SCC",
+        "DIS-PHEOCHROMOCYTOMA",
+        "DIS-PITUITARY-ADENOMA",
+        "DIS-PMBCL",
+        "DIS-PMF",
+        "DIS-PNET",
+        "DIS-PROSTATE",
+        "DIS-PTLD",
+        "DIS-PV",
+        "DIS-RCC",
+        "DIS-RETINOBLASTOMA",
+        "DIS-SALIVARY",
+        "DIS-SCLC",
+        "DIS-SOFT-TISSUE-SARCOMA",
+        "DIS-SPLENIC-MZL",
+        "DIS-T-ALL",
+        "DIS-T-PLL",
+        "DIS-TESTICULAR-GCT",
+        "DIS-TGCT",
+        "DIS-THYROID-ANAPLASTIC",
+        "DIS-THYROID-PAPILLARY",
+        "DIS-UROTHELIAL",
+        "DIS-VULVAR-VAGINAL-SCC",
+        "DIS-WILMS",
+        "DIS-WM"
+      ],
+      "pages_verified": 363,
+      "reader_verification": {
+        "checked": 165,
+        "updated": 0,
+        "preserved": 0
+      },
+      "core_version": "f12b158892e7",
+      "core_compressed_version": "a2a81b93c946"
+    },
+    "all_source_copies": {
+      "knowledge_base/hosted/content/indications/ind_tcell_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-alcl.zip",
+          "disease/openonco-dis-ptcl-nos.zip"
+        ],
+        "sha256": "7eb5da3375d02e0da028b340e62e47327bd62e0fb462302bd9cf8027d54d5e4a"
+      },
+      "knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml": {
+        "copies": [
+          "disease/openonco-dis-aitl.zip"
+        ],
+        "sha256": "3d584baf7184f3aa3eed822885baaf7a9ee5fc06d4a6eff363ed9fff24b1fe06"
+      },
+      "knowledge_base/hosted/content/sources/src_echelon2_five_year_2022.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "29344218bb20502f3534ad9b4ecf3ae98fa1e666d0c51df01b05ac1bd02d2e85"
+      },
+      "knowledge_base/hosted/content/sources/src_echelon2_horwitz_2019.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "2e29d477e1e11f8f08db862dbad28d0b8cf73d598e84beedbb0d9699934bd6e8"
+      },
+      "knowledge_base/hosted/content/sources/src_esmo_eha_ptcl_2025.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "4c21f4141ffcd73eb8ab30e5de057b6481ab9d7df59109ec24431683e5ab4191"
+      },
+      "knowledge_base/hosted/content/sources/src_adcetris_us_label.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "784fc3fcc3a431fc6e6d7288c6d0ebc3059985dc897265a2a48c7bc256c2417a"
+      },
+      "knowledge_base/hosted/content/redflags/rf_tcell_cd30_positive.yaml": {
+        "copies": [
+          "openonco-engine-core.zip"
+        ],
+        "sha256": "4d2e5e890a55e2ad31f318d0da4a213ec0c95524d0ebec578f74713bac78c0b8"
+      }
+    },
+    "core_transport": {
+      "preferred_bytes": 2654573,
+      "budget_bytes": 4250000
+    },
+    "sitemap": {
+      "existing_urls_preserved": 44346,
+      "newly_published_source_urls": 33,
+      "five_year_followup_urls": 11,
+      "previously_absent_label_and_original_trial_urls": 22,
+      "total_urls": 44379,
+      "idempotent_final_check": true,
+      "html_changed": false
+    },
+    "search_indexes": "Three existing indication/red-flag rows updated per locale; no source row or count fabricated."
+  },
+  "production": "not deployed; current branch/PR delivery only",
+  "next_work": [
+    "Repair source-specific neuropathy contraindication provenance with label verification.",
+    "Implement explicit histology/regional choice contract; preserve ALCL distinction without assuming an alternative.",
+    "Reconcile aliases and source-specific eligibility, then clinically review drafts."
+  ],
+  "previous_goal_turn_classification": "progress: canonical CD30 confirmation guard, EN/UA notices and associated runtime/pages committed and pushed",
+  "delivery_follow_up": "The committed file inventory identified 22 additional first-time source pages besides the 11 five-year pages. All 33 newly published source paths are now included in sitemap metadata. No clinical source or HTML changed in this metadata follow-up."
+}

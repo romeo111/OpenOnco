@@ -921,6 +921,10 @@ def render_entity_page(
             f'{"Джерельний YAML: повний запис" if locale == "uk" else "Source YAML: complete record"}</a></p>'
             f'<table class="kb-facts">{_rows(rows)}</table>'
         )
+        if entity.data.get('planning_status', 'active') != 'active':
+            withheld = ('Виключено з планування: запис потребує перевірки джерел і клінічного перегляду.'
+                        if locale == 'uk' else 'Withheld from planning: source and clinical review required.')
+            specifics = f'<p class="kb-info-box" role="alert" data-planning-status="withheld">{html.escape(withheld)}</p>' + specifics
     elif entity.kind == "drugs":
         specifics = _drug_sections(entity, locale=locale)
     elif entity.kind == "biomarkers":

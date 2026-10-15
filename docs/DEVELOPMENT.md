@@ -40,10 +40,69 @@ The first command is a dry run. Output is normalized to LF line endings, so an i
 
 The default path inventory comes from committed `docs/` filenames plus the manifest. For a separate preview with additional destinations, pass `--inventory .tmp/preview-paths.json`, a JSON list of available relative HTML paths. Reader originals outside the manifest must be inventoried; they remain unchanged. A synchronized fingerprint proves source identity, not translation accuracy or clinical approval.
 
+When a partial release adds public pages, extend the existing sitemap separately:
+
+```bash
+python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages.json
+python -m scripts.update_partial_sitemap --output docs --manifest .tmp/new-pages.json --write
+```
+
+The dry run lists additions and metadata changes. The command preserves all previously indexed URLs, even when their HTML is absent from a partial checkout, and reads only selected page heads to exclude redirects, noindex pages and canonical aliases. It rejects preserved pages before opening selected HTML, uses the normal deterministic compressed sitemap writer and reciprocal language links, and changes no HTML. It cannot establish actual search-engine indexing, translation accuracy or clinical approval.
+
+## Source-withheld planning records
+
+Indications and regimens can declare `planning_status: withheld` with a `planning_status_reason`. This is a source-content safety hold, independent of patient eligibility or clinical approval. An explicit unknown status also blocks planning. A selected/default withheld record suppresses treatment and sequencing without promoting another medicine; withheld alternatives and later-line references are omitted. Direct track materialization rejects held records. Wiki pages show the hold explicitly. An absent status preserves existing draft behavior and never implies clinical approval.
+
+Review the source conflict and record as a whole before reactivation. Do not replace it automatically with a new transplant recommendation. Run `python -m pytest tests/test_withheld_planning_records.py tests/test_ptcl_firstline_transplant_reference.py` and the ordinary routing checks before refreshing scoped archives and Wiki pages.
+
+## Patient watchpoint translation drafts
+
+English patient contact instructions use saved pairs in `knowledge_base/engine/_patient_watchpoint_en.json`. A fingerprint binds each pair to its regimen ID, full source trigger/action, urgency, cycle-day window and source IDs. Changes invalidate both fragments together; unknown conditions and unmapped instructions retain the marked Ukrainian original. The clinician report and clinical records are unchanged. These drafts require clinical and language review.
+
+Translated spans remain protected from a second machine translation in other language editions. Update and review an entire symptom/action pair when its source changes, then run `python -m pytest tests/test_patient_watchpoint_translations.py`. Refresh affected patient pages, shared-reader source hashes and browser/API packages through the scoped release workflow. Keep the original Ukrainian report available and the partial-draft notice visible.
+
 ## Publish
+
+After deployment, check the eight main public pages in all eleven languages and the additional internal destinations linked from their headers:
+
+```bash
+python -m scripts.check_live_navigation --report .tmp/live-navigation.json
+```
+
+Use `--base-url http://localhost:8000/` for a locally served preview. The check uses bounded, read-only GET requests, verifies shared headers, language order and flags, document language, canonical links and main landmarks, and fails on broken navigation destinations. Redirects cannot leave the selected website origin. It does not submit cases, call the clinical API, execute JavaScript or prove visual layout, accessibility with assistive technology, or clinical correctness. Create the report directory before running.
 
 GitHub Pages serves branch **`master`**, directory **`/docs`**, at **https://openonco.info/**. Push reviewed generated output and its source changes to the deployment branch through the repository's authorized delivery flow. The standard **pages build and deployment** run must succeed; inspect the live pages afterward. The [Daily Site Refresh](../.github/workflows/daily-site-refresh.yml) rebuilds from current KB content and commits changed output.
 
 The optional question API is a separate deployment; updating GitHub Pages does not configure its secrets or deploy that backend. Keep all credentials outside Git and use synthetic fixtures in demos, screenshots and review packets.
 
 The existing Vercel project is `openonco-vercel-api`, serving `https://openonco-vercel-api.vercel.app/api/clinical-question`. After verification, `python -m scripts.prepare_clinical_api_deploy` creates an isolated package under `.tmp/clinical-api-deploy` containing the API, serverless adapter and public knowledge base; it excludes website pages and translation models. Link that directory to the existing project and deploy with the authenticated Vercel CLI. Do not create a replacement project or copy secrets into source files. Verify an empty synthetic request after deployment; it must return a localized clarification without calling the model provider.
+
+
+### BV-CHP CD30 input confirmation
+
+The two first-line BV-CHP indication records require `biomarkers.BIO-CD30-IHC: "positive"` through the existing `confirmed_profile_values` contract. Missing, unknown, numeric, Boolean or structured results are not converted into confirmation. A false or malformed `findings.cd30_positive` blocks the candidate. The guard applies to selected, alternative and sequencing candidates: a failed selected record withholds the plan without promoting another treatment. Do not infer a universal percentage cutoff or regulatory region from interface language. This confirmation check does not approve histology-specific preference, individual eligibility or local authorization. Existing noncanonical marker aliases remain unconfirmed; input normalization and conflicting alias reconciliation require separate work.
+
+Run `python -m pytest tests/test_cd30_confirmation.py tests/test_tcell_engine.py tests/test_tcell_monitoring.py` and the pinned Node WASM test when modifying this contract. Patient and clinician notices must explain CD30 confirmation in EN/UA and retain the no-substitute behavior. Source outcome and regional preference defects are tracked in the BV histology audit.
+
+
+### BV-CHP evidence scope
+
+Use the separate five-year ECHELON-2 source (`SRC-ECHELON-2-FIVE-YEAR-2022`, Annals of Oncology, DOI `10.1016/j.annonc.2021.12.002`) for long-term outcome estimates. Preserve pooled ITT versus AITL subgroup identity, exploratory status, comparator CHOP and confidence intervals. Do not transform pooled benefit into subtype-specific superiority or infer benefit/harm for an individual from a limited subgroup. The shared indication is still used by more than one disease; its pooled estimates must never be presented as PTCL-NOS or AITL estimates. Clinical reports currently expose source provenance but do not display all structured outcome values; the Wiki and data records preserve the detailed estimates.
+
+US label authorization and histology-specific recommendations are distinct. Current regional authorization, access, algorithm preference and individual eligibility remain separate review work. Interface language is not jurisdiction. Unsupported cross-histology recommendation grading has been cleared in these two records. Do not restore grade or reviewer dates without applicable evidence and actual signoff. Run `python -m pytest tests/test_bv_evidence_scope.py tests/test_cd30_confirmation.py` and pinned Node WASM checks when changing these records.
+
+
+### BV-CHP neuropathy and patient contact references
+
+First-line BV-CHP indications surface `CI-BRENTUXIMAB-BLEOMYCIN` from US ADCETRIS section 4; the myeloma bortezomib contraindication and its alternative regimens are not applicable. This free-form contraindication is a displayed reference, not an executable medication-interaction screen. Baseline neuropathy needs specialist assessment; treatment-emergent modification rows must not be converted into an automatic baseline eligibility decision.
+
+Keep US adult 1.8 mg/kg every-three-week chemotherapy Table 2 separate from eviQ 4038 v3. Preserve sensory versus motor grade and the eviQ recovery delay; monotherapy, AVD, pediatric and other schedules have different rules. The entries are clinician reference text and never modify patient dose inputs. The reference remains incomplete for full dosing, organ function, cycle selection and clinical eligibility.
+
+BV-CHP patient contact points use their own eviQ patient-information source. Fever/contact urgency must not be limited to a presumed nadir window; infusion reactions are not restricted to cycle 1 or being physically in the clinic. Report neuropathy without inventing a next-visit delay or a self-adjustment instruction. English pairs retain source fingerprints and draft status. Run `python -m pytest tests/test_bv_neuropathy_safety.py tests/test_patient_watchpoint_translations.py` and pinned Node WASM checks.
+
+
+### BV-CHP adult dose and course context
+
+The shared BV-CHP reference states `1.8 mg/kg (maximum 180 mg)` and retains a 21-day frequency, without calculating an individual dose. Its `total_cycles` is unset: label/eviQ 6–8 references and the ESMO-EHA systemic-ALCL contexts are not interchangeable patient defaults. Typed `course_context_note` / `course_context_note_ua` fields render escaped, original-source text in both clinician and patient views; absent fields preserve other regimen behavior. Source context is information, not an automatic cycle selector.
+
+Both first-line BV indications require confirmed canonical adult age (at least 18) in addition to confirmed CD30. A failed selected applicability check withholds all treatment without promoting an alternative. This is not whole-patient eligibility, pediatric/off-label care, organ-function review or regulatory approval. Biomarker/age alias reconciliation and explicit protocol-region selection remain separate work. Run `python -m pytest tests/test_bv_course_context.py tests/test_cd30_confirmation.py` and the pinned Node WASM check after changing these contracts.

@@ -2,14 +2,14 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('docs/try.html', 'utf8');
-const names = ['loadedReportError', 'withReportUiLock', 'waitForFrameLoad', 'downloadHtml', 'reportHtmlForDownload', 'reportExportError', 'downloadPdf', 'updateWorkflowControls', 'switchResultLang'];
+const names = ['loadedReportError', 'withReportUiLock', 'waitForFrameLoad', 'downloadHtml', 'reportHtmlForDownload', 'reportExportError', 'downloadPdf', 'reportPrintError', 'updateWorkflowControls', 'switchResultLang'];
 const code = names.map(name => {
   const match = html.match(new RegExp(`^(?:async )?function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm'));
   assert(match, name); return match[0];
 }).join('\n');
 const events = new Map(), timers = new Map(), errors = [];
 let nextTimer = 0, blob, filename, prints = 0;
-let failClick = false, removed = 0;
+let failClick = false, removed = 0, lastError = '';
 const revoked = [];
 const body = { appendChild(anchor) { anchor.parentNode = this; }, removeChild(anchor) { anchor.parentNode = null; removed++; } };
 const button = () => ({ disabled: false });
@@ -35,7 +35,7 @@ const context = vm.createContext({
   resultFrame: frame, Blob, Date,
   profileInputCopy: JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]),
   setTimeout: fn => { const id = ++nextTimer; timers.set(id, fn); return id; },
-  clearTimeout: id => timers.delete(id), setError: error => { if (error) errors.push(error); },
+  clearTimeout: id => timers.delete(id), setError: error => { lastError = error || ''; if (error) errors.push(error); },
   URL: class extends URL { static createObjectURL(value) { blob = value; return 'blob:test'; } static revokeObjectURL(url) { revoked.push(url); } },
   document: { documentElement: { lang: 'en' }, body, createElement: () => ({ click() { if (failClick) throw new Error('Download rejected'); filename = this.download; } }) },
   isInteractionLocked: () => false, setLockedTitle() {}, refreshModeButtonAvailability() {}, openPlanModal() {},
@@ -114,6 +114,32 @@ const run = value => vm.runInContext(value, context);
   for (const href of ['#details','https://pubmed.ncbi.nlm.nih.gov/123/','mailto:contact@example.org','http://[']) assert(portable.includes('href="'+href+'"'));
   assert(portable.includes('<p>DIS-AML 100 mg</p>'));
   assert.equal(context.linkDocument.documentElement.outerHTML, linkedHtml, 'Export must not mutate the live report');
+  const printableWindow = frame.contentWindow;
+  const printedBeforeFailure = prints;
+  frame.contentWindow = { focus() {}, print() { throw new Error('private driver diagnostic'); } };
+  assert.doesNotThrow(() => run('downloadPdf()'));
+  assert.equal(lastError, run('reportPrintError()'));
+  assert(!lastError.includes('private driver diagnostic'));
+  assert.equal(run('reportReady'), true, 'Print failure must leave the valid report available for retry or HTML');
+  assert.equal(prints, printedBeforeFailure);
+  const beforeFallback = blob;
+  run('downloadHtml()');
+  assert.notEqual(blob, beforeFallback, 'HTML fallback must remain usable after a print failure');
+  assert.equal(await blob.text(), '<!DOCTYPE html>\n' + frame.contentDocument.documentElement.outerHTML);
+  frame.contentWindow = null;
+  assert.doesNotThrow(() => run('downloadPdf()'));
+  assert.equal(lastError, run('reportPrintError()'));
+  frame.contentWindow = printableWindow;
+  run('downloadPdf()');
+  assert.equal(prints, printedBeforeFailure + 1);
+  assert.equal(lastError, '', 'Successful print invocation must clear the previous failure without claiming PDF save');
+  const openModal = context.openPlanModal;
+  context.openPlanModal = () => { throw new Error('private modal diagnostic'); };
+  context.planModal.hidden = true;
+  assert.doesNotThrow(() => run('downloadPdf()'));
+  assert.equal(lastError, run('reportPrintError()'), 'Modal opening failure must use the same recoverable localized path');
+  context.openPlanModal = openModal;
+  context.planModal.hidden = false;
   const overlay = fs.readFileSync('scripts/clinical-localization.js', 'utf8');
   assert(!overlay.includes('reloadReport'), 'Overlay must delegate all reloads to the guarded builder');
   assert(overlay.includes("await switchResultLang('en')"));
@@ -132,6 +158,10 @@ const run = value => vm.runInContext(value, context);
   assert.deepEqual(cacheOptions, [false, true], 'Translation script versions must remain distinct in cache');
   for (const locale of ['', 'ukr/', 'es/', 'pt/', 'de/', 'fr/', 'it/', 'da/', 'sv/', 'nb/', 'fi/']) {
     const page = fs.readFileSync(`docs/${locale}try.html`, 'utf8');
+    for (const name of ['reportPrintError', 'downloadPdf']) {
+      const pattern = new RegExp(`^function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`, 'm');
+      assert.equal(page.match(pattern)[0].replace(/\r\n/g,'\n'), html.match(pattern)[0].replace(/\r\n/g,'\n'), `${name} must match across clients`);
+    }
     assert(page.includes('const planFresh = reportReady && planSource !== null && !planDirty;'));
     assert(page.includes('if (planSource == null || !reportReady || planDirty) return;'));
     assert(page.includes('if (!planSource || !reportReady || isInteractionLocked()) return;'));
@@ -141,6 +171,9 @@ const run = value => vm.runInContext(value, context);
     context.document.documentElement.lang = locale;
     const message = run('reportExportError()');
     assert(message.includes('PDF'));
+    const printMessage = run('reportPrintError()');
+    assert(printMessage.includes('HTML'));
+    if (locale !== 'en') assert.notEqual(printMessage, 'Could not open printing. Try again or save the report as HTML.');
     if (locale !== 'en') assert.notEqual(message, 'Could not save the report. Try again or use PDF.');
   }
   console.log('Report export readiness, failure recovery, displayed language and eleven clients passed');

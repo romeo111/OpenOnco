@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-13",
+  "scope": "Primary-source requirements for a separate proven-CNS Burkitt reference pathway",
+  "status": "source_review_complete_implementation_open",
+  "clinical_approval": false,
+  "baseline_commit": "c2d2fb284fd8a03db1a4617ea754eaea7969b8a4",
+  "current_reference_sha256": "ed882e7b92570e0d066427b89c386e72db50a29b08398711ef6a73e25a2169b5",
+  "sources": [
+    {
+      "id": "eviQ-4492",
+      "version": "1",
+      "url": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4492-burkitt-lymphoma-high-risk-proven-cns-disease",
+      "sections_read": [
+        "Treatment schedule, Overview and Detail",
+        "Indications and patient population"
+      ]
+    },
+    {
+      "id": "eviQ-4493",
+      "version": "2",
+      "url": "https://www.eviq.org.au/haematology/lymphoma/burkitt-lymphoma/4493-burkitt-lymphoma-high-risk-proven-cns-disease",
+      "sections_read": [
+        "Treatment schedule and footnotes",
+        "Detail"
+      ]
+    },
+    {
+      "id": "Phillips-2020-Burkitt",
+      "doi": "10.1002/jha2.3",
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/jha2.3",
+      "sections_read": [
+        "Abstract",
+        "Methods 2.1 Eligibility",
+        "Methods 2.2 Study treatment",
+        "Results 3.1 and Table 1"
+      ]
+    }
+  ],
+  "verified_distinctions": [
+    {
+      "topic": "CODOX-M reference calendar",
+      "current_no_proven_cns": {
+        "rituximab_days": [
+          1,
+          9
+        ],
+        "it_cytarabine_days": [
+          1,
+          3
+        ],
+        "it_methotrexate_days": [
+          15
+        ]
+      },
+      "eviq_proven_cns": {
+        "rituximab_days": [
+          1,
+          11
+        ],
+        "it_cytarabine_days": [
+          1,
+          3,
+          5
+        ],
+        "it_methotrexate_days": [
+          15,
+          17
+        ],
+        "oral_folinate_days": [
+          16,
+          18
+        ]
+      },
+      "source": "eviQ-4492, Treatment schedule; IV folinate rescue remains separate from post-IT oral dosing."
+    },
+    {
+      "topic": "IVAC reference calendar",
+      "current_no_proven_cns": {
+        "it_methotrexate_days": [
+          5
+        ],
+        "it_cytarabine_days": []
+      },
+      "eviq_proven_cns": {
+        "it_methotrexate_days": [
+          5
+        ],
+        "it_cytarabine_days": [
+          7,
+          9
+        ],
+        "rituximab_days": [
+          3,
+          7
+        ]
+      },
+      "source": "eviQ-4493, Treatment schedule and Detail"
+    },
+    {
+      "topic": "Antibody schedule evidence",
+      "finding": "eviQ 4493 explicitly attributes days 3/7 to a committee adaptation of HOVON/SAKK, whose CNS population was excluded. It also offers a different antibody calendar. This is not randomized evidence establishing benefit in proven-CNS disease.",
+      "source": "eviQ-4493, Treatment schedule footnote for rituximab"
+    },
+    {
+      "topic": "Whole-course IT counts cannot be blended",
+      "eviq_course": {
+        "codox_it_per_block": 5,
+        "ivac_it_per_block": 3,
+        "blocks_each": 2,
+        "total_it_treatments": 16
+      },
+      "phillips_trial_text": {
+        "standard_it_treatments": 8,
+        "additional_for_cns": 4,
+        "derived_total_it_treatments": 12
+      },
+      "finding": "The distinct described calendars require explicit protocol-variant identity; the trial prose and current eviQ schedule must not be combined into one supposedly identical regimen. The trial full dosing supplement was not inspected.",
+      "sources": [
+        "eviQ-4492/4493 Treatment schedule",
+        "Phillips 2020 Methods 2.2"
+      ]
+    },
+    {
+      "topic": "Burkitt evidence must not be mislabeled as the parallel DLBCL cohort",
+      "finding": "The open-access Burkitt paper has Phillips as first author and McMillan as corresponding author; DOI 10.1002/jha2.3. Methods describes a parallel DLBCL cohort reported separately.",
+      "source": "Phillips 2020 author metadata and Methods"
+    },
+    {
+      "topic": "Evidence population",
+      "finding": "The prospective single-arm Burkitt analysis contains 27 patients, including four with CNS disease. Aggregate outcomes are not verified CNS-specific efficacy or an individual probability of cure. Trial eligibility and the broader eviQ reference population differ; advanced HIV needs specialist assessment.",
+      "sources": [
+        "Phillips 2020 Abstract, Methods 2.1 and Results 3.1",
+        "eviQ-4492 Indications and caution"
+      ]
+    }
+  ],
+  "required_implementation": [
+    "Create separate regimen/monitoring/source identifiers for the chosen proven-CNS eviQ variant; preserve current no-proven-CNS records and their scope guards.",
+    "Encode and test IV versus IT drug separation, additional CNS IT treatments, separate IV/oral folinate clocks and the selected antibody timing; disclose consensus provenance.",
+    "Do not silently substitute the alternative trial antibody calendar or import aggregate efficacy into a CNS-specific outcome field.",
+    "Verify age/fitness, organ function, immune/HIV context and documented CNS/risk assessment before enabling automatic pathway selection; unknown values must not imply eligibility.",
+    "Add positive and negative actual-engine tests covering no-CNS, proven-CNS, low-risk, missing and conflicting context; no default or automatic alternative on failed applicability.",
+    "Verify all affected original/translated pages, cached form migrations, reader hashes, source-canonical archive copies and backend package parity before publication."
+  ],
+  "not_established": [
+    "Individualized prescribing or clinical signoff",
+    "Randomized proven-CNS regimen superiority",
+    "Complete age/fitness, immunodeficiency or organ-function eligibility policy",
+    "Full trial supplement/LY10 dosing reconciliation",
+    "Operational automatic CNS-specific route"
+  ],
+  "current_behavior": "CNS-positive cases remain explicitly withheld from the no-proven-CNS reference; no new treatment route is introduced by this evidence review.",
+  "delivery": "Current-branch audit only; production publication awaits explicit approval after prior automatic review rejection."
+}

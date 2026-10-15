@@ -57,6 +57,7 @@ from ._patient_rationale import build_plan_signal_context_html as _build_plan_si
 from ._patient_rationale import _fired_rf_ids_from_trace as _patient_fired_rf_ids
 from ._patient_rationale import _first_sentence_ua as _patient_first_sentence
 from ._patient_note_translations import translate_patient_note
+from ._patient_watchpoint_translations import translate_watchpoint
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
@@ -670,8 +671,14 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
                                           "Pass experimental_search_fn to generate_plan() "
                                           "or sync offline (per ua-ingestion plan §3.3)."},
     "exp_last_synced_prefix":      {"uk": "Останнє оновлення:", "en": "Last synced:"},
-    "exp_empty_default":           {"uk": "Жодного активного трайла для цього сценарію в ctgov не знайдено.",
-                                    "en": "No active trials matched this scenario in ctgov."},
+    "exp_empty_default":           {"uk": "Завершений пошук не повернув досліджень, що відповідають цьому запиту й фільтрам. Це не означає, що інших досліджень немає.",
+                                    "en": "The completed search returned no studies matching this query and its filters. This does not establish that no other trials exist."},
+    "exp_not_run":                 {"uk": "Пошук у ClinicalTrials.gov не виконувався. Наявність відповідних досліджень невідома.",
+                                    "en": "ClinicalTrials.gov search was not run. Matching trial availability is unknown."},
+    "exp_failed":                  {"uk": "Пошук у ClinicalTrials.gov не вдалося завершити. Наявність відповідних досліджень невідома; повторіть пошук пізніше.",
+                                    "en": "ClinicalTrials.gov search could not be completed. Matching trial availability is unknown; retry later."},
+    "exp_search_unknown":          {"uk": "Виконання пошуку для цих збережених даних не підтверджено. Перевірте актуальні дослідження та статус набору безпосередньо в реєстрі.",
+                                    "en": "Search execution is unconfirmed for these stored data. Verify current studies and recruitment status directly in the registry."},
     "exp_table_sub":               {"uk": "Третій трек плану — open-enrollment trials з ClinicalTrials.gov. "
                                           "Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3).",
                                     "en": "Third plan track — open-enrollment trials from ClinicalTrials.gov. "
@@ -729,7 +736,10 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "matrix_cost_label_selfpay":   {"uk": "самооплата:", "en": "self-pay:"},
     "matrix_disclaimer":           {"uk": "Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті.",
                                     "en": "Cost information is orientation. Verify with a specific pharmacy / foundation / trial site."},
-    "matrix_status_updated":       {"uk": "Статус оновлено:", "en": "Status updated:"},
+    "matrix_assembled_at":         {"uk": "Таблицю сформовано:", "en": "Table assembled:"},
+    "matrix_assembly_unknown":     {"uk": "Дату формування таблиці не зафіксовано.", "en": "Table assembly date is not recorded."},
+    "matrix_provenance_caveat":    {"uk": "Дата формування таблиці не підтверджує перевірку реєстрації, покриття НСЗУ або цін. Актуальність цих даних потрібно перевірити окремо.",
+                                    "en": "Table assembly does not verify registration, NSZU coverage or prices. Check the currency of these data separately."},
     # ── MDT orchestrator strings ──────────────────────────────────────────
     # The orchestrator (knowledge_base/engine/mdt_orchestrator.py) emits
     # role `reason`s and OpenQuestion `question`/`rationale` strings as
@@ -934,6 +944,16 @@ def _format_cycle_window(cycle_len, total_cycles, target_lang: str = "uk") -> st
     if cycles_str and cycles_str != "—":
         return f"{base} × {cycles_str}"
     return base
+
+
+def _course_context_html(regimen, target_lang="uk"):
+    key = 'course_context_note_ua' if target_lang == 'uk' else 'course_context_note'
+    note = regimen.get(key)
+    if not isinstance(note, str) or not note.strip():
+        return ''
+    locale = 'uk' if target_lang == 'uk' else 'en'
+    return (f'<span class="course-context" lang="{locale}" data-original-source '
+            f'data-source-id="{_h(regimen.get("id", ""))}">{_h(note)}</span>')
 
 
 def _localize_html(html_text: str, target_lang: str) -> str:
@@ -1902,6 +1922,7 @@ def _render_timeline(plan, target_lang: str = "uk") -> str:
                 '<div class="tl-phase tl-phase--induction">'
                 f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—"))}</div>'
                 f'<div class="window">{_h(window)}</div>'
+                f'{_course_context_html(reg, target_lang)}'
                 '</div>'
             )
 
@@ -2179,17 +2200,22 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
         )
 
     trials = option.trials or []
+    search_status = getattr(option, "search_status", "unknown")
     last_synced = option.last_synced or ""
     last_synced_prefix = _t("exp_last_synced_prefix", target_lang)
+    status_key = {"not_run": "exp_not_run", "failed": "exp_failed"}.get(search_status, "exp_search_unknown")
+    provenance = (
+        f"{last_synced_prefix} {last_synced} · ClinicalTrials.gov."
+        if search_status == "completed" and last_synced
+        else _t(status_key, target_lang)
+    )
 
     if not trials:
-        # `option.notes` is curator-authored UA free-text; only fall back
-        # to the localized default when it is empty.
-        msg = option.notes or _t("exp_empty_default", target_lang)
+        msg = _t("exp_empty_default" if search_status == "completed" else status_key, target_lang)
         return (
             '<section class="experimental-track experimental-track--empty">'
             f'<h2>{_h(heading)}</h2>'
-            f'<div class="section-sub">{_h(last_synced_prefix)} {_h(last_synced)} · ctgov.</div>'
+            f'<div class="section-sub">{_h(provenance)}</div>'
             f'<p class="empty-state">{_h(msg)}</p>'
             '</section>'
         )
@@ -2226,7 +2252,7 @@ def _render_experimental_options(option, target_lang: str = "uk") -> str:
         f'<h2>{_h(heading)}</h2>'
         '<div class="section-sub">'
         f'{_h(_t("exp_table_sub", target_lang))} '
-        f'{_h(last_synced_prefix)} {_h(last_synced)}.'
+        f'{_h(provenance)}'
         '</div>'
         '<table class="trials-table">'
         '<thead><tr>'
@@ -2377,7 +2403,11 @@ def _render_access_matrix(matrix, target_lang: str = "uk") -> str:
         f'</table>'
         f'<p class="matrix-disclaimer">'
         f'{_h(_t("matrix_disclaimer", target_lang))} '
-        f'{_h(_t("matrix_status_updated", target_lang))} {_h((matrix.generated_at or "")[:10])}.'
+        + (
+            f'{_h(_t("matrix_assembled_at", target_lang))} {_h(matrix.generated_at[:10])}. '
+            if matrix.generated_at else f'{_h(_t("matrix_assembly_unknown", target_lang))} '
+        )
+        + f'{_h(_t("matrix_provenance_caveat", target_lang))}'
         f'</p>'
         f'</details>'
         f'</section>'
@@ -3141,7 +3171,46 @@ def _track_citation_dd(
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
-def render_plan_html(
+def _medication_screen_notice(plan_result, target_lang):
+    state = plan_result.plan.knowledge_base_state if plan_result.plan else {}
+    rows = state.get("medication_screens") or []
+    if not rows:
+        return ""
+    statuses = {row["status"] for row in rows}
+    order = ["blocked", "invalid_input_or_reference", "unsupported_input", "unknown", "incomplete", "not_detected_in_reported_list"]
+    status = next((name for name in order if name in statuses), "unknown")
+    english = target_lang == "en"
+    messages = {
+        "blocked": ("The proposed BV-CHP reference and reported active medicines contain brentuximab and bleomycin. This combination is contraindicated in the US ADCETRIS label because of pulmonary toxicity. Review current medicines with the treating team.", "Запропонований довідковий BV-CHP та вказані одночасні препарати містять брентуксимаб і блеоміцин. Ця комбінація протипоказана за американською інструкцією ADCETRIS через легеневу токсичність. Узгодьте поточні препарати з лікарем."),
+        "invalid_input_or_reference": ("The medication data or encoded reference could not be assessed. Review the entered information and source record with the treating team.", "Не вдалося оцінити дані про препарати або закодований запис. Перевірте введені дані та джерело разом із лікарем."),
+        "unsupported_input": ("Medication information uses unsupported or competing fields. It has not been treated as a reconciled list. Review active medicines before considering BV-CHP.", "Дані про препарати містять непідтримувані або конкуруючі поля. Їх не визнано узгодженим списком. Перевірте одночасні препарати перед розглядом BV-CHP."),
+        "unknown": ("The active medication list is unknown. The brentuximab/bleomycin combination has not been excluded. Review current medicines before considering BV-CHP.", "Список одночасних препаратів невідомий. Комбінацію брентуксимабу з блеоміцином не виключено. Перевірте поточні препарати перед розглядом BV-CHP."),
+        "incomplete": ("The active medication list is partial. No brentuximab/bleomycin combination was found in the reported entries, but missing medicines remain unassessed.", "Список одночасних препаратів неповний. У вказаних записах комбінацію брентуксимабу з блеоміцином не виявлено, але відсутні препарати залишаються неоціненими."),
+        "not_detected_in_reported_list": ("The brentuximab/bleomycin pair was not detected in the caller-reported complete list. Completeness has not been independently verified.", "Пару брентуксимаб/блеоміцин не виявлено у списку, який користувач позначив повним. Повноту не перевірено незалежно."),
+    }
+    title = "BV-CHP medication review" if english else "Перевірка препаратів для BV-CHP"
+    limit = ("Only this encoded pair is assessed. Other interactions and individual treatment eligibility remain unassessed. Do not change medicines yourself." if english else "Оцінено лише цю закодовану пару. Інші взаємодії та індивідуальна відповідність лікуванню залишаються неоціненими. Не змінюйте препарати самостійно.")
+    message = messages[status][0 if english else 1]
+    lang = "en" if english else "uk"
+    return ('<aside class="medication-screen-notice" data-original-source lang="' + lang + '" data-medication-screen="' + status + '" style="margin:16px;padding:16px;border:2px solid #b45309;border-radius:8px">'
+            '<h2>' + _h(title) + '</h2><p>' + _h(message) + '</p><p>' + _h(limit) + '</p>'
+            '<a href="https://labeling.pfizer.com/ShowLabeling.aspx?id=20629">ADCETRIS — ' + ("US label, section 4" if english else "інструкція США, розділ 4") + '</a></aside>')
+
+
+def render_plan_html(plan_result: PlanResult, mdt: Optional[MDTOrchestrationResult] = None, *,
+                     target_lang: str = "uk", mode: str = "clinician",
+                     strict_citation_guard: bool = False, sibling_link: Optional[str] = None) -> str:
+    page = _render_plan_without_medication_notice(plan_result, mdt=mdt,
+        target_lang=target_lang, mode=mode, strict_citation_guard=strict_citation_guard,
+        sibling_link=sibling_link)
+    notice = _medication_screen_notice(plan_result, target_lang)
+    if notice:
+        import re
+        page = re.sub(r"<body[^>]*>", lambda match: match.group(0) + notice, page, count=1)
+    return page
+
+
+def _render_plan_without_medication_notice(
     plan_result: PlanResult,
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
@@ -3179,7 +3248,7 @@ def render_plan_html(
     so unsourced content cannot reach the patient. STRICT is the
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
-    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld")):
+    if plan_result.plan and (plan_result.plan.knowledge_base_state.get("histology_selection_withheld") or plan_result.plan.knowledge_base_state.get("profile_selection_withheld") or plan_result.plan.knowledge_base_state.get('planning_selection_withheld') or plan_result.plan.knowledge_base_state.get("medication_selection_withheld")):
         english = target_lang == 'en'
         title = 'Histology-specific selection required' if english else 'Потрібен вибір з урахуванням гістології'
         explanation = (
@@ -3192,6 +3261,36 @@ def render_plan_html(
         if plan_result.plan.knowledge_base_state.get('profile_selection_withheld'):
             title = 'Treatment applicability requires confirmation' if english else 'Потрібне підтвердження відповідності лікування'
             explanation = ('No medicine plan has been selected. The profile has unconfirmed, conflicting or excluded values. Check metastatic stage, driver status, functional status, the chosen chemotherapy partner and clinical exclusions before selecting this route. No automatic substitute was selected.' if english else 'План препаратів не обрано. Профіль містить непідтверджені, суперечливі або виключені значення. Перед вибором цього маршруту перевірте метастатичну стадію, драйверний статус, функціональний стан, обраний компонент хіміотерапії та клінічні виключення. Автоматичну заміну не обрано.')
+            if plan_result.plan.algorithm_id in {'ALGO-PTCL-1L', 'ALGO-AITL-1L', 'ALGO-ALCL-1L'} and {'biomarkers.BIO-CD30-IHC', 'demographics.age'}.intersection(plan_result.plan.knowledge_base_state.get('unconfirmed_profile_fields', [])):
+                explanation = (
+                    'No medicine plan has been selected. Confirm the documented CD30 result '
+                    'and adult age, and resolve conflicting profile values with the clinical team before '
+                    'considering BV-CHP. Confirmation does not establish individual eligibility '
+                    'or local approval. No automatic substitute was selected.'
+                    if english else
+                    'План препаратів не обрано. Підтвердьте документований результат CD30 '
+                    'і вік дорослого пацієнта та узгодьте суперечливі значення профілю з лікарем перед розглядом BV-CHP. '
+                    'Підтвердження не встановлює індивідуальної відповідності лікуванню '
+                    'або місцевого регуляторного дозволу. Автоматичну заміну не обрано.'
+                )
+            if plan_result.plan.algorithm_id == 'ALGO-BURKITT-1L':
+                explanation = (
+                    'No medicine plan has been selected. Confirm the documented Burkitt risk '
+                    'and CNS status. The encoded reference covers high-risk disease without '
+                    'proven CNS involvement; different or unconfirmed context requires a '
+                    'separate specialist-reviewed protocol. No automatic substitute was selected.'
+                    if english else
+                    'План препаратів не обрано. Підтвердьте документовану групу ризику Беркіта '
+                    'та стан ЦНС. Закодований довідковий розклад охоплює високий ризик без '
+                    'доведеного ураження ЦНС; інший або непідтверджений контекст потребує '
+                    'окремого протоколу, перевіреного спеціалістом. Автоматичну заміну не обрано.'
+                )
+        if plan_result.plan.knowledge_base_state.get('planning_selection_withheld'):
+            title = 'Clinical reference withheld from planning' if english else 'Клінічний запис виключено з планування'
+            explanation = ('This reference has been withheld pending source and clinical review. No medicine plan or automatic substitute has been selected. Discuss an appropriate, independently verified route with your clinical team.' if english else 'Цей запис виключено з планування до перевірки джерел і клінічного перегляду. План препаратів та автоматичну заміну не обрано. Обговоріть із лікарем відповідний, окремо перевірений маршрут.')
+        if plan_result.plan.knowledge_base_state.get("medication_selection_withheld"):
+            title = "Medication review required" if english else "Потрібна перевірка препаратів"
+            explanation = ("The selected route is withheld because the scoped medication review found a prohibited combination or could not assess the supplied data. No medicine plan or automatic substitute has been selected. Review active medicines and source information with the treating team." if english else "Обраний маршрут утримано: вузька перевірка препаратів виявила заборонену комбінацію або не змогла оцінити надані дані. План препаратів та автоматичну заміну не обрано. Перевірте одночасні препарати та джерело разом із лікарем.")
         details = '' if (mode or '').lower() == 'patient' else '<ul>' + ''.join(
             f'<li>{_h(warning)}</li>' for warning in plan_result.warnings
         ) + '</ul>'
@@ -3758,9 +3857,11 @@ def _regimen_schedule_ua(regimen_data: Optional[dict], *, target_lang: str = "uk
             return f"{t_int} cycle(s) of {c} days"
         return f"{t_int} цикл(и) по {c} днів"
     if c:
+        context = _course_context_html(regimen_data, target_lang)
+        suffix = f'; {context}' if context else ''
         if target_lang == 'en':
-            return f"Cycle — {c} days"
-        return f"Цикл — {c} днів"
+            return f"Cycle — {c} days{suffix}"
+        return f"Цикл — {c} днів{suffix}"
     if t_int:
         if target_lang == 'en':
             return f"{t_int} cycle(s)"
@@ -4183,17 +4284,23 @@ def _build_why_bullets_html(plan_result: PlanResult, track, *, target_lang: str 
 # emergency banner).
 _BV_URGENCY_ORDER: tuple[str, ...] = (
     "log_at_next_visit",
+    "contact_clinic",
     "call_clinic_same_day",
+    "contact_clinic_now",
     "er_now",
 )
 _BV_URGENCY_HEADING_UA: dict[str, str] = {
     "log_at_next_visit": "Занотуйте і обговоріть на наступному візиті",
+    "contact_clinic": "Повідомте лікаря або медсестру",
     "call_clinic_same_day": "Подзвоніть у клініку того ж дня",
+    "contact_clinic_now": "Негайно зв’яжіться з лікарем або медсестрою",
     "er_now": "Звертайтесь у лікарню негайно",
 }
 _BV_URGENCY_CSS_CLASS: dict[str, str] = {
     "log_at_next_visit": "bv-urgency-group bv-log",
+    "contact_clinic": "bv-urgency-group bv-call",
     "call_clinic_same_day": "bv-urgency-group bv-call",
+    "contact_clinic_now": "bv-urgency-group bv-er",
     "er_now": "bv-urgency-group bv-er",
 }
 _BV_FALLBACK_HTML = (
@@ -4247,7 +4354,9 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
     section_heading = "What to watch for between visits" if english else "На що звернути увагу між візитами"
     urgency_headings = {
         "log_at_next_visit": "Make a note and discuss it at your next visit",
+        "contact_clinic": "Tell your doctor or nurse",
         "call_clinic_same_day": "Call the clinic the same day",
+        "contact_clinic_now": "Contact your doctor or nurse immediately",
         "er_now": "Go to hospital immediately",
     } if english else _BV_URGENCY_HEADING_UA
     fallback = (
@@ -4317,10 +4426,12 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
             heading = urgency_headings[urg]
             li_parts: list[str] = []
             for w in items:
-                original_attrs = ' lang="uk" data-original-source' if english else ''
+                translated = translate_watchpoint(regimen_id, w) if english else None
+                original_attrs = (' lang="en" data-original-source data-translation-status="draft_pending_clinical_and_language_review"'
+                                  if translated else ' lang="uk" data-original-source') if english else ''
                 window_attrs = ' lang="und" data-original-source' if english else ''
-                trigger = _h(w.get("trigger_ua") or "")
-                action = _h(w.get("action_ua") or "")
+                trigger = _h(translated[0] if translated else w.get("trigger_ua") or "")
+                action = _h(translated[1] if translated else w.get("action_ua") or "")
                 window = w.get("cycle_day_window") or ""
                 window_html = (
                     f' <span class="bv-window"{window_attrs}>({_h(window)})</span>'
@@ -4328,7 +4439,7 @@ def _render_between_visits_section(plan_result: PlanResult, *, target_lang: str 
                 )
                 li_parts.append(
                     "<li>" +
-                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english else '') +
+                    ('<span class="translation-fallback">Original Ukrainian text; translation unavailable: </span>' if english and not translated else '') +
                     f'<span class="bv-trigger"{original_attrs}>{trigger}</span>{window_html}'
                     f' — <span class="bv-action"{original_attrs}>{action}</span>'
                     "</li>"

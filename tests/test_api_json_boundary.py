@@ -1,8 +1,8 @@
 """HTTP parser failures must not reach clinical processing or paid providers."""
 import importlib.util
 import io
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -59,9 +59,37 @@ def test_valid_nested_request_reaches_processing_unchanged(endpoint, monkeypatch
 
 def test_nesting_limit_ignores_brackets_and_escaped_quotes_in_strings():
     import json
-    from serverless.request_json import decode_request_json, MAX_JSON_NESTING
+
+    from serverless.request_json import MAX_JSON_NESTING, decode_request_json
     original = {'text': '[{' * 6000 + '\\"' + ']}' * 6000}
     assert decode_request_json(json.dumps(original)) == original
     assert decode_request_json('[' * MAX_JSON_NESTING + '0' + ']' * MAX_JSON_NESTING)
     with pytest.raises(ValueError, match='nesting'):
         decode_request_json('[' * (MAX_JSON_NESTING + 1) + '0' + ']' * (MAX_JSON_NESTING + 1))
+
+
+@pytest.mark.parametrize('raw', [
+    '{"case_text":"first","case_text":"second"}',
+    '{"patient":{"demographics":{"age":17,"age":60}}}',
+    '{"patient":{"concomitant_medications":{"status":"partial","status":"complete","drug_ids":[]}}}',
+    '{"patient":{"concomitant_medications":{"status":"complete","drug_ids":["DRUG-BLEOMYCIN"],"drug_ids":[]}}}',
+    '{"patient":{"biomarkers":{"BIO-CD30-IHC":"negative","BIO-CD30-IHC":"positive"}}}',
+    '{"patient":{"age":60,"age":60}}',
+    r'{"patient":{"status":"partial","\u0073tatus":"complete"}}',
+], ids=['request-field', 'nested-age', 'medication-status', 'medication-list', 'biomarker', 'identical-value', 'escaped-key'])
+def test_duplicate_keys_return_400_before_clinical_processing(endpoint, monkeypatch, raw):
+    responses, calls = post(endpoint, monkeypatch, raw)
+    assert responses == [(400, {'status': 'error', 'message': 'Invalid JSON body'})]
+    assert calls == [], 'Ambiguous input must not reach clinical handling or a provider'
+
+
+def test_same_key_in_different_objects_and_key_like_text_are_preserved(endpoint, monkeypatch):
+    import json
+    original = {
+        'patient': {'status': 'partial', 'extra': {'status': 'unknown'}},
+        'metadata': [{'status': False}, {'status': None}],
+        'case_text': 'Synthetic text containing "status": "partial", "status": "complete"',
+    }
+    responses, calls = post(endpoint, monkeypatch, json.dumps(original))
+    assert responses == [(200, {'status': 'test'})]
+    assert calls == [original]
