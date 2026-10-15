@@ -3,8 +3,8 @@ const page=fs.readFileSync('docs/try.html','utf8');
 function fn(html,name){const m=html.match(new RegExp(`^function ${name}\\([^\\n]*\\{[\\s\\S]*?^\\}`,'m'));assert(m,name);return m[0].replace(/\r\n/g,'\n');}
 const copy=JSON.parse(page.match(/^const profileInputCopy = (.*);$/m)[1]);
 const textarea={value:''},errors=[];
-const context=vm.createContext({textarea,profileInputCopy:copy,setError:e=>errors.push(e)});
-vm.runInContext('let mode="json";'+fn(page,'profileInputError')+fn(page,'buildProfile'),context);
+const context=vm.createContext({textarea,profileInputCopy:copy,setError:e=>errors.push(e),isInteractionLocked:()=>false});
+vm.runInContext('let mode="json";'+fn(page,'profileInputError')+fn(page,'buildProfile')+fn(page,'formatProfileJson'),context);
 for(const [text,error] of [['[]',copy.object],['null',copy.object],['42',copy.object],['"VIRTUAL"',copy.object],
  ['{"findings":[]}',copy.section+' findings'],['{"demographics":false}',copy.section+' demographics'],
  ['{"findings":{"nested":[{"value":1e9999}]}}',copy.finite],['{"findings":{"value":-1e9999}}',copy.finite],
@@ -28,11 +28,36 @@ assert.equal(vm.runInContext('buildProfile()',context),null);assert.equal(errors
 const wideObject={patient_id:'VIRTUAL-WIDE-OBJECT',metadata:Object.fromEntries(Array.from({length:wideCount},(_,i)=>['virtual_'+i,0]))};
 textarea.value=JSON.stringify(wideObject);
 assert(vm.runInContext('buildProfile()',context),'A valid wide object remains valid JSON');
+const ambiguous = [
+ '{"demographics":{"age":17,"age":61}}',
+ '{"concomitant_medications":{"status":"partial","status":"complete","drug_ids":[]}}',
+ '{"concomitant_medications":{"status":"complete","drug_ids":["DRUG-BLEOMYCIN"],"drug_ids":[]}}',
+ '{"biomarkers":{"BIO-CD30-IHC":"negative","BIO-CD30-IHC":"positive"}}',
+ '{"metadata":[{"value":0,"value":0}]}',
+ String.raw`{"metadata":{"status":0,"\u0073tatus":1}}`,
+ String.raw`{"metadata":{"a\"b":0,"a\u0022b":1}}`,
+ '{"metadata":{"__proto__":0,"__proto__":1}}',
+];
+for (const text of ambiguous) {
+ textarea.value=text;
+ assert.equal(vm.runInContext('buildProfile()',context),null,'Ambiguous JSON cannot generate a profile');
+ assert.equal(errors.at(-1),copy.duplicate);
+ vm.runInContext('formatProfileJson()',context);
+ assert.equal(textarea.value,text,'Formatting must preserve conflicting original text for correction');
+ assert.equal(errors.at(-1),copy.duplicate);
+}
+const safe={patient_id:'VIRTUAL-KEY-CONTROL',metadata:[{status:0},{status:false}],text:'{"status":0,"status":1}',nested:{brackets:'[{},] and escaped " quotes',value:null}};
+textarea.value=JSON.stringify(safe);
+assert.deepEqual(JSON.parse(JSON.stringify(vm.runInContext('buildProfile()',context))),safe);
+vm.runInContext('formatProfileJson()',context);
+assert.deepEqual(JSON.parse(textarea.value),safe,'Valid formatting preserves values');
+assert.equal(errors.at(-1),'');
 for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/','fi/']){
  const html=fs.readFileSync('docs/'+prefix+'try.html','utf8');
- assert.equal(fn(html,'profileInputError'),fn(page,'profileInputError'));
+ for (const name of ['profileInputError','buildProfile','formatProfileJson']) assert.equal(fn(html,name),fn(page,name));
  const labels=JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]);
- if(prefix)assert.notEqual(labels.object,copy.object);
+ assert(labels.duplicate);
+ if(prefix){assert.notEqual(labels.object,copy.object);assert.notEqual(labels.duplicate,copy.duplicate);}
  assert(html.includes("if (mode !== 'json') setError("),'Keep the specific JSON error instead of replacing it with a generic assembly failure');
 }
 console.log('Direct JSON: object/section/finite boundaries, localized errors and unchanged zero/false/null/decimal data passed in all eleven clients');

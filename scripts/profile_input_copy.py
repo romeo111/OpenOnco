@@ -110,3 +110,19 @@ READINESS = {
 }
 for locale, messages in READINESS.items():
     COPY[locale]['readinessUnknown'], COPY[locale]['readinessComplete'] = messages
+
+DUPLICATE = {
+'en': 'Duplicate JSON field names are not allowed. Remove the repeated field; your original JSON is preserved.',
+'uk': 'Повторені назви полів JSON не дозволені. Приберіть повторене поле; початковий JSON збережено.',
+'es': 'No se permiten nombres de campo JSON duplicados. Elimine el campo repetido; se conserva el JSON original.',
+'pt': 'Não são permitidos nomes de campos JSON duplicados. Remova o campo repetido; o JSON original é preservado.',
+'de': 'Doppelte JSON-Feldnamen sind nicht zulässig. Entfernen Sie das wiederholte Feld; Ihr ursprüngliches JSON bleibt erhalten.',
+'fr': 'Les noms de champs JSON en double ne sont pas autorisés. Supprimez le champ répété ; le JSON original est conservé.',
+'it': 'I nomi dei campi JSON duplicati non sono consentiti. Rimuovi il campo ripetuto; il JSON originale viene conservato.',
+'da': 'Dublerede JSON-feltnavne er ikke tilladt. Fjern det gentagne felt; din oprindelige JSON bevares.',
+'sv': 'Dubbla JSON-fältnamn är inte tillåtna. Ta bort det upprepade fältet; din ursprungliga JSON bevaras.',
+'nb': 'Dupliserte JSON-feltnavn er ikke tillatt. Fjern det gjentatte feltet; den opprinnelige JSON-en bevares.',
+'fi': 'Samoja JSON-kenttien nimiä ei sallita useita kertoja. Poista toistuva kenttä; alkuperäinen JSON säilytetään.',
+}
+for locale, message in DUPLICATE.items():
+    COPY[locale]['duplicate'] = message

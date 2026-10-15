@@ -471,7 +471,7 @@ const formPane = document.getElementById('formPane');
 const numericInputSummary = document.getElementById('numericInputSummary');
 const numericInputCopy = {"number": "Introduza um número válido.", "integer": "Introduza um número inteiro.", "range": "Use um valor dentro destes limites:", "summary": "Corrija os campos numéricos destacados antes de gerar ou abrir JSON.", "sync": "Introduza novamente este número para o confirmar."};
 const numericInputErrors = new Map();
-const profileInputCopy = {"json": "Introduza JSON válido.", "object": "O perfil deve ser um objeto JSON.", "finite": "O perfil contém um número não finito.", "section": "Esta secção do perfil deve ser um objeto ou null:", "transfer": "Mantenha este perfil no modo JSON: selecione o formulário da doença correspondente e valores compatíveis com os campos. O seu JSON foi preservado.", "restored": "Rascunho JSON restaurado. Reveja-o antes de gerar um relatório.", "restoreLimited": "Rascunho JSON restaurado; não foi possível carregar o questionário. Pode continuar no modo JSON.", "questionnaireUnavailable": "O questionário selecionado está indisponível ou não corresponde a esta doença.", "switchFailed": "Não foi possível carregar o formulário selecionado. O formulário, as respostas e o relatório anteriores foram preservados. Tente novamente.", "exampleUnavailable": "O exemplo selecionado está indisponível ou o seu perfil não corresponde à doença selecionada.", "exampleFailed": "Não foi possível carregar o exemplo. Os dados e o relatório atuais foram preservados. Tente novamente.", "exampleReportFailed": "O perfil do exemplo foi carregado, mas o relatório está indisponível. Pode gerar um novo relatório.", "exampleLoaded": "Perfil de exemplo carregado. Reveja os dados e as fontes antes de o utilizar.", "reportInvalid": "A página carregada não é um relatório legível do OpenOnco. Tente gerar o relatório novamente.", "readinessUnknown": "Preenchimento desconhecido: introduza JSON válido e selecione o questionário da doença correspondente.", "readinessComplete": "Campos críticos do questionário preenchidos; os valores ainda precisam de revisão."};
+const profileInputCopy = {"json": "Introduza JSON válido.", "object": "O perfil deve ser um objeto JSON.", "finite": "O perfil contém um número não finito.", "section": "Esta secção do perfil deve ser um objeto ou null:", "transfer": "Mantenha este perfil no modo JSON: selecione o formulário da doença correspondente e valores compatíveis com os campos. O seu JSON foi preservado.", "restored": "Rascunho JSON restaurado. Reveja-o antes de gerar um relatório.", "restoreLimited": "Rascunho JSON restaurado; não foi possível carregar o questionário. Pode continuar no modo JSON.", "questionnaireUnavailable": "O questionário selecionado está indisponível ou não corresponde a esta doença.", "switchFailed": "Não foi possível carregar o formulário selecionado. O formulário, as respostas e o relatório anteriores foram preservados. Tente novamente.", "exampleUnavailable": "O exemplo selecionado está indisponível ou o seu perfil não corresponde à doença selecionada.", "exampleFailed": "Não foi possível carregar o exemplo. Os dados e o relatório atuais foram preservados. Tente novamente.", "exampleReportFailed": "O perfil do exemplo foi carregado, mas o relatório está indisponível. Pode gerar um novo relatório.", "exampleLoaded": "Perfil de exemplo carregado. Reveja os dados e as fontes antes de o utilizar.", "reportInvalid": "A página carregada não é um relatório legível do OpenOnco. Tente gerar o relatório novamente.", "readinessUnknown": "Preenchimento desconhecido: introduza JSON válido e selecione o questionário da doença correspondente.", "readinessComplete": "Campos críticos do questionário preenchidos; os valores ainda precisam de revisão.", "duplicate": "Não são permitidos nomes de campos JSON duplicados. Remova o campo repetido; o JSON original é preservado."};
 const questionnaireNoticeCopy = {"defaults": "Introduza a informação conhecida. Os dados em falta continuam desconhecidos e podem limitar o relatório.", "starter": "Formulário inicial gerado automaticamente: pode faltar informação importante. Verifique os valores, os dados em falta e as fontes com um profissional clínico qualificado antes de decisões assistenciais.", "unknown": "Os campos de rastreio por preencher continuam desconhecidos. Algumas verificações de segurança podem não ser avaliadas; a completude do formulário não estabelece a sua suficiência clínica."};
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1646,7 +1646,32 @@ function setMode(newMode, { syncFromForm = false, syncFromJson = false, persist 
 }
 
 // ── Profile assembly + live preview ───────────────────────────────────────
-function profileInputError(profile) {
+function profileInputError(profile, rawJson = null) {
+  // JSON.parse validates syntax first. Inspect decoded object keys before any
+  // parsed profile is used; formatting must never silently keep the last key.
+  if (typeof rawJson === 'string') {
+    const stack = [];
+    for (let i = 0; i < rawJson.length; i++) {
+      const ch = rawJson[i];
+      if (ch === '"') {
+        const start = i;
+        for (i++; i < rawJson.length; i++) {
+          if (rawJson.charCodeAt(i) === 92) i++;
+          else if (rawJson[i] === '"') break;
+        }
+        const current = stack.at(-1);
+        if (current && current.expectKey) {
+          const key = JSON.parse(rawJson.slice(start, i + 1));
+          if (current.keys.has(key)) return profileInputCopy.duplicate;
+          current.keys.add(key);
+          current.expectKey = false;
+        }
+      } else if (ch === '{') stack.push({ keys: new Set(), expectKey: true });
+      else if (ch === '[') stack.push(null);
+      else if (ch === '}' || ch === ']') stack.pop();
+      else if (ch === ',' && stack.at(-1)) stack.at(-1).expectKey = true;
+    }
+  }
   if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return profileInputCopy.object;
   for (const name of ['disease','demographics','findings','biomarkers','clinician_confirmations']) {
     const section = profile[name];
@@ -1668,7 +1693,7 @@ function buildProfile() {
   if (mode === 'json') {
     try {
       const profile = JSON.parse(textarea.value);
-      const error = profileInputError(profile);
+      const error = profileInputError(profile, textarea.value);
       if (error) { setError(error); return null; }
       return profile;
     } catch { setError(profileInputCopy.json); return null; }
@@ -1936,7 +1961,7 @@ function updateImpactPanelLocal() {
   let jsonProfile = null;
   if (mode === 'json') {
     try { jsonProfile = JSON.parse(textarea.value); } catch (error) { /* unfinished drafts remain editable */ }
-    const index = jsonProfile && !profileInputError(jsonProfile) ? findQuestionnaireForProfile(jsonProfile) : -1;
+    const index = jsonProfile && !profileInputError(jsonProfile, textarea.value) ? findQuestionnaireForProfile(jsonProfile) : -1;
     if (!activeQuest || index < 0 || QUESTIONNAIRES_MANIFEST[index].id !== activeQuest.id) {
       setProgress(0, 0);
       if (readinessCriticalText) {
@@ -3212,12 +3237,17 @@ personalizeBtn && personalizeBtn.addEventListener('click', () => {
 
 modeFormBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('form', { syncFromJson: true }); });
 modeJsonBtn.addEventListener('click', () => { if (!isInteractionLocked()) setMode('json', { syncFromForm: true }); });
-formatBtn && formatBtn.addEventListener('click', () => {
+function formatProfileJson() {
   if (isInteractionLocked()) return;
-  setError(null);
-  try { textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }
-  catch (e) { setError('Invalid JSON: ' + e.message); }
-});
+  try {
+    const profile = JSON.parse(textarea.value);
+    const error = profileInputError(profile, textarea.value);
+    if (error) { setError(error); return; }
+    textarea.value = JSON.stringify(profile, null, 2);
+    setError('');
+  } catch (e) { setError(profileInputCopy.json); }
+}
+formatBtn && formatBtn.addEventListener('click', formatProfileJson);
 textarea.addEventListener('input', () => {
   markPlanDirty();
   saveDraft();
