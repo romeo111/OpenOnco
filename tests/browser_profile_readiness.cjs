@@ -13,7 +13,7 @@ for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/',
   '{field:"findings.flag",type:"boolean",impact:"critical",label:"Flag"},'+
   '{field:"findings.anc",type:"float",range_min:0,impact:"critical",label:"ANC"}]}]};'+names.map(n=>fn(page,n)).join('\n'),c);
  const run=s=>vm.runInContext(s,c);
- for(const invalid of ['{"disease":{"id":"DIS-VIRTUAL"},"demographics":{"age":17,"age":61,"ecog":0},"findings":{"flag":false,"anc":0}}', '{"patient_id":','[]','{"disease":{"id":"DIS-OTHER"}}','{"disease":{"id":"DIS-VIRTUAL"},"findings":{"anc":1e9999}}']){
+ for(const invalid of ['{"disease":{"id":"DIS-VIRTUAL"},"metadata":{"value":9007199254740993}}', '{"disease":{"id":"DIS-VIRTUAL"},"demographics":{"age":17,"age":61,"ecog":0},"findings":{"flag":false,"anc":0}}', '{"patient_id":','[]','{"disease":{"id":"DIS-OTHER"}}','{"disease":{"id":"DIS-VIRTUAL"},"findings":{"anc":1e9999}}']){
   c.textarea.value=invalid;run('updateImpactPanelLocal()');assert.equal(c.progressText.textContent,'0 / 0');assert.equal(c.readinessCriticalText.dataset.kind,'idle');assert.equal(c.readinessCriticalText.textContent,c.profileInputCopy.readinessUnknown);
  }
  c.textarea.value='{"disease":{"id":"DIS-VIRTUAL"}}';run('updateImpactPanelLocal()');assert.equal(c.progressText.textContent,'0 / 4');assert.equal(c.readinessCriticalText.dataset.kind,'warn');
