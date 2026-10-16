@@ -43,3 +43,6 @@ for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/',
  assert(page.includes('if (!populateFormFromProfile(quest, patient))'));
 }
 console.log('Full JSON/form/draft round trips preserve unmapped fields, null/zero/false, missing data and edits; incompatible imports remain JSON; all eleven clients match');
+
+// Medication editing extends this same full-profile preservation contract.
+require('./browser_medication_editor.cjs');
