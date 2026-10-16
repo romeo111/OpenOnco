@@ -4828,6 +4828,8 @@ def render_try(
     questionnaires_manifest: list = None,
     examples_manifest: list = None,
 ) -> str:
+    from scripts.medication_editor import render_medication_editor
+    medication_editor_js = render_medication_editor(target_lang)
     from scripts.report_export_copy import ERRORS as report_export_errors
     from scripts.report_export_copy import PRINT_ERRORS as report_print_errors
     from scripts.runtime_cache_copy import COPY as runtime_copy
@@ -7988,6 +7990,7 @@ function formatProfileJson() {{
   }} catch (e) {{ setError(profileInputCopy.json); }}
 }}
 formatBtn && formatBtn.addEventListener('click', formatProfileJson);
+{medication_editor_js}
 textarea.addEventListener('input', () => {{
   markPlanDirty();
   saveDraft();
