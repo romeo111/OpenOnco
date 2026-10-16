@@ -189,6 +189,8 @@ def localize_page(source, locale, path, available, catalog, *, style_assets=None
         page = re.sub(r'^const nsclcQuestionCopy = .*;$', lambda _: 'const nsclcQuestionCopy = ' + json.dumps(nsclc_question_messages(locale), ensure_ascii=False).replace('</', '<\\/') + ';', page, flags=re.M, count=1)
         from scripts.runtime_cache_copy import COPY
         page = re.sub(r"^const runtimeCacheCopy = .*;$", lambda _: "const runtimeCacheCopy = " + json.dumps(COPY[locale], ensure_ascii=False) + ";", page, flags=re.M, count=1)
+        from scripts.medication_editor import localized_editor_config
+        page = re.sub(r"^const medicationEditorConfig = (.*);$", lambda match: "const medicationEditorConfig = " + localized_editor_config(match.group(1), locale) + ";", page, flags=re.M, count=1)
         from scripts.numeric_input_copy import COPY as numeric_copy
         from scripts.profile_input_copy import COPY as profile_copy
         from scripts.questionnaire_notice_copy import COPY as questionnaire_copy

@@ -31,6 +31,8 @@ OpenOnco is an early-stage informational project. Clinical content can be draft,
 | Handbook | [Read](https://openonco.info/handbook.html) | [Читати](https://openonco.info/ukr/handbook.html) | 9 chapters / 27 questions; Ukrainian translation awaits clinical review; no ESMO endorsement or CME credit |
 | Clinician review | [DLBCL 1L packet](https://openonco.info/review/dlbcl-1l/) | English packet | 26 synthetic scenarios, actual plans, traces and local feedback export |
 
+In Plan Builder’s normal form, expand **Concomitant medicines**, choose list completeness and catalog medicines, then select **Save medication list**. JSON editing is optional; medicines are retained in local drafts and form/JSON transfers. If a medicine is missing from the catalog, keep the list partial. Completeness is user-reported and does not establish that all interactions have been checked.
+
 Use synthetic profiles for public demos and feedback. Do not submit identifiable patient data to the question prototype or GitHub. The browser plan builder processes profiles locally; that privacy property does not apply to server-backed tools.
 
 Onco Wiki records, Handbook chapters and quizzes, interactive tools and result displays also have draft [Español](https://openonco.info/es/), [Português](https://openonco.info/pt/), [Deutsch](https://openonco.info/de/) and [Français](https://openonco.info/fr/) translations. Clinical translation review is pending. Original English pages remain accessible; identifiers, questionnaire values, answer keys and engine decisions stay unchanged. See the [localization scope and maintenance guide](docs/LOCALIZATION.md).

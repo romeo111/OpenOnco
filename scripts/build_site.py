@@ -6125,6 +6125,7 @@ function renderForm(quest) {{
   removedProfileFields = new Set();
   answers = {{}};
   questGroups.innerHTML = '';
+  closeMedicationEditors();
   hideExampleLockBanner();
   if (!quest) {{
     questEmpty.style.display = '';
