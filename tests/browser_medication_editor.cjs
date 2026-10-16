@@ -20,8 +20,9 @@ for(const prefix of prefixes){
  if(prefix) assert.notEqual(config.copy.title,JSON.parse(fs.readFileSync('docs/try.html','utf8').match(/^const medicationEditorConfig = (.*);$/m)[1]).copy.title);
  const catalog=config.drugs;assert(catalog.length>100);assert.equal(new Set(catalog.map(drug=>drug.id)).size,catalog.length);
  assert(catalog.some(drug=>drug.id==='DRUG-BLEOMYCIN'));
- const pane=new Element('section');let saved=0,dirty=0,error='';
- const c=vm.createContext({document:{createElement:tag=>new Element(tag)},jsonPane:pane,medicationEditorConfig:config,
+ const pane=new Element('section'),form=new Element('section'),banner={hidden:true};let saved=0,dirty=0,error='';
+ const c=vm.createContext({document:{createElement:tag=>new Element(tag),getElementById:()=>banner,querySelectorAll:()=>[...pane.children,...form.children]},jsonPane:pane,formPane:form,medicationEditorConfig:config,
+  modeFormBtn:new Element('button'),modeJsonBtn:new Element('button'),personalizeBtn:new Element('button'),activeQuest:{id:'QUEST-VIRTUAL'},
   textarea:{value:''},mode:'json',locked:false,isInteractionLocked:()=>c.locked,
   setError:value=>error=value,saveDraft:()=>saved++,markPlanDirty:()=>dirty++,updateRunBtnEnabled(){},updateImpactPanelLocal(){},
   profileInputCopy:JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1])});

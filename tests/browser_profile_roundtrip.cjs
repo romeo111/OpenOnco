@@ -46,3 +46,5 @@ console.log('Full JSON/form/draft round trips preserve unmapped fields, null/zer
 
 // Medication editing extends this same full-profile preservation contract.
 require('./browser_medication_editor.cjs');
+
+require('./browser_form_medication.cjs');

@@ -190,6 +190,101 @@ ROWS = {
 COPY = {locale: dict(zip(KEYS, row)) for locale, row in ROWS.items()}
 
 
+FORM_KEYS = ["formTitle", "formApply", "formChanged", "formInvalid", "formLocked", "formSaved"]
+FORM_ROWS = {
+    "en": [
+        "Concomitant medicines",
+        "Save medication list",
+        "The form changed. Close and reopen this section before saving.",
+        "Check the form values and medication list. Known medicines require partial or complete status.",
+        "Personalise this example, then reopen this section to edit its medication list.",
+        "Medication list saved in the form.",
+    ],
+    "uk": [
+        "Супутні ліки",
+        "Зберегти перелік ліків",
+        "Форма змінилася. Закрийте й знову відкрийте цей розділ перед збереженням.",
+        "Перевірте значення форми й перелік ліків. Для відомих ліків виберіть частковий або повний перелік.",
+        "Персоналізуйте цей приклад, потім знову відкрийте розділ для редагування його ліків.",
+        "Перелік ліків збережено у формі.",
+    ],
+    "es": [
+        "Medicamentos concomitantes",
+        "Guardar lista de medicamentos",
+        "El formulario ha cambiado. Cierre y vuelva a abrir esta sección antes de guardar.",
+        "Revise los valores del formulario y la lista de medicamentos. Los medicamentos conocidos requieren el estado parcial o completo.",
+        "Personalice este ejemplo y vuelva a abrir esta sección para editar sus medicamentos.",
+        "Lista de medicamentos guardada en el formulario.",
+    ],
+    "pt": [
+        "Medicamentos concomitantes",
+        "Guardar lista de medicamentos",
+        "O formulário foi alterado. Feche e reabra esta secção antes de guardar.",
+        "Verifique os valores do formulário e a lista de medicamentos. Medicamentos conhecidos exigem o estado parcial ou completo.",
+        "Personalize este exemplo e reabra esta secção para editar os seus medicamentos.",
+        "Lista de medicamentos guardada no formulário.",
+    ],
+    "de": [
+        "Begleitmedikation",
+        "Medikamentenliste speichern",
+        "Das Formular wurde geändert. Schließen und öffnen Sie diesen Abschnitt vor dem Speichern erneut.",
+        "Prüfen Sie Formularwerte und Medikamentenliste. Bekannte Medikamente erfordern den Status unvollständig oder vollständig.",
+        "Passen Sie dieses Beispiel an und öffnen Sie diesen Abschnitt erneut, um seine Medikamente zu bearbeiten.",
+        "Medikamentenliste im Formular gespeichert.",
+    ],
+    "fr": [
+        "Médicaments concomitants",
+        "Enregistrer la liste des médicaments",
+        "Le formulaire a changé. Fermez puis rouvrez cette section avant d’enregistrer.",
+        "Vérifiez les valeurs du formulaire et la liste des médicaments. Des médicaments connus exigent le statut partiel ou complet.",
+        "Personnalisez cet exemple, puis rouvrez cette section pour modifier ses médicaments.",
+        "Liste des médicaments enregistrée dans le formulaire.",
+    ],
+    "it": [
+        "Farmaci concomitanti",
+        "Salva elenco dei farmaci",
+        "Il modulo è cambiato. Chiudi e riapri questa sezione prima di salvare.",
+        "Controlla i valori del modulo e l’elenco dei farmaci. I farmaci noti richiedono lo stato parziale o completo.",
+        "Personalizza questo esempio, poi riapri questa sezione per modificarne i farmaci.",
+        "Elenco dei farmaci salvato nel modulo.",
+    ],
+    "da": [
+        "Samtidig medicin",
+        "Gem medicinlisten",
+        "Formularen er ændret. Luk og genåbn dette afsnit, før du gemmer.",
+        "Kontrollér formularværdierne og medicinlisten. Kendt medicin kræver status delvis eller komplet.",
+        "Tilpas dette eksempel, og genåbn afsnittet for at redigere dets medicin.",
+        "Medicinlisten er gemt i formularen.",
+    ],
+    "sv": [
+        "Samtidiga läkemedel",
+        "Spara läkemedelslistan",
+        "Formuläret har ändrats. Stäng och öppna avsnittet igen innan du sparar.",
+        "Kontrollera formulärvärdena och läkemedelslistan. Kända läkemedel kräver status delvis eller fullständig.",
+        "Anpassa det här exemplet och öppna avsnittet igen för att redigera dess läkemedel.",
+        "Läkemedelslistan har sparats i formuläret.",
+    ],
+    "nb": [
+        "Samtidige legemidler",
+        "Lagre legemiddellisten",
+        "Skjemaet er endret. Lukk og åpne avsnittet igjen før du lagrer.",
+        "Kontroller skjemaverdiene og legemiddellisten. Kjente legemidler krever status delvis eller fullstendig.",
+        "Tilpass dette eksemplet, og åpne avsnittet igjen for å redigere legemidlene.",
+        "Legemiddellisten er lagret i skjemaet.",
+    ],
+    "fi": [
+        "Samanaikaiset lääkkeet",
+        "Tallenna lääkeluettelo",
+        "Lomake on muuttunut. Sulje tämä osio ja avaa se uudelleen ennen tallennusta.",
+        "Tarkista lomakkeen arvot ja lääkeluettelo. Tunnetut lääkkeet vaativat osittaisen tai täydellisen tilan.",
+        "Mukauta tätä esimerkkiä ja avaa osio uudelleen muokataksesi sen lääkkeitä.",
+        "Lääkeluettelo tallennettu lomakkeeseen.",
+    ],
+}
+for locale, row in FORM_ROWS.items():
+    COPY[locale].update(zip(FORM_KEYS, row))
+
+
 def render_medication_editor(locale):
     root = Path(__file__).resolve().parents[1]
     drugs = []

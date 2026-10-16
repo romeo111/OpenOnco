@@ -44,7 +44,7 @@ def test_editor_catalog_and_contract():
     source = (
         (ROOT / "scripts/medication_editor.js")
         .read_text(encoding="utf-8")
-        .split("(function installMedicationEditor()", 1)[0]
+        .split("function closeMedicationEditors()", 1)[0]
     )
     runner = (
         source
@@ -65,3 +65,12 @@ def test_medication_copy_is_complete(locale):
     if locale != "en":
         assert COPY[locale]["notice"] != COPY["en"]["notice"]
         assert COPY[locale]["complete"] != COPY["en"]["complete"]
+        for key in [
+            "formTitle",
+            "formApply",
+            "formChanged",
+            "formInvalid",
+            "formLocked",
+            "formSaved",
+        ]:
+            assert COPY[locale][key] != COPY["en"][key]
