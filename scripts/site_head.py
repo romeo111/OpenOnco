@@ -226,10 +226,10 @@ def _news_entries_by_slug() -> dict[str, dict]:
 
 
 def _news_slug_for(path: str) -> str | None:
-    normalized = path.replace("\\", "/").lstrip("/")
-    if not (normalized.startswith("news/") or normalized.startswith("ukr/news/")):
+    _, base_path = split_locale(path)
+    if not (base_path.startswith("news/") and base_path.endswith(".html")):
         return None
-    return normalized.removeprefix("ukr/").removeprefix("news/").removesuffix(".html")
+    return base_path.removeprefix("news/").removesuffix(".html")
 
 
 def _news_dates(path: str) -> tuple[str, str] | None:
@@ -341,10 +341,10 @@ def _description_for(path: str, title: str, locale: str) -> str:
             if not is_uk else
             "Свіжі зміни OpenOnco та пояснення з джерелами: докази й обмеження видно читачеві."
         )
-    if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
+    if _news_slug_for(normalized):
         slug = _news_slug_for(normalized)
         entry = _news_entries_by_slug().get(slug) if slug else None
-        summary = entry["summary"]["uk" if is_uk else "en"] if entry else None
+        summary = entry["summary"].get(locale) if entry else None
         if summary:
             return summary
         return (
@@ -370,7 +370,7 @@ def _schema_type(path: str, available_paths: set[str] | None = None) -> str:
         return "WebPage"  # translated introduction, not the application itself
     if normalized.endswith("try.html"):
         return "SoftwareApplication"
-    if normalized.startswith("news/") or normalized.startswith("ukr/news/"):
+    if _news_slug_for(normalized):
         return "NewsArticle"
     if (
         normalized.endswith("kb.html")
@@ -410,7 +410,7 @@ def _language_links(path: str, available_paths: set[str] | None = None) -> list[
         # Localized tool introductions are explicit English launch pages,
         # rather than translations of the complete interactive tools.
         completed = {code for code in LOCALES if locale_path('handbook/hb-dlbcl-1l.html', code) in available_paths}
-        if base_path not in {"index.html", "about.html", "kb.html", "participate.html", "handbook.html"}:
+        if base_path not in {"index.html", "about.html", "kb.html", "participate.html", "handbook.html"} and not base_path.startswith("news/"):
             locale = split_locale(path)[0]
             allowed = {'en', 'uk', 'x-default'} | completed
             if locale in {'es', 'pt', 'de', 'fr'} and locale not in completed:

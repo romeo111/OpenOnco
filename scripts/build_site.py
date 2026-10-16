@@ -78,7 +78,7 @@ from scripts.build_handbook import build_handbook
 from scripts.build_clinician_review import build_clinician_review
 from scripts.build_kb_wiki import build_kb_wiki
 from scripts.build_participation import build_participation
-from scripts.build_news import build_news
+from scripts.build_news import build_news, connect_localized_news_indexes
 from scripts.build_international import build_international
 from scripts.build_clinical_locales import build_clinical_locales
 from scripts.site_cases import (
@@ -11635,6 +11635,7 @@ def build_site(output_dir: Path, *, progress: bool = False) -> dict:
     stage("Building news and language editions")
     news_payload = build_news(output_dir, top_bar=_render_top_bar)
     international_payload = build_international(output_dir)
+    connect_localized_news_indexes(output_dir)
     clinical_locales_payload = build_clinical_locales(output_dir)
     from scripts.build_public_locales import synchronize_public_styles
     synchronize_public_styles(output_dir)

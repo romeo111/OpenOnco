@@ -1,4 +1,4 @@
-"""Build the OpenOnco news section (bilingual) with open comments.
+"""Build the OpenOnco news section with open comments.
 
 News is editorial content, not clinical knowledge base content. It lives in
 `content/news/*.yaml` rather than under `knowledge_base/hosted/content/` so it
@@ -35,6 +35,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.news_archive_copy import LANGUAGES as NEWS_LOCALES, article_translation
+from scripts.site_locales import LOCALES, locale_path, split_locale
+
 DEFAULT_NEWS_DIR = REPO_ROOT / "content" / "news"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "docs"
 
@@ -64,6 +67,8 @@ COMMENTS = {
 # own commits, so it must carry citations and says on the page that it is not
 # clinical advice.
 POST_KINDS = {"project", "explainer"}
+AUTOMATED_SERIES = "openonco-three-day"
+SERIES_FORMATS = {"research", "platform"}
 
 BLOCK_TYPES = {"p", "h2", "h3", "ul", "ol", "quote", "callout", "code"}
 CALLOUT_TONES = {"info": "", "good": " callout-good", "warn": " callout-hard"}
@@ -81,6 +86,46 @@ _SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _LINK_RE = re.compile(r"\[([^\]\[]+)\]\(([^()\s]+)\)")
 _BOLD_RE = re.compile(r"\*\*([^*]+)\*\*")
 _CODE_RE = re.compile(r"`([^`]+)`")
+
+# Complete article-page chrome for languages with a full translation.
+# Source titles in the bibliography remain in their original publication language.
+ARTICLE_UI = {
+    "es": ("← Todas las noticias", "por", "Fuentes", "Escrito retrospectivamente; publicado el {date}.", "Material informativo, no consejo médico. Consulte las fuentes y hable con su equipo clínico.", "Comentarios", "Los comentarios son públicos. No incluya datos personales de pacientes. ¿Detectó un error clínico? [Abra una incidencia](https://github.com/romeo111/OpenOnco/issues/new).", "Los comentarios aún no están activados."),
+    "pt": ("← Todas as notícias", "por", "Fontes", "Escrito retrospetivamente; publicado em {date}.", "Material informativo, não aconselhamento médico. Consulte as fontes e fale com a sua equipa clínica.", "Comentários", "Os comentários são públicos. Não inclua dados pessoais de pacientes. Encontrou um erro clínico? [Abra uma ocorrência](https://github.com/romeo111/OpenOnco/issues/new).", "Os comentários ainda não estão ativos."),
+    "de": ("← Alle Neuigkeiten", "von", "Quellen", "Rückblickend verfasst; veröffentlicht am {date}.", "Hintergrundinformation, keine medizinische Beratung. Prüfen Sie die Quellen und sprechen Sie mit Ihrem Behandlungsteam.", "Kommentare", "Kommentare sind öffentlich. Bitte keine persönlichen Patientendaten eingeben. Klinischen Fehler entdeckt? [Issue eröffnen](https://github.com/romeo111/OpenOnco/issues/new).", "Kommentare sind noch nicht aktiviert."),
+    "fr": ("← Toutes les actualités", "par", "Sources", "Rédigé rétrospectivement ; publié le {date}.", "Information générale, pas un avis médical. Vérifiez les sources et parlez-en à votre équipe soignante.", "Commentaires", "Les commentaires sont publics. N’y publiez aucune donnée personnelle de patient. Une erreur clinique ? [Ouvrez un ticket](https://github.com/romeo111/OpenOnco/issues/new).", "Les commentaires ne sont pas encore activés."),
+    "it": ("← Tutte le notizie", "di", "Fonti", "Scritto retrospettivamente; pubblicato il {date}.", "Informazioni generali, non consulenza medica. Verifica le fonti e parlane con il team curante.", "Commenti", "I commenti sono pubblici. Non inserire dati personali dei pazienti. Hai trovato un errore clinico? [Apri una segnalazione](https://github.com/romeo111/OpenOnco/issues/new).", "I commenti non sono ancora attivi."),
+    "da": ("← Alle nyheder", "af", "Kilder", "Skrevet efterfølgende; udgivet {date}.", "Baggrundsinformation, ikke lægelig rådgivning. Kontrollér kilderne, og tal med dit behandlingsteam.", "Kommentarer", "Kommentarer er offentlige. Del ikke personlige patientoplysninger. Fundet en klinisk fejl? [Opret en sag](https://github.com/romeo111/OpenOnco/issues/new).", "Kommentarer er endnu ikke slået til."),
+    "sv": ("← Alla nyheter", "av", "Källor", "Skriven i efterhand; publicerad {date}.", "Bakgrundsinformation, inte medicinsk rådgivning. Kontrollera källorna och tala med ditt vårdteam.", "Kommentarer", "Kommentarer är offentliga. Ange inga personliga patientuppgifter. Hittat ett kliniskt fel? [Skapa ett ärende](https://github.com/romeo111/OpenOnco/issues/new).", "Kommentarer är ännu inte aktiverade."),
+    "nb": ("← Alle nyheter", "av", "Kilder", "Skrevet i ettertid; publisert {date}.", "Bakgrunnsinformasjon, ikke medisinske råd. Sjekk kildene og snakk med behandlingsteamet ditt.", "Kommentarer", "Kommentarer er offentlige. Ikke legg inn personlige pasientopplysninger. Funnet en klinisk feil? [Opprett en sak](https://github.com/romeo111/OpenOnco/issues/new).", "Kommentarer er ennå ikke aktivert."),
+    "fi": ("← Kaikki uutiset", "kirjoittaja", "Lähteet", "Kirjoitettu jälkikäteen; julkaistu {date}.", "Taustatietoa, ei lääketieteellisiä neuvoja. Tarkista lähteet ja keskustele hoitotiimisi kanssa.", "Kommentit", "Kommentit ovat julkisia. Älä kirjoita potilaiden henkilötietoja. Löysitkö kliinisen virheen? [Avaa ilmoitus](https://github.com/romeo111/OpenOnco/issues/new).", "Kommentointi ei ole vielä käytössä."),
+}
+
+INDEX_LANGUAGE_NOTE = {
+    "es": "Las tarjetas traducidas abren el artículo completo en español; las demás abren el original en inglés.",
+    "pt": "Os cartões traduzidos abrem o artigo completo em português; os restantes abrem o original em inglês.",
+    "de": "Übersetzte Karten öffnen den vollständigen deutschen Artikel; die übrigen führen zum englischen Original.",
+    "fr": "Les cartes traduites ouvrent l’article complet en français ; les autres mènent à l’original anglais.",
+    "it": "Le schede tradotte aprono l’articolo completo in italiano; le altre aprono l’originale inglese.",
+    "da": "Oversatte kort åbner hele artiklen på dansk; de øvrige åbner den engelske original.",
+    "sv": "Översatta kort öppnar hela artikeln på svenska; övriga öppnar det engelska originalet.",
+    "nb": "Oversatte kort åpner hele artikkelen på norsk; de øvrige åpner den engelske originalen.",
+    "fi": "Käännetyt kortit avaavat koko artikkelin suomeksi; muut avaavat englanninkielisen alkuperäisen.",
+}
+
+DOCTOR_NOTE = {
+    "en": "This article does not replace a doctor.",
+    "uk": "Цей матеріал не замінює консультації лікаря.",
+    "es": "Este artículo no sustituye la consulta con un médico.",
+    "pt": "Este artigo não substitui a consulta com um médico.",
+    "de": "Dieser Artikel ersetzt keine ärztliche Beratung.",
+    "fr": "Cet article ne remplace pas une consultation médicale.",
+    "it": "Questo articolo non sostituisce il parere di un medico.",
+    "da": "Denne artikel erstatter ikke lægelig rådgivning.",
+    "sv": "Den här artikeln ersätter inte en läkares bedömning.",
+    "nb": "Denne artikkelen erstatter ikke en leges vurdering.",
+    "fi": "Tämä artikkeli ei korvaa lääkärin arviota.",
+}
 
 
 class NewsContentError(ValueError):
@@ -131,6 +176,8 @@ def _inline(text: object) -> str:
 def _format_date(value: date, lang: str) -> str:
     if lang == "uk":
         return f"{value.day} {_UK_MONTHS_GENITIVE[value.month - 1]} {value.year}"
+    if lang in NEWS_LOCALES:
+        return value.isoformat()
     return f"{_EN_MONTHS[value.month - 1]} {value.day}, {value.year}"
 
 
@@ -263,14 +310,25 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
             raise NewsContentError(
                 f"{source}: 'kind' must be one of {sorted(POST_KINDS)}, got {kind!r}"
             )
+        series = raw.get("series")
+        series_format = raw.get("series_format")
+        if series is not None or series_format is not None:
+            if series != AUTOMATED_SERIES or series_format not in SERIES_FORMATS:
+                raise NewsContentError(f"{source}: invalid automated series or series_format")
 
         sources = _validate_sources(raw.get("sources"), source, kind)
 
-        entries.append({
+        translations = raw.get("translations") or {}
+        if not isinstance(translations, dict) or set(translations) - set(NEWS_LOCALES):
+            raise NewsContentError(f"{source}: translations must map supported non-EN/UK locales")
+
+        entry = {
             "slug": slug,
             "date": event_date,
             "published": published,
             "kind": kind,
+            "series": series,
+            "series_format": series_format,
             "sources": sources,
             "tags": [str(t).strip() for t in tags if str(t).strip()],
             "author": str(raw.get("author", "OpenOnco")).strip() or "OpenOnco",
@@ -281,9 +339,38 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
                 for lang in ("en", "uk")
             },
             "source_file": source,
-        })
+        }
+        for locale, translated in translations.items():
+            if not isinstance(translated, dict):
+                raise NewsContentError(f"{source}: translations.{locale} must be a mapping")
+            for field in ("title", "summary"):
+                value = translated.get(field)
+                if not isinstance(value, str) or not value.strip():
+                    raise NewsContentError(f"{source}: translations.{locale}.{field} is required")
+                entry[field][locale] = value.strip()
+            entry["body"][locale] = _validate_blocks(translated.get("body"), source, locale)
+        if "archive" in entry["tags"]:
+            for locale in NEWS_LOCALES:
+                if locale in entry["body"]:
+                    raise NewsContentError(f"{source}: archive translation is already curated")
+                try:
+                    translated = article_translation(entry, locale)
+                except (KeyError, ValueError) as exc:
+                    raise NewsContentError(f"{source}: incomplete {locale} archive translation: {exc}") from exc
+                for field in ("title", "summary", "body"):
+                    entry[field][locale] = translated[field]
+        entries.append(entry)
 
     entries.sort(key=lambda e: (e["date"], e["slug"]), reverse=True)
+    sequence = sorted(
+        (e for e in entries if e["series"] == AUTOMATED_SERIES),
+        key=lambda e: (e["published"] or e["date"], e["slug"]),
+    )
+    for earlier, later in zip(sequence, sequence[1:]):
+        if earlier["series_format"] == later["series_format"]:
+            raise NewsContentError(
+                f"{later['source_file']}: automated series must alternate after {earlier['source_file']}"
+            )
     return entries
 
 
@@ -308,7 +395,7 @@ def _render_sources(entry: dict[str, Any], target_lang: str) -> str:
     if not entry.get("sources"):
         return ""
     is_en = target_lang == "en"
-    heading = "Sources" if is_en else "Джерела"
+    heading = "Sources" if is_en else "Джерела" if target_lang == "uk" else ARTICLE_UI[target_lang][2]
     items = []
     for src in entry["sources"]:
         href = _source_href(src["id"])
@@ -339,13 +426,15 @@ def _render_explainer_note(target_lang: str) -> str:
             "research; it is not a recommendation for any individual case, and the "
             "cited studies may have been superseded."
         )
-    else:
+    elif target_lang == "uk":
         text = (
             "Матеріал для загального розуміння, а не клінічна настанова. Тут описані "
             "опубліковані дослідження; це не рекомендація для конкретного випадку, а "
             "згадані праці могли бути переглянуті пізнішими даними."
         )
-    return f'    <p class="news-kind-note">{_esc(text)}</p>'
+    else:
+        text = ARTICLE_UI[target_lang][4]
+    return f'    <p class="news-kind-note">{_esc(text + " " + DOCTOR_NOTE[target_lang])}</p>'
 
 
 def _render_blocks(blocks: list[dict[str, Any]]) -> str:
@@ -370,12 +459,11 @@ def _render_blocks(blocks: list[dict[str, Any]]) -> str:
 
 
 def article_path(slug: str, target_lang: str) -> str:
-    prefix = "/ukr" if target_lang == "uk" else ""
-    return f"{prefix}/news/{slug}.html"
+    return "/" + locale_path(f"news/{slug}.html", target_lang)
 
 
 def index_path(target_lang: str) -> str:
-    return "/ukr/news.html" if target_lang == "uk" else "/news.html"
+    return "/" + locale_path("news.html", target_lang)
 
 
 def thread_id(slug: str) -> str:
@@ -537,7 +625,7 @@ def render_comments(entry: dict[str, Any], target_lang: str) -> str:
     discussion is not split by translation.
     """
     is_en = target_lang == "en"
-    heading = "Comments" if is_en else "Коментарі"
+    heading = "Comments" if is_en else "Коментарі" if target_lang == "uk" else ARTICLE_UI[target_lang][5]
     if is_en:
         note = (
             "Threads are public and indexed — please keep personal medical data out "
@@ -548,7 +636,7 @@ def render_comments(entry: dict[str, Any], target_lang: str) -> str:
             "Comments are not switched on yet — the backend still needs to be "
             "configured."
         )
-    else:
+    elif target_lang == "uk":
         note = (
             "Гілки публічні й індексуються — будь ласка, не пишіть у них персональні "
             "медичні дані. Знайшли клінічну помилку? "
@@ -557,6 +645,8 @@ def render_comments(entry: dict[str, Any], target_lang: str) -> str:
         offline = (
             "Коментарі ще не увімкнено — бекенд потрібно налаштувати."
         )
+    else:
+        note, offline = ARTICLE_UI[target_lang][6:8]
 
     if not comments_enabled():
         body = f'    <p class="news-comments-offline">{_esc(offline)}</p>'
@@ -583,7 +673,7 @@ def _page_shell(*, target_lang: str, page_title: str, top_bar_html: str,
     and JSON-LD are injected afterwards by site_head.finalize_site_discovery,
     which scrapes the `OpenOnco · <title>` form emitted here.
     """
-    lang_attr = "en" if target_lang == "en" else "uk"
+    lang_attr = target_lang
     return f"""<!DOCTYPE html>
 <html lang="{lang_attr}">
 <head>
@@ -636,7 +726,7 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         archive_note = "Earlier releases and explainers, newest first"
         project_label = "Project update"
         kind_label = "Explainer"
-        language_note = "Full articles are available in English and Ukrainian."
+        language_note = "Every post has English and Ukrainian text; selected posts have nine more full translations."
         retro_label = "Retrospective"
     else:
         lead = (
@@ -654,7 +744,7 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         archive_note = "Попередні зміни й пояснення, від нових до давніх"
         project_label = "Оновлення проєкту"
         kind_label = "Пояснення"
-        language_note = "Повні тексти доступні англійською та українською."
+        language_note = "Кожен допис має повний текст англійською й українською; для частини є ще дев’ять перекладів."
         retro_label = "Ретроспектива"
 
     def card(entry: dict[str, Any], *, featured: bool = False) -> str:
@@ -679,6 +769,11 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         # event date matches a current story. Do not let a batch of historical
         # notes displace the editorial front page.
         fresh = [e for e in entries if "archive" not in e["tags"]] or entries
+        fresh = sorted(
+            fresh,
+            key=lambda e: (e["published"] or e["date"], e["date"], e["slug"]),
+            reverse=True,
+        )
         feature = card(fresh[0], featured=True)
         recent = fresh[1:3]
         explainers = [e for e in fresh[1:] if e["kind"] == "explainer"][:3]
@@ -737,10 +832,13 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
         back = "← All news"
         by_line = "by"
         footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
-    else:
+    elif target_lang == "uk":
         back = "← Усі новини"
         by_line = "—"
         footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
+    else:
+        back, by_line = ARTICLE_UI[target_lang][:2]
+        footer = ARTICLE_UI[target_lang][4]
 
     dateline = _format_date(entry["date"], target_lang)
     tags_html = _render_tags(entry["tags"])
@@ -755,6 +853,8 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
             f"Written retrospectively and published on {when}."
             if is_en else
             f"Написано ретроспективно, опубліковано {when}."
+            if target_lang == "uk" else
+            ARTICLE_UI[target_lang][3].format(date=when)
         )
         retro_html = f'\n    <p class="news-retro">{_esc(retro)}</p>'
 
@@ -791,12 +891,16 @@ def build_news(
     top_bar: Callable[..., str],
     news_dir: Path = DEFAULT_NEWS_DIR,
 ) -> dict:
-    """Write the bilingual news index and article pages.
+    """Write the EN/UK indexes and every available full article translation.
 
     `top_bar` is injected rather than imported so this module stays free of a
     circular import with build_site.py.
     """
     entries = load_news_entries(news_dir)
+    article_paths = {
+        locale_path(f"news/{entry['slug']}.html", locale)
+        for entry in entries for locale in LOCALES if locale in entry["body"]
+    }
 
     for rel in ("news", "ukr/news"):
         (output_dir / rel).mkdir(parents=True, exist_ok=True)
@@ -821,6 +925,8 @@ def build_news(
                 active="news",
                 target_lang=target_lang,
                 lang_switch_href=article_path(entry["slug"], mirror_lang),
+                page_path=f"news/{entry['slug']}.html",
+                available_paths=article_paths,
             )
             article_rel = f"{prefix}news/{entry['slug']}.html"
             (output_dir / article_rel).write_text(
@@ -828,6 +934,26 @@ def build_news(
                 encoding="utf-8",
             )
             written.append(article_rel)
+
+    for locale in NEWS_LOCALES:
+        for entry in entries:
+            if locale not in entry["body"]:
+                continue
+            rel = locale_path(f"news/{entry['slug']}.html", locale)
+            target = output_dir / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            article_bar = top_bar(
+                active="news",
+                target_lang=locale,
+                lang_switch_href=article_path(entry["slug"], "en"),
+                page_path=f"news/{entry['slug']}.html",
+                available_paths=article_paths,
+            )
+            target.write_text(
+                render_news_article(entry, target_lang=locale, top_bar_html=article_bar),
+                encoding="utf-8",
+            )
+            written.append(rel)
 
     payload = {
         "kind": "openonco_news_index",
@@ -839,14 +965,16 @@ def build_news(
                 "date": e["date"].isoformat(),
                 "published": e["published"].isoformat() if e["published"] else None,
                 "kind": e["kind"],
+                "series": e["series"],
+                "series_format": e["series_format"],
                 "sources": e["sources"],
                 "tags": e["tags"],
                 "author": e["author"],
                 "title": e["title"],
                 "summary": e["summary"],
                 "url": {
-                    "en": article_path(e["slug"], "en"),
-                    "uk": article_path(e["slug"], "uk"),
+                    locale: article_path(e["slug"], locale)
+                    for locale in LOCALES if locale in e["body"]
                 },
             }
             for e in entries
@@ -862,6 +990,46 @@ def build_news(
         "comments_enabled": comments_enabled(),
         "index_json": "news_index.json",
     }
+
+
+def connect_localized_news_indexes(output_dir: Path, *, news_dir: Path = DEFAULT_NEWS_DIR) -> int:
+    """Point translated index cards at complete local articles when they exist.
+
+    Public-page localization creates the nine indexes after build_news. An
+    untranslated article keeps its English destination and an explicit language
+    marker; no article is invented from a translated teaser.
+    """
+    entries = load_news_entries(news_dir)
+    translated = {
+        locale: {entry["slug"] for entry in entries if locale in entry["body"]}
+        for locale in NEWS_LOCALES
+    }
+    changed = 0
+    for locale in NEWS_LOCALES:
+        path = output_dir / locale / "news.html"
+        if not path.exists():
+            continue
+        source = path.read_text(encoding="utf-8")
+
+        def replace_link(match: re.Match[str]) -> str:
+            slug = match.group(1)
+            if slug in translated[locale]:
+                return f'href="{article_path(slug, locale)}"'
+            return match.group(0) + ' lang="en" hreflang="en"'
+
+        result = re.sub(r'href="/news/([a-z0-9-]+)\.html"', replace_link, source)
+        result, note_count = re.subn(
+            r'(<p class="news-count">.*? · <span>).*?(</span></p>)',
+            lambda match: match.group(1) + _esc(INDEX_LANGUAGE_NOTE[locale]) + match.group(2),
+            result,
+            count=1,
+            flags=re.S,
+        )
+        if note_count != 1:
+            raise NewsContentError(f"{path}: expected one language-availability note")
+        path.write_text(result, encoding="utf-8")
+        changed += 1
+    return changed
 
 
 def main(argv: list[str] | None = None) -> int:
