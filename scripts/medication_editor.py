@@ -303,3 +303,10 @@ def render_medication_editor(locale):
         + ";\n"
         + (root / "scripts/medication_editor.js").read_text(encoding="utf-8")
     )
+
+
+def localized_editor_config(encoded, locale):
+    """Localize UI copy without changing source catalog IDs, names or order."""
+    config = json.loads(encoded)
+    config["copy"] = COPY[locale]
+    return json.dumps(config, ensure_ascii=False).replace("<", "\\u003c")

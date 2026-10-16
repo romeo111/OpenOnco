@@ -74,3 +74,26 @@ def test_medication_copy_is_complete(locale):
             "formSaved",
         ]:
             assert COPY[locale][key] != COPY["en"][key]
+
+
+@pytest.mark.parametrize("locale", ["es", "pt", "de", "fr", "it", "da", "sv", "nb", "fi"])
+def test_standard_localization_keeps_native_editor_and_exact_catalog(locale):
+    import re
+
+    from scripts.build_clinical_locales import localize_page
+
+    config = {"copy": COPY["en"], "drugs": [{"id": "DRUG-BLEOMYCIN", "name": "Bleomycin"}]}
+    editor = (ROOT / "scripts/medication_editor.js").read_text(encoding="utf-8")
+    source = (
+        '<html lang="en"><head></head><body><main><script>\nconst medicationEditorConfig = '
+        + json.dumps(config)
+        + ";\n"
+        + editor
+        + "</script></main></body></html>"
+    )
+    page = localize_page(source, locale, "try.html", set(), {})
+    localized = json.loads(re.search(r"^const medicationEditorConfig = (.*);$", page, re.MULTILINE)[1])
+    assert localized["copy"] == COPY[locale]
+    assert localized["drugs"] == config["drugs"]
+    assert editor in page
+    assert "installMedicationEditor('form',formPane);" in page
