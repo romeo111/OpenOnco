@@ -46,6 +46,24 @@ for (const text of ambiguous) {
  assert.equal(textarea.value,text,'Formatting must preserve conflicting original text for correction');
  assert.equal(errors.at(-1),copy.duplicate);
 }
+// Do not turn a previously materialized form draft into a discarded base.
+assert.equal(vm.runInContext("profileInputError({metadata:{value:1e20}})",context),'');
+// JSON.parse rounds unsafe integers before the engine can inspect them.
+for (const numeric of ['9007199254740992','9007199254740993','-9007199254740993','1e20']) {
+ const original='{"metadata":{"nested":[{"value":'+numeric+'}]}}';
+ textarea.value=original;
+ assert.equal(vm.runInContext('buildProfile()',context),null);
+ assert.equal(errors.at(-1),copy.integerRange);
+ vm.runInContext('formatProfileJson()',context);
+ assert.equal(textarea.value,original,'Unsafe integers must not be rewritten after rounding');
+ assert.equal(errors.at(-1),copy.integerRange);
+}
+for (const numeric of ['9007199254740991','-9007199254740991','42','0','-0','0.836','1.25e-3']) {
+ textarea.value='{"metadata":{"value":'+numeric+'}}';
+ assert(vm.runInContext('buildProfile()',context),'Safe integers and ordinary decimals remain accepted');
+}
+textarea.value='{"patient_id":"9007199254740993","metadata":{"value":"1e20"}}';
+assert(vm.runInContext('buildProfile()',context),'Text identifiers are not coerced into numbers');
 const safe={patient_id:'VIRTUAL-KEY-CONTROL',metadata:[{status:0},{status:false}],text:'{"status":0,"status":1}',nested:{brackets:'[{},] and escaped " quotes',value:null}};
 textarea.value=JSON.stringify(safe);
 assert.deepEqual(JSON.parse(JSON.stringify(vm.runInContext('buildProfile()',context))),safe);
@@ -57,7 +75,8 @@ for(const prefix of ['', 'ukr/','es/','pt/','de/','fr/','it/','da/','sv/','nb/',
  for (const name of ['profileInputError','buildProfile','formatProfileJson']) assert.equal(fn(html,name),fn(page,name));
  const labels=JSON.parse(html.match(/^const profileInputCopy = (.*);$/m)[1]);
  assert(labels.duplicate);
- if(prefix){assert.notEqual(labels.object,copy.object);assert.notEqual(labels.duplicate,copy.duplicate);}
+ assert(labels.integerRange);
+ if(prefix){assert.notEqual(labels.integerRange,copy.integerRange);assert.notEqual(labels.object,copy.object);assert.notEqual(labels.duplicate,copy.duplicate);}
  assert(html.includes("if (mode !== 'json') setError("),'Keep the specific JSON error instead of replacing it with a generic assembly failure');
 }
 console.log('Direct JSON: object/section/finite boundaries, localized errors and unchanged zero/false/null/decimal data passed in all eleven clients');
