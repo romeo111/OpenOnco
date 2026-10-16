@@ -46,6 +46,8 @@ for (const text of ambiguous) {
  assert.equal(textarea.value,text,'Formatting must preserve conflicting original text for correction');
  assert.equal(errors.at(-1),copy.duplicate);
 }
+// Do not turn a previously materialized form draft into a discarded base.
+assert.equal(vm.runInContext("profileInputError({metadata:{value:1e20}})",context),'');
 // JSON.parse rounds unsafe integers before the engine can inspect them.
 for (const numeric of ['9007199254740992','9007199254740993','-9007199254740993','1e20']) {
  const original='{"metadata":{"nested":[{"value":'+numeric+'}]}}';

@@ -1698,7 +1698,7 @@ function profileInputError(profile, rawJson = null) {
   while (pending.length) {
     const value = pending.pop();
     if (typeof value === 'number' && !Number.isFinite(value)) return profileInputCopy.finite;
-    if (typeof value === 'number' && Number.isInteger(value) && !Number.isSafeInteger(value)) return profileInputCopy.integerRange;
+    if (typeof rawJson === 'string' && typeof value === 'number' && Number.isInteger(value) && !Number.isSafeInteger(value)) return profileInputCopy.integerRange;
     if (value && typeof value === 'object') {
       // Do not spread wide collections into a function call (argument limit).
       for (const child of Object.values(value)) pending.push(child);
