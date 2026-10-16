@@ -87,6 +87,16 @@ def test_retrospective_archive_is_dated_honestly():
         assert "https://github.com/romeo111/OpenOnco/commit/" in entry["body"]["en"][-1]["text"]
 
 
+def test_archive_has_complete_articles_in_all_eleven_languages():
+    archive = [e for e in load_news_entries() if "archive" in e["tags"]]
+    for entry in archive:
+        assert set(entry["body"]) == {"en", "uk", *build_news.NEWS_LOCALES}
+        for locale in LANGUAGES:
+            assert len(entry["body"][locale]) == len(entry["body"]["en"])
+            assert entry["body"][locale][1]["text"] != entry["body"]["en"][1]["text"]
+            assert re.search(r"https://github.com/romeo111/OpenOnco/commit/[a-f0-9]+", entry["body"][locale][-1]["text"])
+
+
 @pytest.mark.parametrize("locale", LANGUAGES)
 def test_public_capabilities_link_to_existing_gap_dashboard(locale):
     source = '<html lang="en"><head></head><body><main><a href="/clinical-gaps.html">Gap dashboard</a></main></body></html>'
@@ -186,7 +196,7 @@ def test_news_index_prioritizes_recent_work_and_keeps_archive_accessible(news_di
     en = (news_dir / "news.html").read_text(encoding="utf-8")
     uk = (news_dir / "ukr" / "news.html").read_text(encoding="utf-8")
     assert 'class="case-card news-card news-feature"' in en
-    assert en.index('href="/news/ask-a-clearer-question.html"') < en.index("Just shipped")
+    assert en.index('href="/news/nhs-galleri-primary-endpoint.html"') < en.index("Just shipped")
     assert 'href="/news/translation-safety-net.html"' in en
     assert 'href="/news/wiki-finds-the-source.html"' in en
     assert '<details class="news-archive">' in en
@@ -217,6 +227,25 @@ def test_published_news_indexes_show_recent_story_in_every_language():
         assert f'href="{prefix}translation-safety-net.html"' in page
         assert f'href="{prefix}wiki-finds-the-source.html"' in page
         assert '<details class="news-archive">' in page
+
+
+def test_translated_issue_and_archive_cards_link_to_full_local_articles():
+    for locale in LANGUAGES:
+        page = (REPO_ROOT / "docs" / locale / "news.html").read_text(encoding="utf-8")
+        for slug in ("nhs-galleri-primary-endpoint", "validate-before-server-work"):
+            assert f'href="/{locale}/news/{slug}.html"' in page
+        assert 'href="/news/translation-safety-net.html" lang="en" hreflang="en"' in page
+
+
+def test_research_issue_has_full_local_pages_and_reciprocal_hreflang(news_dir: Path):
+    slug = "nhs-galleri-primary-endpoint"
+    paths = {f"{locale}/news/{slug}.html" for locale in LANGUAGES}
+    paths.update({f"news/{slug}.html", f"ukr/news/{slug}.html"})
+    for rel in paths:
+        page = (news_dir / rel).read_text(encoding="utf-8")
+        assert "142" in page and "706" in page and "688" in page
+        assert "10.1056/NEJMoa2505723" in page
+        assert len(site_head._language_links(rel, paths)) == 12  # eleven languages + x-default
 
 
 def test_new_articles_are_finalized_and_discoverable():
@@ -509,6 +538,7 @@ def test_service_worker_cache_prefix_bumped(tmp_path):
 def test_news_article_is_typed_as_article():
     assert _schema_type("news/news-and-comments.html") == "NewsArticle"
     assert _schema_type("ukr/news/news-and-comments.html") == "NewsArticle"
+    assert _schema_type("es/news/nhs-galleri-primary-endpoint.html") == "NewsArticle"
     assert _schema_type("news.html") == "WebPage"
 
 

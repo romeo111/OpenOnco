@@ -1,13 +1,33 @@
-"""Curated headlines and summaries for the retrospective project notes.
+"""Curated translations for the 20 retrospective project notes."""
 
-Full archive articles currently remain English/Ukrainian. These display strings
-make the eleven-language news index usable without mislabelling article bodies.
-"""
+import re
 
 LANGUAGES = ('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi')
 
 # Entries follow the language order above. They translate display copy only.
 COPY = {
+    "A multicancer blood test missed its main screening goal": (
+        "El análisis de sangre multicáncer no alcanzó su principal objetivo",
+        "O teste sanguíneo multicancro não atingiu o objetivo principal",
+        "Multikrebs-Bluttest verfehlte sein wichtigstes Screeningziel",
+        "Le test sanguin multicancer n’a pas atteint son objectif principal",
+        "Il test sanguigno multicancro non ha raggiunto l’obiettivo principale",
+        "Blodprøve for flere kræftformer nåede ikke sit vigtigste screeningsmål",
+        "Blodprov för flera cancerformer nådde inte sitt främsta screeningmål",
+        "Blodprøve for flere kreftformer nådde ikke hovedmålet for screening",
+        "Usean syövän verikoe ei saavuttanut seulonnan päätavoitetta",
+    ),
+    "In a randomized trial of 142,250 people, adding the Galleri test did not reduce the combined rate of stage III–IV cancers across 12 prespecified types.": (
+        "En un ensayo aleatorizado de 142 250 personas, añadir Galleri no redujo la tasa conjunta de cánceres en estadio III–IV de 12 tipos predefinidos.",
+        "Num ensaio aleatorizado com 142 250 pessoas, acrescentar o Galleri não reduziu a taxa conjunta de cancros em estádio III–IV de 12 tipos predefinidos.",
+        "In einer randomisierten Studie mit 142 250 Personen senkte Galleri zusätzlich zur üblichen Versorgung die gemeinsame Rate von Krebs im Stadium III–IV bei zwölf vorab festgelegten Krebsarten nicht.",
+        "Dans un essai randomisé de 142 250 personnes, l’ajout de Galleri n’a pas réduit le taux combiné de cancers de stade III–IV parmi douze types prédéfinis.",
+        "In uno studio randomizzato su 142 250 persone, aggiungere Galleri non ha ridotto il tasso combinato di tumori allo stadio III–IV fra dodici tipi prestabiliti.",
+        "I et randomiseret forsøg med 142 250 personer sænkede Galleri som tillæg til sædvanlig behandling ikke den samlede forekomst af kræft i stadie III–IV blandt tolv forudvalgte kræftformer.",
+        "I en randomiserad studie med 142 250 personer minskade Galleri som tillägg till ordinarie vård inte den samlade förekomsten av cancer i stadium III–IV bland tolv förutbestämda cancerformer.",
+        "I en randomisert studie med 142 250 personer reduserte ikke Galleri som tillegg til vanlig helsehjelp den samlede forekomsten av kreft i stadium III–IV blant tolv forhåndsbestemte kreftformer.",
+        "Satunnaistetussa 142 250 henkilön tutkimuksessa Galleri-testin lisääminen tavanomaiseen hoitoon ei vähentänyt 12 ennalta määritellyn syöpätyypin III–IV vaiheen syöpien yhteistä ilmaantuvuutta.",
+    ),
     'Five views of what OpenOnco can do': (
         'Cinco formas de explorar OpenOnco', 'Cinco formas de explorar o OpenOnco', 'Fünf Einblicke in OpenOnco', 'Cinq façons de découvrir OpenOnco',
         'Cinque modi per esplorare OpenOnco', 'Fem indblik i OpenOnco', 'Fem sätt att utforska OpenOnco', 'Fem måter å utforske OpenOnco på', 'Viisi näkökulmaa OpenOncoon'),
@@ -269,6 +289,269 @@ COPY = {
         'Tastaturnavigering går nå videre ved grensene til den innebygde rapporten.',
         'Näppäimistöllä siirtyminen jatkuu nyt upotetun raportin rajojen yli.'),
 }
+
+DETAILS = {
+    "Visitors can move from a broad overview to specific parts without reading one long wall of text. The page describes software scope; it does not certify clinical accuracy.": (
+        "Se puede pasar de una visión general a partes concretas sin leer un bloque interminable. La página describe el alcance del programa; no certifica su precisión clínica.",
+        "É possível passar de uma visão geral para partes concretas sem ler um longo bloco de texto. A página descreve o âmbito do software; não certifica a sua precisão clínica.",
+        "Von der Übersicht gelangt man zu einzelnen Bereichen, ohne einen langen Text lesen zu müssen. Die Seite beschreibt den Umfang der Software; sie bescheinigt keine klinische Genauigkeit.",
+        "On peut passer d’une vue d’ensemble aux parties précises sans lire un long bloc de texte. La page décrit le périmètre du logiciel ; elle ne certifie pas sa précision clinique.",
+        "Si può passare dalla panoramica alle singole parti senza leggere un lungo blocco di testo. La pagina descrive l’ambito del software; non ne certifica l’accuratezza clinica.",
+        "Man kan gå fra et overblik til bestemte dele uden at læse en lang tekst. Siden beskriver softwarens omfang; den dokumenterer ikke klinisk nøjagtighed.",
+        "Besökare kan gå från en översikt till enskilda delar utan att läsa en lång textvägg. Sidan beskriver programvarans omfattning; den intygar inte klinisk noggrannhet.",
+        "Leseren kan gå fra en oversikt til bestemte deler uten å lese en lang tekstvegg. Siden beskriver programvarens omfang; den dokumenterer ikke klinisk nøyaktighet.",
+        "Yleiskuvasta voi siirtyä yksittäisiin osiin lukematta pitkää tekstiseinää. Sivu kuvaa ohjelmiston laajuutta; se ei osoita kliinistä tarkkuutta.",
+    ),
+    "A count is useful only if readers can inspect the records behind it. The directory makes that next step visible; the number itself says nothing about review readiness.": (
+        "Una cifra solo es útil si se pueden examinar los registros que la sustentan. El catálogo muestra ese siguiente paso; la cifra por sí sola no indica si los registros están listos para revisión.",
+        "Um número só é útil se os leitores puderem consultar os registos por trás dele. O catálogo torna esse passo visível; o número, por si só, nada diz sobre o estado da revisão.",
+        "Eine Zahl ist nur hilfreich, wenn man die dahinterliegenden Einträge prüfen kann. Das Verzeichnis macht diesen Schritt sichtbar; die Zahl allein sagt nichts über den Prüfstatus.",
+        "Un chiffre n’est utile que si l’on peut consulter les fiches qui le composent. Le catalogue rend cette étape visible ; le chiffre seul ne dit rien de leur état de relecture.",
+        "Un numero è utile solo se si possono esaminare le schede che lo compongono. Il catalogo rende visibile questo passaggio; il numero da solo non dice nulla sullo stato della revisione.",
+        "Et tal er kun nyttigt, hvis læserne kan gennemgå posterne bag det. Kataloget gør det næste skridt synligt; tallet siger intet om, hvor langt gennemgangen er nået.",
+        "En siffra är bara användbar om läsaren kan granska posterna bakom den. Katalogen visar nästa steg; siffran i sig säger inget om granskningsstatus.",
+        "Et tall er bare nyttig hvis leseren kan undersøke postene bak det. Katalogen viser neste steg; tallet alene sier ingenting om status for gjennomgang.",
+        "Luku on hyödyllinen vain, jos sen taustalla olevia tietueita voi tarkastella. Luettelo tekee seuraavan vaiheen näkyväksi; luku ei yksin kerro tarkistuksen tilasta.",
+    ),
+    "It frames OpenOnco as a source-linked drafting aid for a clinician, with attention to checking missed details. A polished landing page is not evidence that every pathway has clinical sign-off.": (
+        "Presenta OpenOnco como una herramienta de borradores con fuentes para profesionales, que ayuda a revisar detalles omitidos. Una portada cuidada no demuestra que todas las rutas tengan aprobación clínica.",
+        "Apresenta o OpenOnco como uma ajuda à elaboração de rascunhos com fontes para profissionais, atenta a detalhes omitidos. Uma página inicial cuidada não prova que todos os percursos tenham aprovação clínica.",
+        "OpenOnco wird als quellenbasierte Entwurfshilfe für Fachkräfte dargestellt, die auch übersehene Details prüfen soll. Eine ansprechend gestaltete Startseite belegt keine klinische Freigabe aller Pfade.",
+        "OpenOnco y apparaît comme une aide à la rédaction pour les soignants, liée aux sources et attentive aux détails oubliés. Une belle page d’accueil ne prouve pas que chaque parcours a été validé cliniquement.",
+        "Presenta OpenOnco come ausilio alla stesura per i professionisti, collegato alle fonti e attento ai dettagli trascurati. Una pagina iniziale curata non prova che ogni percorso sia stato approvato clinicamente.",
+        "OpenOnco beskrives som et kildebaseret udkastværktøj til klinikere, også til at tjekke oversete detaljer. En flot forside er ikke bevis for, at alle forløb er klinisk godkendt.",
+        "OpenOnco beskrivs som ett källanknutet stöd för klinikerns utkast, med fokus på att upptäcka förbisedda detaljer. En välgjord startsida visar inte att varje vårdväg har godkänts kliniskt.",
+        "OpenOnco beskrives som et kildebasert hjelpemiddel for klinikerens utkast, med vekt på å sjekke oversette detaljer. En pen forside beviser ikke at alle forløp er klinisk godkjent.",
+        "OpenOnco esitetään lähteisiin kytkettynä apuna kliinikon luonnosten laatimiseen ja huomaamatta jääneiden yksityiskohtien tarkistamiseen. Viimeistelty etusivu ei osoita, että jokainen hoitopolku olisi hyväksytty kliinisesti.",
+    ),
+    "That lets tests inspect part of the routing logic instead of relying on prose alone. It does not imply that every narrative condition is now encoded or clinically approved.": (
+        "Así las pruebas pueden examinar parte de la lógica de selección sin depender solo del texto. No significa que todas las condiciones narrativas estén ya codificadas o aprobadas clínicamente.",
+        "Assim, os testes podem examinar parte da lógica de encaminhamento sem depender apenas do texto. Isso não significa que todas as condições narrativas estejam codificadas ou clinicamente aprovadas.",
+        "So können Tests einen Teil der Verzweigungslogik prüfen, statt sich nur auf Prosa zu stützen. Das bedeutet nicht, dass alle beschriebenen Bedingungen kodiert oder klinisch freigegeben sind.",
+        "Les tests peuvent ainsi examiner une partie de la logique d’orientation sans dépendre uniquement du texte. Cela ne signifie pas que toutes les conditions narratives sont codées ou validées cliniquement.",
+        "I test possono così esaminare parte della logica di instradamento senza affidarsi solo al testo. Ciò non significa che tutte le condizioni narrative siano codificate o approvate clinicamente.",
+        "Dermed kan test undersøge en del af beslutningslogikken i stedet for kun at bygge på tekst. Det betyder ikke, at alle beskrevne betingelser er kodet eller klinisk godkendt.",
+        "Då kan tester granska delar av beslutslogiken i stället för att bara förlita sig på löptext. Det betyder inte att alla beskrivna villkor är kodade eller kliniskt godkända.",
+        "Da kan tester undersøke deler av beslutningslogikken i stedet for bare å støtte seg på tekst. Det betyr ikke at alle beskrevne vilkår er kodet eller klinisk godkjent.",
+        "Näin testit voivat tarkastaa osan valintalogiikasta pelkän tekstin sijaan. Se ei tarkoita, että kaikki sanalliset ehdot olisi koodattu tai hyväksytty kliinisesti.",
+    ),
+    "The examples demonstrate input shapes and generated output. They are reference cases for testing the software, not ready-made plans for a real person.": (
+        "Los ejemplos muestran cómo son los datos de entrada y la salida generada. Son casos de referencia para probar el programa, no planes listos para una persona real.",
+        "Os exemplos mostram a estrutura dos dados de entrada e o resultado gerado. São casos de referência para testar o software, não planos prontos para uma pessoa real.",
+        "Die Beispiele zeigen Eingabeformate und erzeugte Ausgaben. Sie dienen als Referenzfälle für Softwaretests, nicht als fertige Pläne für reale Personen.",
+        "Les exemples montrent la forme des données saisies et du résultat produit. Ce sont des cas de référence pour tester le logiciel, pas des plans prêts à l’emploi pour une personne réelle.",
+        "Gli esempi mostrano la struttura dei dati inseriti e il risultato generato. Sono casi di riferimento per testare il software, non piani pronti per una persona reale.",
+        "Eksemplerne viser inputformater og genererede resultater. De er referenceeksempler til test af softwaren, ikke færdige planer til et virkeligt menneske.",
+        "Exemplen visar hur indata och genererade resultat ser ut. De är referensfall för att testa programvaran, inte färdiga planer för en verklig person.",
+        "Eksemplene viser formen på inndata og genererte resultater. De er referansetilfeller for testing av programvaren, ikke ferdige planer for en virkelig person.",
+        "Esimerkit näyttävät syötteiden rakenteen ja tuotetun tuloksen. Ne ovat ohjelmiston testauksen vertailutapauksia, eivät valmiita suunnitelmia todelliselle ihmiselle.",
+    ),
+    "Readers can learn how the project is organised before opening a clinical draft. The reviewer workflow records feedback; a chapter being online is not a clinical endorsement.": (
+        "Antes de abrir un borrador clínico, se puede conocer la organización del proyecto. El proceso de revisión registra comentarios; que un capítulo esté publicado no equivale a una aprobación clínica.",
+        "Antes de abrir um rascunho clínico, os leitores podem conhecer a organização do projeto. O processo de revisão regista comentários; um capítulo online não equivale a aprovação clínica.",
+        "Vor dem Öffnen eines klinischen Entwurfs kann man die Struktur des Projekts kennenlernen. Der Prüfablauf erfasst Rückmeldungen; ein online verfügbares Kapitel ist keine klinische Billigung.",
+        "Avant d’ouvrir un brouillon clinique, on peut comprendre l’organisation du projet. Le processus de relecture consigne les avis ; la mise en ligne d’un chapitre ne vaut pas validation clinique.",
+        "Prima di aprire una bozza clinica, si può capire come è organizzato il progetto. Il processo di revisione raccoglie i commenti; pubblicare un capitolo non equivale ad approvarlo clinicamente.",
+        "Læsere kan lære projektets opbygning at kende, før de åbner et klinisk udkast. Gennemgangen registrerer feedback; et kapitel på nettet er ikke en klinisk godkendelse.",
+        "Läsare kan lära sig hur projektet är organiserat innan de öppnar ett kliniskt utkast. Granskningsflödet registrerar synpunkter; ett publicerat kapitel är inte ett kliniskt godkännande.",
+        "Leseren kan lære hvordan prosjektet er organisert før et klinisk utkast åpnes. Gjennomgangsprosessen registrerer tilbakemeldinger; et kapittel på nett er ikke en klinisk godkjenning.",
+        "Lukija voi tutustua hankkeen rakenteeseen ennen kliinisen luonnoksen avaamista. Tarkistusprosessi tallentaa palautteen; verkossa oleva luku ei merkitse kliinistä hyväksyntää.",
+    ),
+    "The change widened draft coverage and made missing paths visible to testing. It did not make those pathways clinically signed off; review status must be checked on each page.": (
+        "El cambio amplió la cobertura de borradores y permitió detectar rutas ausentes en las pruebas. No aportó aprobación clínica a esas rutas; hay que comprobar el estado de revisión en cada página.",
+        "A alteração ampliou a cobertura de rascunhos e tornou os percursos em falta visíveis nos testes. Não conferiu aprovação clínica a esses percursos; é preciso verificar o estado da revisão em cada página.",
+        "Die Änderung erweiterte die Entwurfsabdeckung und machte fehlende Pfade in Tests sichtbar. Sie führte nicht zur klinischen Freigabe dieser Pfade; der Prüfstatus ist auf jeder Seite zu prüfen.",
+        "Ce changement a élargi la couverture des brouillons et rendu les parcours manquants visibles lors des tests. Il n’a pas validé ces parcours cliniquement ; leur état de relecture doit être vérifié sur chaque page.",
+        "La modifica ha ampliato la copertura delle bozze e reso visibili nei test i percorsi mancanti. Non ha approvato clinicamente questi percorsi; lo stato della revisione va controllato su ogni pagina.",
+        "Ændringen udvidede udkastenes dækning og gjorde manglende forløb synlige i test. Den gav ikke forløbene klinisk godkendelse; kontrollér gennemgangsstatus på hver side.",
+        "Ändringen gav fler utkast och gjorde saknade vårdvägar synliga i tester. Den innebar inte att vårdvägarna godkändes kliniskt; kontrollera granskningsstatus på varje sida.",
+        "Endringen utvidet utkastdekningen og gjorde manglende forløp synlige i tester. Den ga ikke forløpene klinisk godkjenning; sjekk gjennomgangsstatus på hver side.",
+        "Muutos laajensi luonnosten kattavuutta ja toi puuttuvat hoitopolut näkyviin testeissä. Se ei merkinnyt niiden kliinistä hyväksyntää; tarkistuksen tila on katsottava kultakin sivulta.",
+    ),
+    "The paired pages let a reader compare technical and plain-language presentation of the same fictional scenario. They do not turn a sample case into personal advice.": (
+        "Las páginas emparejadas permiten comparar la explicación técnica y la sencilla de un mismo caso ficticio. No convierten un ejemplo en consejo personal.",
+        "As páginas emparelhadas permitem comparar a apresentação técnica e a linguagem simples do mesmo cenário fictício. Não transformam um caso de exemplo em aconselhamento pessoal.",
+        "Die Seitenpaare zeigen denselben erfundenen Fall in Fachsprache und einfacher Sprache. Aus einem Beispielfall wird dadurch keine persönliche Beratung.",
+        "Les pages associées permettent de comparer la présentation technique et celle en langage simple d’un même scénario fictif. Elles ne transforment pas un exemple en conseil personnalisé.",
+        "Le pagine abbinate permettono di confrontare la versione tecnica e quella in linguaggio semplice dello stesso scenario fittizio. Un caso di esempio non diventa così un consiglio personale.",
+        "De parrede sider gør det muligt at sammenligne faglig og letforståelig fremstilling af det samme opdigtede scenarie. Et eksempel bliver ikke dermed personlig rådgivning.",
+        "De parade sidorna låter läsaren jämföra fackspråk och enkelt språk för samma påhittade scenario. Ett exempel blir inte personliga råd.",
+        "De sammenkoblede sidene lar leseren sammenligne faglig og lettfattelig framstilling av det samme oppdiktede scenarioet. Et eksempel blir ikke personlige råd.",
+        "Sivuparit antavat lukijan verrata saman kuvitteellisen tilanteen teknistä ja yleiskielistä esitystä. Esimerkkitapaus ei muutu henkilökohtaiseksi neuvoksi.",
+    ),
+    "Clearer labels make a draft easier to read without changing the underlying monitoring rules. As with other translated clinical content, wording still needs review in context.": (
+        "Las etiquetas más claras facilitan leer el borrador sin cambiar las reglas de seguimiento. Como ocurre con otros contenidos clínicos traducidos, la redacción todavía debe revisarse en su contexto.",
+        "Rótulos mais claros facilitam a leitura do rascunho sem alterar as regras de monitorização. Como noutros conteúdos clínicos traduzidos, a redação ainda precisa de revisão no contexto.",
+        "Klarere Bezeichnungen erleichtern das Lesen eines Entwurfs, ohne die zugrunde liegenden Überwachungsregeln zu ändern. Wie andere übersetzte klinische Inhalte muss die Formulierung noch im Kontext geprüft werden.",
+        "Des libellés plus clairs facilitent la lecture d’un brouillon sans modifier les règles de suivi. Comme pour les autres contenus cliniques traduits, la formulation doit encore être relue dans son contexte.",
+        "Etichette più chiare facilitano la lettura della bozza senza cambiare le regole di monitoraggio. Come per altri contenuti clinici tradotti, le parole vanno ancora riviste nel contesto.",
+        "Klarere betegnelser gør et udkast lettere at læse uden at ændre reglerne for monitorering. Som andet oversat klinisk indhold skal ordlyden stadig gennemgås i sammenhæng.",
+        "Tydligare etiketter gör ett utkast lättare att läsa utan att ändra reglerna för uppföljning. Precis som annat översatt kliniskt innehåll behöver formuleringarna granskas i sitt sammanhang.",
+        "Tydeligere betegnelser gjør et utkast lettere å lese uten å endre reglene for oppfølging. Som annet oversatt klinisk innhold må ordlyden fortsatt vurderes i sammenheng.",
+        "Selkeämmät merkinnät helpottavat luonnoksen lukemista muuttamatta seurannan sääntöjä. Kuten muussakin käännetyssä kliinisessä sisällössä, sanamuoto on vielä tarkistettava asiayhteydessään.",
+    ),
+    "The lighter entry page matters on slower connections and phones. The size change concerns the landing page, not the total knowledge-base download or evidence quality.": (
+        "Una página de entrada más ligera ayuda con conexiones lentas y teléfonos. La reducción afecta a esa página, no al tamaño total de la base de conocimientos ni a la calidad de las pruebas.",
+        "Uma página de entrada mais leve ajuda em ligações lentas e telemóveis. A redução diz respeito à página inicial, não ao descarregamento total da base de conhecimento nem à qualidade da evidência.",
+        "Eine schlankere Einstiegsseite hilft bei langsamen Verbindungen und auf Smartphones. Die Größenänderung betrifft diese Seite, nicht den gesamten Wissensbasis-Download oder die Qualität der Evidenz.",
+        "Une page d’entrée plus légère compte sur les connexions lentes et les téléphones. La réduction concerne cette page, pas le téléchargement complet de la base de connaissances ni la qualité des preuves.",
+        "Una pagina di accesso più leggera aiuta con connessioni lente e telefoni. La riduzione riguarda la pagina iniziale, non il download dell’intera base di conoscenze né la qualità delle prove.",
+        "En lettere indgangsside hjælper på langsomme forbindelser og telefoner. Størrelsesændringen gælder denne side, ikke hele vidensbasens download eller evidensens kvalitet.",
+        "En lättare ingångssida hjälper vid långsamma uppkopplingar och på telefoner. Storleksändringen gäller sidan, inte hela kunskapsbasens nedladdning eller evidensens kvalitet.",
+        "En lettere inngangsside hjelper på trege forbindelser og telefoner. Størrelsesendringen gjelder denne siden, ikke nedlastingen av hele kunnskapsbasen eller kvaliteten på dokumentasjonen.",
+        "Kevyempi aloitussivu auttaa hitailla yhteyksillä ja puhelimilla. Kokomuutos koskee tätä sivua, ei koko tietokannan latausta tai näytön laatua.",
+    ),
+    "A record is a starting point for checking its scope and sources, not permission to use a treatment. The change also added participation resources for contributors.": (
+        "Una ficha es un punto de partida para comprobar su alcance y sus fuentes, no una autorización para usar un tratamiento. El cambio también añadió recursos para quienes contribuyen al proyecto.",
+        "Um registo é um ponto de partida para verificar o seu âmbito e as suas fontes, não uma autorização para usar um tratamento. A alteração também acrescentou recursos para colaboradores.",
+        "Ein Eintrag ist ein Ausgangspunkt, um Geltungsbereich und Quellen zu prüfen, keine Erlaubnis für eine Behandlung. Die Änderung ergänzte auch Materialien für Mitwirkende.",
+        "Une fiche sert à vérifier son périmètre et ses sources ; elle n’autorise pas à utiliser un traitement. Le changement a aussi ajouté des ressources pour les contributeurs.",
+        "Una scheda è un punto di partenza per verificarne ambito e fonti, non un permesso di usare un trattamento. La modifica ha aggiunto anche risorse per chi contribuisce.",
+        "En post er et udgangspunkt for at undersøge dens omfang og kilder, ikke en tilladelse til at bruge en behandling. Ændringen tilføjede også ressourcer til bidragydere.",
+        "En post är en utgångspunkt för att kontrollera omfattning och källor, inte ett tillstånd att använda en behandling. Ändringen lade också till resurser för dem som bidrar.",
+        "En post er et utgangspunkt for å kontrollere omfang og kilder, ikke en tillatelse til å bruke en behandling. Endringen la også til ressurser for bidragsytere.",
+        "Tietue on lähtökohta sen soveltamisalan ja lähteiden tarkistamiseen, ei lupa hoidon käyttöön. Muutos toi myös aineistoa hankkeeseen osallistuville.",
+    ),
+    "Navigation and explanatory copy became easier to reach beyond English and Ukrainian. These were draft translations, with source text retained where verification was incomplete.": (
+        "La navegación y las explicaciones se hicieron más accesibles fuera del inglés y el ucraniano. Eran traducciones preliminares; donde faltaba verificación se conservó el texto original.",
+        "A navegação e os textos explicativos ficaram mais acessíveis além do inglês e do ucraniano. Eram traduções preliminares; onde a verificação estava incompleta manteve-se o texto original.",
+        "Navigation und Erläuterungen wurden auch jenseits von Englisch und Ukrainisch leichter zugänglich. Die Übersetzungen waren Entwürfe; wo die Prüfung fehlte, blieb der Ausgangstext erhalten.",
+        "La navigation et les explications sont devenues plus accessibles au-delà de l’anglais et de l’ukrainien. Il s’agissait de traductions provisoires ; le texte source a été conservé là où la vérification restait incomplète.",
+        "Navigazione e spiegazioni sono diventate più accessibili oltre l’inglese e l’ucraino. Erano traduzioni preliminari; dove la verifica era incompleta è rimasto il testo originale.",
+        "Navigation og forklaringer blev lettere at finde på andre sprog end engelsk og ukrainsk. Oversættelserne var udkast; kildeteksten blev bevaret, hvor kontrollen manglede.",
+        "Navigation och förklaringar blev lättare att nå även på andra språk än engelska och ukrainska. Översättningarna var utkast; källtexten behölls där kontrollen var ofullständig.",
+        "Navigasjon og forklaringer ble lettere tilgjengelige på andre språk enn engelsk og ukrainsk. Oversettelsene var utkast; kildeteksten ble beholdt der kontrollen var ufullstendig.",
+        "Navigointi ja selitykset tulivat helpommin saataville myös englannin ja ukrainan ulkopuolella. Käännökset olivat luonnoksia; lähdeteksti säilytettiin, jos tarkistus oli kesken.",
+    ),
+    "This reduces surprises when sharing a draft with a clinician. If a passage remains in its source language, the export says so instead of silently passing it off as translated.": (
+        "Así hay menos sorpresas al compartir un borrador con un profesional. Si un pasaje sigue en su idioma original, el archivo exportado lo indica en lugar de presentarlo como traducido.",
+        "Isto reduz surpresas ao partilhar um rascunho com um profissional. Se uma passagem continuar na língua original, a exportação indica-o em vez de a apresentar como traduzida.",
+        "Das vermindert Überraschungen beim Teilen eines Entwurfs mit einer Fachkraft. Bleibt eine Passage in der Ausgangssprache, weist der Export darauf hin, statt sie stillschweigend als übersetzt auszugeben.",
+        "Cela évite des surprises quand on partage un brouillon avec un soignant. Si un passage reste dans sa langue d’origine, l’export l’indique au lieu de le présenter comme traduit.",
+        "Così si evitano sorprese quando si condivide una bozza con un professionista. Se un passaggio resta nella lingua originale, l’esportazione lo segnala invece di presentarlo come tradotto.",
+        "Det mindsker overraskelser, når et udkast deles med en kliniker. Hvis et afsnit stadig er på originalsproget, oplyser eksporten det i stedet for at foregive en oversættelse.",
+        "Det minskar överraskningar när ett utkast delas med vårdpersonal. Om ett avsnitt är kvar på originalspråket anger exporten det i stället för att framställa det som översatt.",
+        "Det reduserer overraskelser når et utkast deles med en kliniker. Hvis et avsnitt fortsatt er på originalspråket, opplyser eksporten om det i stedet for å framstille det som oversatt.",
+        "Näin luonnoksen jakaminen kliinikolle aiheuttaa vähemmän yllätyksiä. Jos kohta jää lähdekielelle, vientitiedosto kertoo sen eikä esitä kohtaa käännettynä.",
+    ),
+    "That ordering makes uncertainty visible at the point a reader might otherwise focus on a named option. Missing data still require a clinician to resolve; the page cannot fill them in.": (
+        "Ese orden deja ver la incertidumbre justo cuando el lector podría fijarse solo en una opción nombrada. Un profesional debe resolver los datos faltantes; la página no puede completarlos.",
+        "Essa ordem torna a incerteza visível no momento em que o leitor poderia fixar-se numa opção nomeada. Os dados em falta continuam a exigir avaliação clínica; a página não os pode preencher.",
+        "Diese Reihenfolge macht Unsicherheit sichtbar, bevor ein Leser sich auf eine genannte Option konzentriert. Fehlende Daten müssen weiterhin fachlich geklärt werden; die Seite kann sie nicht ergänzen.",
+        "Cet ordre rend l’incertitude visible au moment où le lecteur pourrait se concentrer sur une option nommée. Les données manquantes doivent toujours être examinées par un clinicien ; la page ne peut pas les combler.",
+        "Quest’ordine rende visibile l’incertezza quando il lettore potrebbe concentrarsi su un’opzione citata. I dati mancanti richiedono comunque un professionista; la pagina non può completarli.",
+        "Rækkefølgen viser usikkerheden, hvor læseren ellers kunne fokusere på en navngiven mulighed. Manglende data skal stadig afklares af en kliniker; siden kan ikke udfylde dem.",
+        "Ordningen visar osäkerheten där läsaren annars kunde fastna vid ett namngivet alternativ. Saknade uppgifter måste fortfarande klarläggas av en kliniker; sidan kan inte fylla i dem.",
+        "Rekkefølgen synliggjør usikkerhet der leseren ellers kunne feste seg ved et navngitt alternativ. Manglende opplysninger må fortsatt avklares av en kliniker; siden kan ikke fylle dem inn.",
+        "Tämä järjestys tuo epävarmuuden näkyviin ennen kuin lukija keskittyy nimettyyn vaihtoehtoon. Kliinikon on edelleen selvitettävä puuttuvat tiedot; sivu ei voi täydentää niitä.",
+    ),
+    "Readers should be able to reach the Wiki, tools and project pages without a crowded first screen. The same links remain available; the layout changed.": (
+        "Se debería poder llegar a la Wiki, las herramientas y las páginas del proyecto sin una primera pantalla recargada. Los mismos enlaces siguen disponibles; cambió la disposición.",
+        "Os leitores devem poder chegar à Wiki, às ferramentas e às páginas do projeto sem um primeiro ecrã sobrecarregado. As mesmas ligações continuam disponíveis; mudou a disposição.",
+        "Wiki, Werkzeuge und Projektseiten sollen erreichbar sein, ohne den ersten Bildschirm zu überladen. Die Links bleiben dieselben; nur das Layout wurde geändert.",
+        "Les lecteurs doivent pouvoir accéder au Wiki, aux outils et aux pages du projet sans un premier écran surchargé. Les mêmes liens restent disponibles ; seule la disposition a changé.",
+        "Si deve poter raggiungere la Wiki, gli strumenti e le pagine del progetto senza una prima schermata affollata. I collegamenti restano gli stessi; è cambiato il layout.",
+        "Læsere skal kunne nå Wiki, værktøjer og projektsider uden en overfyldt første skærm. De samme links er der stadig; layoutet er ændret.",
+        "Läsare ska kunna nå Wiki, verktyg och projektsidor utan en överfull första skärm. Samma länkar finns kvar; layouten ändrades.",
+        "Lesere skal kunne nå Wiki, verktøy og prosjektsider uten en overfylt første skjerm. De samme lenkene finnes fortsatt; oppsettet ble endret.",
+        "Wikiin, työkaluihin ja hankkeen sivuille pitäisi päästä ilman ahtautta ensimmäisessä näkymässä. Samat linkit ovat edelleen saatavilla; asettelu muuttui.",
+    ),
+    "The purpose is to make a statement easier to trace back, including when a translated explanation is incomplete. A visible citation is a route to verification, not an endorsement by itself.": (
+        "La intención es facilitar el rastreo de una afirmación, incluso cuando la explicación traducida esté incompleta. Una cita visible permite verificar, pero por sí sola no avala el contenido.",
+        "O objetivo é facilitar a rastreabilidade de uma afirmação, mesmo quando uma explicação traduzida está incompleta. Uma citação visível permite verificar, mas não constitui aprovação por si só.",
+        "Aussagen sollen leichter zu ihren Quellen zurückzuverfolgen sein, auch wenn eine Übersetzung unvollständig ist. Ein sichtbarer Beleg ermöglicht eine Prüfung; er ist für sich genommen keine Bestätigung.",
+        "Le but est de faciliter la remontée d’une affirmation à sa source, même si l’explication traduite est incomplète. Une citation visible permet de vérifier ; elle ne vaut pas approbation à elle seule.",
+        "Lo scopo è facilitare la verifica dell’origine di un’affermazione, anche se la spiegazione tradotta è incompleta. Una citazione visibile aiuta a controllare; da sola non è un’approvazione.",
+        "Formålet er at gøre det lettere at spore en påstand til kilden, også når en oversat forklaring er ufuldstændig. En synlig kildehenvisning giver mulighed for kontrol, ikke godkendelse i sig selv.",
+        "Syftet är att göra ett påstående lättare att spåra till källan, även när en översatt förklaring är ofullständig. En synlig källhänvisning gör kontroll möjlig; den är inte ett godkännande i sig.",
+        "Målet er å gjøre det lettere å spore en påstand til kilden, også når en oversatt forklaring er ufullstendig. En synlig kildehenvisning gjør kontroll mulig; den er ikke en godkjenning i seg selv.",
+        "Tarkoitus on helpottaa väitteen jäljittämistä lähteeseen myös silloin, kun käännetty selitys on puutteellinen. Näkyvä viite mahdollistaa tarkistuksen; se ei yksin ole hyväksyntä.",
+    ),
+    "The distinction matters: the browser Plan Builder and the submitted Tumor Board question do not have the same data path. Readers should see that before entering a case.": (
+        "La diferencia importa: el Plan Builder del navegador y una pregunta enviada al Tumor Board siguen rutas de datos distintas. Eso debe quedar claro antes de introducir un caso.",
+        "A diferença importa: o Plan Builder no navegador e uma pergunta enviada ao Tumor Board seguem percursos de dados distintos. Isso deve ser claro antes de introduzir um caso.",
+        "Der Unterschied ist wichtig: Der Plan Builder im Browser und eine eingesandte Tumor-Board-Frage nehmen unterschiedliche Datenwege. Das sollte vor der Falleingabe erkennbar sein.",
+        "La distinction compte : le Plan Builder dans le navigateur et une question envoyée au Tumor Board ne suivent pas le même trajet de données. Il faut le savoir avant de saisir un cas.",
+        "La distinzione conta: il Plan Builder nel browser e una domanda inviata al Tumor Board seguono percorsi dei dati diversi. Va chiarito prima di inserire un caso.",
+        "Forskellen er vigtig: Plan Builder i browseren og et spørgsmål sendt til Tumor Board følger ikke samme datavej. Det bør stå klart, før man indtaster en sag.",
+        "Skillnaden är viktig: Plan Builder i webbläsaren och en fråga som skickas till Tumor Board har olika datavägar. Det bör framgå innan man matar in ett fall.",
+        "Forskjellen er viktig: Plan Builder i nettleseren og et spørsmål sendt til Tumor Board følger ulike dataløp. Det bør være tydelig før man skriver inn et tilfelle.",
+        "Ero on tärkeä: selaimen Plan Builder ja Tumor Boardiin lähetetty kysymys kulkevat eri tietoreittejä. Sen on käytävä ilmi ennen tapauksen syöttämistä.",
+    ),
+    "This is a small access fix for people moving through the page without a mouse. It changes focus behavior, not the report content.": (
+        "Es una pequeña mejora de accesibilidad para quienes recorren la página sin ratón. Cambia el comportamiento del foco, no el contenido del informe.",
+        "É uma pequena melhoria de acessibilidade para quem percorre a página sem rato. Altera o comportamento do foco, não o conteúdo do relatório.",
+        "Das ist eine kleine Verbesserung der Zugänglichkeit für Menschen, die ohne Maus durch die Seite navigieren. Sie ändert das Fokusverhalten, nicht den Berichtstext.",
+        "C’est une petite amélioration de l’accessibilité pour les personnes qui parcourent la page sans souris. Elle change le comportement du focus, pas le contenu du rapport.",
+        "È una piccola miglioria di accessibilità per chi naviga nella pagina senza mouse. Cambia il comportamento del focus, non il contenuto del referto.",
+        "Det er en lille forbedring af tilgængeligheden for dem, der bruger siden uden mus. Den ændrer tastaturfokus, ikke rapportens indhold.",
+        "Det är en liten tillgänglighetsförbättring för dem som använder sidan utan mus. Den ändrar fokusets beteende, inte rapportens innehåll.",
+        "Det er en liten tilgjengelighetsforbedring for dem som bruker siden uten mus. Den endrer hvordan fokus flyttes, ikke innholdet i rapporten.",
+        "Tämä on pieni saavutettavuuskorjaus niille, jotka käyttävät sivua ilman hiirtä. Se muuttaa kohdistuksen toimintaa, ei raportin sisältöä.",
+    ),
+    "A reader can distinguish a drafted explanation from one that has completed clinical review. Technical tests and translation checks are separate from clinical approval.": (
+        "Así se puede distinguir una explicación preliminar de otra que haya completado la revisión clínica. Las pruebas técnicas y la revisión de traducciones no equivalen a aprobación clínica.",
+        "Assim, é possível distinguir uma explicação preliminar de outra que concluiu a revisão clínica. Testes técnicos e verificações da tradução não equivalem a aprovação clínica.",
+        "Leser können einen Erklärungsentwurf von einem klinisch geprüften Text unterscheiden. Technische Tests und Übersetzungsprüfungen sind keine klinische Freigabe.",
+        "On peut ainsi distinguer une explication provisoire d’un texte ayant terminé la relecture clinique. Les tests techniques et les contrôles de traduction ne valent pas validation clinique.",
+        "Si può così distinguere una spiegazione preliminare da una che ha completato la revisione clinica. I test tecnici e le verifiche delle traduzioni non equivalgono ad approvazione clinica.",
+        "Læsere kan skelne et udkast til en forklaring fra en tekst, der har gennemgået klinisk vurdering. Tekniske test og oversættelseskontrol er ikke klinisk godkendelse.",
+        "Läsaren kan skilja ett utkast till förklaring från en text som har genomgått klinisk granskning. Tekniska tester och översättningskontroller är inte kliniskt godkännande.",
+        "Leseren kan skille en forklaring i utkast fra en som har gjennomgått klinisk vurdering. Tekniske tester og oversettelseskontroll er ikke klinisk godkjenning.",
+        "Lukija voi erottaa selitysluonnoksen kliinisen tarkistuksen läpäisseestä tekstistä. Tekniset testit ja käännöstarkistukset eivät ole kliininen hyväksyntä.",
+    ),
+    "Malformed data should fail clearly instead of entering later steps. The change concerns input handling; it does not change the clinical meaning of a valid result.": (
+        "Los datos mal formados deben rechazarse con claridad antes de pasar a etapas posteriores. El cambio afecta a la gestión de entradas; no altera el significado clínico de un resultado válido.",
+        "Dados malformados devem ser rejeitados claramente antes de chegar às etapas seguintes. A alteração diz respeito ao tratamento da entrada; não muda o significado clínico de um resultado válido.",
+        "Fehlerhafte Daten sollen klar zurückgewiesen werden, statt spätere Schritte zu erreichen. Die Änderung betrifft die Eingabeverarbeitung; sie ändert nicht die klinische Bedeutung eines gültigen Ergebnisses.",
+        "Les données mal formées doivent être rejetées clairement avant les étapes suivantes. Le changement concerne le traitement de la saisie ; il ne modifie pas la signification clinique d’un résultat valide.",
+        "I dati non validi devono essere respinti chiaramente prima delle fasi successive. La modifica riguarda la gestione dell’input; non cambia il significato clinico di un risultato valido.",
+        "Fejlformede data skal afvises tydeligt før senere trin. Ændringen vedrører håndtering af input; den ændrer ikke den kliniske betydning af et gyldigt resultat.",
+        "Felaktigt formaterade data ska avvisas tydligt innan senare steg. Ändringen gäller hanteringen av indata; den ändrar inte den kliniska betydelsen av ett giltigt resultat.",
+        "Feilformaterte data skal avvises tydelig før de når senere trinn. Endringen gjelder håndtering av inndata; den endrer ikke den kliniske betydningen av et gyldig resultat.",
+        "Virheellisesti muotoiltu tieto pitää hylätä selvästi ennen myöhempiä vaiheita. Muutos koskee syötteen käsittelyä; se ei muuta kelvollisen tuloksen kliinistä merkitystä.",
+    ),
+}
+
+CREDIT = {
+    "es": "Consulte el [cambio original]({url}) para ver la implementación. Esta nota retrospectiva se escribió el 13 de octubre de 2026.",
+    "pt": "Consulte a [alteração original]({url}) para ver a implementação. Esta nota retrospetiva foi escrita em 13 de outubro de 2026.",
+    "de": "Die Umsetzung ist in der [ursprünglichen Änderung]({url}) dokumentiert. Diese rückblickende Notiz wurde am 13. Oktober 2026 verfasst.",
+    "fr": "Consultez la [modification d’origine]({url}) pour voir sa mise en œuvre. Cette note rétrospective a été rédigée le 13 octobre 2026.",
+    "it": "La realizzazione è documentata nella [modifica originale]({url}). Questa nota retrospettiva è stata scritta il 13 ottobre 2026.",
+    "da": "Se den [oprindelige ændring]({url}) for detaljer om implementeringen. Dette tilbageblik blev skrevet den 13. oktober 2026.",
+    "sv": "Se den [ursprungliga ändringen]({url}) för hur den genomfördes. Denna tillbakablick skrevs den 13 oktober 2026.",
+    "nb": "Se den [opprinnelige endringen]({url}) for detaljer om gjennomføringen. Dette tilbakeblikket ble skrevet 13. oktober 2026.",
+    "fi": "Toteutuksen tiedot löytyvät [alkuperäisestä muutoksesta]({url}). Tämä jälkikäteen laadittu kirjoitus tehtiin 13. lokakuuta 2026.",
+}
+
+_COMMIT_URL = re.compile(r"https://github\.com/romeo111/OpenOnco/commit/[a-f0-9]+")
+
+
+def article_translation(entry, locale):
+    """Return all three archive paragraphs, or fail on an incomplete translation."""
+    index = LANGUAGES.index(locale)
+    title = entry["title"]["en"]
+    summary = entry["summary"]["en"]
+    paragraphs = entry["body"]["en"]
+    if len(paragraphs) != 3 or any(block["type"] != "p" for block in paragraphs):
+        raise ValueError(f"{entry['slug']}: archive structure changed; retranslate explicitly")
+    if paragraphs[0]["text"] != summary:
+        raise ValueError(f"{entry['slug']}: first paragraph changed; retranslate explicitly")
+    match = _COMMIT_URL.search(paragraphs[2]["text"])
+    if not match or not paragraphs[2]["text"].endswith("This retrospective note was written on 13 October 2026."):
+        raise ValueError(f"{entry['slug']}: source/date changed; retranslate explicitly")
+    translated_summary = COPY[summary][index]
+    return {
+        "title": COPY[title][index],
+        "summary": translated_summary,
+        "body": [
+            {"type": "p", "text": translated_summary},
+            {"type": "p", "text": DETAILS[paragraphs[1]["text"]][index]},
+            {"type": "p", "text": CREDIT[locale].format(url=match.group())},
+        ],
+    }
+
 
 def messages_for(locale):
     index = LANGUAGES.index(locale)
