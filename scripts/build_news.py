@@ -69,6 +69,7 @@ COMMENTS = {
 POST_KINDS = {"project", "explainer"}
 AUTOMATED_SERIES = "openonco-three-day"
 SERIES_FORMATS = {"research", "platform"}
+STARTUP_SERIES = "openonco-startups-daily"
 
 BLOCK_TYPES = {"p", "h2", "h3", "ul", "ol", "quote", "callout", "code"}
 CALLOUT_TONES = {"info": "", "good": " callout-good", "warn": " callout-hard"}
@@ -125,6 +126,20 @@ DOCTOR_NOTE = {
     "sv": "Den här artikeln ersätter inte en läkares bedömning.",
     "nb": "Denne artikkelen erstatter ikke en leges vurdering.",
     "fi": "Tämä artikkeli ei korvaa lääkärin arviota.",
+}
+
+STARTUP_NOTE = {
+    "en": "A company announcement is not independent evidence of clinical benefit. This comparison is informational, not medical advice.",
+    "uk": "Повідомлення компанії не є незалежним доказом клінічної користі. Це інформаційне порівняння, а не медична порада.",
+    "es": "Un comunicado empresarial no demuestra de forma independiente un beneficio clínico. Esta comparación es informativa, no un consejo médico.",
+    "pt": "Um comunicado da empresa não demonstra de forma independente benefício clínico. Esta comparação é informativa, não aconselhamento médico.",
+    "de": "Eine Unternehmensmitteilung ist kein unabhängiger Beleg für klinischen Nutzen. Dieser Vergleich informiert und ist keine medizinische Beratung.",
+    "fr": "Un communiqué d’entreprise ne prouve pas indépendamment un bénéfice clinique. Cette comparaison informe et ne constitue pas un avis médical.",
+    "it": "Un comunicato aziendale non dimostra in modo indipendente un beneficio clinico. Questo confronto è informativo, non è un consiglio medico.",
+    "da": "En virksomhedsmeddelelse er ikke uafhængig dokumentation for klinisk nytte. Denne sammenligning er information, ikke lægelig rådgivning.",
+    "sv": "Ett företagsmeddelande är inte oberoende belägg för klinisk nytta. Jämförelsen är information, inte medicinsk rådgivning.",
+    "nb": "En selskapsmelding er ikke uavhengig dokumentasjon på klinisk nytte. Denne sammenligningen er informasjon, ikke medisinske råd.",
+    "fi": "Yhtiön tiedote ei ole riippumaton näyttö kliinisestä hyödystä. Tämä vertailu on tietoa, ei lääketieteellinen neuvo.",
 }
 
 
@@ -313,7 +328,13 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
         series = raw.get("series")
         series_format = raw.get("series_format")
         if series is not None or series_format is not None:
-            if series != AUTOMATED_SERIES or series_format not in SERIES_FORMATS:
+            valid_series = (
+                series == AUTOMATED_SERIES and series_format in SERIES_FORMATS
+            ) or (
+                series == STARTUP_SERIES and series_format == "startup"
+                and published is not None and kind == "explainer"
+            )
+            if not valid_series:
                 raise NewsContentError(f"{source}: invalid automated series or series_format")
 
         sources = _validate_sources(raw.get("sources"), source, kind)
@@ -371,6 +392,15 @@ def load_news_entries(news_dir: Path = DEFAULT_NEWS_DIR) -> list[dict[str, Any]]
             raise NewsContentError(
                 f"{later['source_file']}: automated series must alternate after {earlier['source_file']}"
             )
+    startup_dates: set[date] = set()
+    for entry in entries:
+        if entry["series"] != STARTUP_SERIES:
+            continue
+        if entry["published"] in startup_dates:
+            raise NewsContentError(
+                f"{entry['source_file']}: only one startup issue may be published per day"
+            )
+        startup_dates.add(entry["published"])
     return entries
 
 
@@ -413,14 +443,16 @@ def _render_sources(entry: dict[str, Any], target_lang: str) -> str:
   </section>"""
 
 
-def _render_explainer_note(target_lang: str) -> str:
+def _render_explainer_note(target_lang: str, series: str | None = None) -> str:
     """Shown on explainer posts only.
 
     A reader who arrives from search at a page about tumour biology should not
     have to infer that it is background reading rather than guidance for their
     own case.
     """
-    if target_lang == "en":
+    if series == STARTUP_SERIES:
+        text = STARTUP_NOTE[target_lang]
+    elif target_lang == "en":
         text = (
             "Background reading, not clinical guidance. This describes published "
             "research; it is not a recommendation for any individual case, and the "
@@ -748,7 +780,11 @@ def render_news_index(entries: list[dict[str, Any]], *, target_lang: str,
         retro_label = "Ретроспектива"
 
     def card(entry: dict[str, Any], *, featured: bool = False) -> str:
-        kind = kind_label if entry["kind"] == "explainer" else project_label
+        kind = (
+            "Startup watch" if is_en else "Огляд стартапів"
+        ) if entry["series"] == STARTUP_SERIES else (
+            kind_label if entry["kind"] == "explainer" else project_label
+        )
         classes = "case-card news-card news-feature" if featured else "case-card news-card"
         retro_badge = (
             f'\n          <span>{_esc(retro_label)}</span>'
@@ -867,7 +903,7 @@ def render_news_article(entry: dict[str, Any], *, target_lang: str,
     <h1>{_esc(title)}</h1>
     <p class="lead">{_esc(entry['summary'][target_lang])}</p>
     <p class="news-byline">{_esc(by_line)} {_esc(entry['author'])}</p>{retro_html}
-{_render_explainer_note(target_lang) if entry['kind'] == 'explainer' else ''}
+{_render_explainer_note(target_lang, entry['series']) if entry['kind'] == 'explainer' else ''}
     <div class="news-body info-text">
       {body_html}
     </div>

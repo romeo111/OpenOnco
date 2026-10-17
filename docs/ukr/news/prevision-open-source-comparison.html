@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<!-- openonco-geo-lang:start -->
+<script>
+(function(){
+  try{
+    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
+    var UARE=/^\/ukr(\/|$)/;
+    // Remember an explicit language choice so IP detection never overrides it.
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
+      if(!a)return;
+      var href=a.getAttribute('href')||'';
+      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
+      try{localStorage.setItem('oo_lang',selected);}catch(_){}
+    },true);
+    var ua=navigator.userAgent||'';
+    // Bots: leave both language trees crawlable — no auto-redirect.
+    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
+    var path=location.pathname||'/';
+    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
+    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
+    var pageLang=UARE.test(path)?'uk':'en';
+    // Track first real interaction so a slow async lookup never discards typed
+    // input (e.g. the /try.html plan form) by navigating out from under the user.
+    var touched=false,mark=function(){touched=true;};
+    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
+      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
+    });
+    function mirror(){
+      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
+      return p+(location.search||'')+(location.hash||'');
+    }
+    function go(lang){
+      if(lang===pageLang)return;
+      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
+      if(!alternate)return;                         // never guess a missing translated page
+      var target=alternate.href+(location.search||'')+(location.hash||'');
+      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
+      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
+      location.replace(target);
+    }
+    function want(cc){return cc==='UA'?'uk':'en';}
+    // 1) explicit choice wins
+    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
+    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
+    if(pref==='uk'||pref==='en'){go(pref);return;}
+    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
+    var cc=null;
+    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
+    if(cc){go(want(cc));return;}
+    // 3) look up country by IP. Third-party surface kept minimal for a medical
+    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
+    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
+    var eps=[
+      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
+      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
+    ];
+    (function tryEp(i){
+      if(i>=eps.length)return;                          // all endpoints failed → English default
+      var ctl=('AbortController'in window)?new AbortController():null;
+      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
+      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(j){
+          if(to)clearTimeout(to);
+          var code=((eps[i][1](j))||'').toString().toUpperCase();
+          if(/^[A-Z]{2}$/.test(code)){
+            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
+            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
+          }else{tryEp(i+1);}
+        })
+        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
+    })(0);
+  }catch(_){}
+})();
+</script>
+<!-- openonco-geo-lang:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Prevision залучила $5,4 млн. Що дає відкритий код?</title>
+<!-- openonco-seo:start -->
+<meta name="description" content="Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="ai-summary" content="Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.">
+<meta name="ai-content-declaration" content="Публічна документація OpenOnco, сторінки онкологічної бази знань із джерелами та синтетичні приклади; без реальних даних пацієнтів; не замінює рішення лікаря.">
+<link rel="canonical" href="https://openonco.info/ukr/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="en" href="https://openonco.info/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="es" href="https://openonco.info/es/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="de" href="https://openonco.info/de/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="it" href="https://openonco.info/it/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="da" href="https://openonco.info/da/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/news/prevision-open-source-comparison.html">
+<link rel="alternate" hreflang="x-default" href="https://openonco.info/news/prevision-open-source-comparison.html">
+<meta property="og:site_name" content="OpenOnco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenOnco · Prevision залучила $5,4 млн. Що дає відкритий код?">
+<meta property="og:description" content="Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.">
+<meta property="og:url" content="https://openonco.info/ukr/news/prevision-open-source-comparison.html">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenOnco · Prevision залучила $5,4 млн. Що дає відкритий код?">
+<meta name="twitter:description" content="Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","name":"OpenOnco · Prevision залучила $5,4 млн. Що дає відкритий код?","description":"Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.","url":"https://openonco.info/ukr/news/prevision-open-source-comparison.html","inLanguage":"uk-UA","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/ukr/news/prevision-open-source-comparison.html"},"datePublished":"2026-10-17","dateModified":"2026-09-24","author":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info"}}</script>
+<!-- openonco-seo:end -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar site-header">
+  <link rel="stylesheet" href="/header.css?v=layout-20261011">
+  <div class="header-shell">
+  <div class="header-main">
+    <div class="brand-line">
+      <a href="/ukr/" class="brand-mini" aria-label="OpenOnco">
+        <img class="header-mark" src="/logo.svg" width="44" height="44" alt="">
+        <span class="brand-copy"><span class="brand-wordmark">Open<span>Onco</span></span><span class="brand-caption">ВІДКРИТА ОНКОЛОГІЯ</span></span>
+      </a>
+    </div>
+    <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html" class="active" aria-current="page">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+    <div class="top-right">
+    <details class="language-menu lang-switch">
+      <summary aria-label="Мова"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg>UA <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Мова"><a href="/news/prevision-open-source-comparison.html" lang="en" hreflang="en"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#cf142b" stroke-width="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" stroke-width="6" d="M12 0v16M0 8h24"/><path stroke="#cf142b" stroke-width="3" d="M12 0v16M0 8h24"/></svg><span>English</span><small>EN</small></a><a href="/ukr/news/prevision-open-source-comparison.html" lang="uk" hreflang="uk" aria-current="true"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0057b7" d="M0 0h24v8H0z"/><path fill="#ffd700" d="M0 8h24v8H0z"/></svg><span>Українська</span><small>UA</small></a><a href="/es/news/prevision-open-source-comparison.html" lang="es" hreflang="es"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/><path fill="#aa151b" d="M6 6h3v4H6z"/></svg><span>Español</span><small>ES</small></a><a href="/pt/news/prevision-open-source-comparison.html" lang="pt" hreflang="pt"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ff0000" d="M0 0h24v16H0z"/><path fill="#006600" d="M0 0h9.6v16H0z"/><circle cx="9.6" cy="8" r="3" fill="#ffcc00"/><path fill="#fff" d="M8 6h3.2v3L9.6 10 8 9z"/><path fill="#d71920" d="M8.6 6.6h2v2L9.6 9.3l-1-.7z"/></svg><span>Português</span><small>PT</small></a><a href="/de/news/prevision-open-source-comparison.html" lang="de" hreflang="de"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#000" d="M0 0h24v5.34H0z"/><path fill="#dd0000" d="M0 5.33h24v5.34H0z"/><path fill="#ffce00" d="M0 10.66h24V16H0z"/></svg><span>Deutsch</span><small>DE</small></a><a href="/fr/news/prevision-open-source-comparison.html" lang="fr" hreflang="fr"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#0055a4" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ef4135" d="M16 0h8v16h-8z"/></svg><span>Français</span><small>FR</small></a><a href="/it/news/prevision-open-source-comparison.html" lang="it" hreflang="it"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#009246" d="M0 0h8v16H0z"/><path fill="#fff" d="M8 0h8v16H8z"/><path fill="#ce2b37" d="M16 0h8v16h-8z"/></svg><span>Italiano</span><small>IT</small></a><a href="/da/news/prevision-open-source-comparison.html" lang="da" hreflang="da"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#c8102e" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="2.5" d="M8 0v16M0 8h24"/></svg><span>Dansk</span><small>DA</small></a><a href="/sv/news/prevision-open-source-comparison.html" lang="sv" hreflang="sv"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#006aa7" d="M0 0h24v16H0z"/><path stroke="#fecc00" stroke-width="3" d="M8 0v16M0 8h24"/></svg><span>Svenska</span><small>SV</small></a><a href="/nb/news/prevision-open-source-comparison.html" lang="nb" hreflang="nb"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#ba0c2f" d="M0 0h24v16H0z"/><path stroke="#fff" stroke-width="4" d="M8 0v16M0 8h24"/><path stroke="#00205b" stroke-width="2" d="M8 0v16M0 8h24"/></svg><span>Norsk bokmål</span><small>NO</small></a><a href="/fi/news/prevision-open-source-comparison.html" lang="fi" hreflang="fi"><svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#fff" d="M0 0h24v16H0z"/><path stroke="#003580" stroke-width="4" d="M8 0v16M0 8h24"/></svg><span>Suomi</span><small>FI</small></a></nav>
+    </details>
+    <a href="/ukr/try.html" class="btn-cta-top btn-cta-try"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    <details class="mobile-menu">
+      <summary aria-label="Меню"><span class="menu-lines" aria-hidden="true"></span></summary>
+      <div class="mobile-menu-panel">
+        <a href="/ukr/try.html" class="btn-cta-top btn-cta-try mobile-plan-link"><span>План лікування</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+        <nav aria-label="Меню">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/handbook.html">Посібник</a><a href="/ukr/news.html" class="active" aria-current="page">Новини</a>
+    <a href="/ukr/about.html">Про проєкт</a>
+    </nav>
+        <div class="mobile-tools">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+      </div>
+    </details>
+    </div>
+  </div>
+  <div class="header-tools">
+    <span class="header-tools-label">Інструменти</span>
+    <div class="top-cta-group">
+      <a href="/ukr/kb.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5A3 3 0 0 1 7 4h5v15H7a3 3 0 0 0-3 1.5zM20 5.5A3 3 0 0 0 17 4h-5v15h5a3 3 0 0 1 3 1.5z"/></svg><span>Онко-вікі</span></a>
+      <a href="/ukr/ask.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 11a7 7 0 0 1-7 7H6l-3 3V11a7 7 0 0 1 7-7h3a7 7 0 0 1 7 7Z"/><path d="M8 11h8M8 8h5"/></svg><span>Туморборд</span></a>
+      <a href="/ukr/prevent.html" class="btn-cta-top btn-cta-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span>Профілактика</span></a>
+    </div>
+    <span class="header-open-label"><span aria-hidden="true"></span>Відкритий код</span>
+  </div>
+  </div>
+</header>
+
+<main>
+  <article class="info-page news-article">
+    <a class="case-back-btn news-back" href="/ukr/news.html">← Усі новини</a>
+    <div class="case-badge-row">
+      <span class="case-badge bdg-plan">24 вересня 2026</span>
+          <span class="case-quality quality-starter">startup-watch</span>
+          <span class="case-quality quality-starter">open-source</span>
+          <span class="case-quality quality-starter">evidence</span>
+    </div>
+    <h1>Prevision залучила $5,4 млн. Що дає відкритий код?</h1>
+    <p class="lead">Лабораторний тест і OpenOnco відповідають на різні запитання. Відкритий код дозволяє перевіряти правила; саме фінансування не доводить користі для пацієнтів.</p>
+    <p class="news-byline">— OpenOnco</p>
+    <p class="news-retro">Написано ретроспективно, опубліковано 17 жовтня 2026.</p>
+    <p class="news-kind-note">Повідомлення компанії не є незалежним доказом клінічної користі. Це інформаційне порівняння, а не медична порада. Цей матеріал не замінює консультації лікаря.</p>
+    <div class="news-body info-text">
+      <p>24 вересня Prevision Medicine оголосила про залучення $5,4 млн початкового фінансування для платформи функціонального тестування в онкології. За описом компанії, PrevisionOne вимірює реакцію живих пухлинних клітин на ліки. Сума фінансування походить із повідомлення компанії, а не з незалежного вимірювання користі лікування.</p>
+      <p>Спільна з OpenOnco тема — обговорення лікування, але методи різні. Prevision описує власний лабораторний тест, для якого потрібен зразок пацієнта. OpenOnco публікує детерміновані правила з джерелами й код під ліцензією MIT та має безкоштовний браузерний конструктор планів. Правило не вимірює чутливість пухлини до ліків, а лабораторний результат не замінює аналізу настанов.</p>
+      <p>Перевага відкритого коду тут вужча й перевірювана: кожен може вивчити, повторно використати й оскаржити код OpenOnco. Це не доводить кращої точності чи результатів для пацієнтів порівняно з Prevision. Наведені сторінки компанії не містять прямого порівняння; клінічні твердження треба оцінювати за окремими доказами.</p>
+      <p>Лише умовне обговорення: вигаданий консиліум, отримавши звіт про чутливість до ліків, перевірив би валідацію тесту поруч із усталеними доказами. OpenOnco може впорядкувати варіанти з посиланнями, але жоден інструмент не має обирати лікування реальній людині без перевірки кваліфікованим лікарем. Порівняння перевірено 17 жовтня 2026 року.</p>
+    </div>
+  </article>
+
+  <section class="news-sources">
+    <h2>Джерела</h2>
+    <ol>
+      <li>Prevision Medicine. Press release announcing a $5.4m seed round. 24 September 2026. · <a href="https://www.previsionmedicine.com/news/press-release-prevision-medicine-raises-5-4m-in-seed-funding-round" target="_blank" rel="noopener noreferrer">https://www.previsionmedicine.com/news/press-release-prevision-medicine-raises-5-4m-in-seed-funding-round</a></li>
+      <li>Prevision Medicine. Products: PrevisionOne and disease-specific drug tests. Accessed 17 October 2026. · <a href="https://www.previsionmedicine.com/products" target="_blank" rel="noopener noreferrer">https://www.previsionmedicine.com/products</a></li>
+      <li>OpenOnco. Public repository and README: licenses, deterministic engine, browser Plan Builder and limitations. Accessed 17 October 2026. · <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener noreferrer">https://github.com/romeo111/OpenOnco</a></li>
+    </ol>
+  </section>
+  <section class="news-comments" id="comments">
+    <h2>Коментарі</h2>
+    <p class="news-comments-note">Гілки публічні й індексуються — будь ласка, не пишіть у них персональні медичні дані. Знайшли клінічну помилку? <a href="https://github.com/romeo111/OpenOnco/issues/new" target="_blank" rel="noopener noreferrer">Відкрийте issue</a>.</p>
+    <p class="news-comments-offline">Коментарі ще не увімкнено — бекенд потрібно налаштувати.</p>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15).
+  </footer>
+</main>
+</body>
+</html>
