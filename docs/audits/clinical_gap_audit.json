@@ -1,21 +1,21 @@
 {
-  "generated_at_utc": "2026-10-13T15:12:27Z",
+  "generated_at_utc": "2026-10-17T11:44:20Z",
   "kb_root": "/home/runner/work/OpenOnco/OpenOnco/knowledge_base/hosted/content",
   "entity_counts": {
     "diseases": 103,
     "drugs": 321,
     "drug_indications": 1,
-    "regimens": 406,
-    "indications": 833,
+    "regimens": 407,
+    "indications": 834,
     "biomarkers": 257,
     "biomarker_actionability": 475,
-    "contraindications": 21,
+    "contraindications": 22,
     "redflags": 715,
     "algorithms": 189,
     "tests": 131,
     "supportive_care": 13,
-    "monitoring": 26,
-    "sources": 559,
+    "monitoring": 29,
+    "sources": 576,
     "workups": 24,
     "questionnaires": 78,
     "handbook_chapters": 9,
@@ -37,7 +37,7 @@
     {
       "id": "clinical_signoff",
       "title": "Optional external clinical review",
-      "current": "0/2618 signoff-eligible entities reviewed (0.0%)",
+      "current": "0/2620 signoff-eligible entities reviewed (0.0%)",
       "target": "Record actual additional reviews when available; no reviewer quota for solo-project releases.",
       "status": "informational",
       "blocker": "External clinical review is optional and is not a development or publication blocker.",
@@ -45,9 +45,9 @@
       "details": {
         "by_type": {
           "indications": {
-            "total": 833,
+            "total": 834,
             "reviewed": 0,
-            "gap": 833,
+            "gap": 834,
             "historical_structured_reviews": 0,
             "legacy_review_counter_total": 30
           },
@@ -59,9 +59,9 @@
             "legacy_review_counter_total": 0
           },
           "regimens": {
-            "total": 406,
+            "total": 407,
             "reviewed": 0,
-            "gap": 406,
+            "gap": 407,
             "historical_structured_reviews": 0,
             "legacy_review_counter_total": 0
           },
@@ -328,7 +328,7 @@
     {
       "id": "surgery_radiation_structure",
       "title": "Surgery/radiation detail",
-      "current": "21 structured procedure entities; 9 structured radiation-course entities; 818 indications mention surgery/radiation in text",
+      "current": "21 structured procedure entities; 9 structured radiation-course entities; 819 indications mention surgery/radiation in text",
       "target": "Dedicated modality entities for surgery and radiation with dose/fraction/intent/timing fields.",
       "status": "coverage_gap",
       "blocker": "The modality schemas and initial entities exist, but many indication-level references remain prose-only.",
@@ -502,19 +502,19 @@
           "IND-BREAST-BRCA-MET-TALAZOPARIB",
           "IND-BREAST-HER2-LOW-2L-DATO-DXD"
         ],
-        "mention_count": 818
+        "mention_count": 819
       }
     },
     {
       "id": "supportive_care_depth",
       "title": "Supportive-care depth",
-      "current": "136/406 regimens have mandatory supportive care (33.5%); 43 have monitoring; 358 have dose adjustments",
+      "current": "136/407 regimens have mandatory supportive care (33.4%); 43 have monitoring; 358 have dose adjustments",
       "target": "Every active regimen has supportive care, monitoring, dose-adjustment, and patient-watchpoint coverage.",
       "status": "coverage_gap",
       "blocker": "Supportive-care records exist, but regimen attachment is incomplete.",
       "next_action": "Audit high-toxicity regimens first, then fill missing regimen attachments.",
       "details": {
-        "regimens_total": 406,
+        "regimens_total": 407,
         "with_mandatory_supportive_care": 136,
         "with_premedication": 275,
         "with_monitoring": 43,
@@ -573,6 +573,7 @@
           "REG-CARBOPLATIN-PACLITAXEL-WEEKLY",
           "REG-CE-SCLC",
           "REG-CETUXIMAB-RECHALLENGE",
+          "REG-CHOEP-ALLOSCT-CONSOLIDATION",
           "REG-CINACALCET-HYPERCALCEMIA",
           "REG-CINV-4DRUG-HEC",
           "REG-CISPLATIN-5FU-PENILE",
@@ -639,15 +640,14 @@
           "REG-IMATINIB-GIST-1L",
           "REG-IMATINIB-KIT-MELANOMA",
           "REG-IMETELSTAT-MDS-LR",
-          "REG-INAVOLISIB-PALBO-FULV-BREAST",
-          "REG-INFIGRATINIB-CHOLANGIO-2L"
+          "REG-INAVOLISIB-PALBO-FULV-BREAST"
         ]
       }
     },
     {
       "id": "drug_indication_tracking",
       "title": "Drug indication and off-label tracking",
-      "current": "1/869 inferred drug-disease-indication pairs have a first-class record; 1 carry a source-backed assessed status",
+      "current": "1/883 inferred drug-disease-indication pairs have a first-class record; 1 carry a source-backed assessed status",
       "target": "Every drug-use pair has explicit regulatory-label status, NCCN/ESMO category, and source provenance.",
       "status": "coverage_gap",
       "blocker": "The first-class model is present, but most regimen-derived drug-use pairs still need source-backed assessment.",
@@ -655,11 +655,11 @@
       "details": {
         "drug_indications_entity_dir_present": true,
         "drug_indication_records": 1,
-        "inferred_drug_disease_indication_pairs": 869,
-        "pairs_with_indication_evidence_context": 869,
+        "inferred_drug_disease_indication_pairs": 883,
+        "pairs_with_indication_evidence_context": 883,
         "source_backed_assessed_pairs": 1,
         "explicitly_not_assessed_pairs": 0,
-        "missing_explicit_pair_count": 868,
+        "missing_explicit_pair_count": 882,
         "missing_explicit_pairs": [
           {
             "drug_id": "DRUG-5-FLUOROURACIL",
