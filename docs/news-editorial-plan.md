@@ -11,6 +11,28 @@
 
 Companion to `docs/news-comments-setup.md`, which covers the mechanics.
 
+## Daily startup watch (from 2026-10-17)
+
+This is a separate series, `series: openonco-startups-daily` and
+`series_format: startup`. It does not count toward or reset the alternating
+three-day research/platform series. Publish at most one short, substantive
+startup issue per calendar day; skip a day when no relevant claim can be
+checked. A funding announcement is a company claim, not clinical validation.
+
+Start with the dated primary announcement and the startup's current product
+documentation. State what the product actually does and which facts are
+self-reported. Compare it with OpenOnco only on named, verifiable dimensions:
+source access, licensing, reproducibility, cost to the reader, workflow, and
+clinical evidence. A lab assay, image model, trial matcher and rules engine
+may complement one another; do not score unlike tools as interchangeable.
+Do not claim that OpenOnco is superior in accuracy, outcomes, safety or every
+setting without direct comparative evidence. Light irony may target inflated
+marketing claims, never patients or researchers. Link both parties' primary
+sources and include the date and physician-review note. The English original
+and all ten complete translations must pass checks before publication; a
+translated headline alone is not an article. Use the ordinary PR, CI, Pages
+deployment and live-page checks.
+
 ## Current editorial status (2026-10-13)
 
 The public index now has 28 posts. Three October project updates lead it:

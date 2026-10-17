@@ -1,4 +1,4 @@
-"""Curated translations for the 20 retrospective project notes."""
+"""Curated news display copy and retrospective article translations."""
 
 import re
 
@@ -6,6 +6,33 @@ LANGUAGES = ('es', 'pt', 'de', 'fr', 'it', 'da', 'sv', 'nb', 'fi')
 
 # Entries follow the language order above. They translate display copy only.
 COPY = {
+    "Startup watch": (
+        "Observatorio de startups", "Radar de startups", "Startup-Radar",
+        "Veille des startups", "Osservatorio startup", "Startup-overblik",
+        "Startupkollen", "Startup-oversikt", "Startup-seuranta",
+    ),
+    "Prevision raised $5.4m. What does open source offer?": (
+        "Prevision recaudó 5,4 millones de dólares. ¿Qué aporta el código abierto?",
+        "A Prevision angariou 5,4 milhões de dólares. O que oferece o código aberto?",
+        "Prevision sammelte 5,4 Millionen Dollar ein. Was bietet Open Source?",
+        "Prevision a levé 5,4 millions de dollars. Que permet l’open source ?",
+        "Prevision ha raccolto 5,4 milioni di dollari. Cosa offre l’open source?",
+        "Prevision rejste 5,4 mio. dollar. Hvad tilbyder open source?",
+        "Prevision tog in 5,4 miljoner dollar. Vad erbjuder öppen källkod?",
+        "Prevision hentet 5,4 millioner dollar. Hva gir åpen kildekode?",
+        "Prevision keräsi 5,4 miljoonaa dollaria. Mitä avoin lähdekoodi tarjoaa?",
+    ),
+    "The lab assay and OpenOnco answer different questions. Open code makes rules inspectable; funding alone says nothing about patient outcomes.": (
+        "La prueba de laboratorio y OpenOnco responden preguntas distintas. El código abierto permite revisar las reglas; la financiación no demuestra resultados clínicos.",
+        "O teste laboratorial e o OpenOnco respondem a perguntas diferentes. O código aberto permite inspecionar as regras; o financiamento não demonstra resultados clínicos.",
+        "Labortest und OpenOnco beantworten unterschiedliche Fragen. Offener Code macht Regeln prüfbar; eine Finanzierung belegt keine Behandlungsergebnisse.",
+        "Le test de laboratoire et OpenOnco répondent à des questions différentes. Le code ouvert rend les règles vérifiables ; une levée de fonds ne prouve aucun bénéfice clinique.",
+        "Il test di laboratorio e OpenOnco rispondono a domande diverse. Il codice aperto rende verificabili le regole; i finanziamenti non dimostrano benefici clinici.",
+        "Laboratorietesten og OpenOnco besvarer forskellige spørgsmål. Åben kode gør reglerne efterprøvelige; finansiering dokumenterer ikke behandlingsresultater.",
+        "Laboratorietestet och OpenOnco svarar på olika frågor. Öppen kod gör reglerna granskbara; finansiering visar inte bättre behandlingsresultat.",
+        "Laboratorietesten og OpenOnco svarer på ulike spørsmål. Åpen kode gjør reglene etterprøvbare; finansiering dokumenterer ikke bedre behandlingsresultater.",
+        "Laboratoriotesti ja OpenOnco vastaavat eri kysymyksiin. Avoin koodi tekee säännöistä tarkistettavia; rahoitus ei osoita parempia hoitotuloksia.",
+    ),
     "A multicancer blood test missed its main screening goal": (
         "El análisis de sangre multicáncer no alcanzó su principal objetivo",
         "O teste sanguíneo multicancro não atingiu o objetivo principal",
