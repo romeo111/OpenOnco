@@ -97,20 +97,21 @@ def test_archive_has_complete_articles_in_all_eleven_languages():
             assert re.search(r"https://github.com/romeo111/OpenOnco/commit/[a-f0-9]+", entry["body"][locale][-1]["text"])
 
 
-def test_startup_issue_is_distinct_and_completely_translated():
+def test_startup_issues_are_distinct_and_completely_translated():
     issues = [e for e in load_news_entries() if e["series"] == build_news.STARTUP_SERIES]
-    assert len(issues) == 1
-    issue = issues[0]
-    assert issue["series_format"] == "startup"
-    assert issue["kind"] == "explainer" and issue["published"]
-    assert set(issue["body"]) == {"en", "uk", *build_news.NEWS_LOCALES}
-    for locale in issue["body"]:
-        assert len(issue["body"][locale]) == 4
-        assert "Prevision" in issue["body"][locale][0]["text"]
-        assert "OpenOnco" in issue["body"][locale][1]["text"]
-        page = build_news.render_news_article(issue, target_lang=locale, top_bar_html="")
-        assert build_news.STARTUP_NOTE[locale] in html.unescape(page)
-        assert build_news.DOCTOR_NOTE[locale] in html.unescape(page)
+    assert len(issues) >= 2
+    assert len({issue["published"] for issue in issues}) == len(issues)
+    for issue in issues:
+        assert issue["series_format"] == "startup"
+        assert issue["kind"] == "explainer" and issue["published"]
+        assert set(issue["body"]) == {"en", "uk", *build_news.NEWS_LOCALES}
+        for locale in issue["body"]:
+            assert issue["title"][locale] and issue["summary"][locale]
+            assert len(issue["body"][locale]) == len(issue["body"]["en"])
+            assert "OpenOnco" in " ".join(block["text"] for block in issue["body"][locale])
+            page = build_news.render_news_article(issue, target_lang=locale, top_bar_html="")
+            assert build_news.STARTUP_NOTE[locale] in html.unescape(page)
+            assert build_news.DOCTOR_NOTE[locale] in html.unescape(page)
 
 
 def test_startup_series_rejects_two_issues_on_one_day(tmp_path):
@@ -222,7 +223,7 @@ def test_news_index_prioritizes_recent_work_and_keeps_archive_accessible(news_di
     en = (news_dir / "news.html").read_text(encoding="utf-8")
     uk = (news_dir / "ukr" / "news.html").read_text(encoding="utf-8")
     assert 'class="case-card news-card news-feature"' in en
-    assert en.index('href="/news/prevision-open-source-comparison.html"') < en.index("Just shipped")
+    assert en.index('href="/news/aignostics-heta-workflow.html"') < en.index("Just shipped")
     assert 'href="/news/translation-safety-net.html"' in en
     assert 'href="/news/wiki-finds-the-source.html"' in en
     assert '<details class="news-archive">' in en
