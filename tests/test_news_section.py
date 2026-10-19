@@ -223,7 +223,7 @@ def test_news_index_prioritizes_recent_work_and_keeps_archive_accessible(news_di
     en = (news_dir / "news.html").read_text(encoding="utf-8")
     uk = (news_dir / "ukr" / "news.html").read_text(encoding="utf-8")
     assert 'class="case-card news-card news-feature"' in en
-    assert en.index('href="/news/aignostics-heta-workflow.html"') < en.index("Just shipped")
+    assert en.index('href="/news/browser-draft-stays-here.html"') < en.index("Just shipped")
     assert 'href="/news/translation-safety-net.html"' in en
     assert 'href="/news/wiki-finds-the-source.html"' in en
     assert '<details class="news-archive">' in en
@@ -262,6 +262,20 @@ def test_translated_issue_and_archive_cards_link_to_full_local_articles():
         for slug in ("nhs-galleri-primary-endpoint", "validate-before-server-work"):
             assert f'href="/{locale}/news/{slug}.html"' in page
         assert 'href="/news/translation-safety-net.html" lang="en" hreflang="en"' in page
+
+
+def test_translated_platform_card_uses_full_local_copy():
+    entry = next(e for e in load_news_entries() if e["slug"] == "browser-draft-stays-here")
+    for locale in LANGUAGES:
+        page = (REPO_ROOT / "docs" / locale / "news.html").read_text(encoding="utf-8")
+        card = re.search(
+            rf'<a class="case-card news-card[^"]*" href="/{locale}/news/browser-draft-stays-here\.html".*?</a>',
+            page, re.S,
+        )
+        assert card, locale
+        assert html.escape(entry["title"][locale], quote=True) in card.group()
+        assert html.escape(entry["summary"][locale], quote=True) in card.group()
+        assert f'>{entry["date"].isoformat()}</time>' in card.group()
 
 
 def test_research_issue_has_full_local_pages_and_reciprocal_hreflang(news_dir: Path):
