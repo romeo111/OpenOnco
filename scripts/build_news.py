@@ -1040,6 +1040,7 @@ def connect_localized_news_indexes(output_dir: Path, *, news_dir: Path = DEFAULT
         locale: {entry["slug"] for entry in entries if locale in entry["body"]}
         for locale in NEWS_LOCALES
     }
+    by_slug = {entry["slug"]: entry for entry in entries}
     changed = 0
     for locale in NEWS_LOCALES:
         path = output_dir / locale / "news.html"
@@ -1054,6 +1055,31 @@ def connect_localized_news_indexes(output_dir: Path, *, news_dir: Path = DEFAULT
             return match.group(0) + ' lang="en" hreflang="en"'
 
         result = re.sub(r'href="/news/([a-z0-9-]+)\.html"', replace_link, source)
+
+        def localize_complete_card(match: re.Match[str]) -> str:
+            slug = match.group(1)
+            if slug not in translated[locale]:
+                return match.group(0)
+            entry = by_slug[slug]
+            card = match.group(0)
+            replacements = (
+                (r'<h3>.*?</h3>', f'<h3>{_esc(entry["title"][locale])}</h3>'),
+                (r'<p>.*?</p>', f'<p>{_esc(entry["summary"][locale])}</p>'),
+                (r'<time datetime="[^"]+">.*?</time>',
+                 f'<time datetime="{entry["date"].isoformat()}">{_format_date(entry["date"], locale)}</time>'),
+            )
+            for pattern, replacement in replacements:
+                card, count = re.subn(pattern, lambda _: replacement, card, count=1, flags=re.S)
+                if count != 1:
+                    raise NewsContentError(f"{path}: incomplete card for {slug}")
+            return card
+
+        result = re.sub(
+            rf'<a class="case-card news-card[^"]*" href="/{locale}/news/([a-z0-9-]+)\.html".*?</a>',
+            localize_complete_card,
+            result,
+            flags=re.S,
+        )
         result, note_count = re.subn(
             r'(<p class="news-count">.*? · <span>).*?(</span></p>)',
             lambda match: match.group(1) + _esc(INDEX_LANGUAGE_NOTE[locale]) + match.group(2),
