@@ -46,6 +46,14 @@ The existing client provides a 24-hour memory cache and request throttling; keep
 
 FDA reports may contain several drugs and several reactions without linking individual pairs. Counts are neither incidence nor proof of causality, and an empty search does not establish safety. The adapter performs no risk ranking or automatic clinical-rule updates. [FDA adverse-event limitations](https://open.fda.gov/apis/drug/event/).
 
+### Drug-card reports
+
+Drug cards include an on-demand openFDA block. `scripts/openfda_drug_card.py` builds the public query with `OpenFDAEventQuery` and emits versioned JavaScript/CSS assets through `build_kb_wiki`. No FDA request runs during site generation. The reader explicitly loads up to five reports, ordered by FDA receipt date, directly from `api.fda.gov`; no API key, patient input, cookies or referrer is sent. Report bodies are not persisted. This browser path uses its own timeout and error display; it does not run the Python cache in the browser.
+
+The block shows the FDA dataset update date from `meta.last_updated`, matching-report count, original drug/reaction terms, receipt dates and source links. Unknown dates remain unknown; failures never become zero reports. It is separate from KB warnings and does not feed the treatment engine. English and Ukrainian controls are provided; other language editions retain the explicitly marked English block through the existing translation pipeline. Original FDA terms are protected from automatic translation.
+
+Run `python -m pytest tests/test_openfda_drug_card.py tests/test_openfda_client.py -q` and `node tests/browser_openfda_drug_card.cjs`. The browser contract uses synthetic responses against the published script. Publish the affected drug cards and their language editions through the partial-site finalizer; keep shared-reader fingerprints bound to finalized English originals. Do not rebuild clinical engine archives for this presentation-only change.
+
 ## Preview and build
 
 ```bash

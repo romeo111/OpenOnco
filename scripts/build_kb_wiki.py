@@ -16,6 +16,8 @@ from typing import Any
 
 import yaml
 
+from scripts.openfda_drug_card import render_openfda_card, write_assets as write_openfda_assets
+
 
 ENTITY_DIRS = {
     "indications": {"en": "Indication", "uk": "Показання"},
@@ -926,7 +928,7 @@ def render_entity_page(
                         if locale == 'uk' else 'Withheld from planning: source and clinical review required.')
             specifics = f'<p class="kb-info-box" role="alert" data-planning-status="withheld">{html.escape(withheld)}</p>' + specifics
     elif entity.kind == "drugs":
-        specifics = _drug_sections(entity, locale=locale)
+        specifics = _drug_sections(entity, locale=locale) + render_openfda_card(entity.data, locale=locale)
     elif entity.kind == "biomarkers":
         specifics = _biomarker_sections(entity, entities, locale=locale)
     elif entity.kind == "redflags":
@@ -1275,6 +1277,7 @@ def build_kb_wiki(kb_root: Path, output_dir: Path) -> dict[str, Any]:
     published = searchable + [e for e in entities.values() if e.kind == "diseases"]
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    write_openfda_assets(output_dir)
     for kind in SEARCH_KINDS | {"diseases"}:
         (output_dir / "kb" / kind).mkdir(parents=True, exist_ok=True)
         (output_dir / "ukr" / "kb" / kind).mkdir(parents=True, exist_ok=True)
