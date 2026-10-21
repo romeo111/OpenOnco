@@ -86,6 +86,7 @@ jobs:
           node tests/browser_dosing_schedule.cjs
           node tests/browser_treatment_line_copy.cjs
           node tests/browser_patient_contact_copy.cjs
+          node tests/browser_openfda_drug_card.cjs
 
       - name: Verify pinned runtime inventory
         run: python -m scripts.audit_pyodide_runtime
@@ -102,6 +103,7 @@ jobs:
         run: |
           python -m pytest \
             tests/test_openfda_client.py \
+            tests/test_openfda_drug_card.py \
             tests/test_base_source_client.py \
             tests/test_api_json_boundary.py \
             tests/test_clinical_request_contract.py \
