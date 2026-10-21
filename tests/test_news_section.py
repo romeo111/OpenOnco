@@ -223,7 +223,11 @@ def test_news_index_prioritizes_recent_work_and_keeps_archive_accessible(news_di
     en = (news_dir / "news.html").read_text(encoding="utf-8")
     uk = (news_dir / "ukr" / "news.html").read_text(encoding="utf-8")
     assert 'class="case-card news-card news-feature"' in en
-    assert en.index('href="/news/reveal-genomics-her2dx-deal.html"') < en.index("Just shipped")
+    latest = max(
+        load_news_entries(),
+        key=lambda e: (e["published"] or e["date"], e["date"], e["slug"]),
+    )
+    assert en.index(f'href="/news/{latest["slug"]}.html"') < en.index("Just shipped")
     assert 'href="/news/translation-safety-net.html"' in en
     assert 'href="/news/wiki-finds-the-source.html"' in en
     assert '<details class="news-archive">' in en
