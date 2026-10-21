@@ -14,6 +14,38 @@ python -m ruff check --select E9,F63,F7,F82 scripts/ knowledge_base/ serverless/
 
 Run additional tests appropriate to the changed component. The [Validate Knowledge Base workflow](../.github/workflows/validate-kb.yml) also checks examples, executable conditions, DLBCL review contracts and engine regressions. The nightly suite covers a broader selection. A green test run is engineering evidence, not clinical approval.
 
+## openFDA adverse-event source adapter
+
+Use `OpenFDAClient.fetch(OpenFDAEventQuery(...))` for direct, read-only retrieval of FDA adverse-event reports by active substance and/or brand. The adapter is available to Python callers; it does not change treatment rules, dose calculations, patient recommendations or the clinical API.
+
+```python
+from knowledge_base.clients.openfda_client import OpenFDAClient, OpenFDAEventQuery
+
+client = OpenFDAClient()
+query = OpenFDAEventQuery(
+    active_substance="osimertinib",
+    brand_names=("Tagrisso",),
+    received_from="2020-01-01",
+    received_to="2026-06-30",
+    limit=10,
+    skip=0,
+)
+response = client.fetch(query)
+reports = response.data["results"]
+metadata = response.data["meta"]
+provenance = (response.source_id, response.fetched_at, query.request_url)
+```
+
+For a loaded drug YAML record, pass `drug["names"]["english"]` and `tuple(drug["names"].get("brand_names", []))`. Search combines harmonized generic/brand fields with reported medicinal-product and active-substance fields, because harmonized names can be absent. Brand display annotations such as `(biosimilar)` are removed for retrieval; the input labels are preserved. Names are quoted literals, with duplicate clauses removed. This is broad discovery: combinations, formulations and similarly named products still require identity review. See the [eight-drug pilot](reviews/dataplex-openfda-pilot-2026-10-21.md).
+
+`limit` accepts 1–1000 and `skip` 0–25000. Optional dates must be supplied together as inclusive `YYYY-MM-DD` bounds on FDA **receipt date**, not reaction onset. Results are sorted by receipt date descending; offset pages are not a stable snapshot. [FDA query parameters](https://open.fda.gov/apis/query-parameters/) and [event endpoint](https://open.fda.gov/apis/drug/event/how-to-use-the-endpoint/).
+
+The response preserves original report arrays and FDA metadata, including `meta.last_updated` when present. `fetched_at` is retrieval time, not source freshness. Only FDA's explicit `404 NOT_FOUND / No matches found!` becomes an empty result; it has no invented update date. With `skip=0`, its total is zero. With `skip>0`, FDA may mean an exhausted page, so the adapter omits the unknown total. Other HTTP failures, throttling, transport failures and malformed responses raise `OpenFDAError` and are not cached. Error messages and `query.request_url` omit API credentials.
+
+The existing client provides a 24-hour memory cache and request throttling; keep a client instance across calls. `OPENFDA_API_KEY` is optional for this endpoint and stays in the environment. The anonymous daily quota is shared by IP; the client does not track that quota or retry 429 responses. An optional disk cache must use an ignored local directory; do not commit fetched report bodies. Run `python -m pytest tests/test_openfda_client.py tests/test_base_source_client.py -q` for the offline adapter contract.
+
+FDA reports may contain several drugs and several reactions without linking individual pairs. Counts are neither incidence nor proof of causality, and an empty search does not establish safety. The adapter performs no risk ranking or automatic clinical-rule updates. [FDA adverse-event limitations](https://open.fda.gov/apis/drug/event/).
+
 ## Preview and build
 
 ```bash
