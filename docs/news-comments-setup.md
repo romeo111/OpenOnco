@@ -82,34 +82,67 @@ where readers are researching a cancer diagnosis.
 
 ### Deploying Waline
 
-1. Deploy the Waline server — the documented path is the Vercel template, then
-   add a database from the Vercel dashboard under Storage → Create Database.
-   Vercel Hobby plus Neon Free is comfortably within limits for this traffic.
-2. Run the `waline.pgsql` schema to create the tables, then redeploy so the
-   database environment variables take effect.
-3. Set `JWT_TOKEN` (any random string), `SITE_NAME`, `SITE_URL`, `SERVER_URL`.
-4. Register the admin account at `<your-server>/ui/register`. **Do this
-   immediately after deploying** — the first account to register becomes admin.
-5. Put the deployed URL into `COMMENTS["server_url"]` in
-   `scripts/build_news.py`, then rebuild and commit the regenerated `docs/`.
+This part happens in the Vercel and Neon dashboards, under your own accounts —
+it cannot be automated from this repository. It is a one-time, ~20–40 minute
+job. Verified current against Waline's Vercel deploy guide on 2026-07-20.
 
-Two settings deserve a deliberate decision rather than the default:
+1. Open the Waline Vercel deploy link:
+   `https://vercel.com/new/clone?repository-url=https://github.com/walinejs/waline/tree/main/example`
+   — sign in to Vercel, name the project, and create it. (Vercel Hobby is free
+   and within limits for this traffic.)
+2. In the project, go to **Storage → Create Database → Neon**, pick an **EU
+   region**, and create it. Vercel wires the Postgres connection variables in
+   for you.
+3. Open Neon's SQL editor and run the `waline.pgsql` schema (linked from the
+   Waline deploy guide) to create the tables.
+4. Add the environment variables below (Settings → Environment Variables), then
+   **Deployments → Redeploy** — Waline only picks up new variables on a
+   redeploy.
+5. Once the deployment is `Ready`, open `<your-server>/ui/register` and register
+   **immediately** — the first account to register becomes the admin. Do this
+   before sharing the URL anywhere.
+6. Send the deployed server URL back, and the one-line `COMMENTS["server_url"]`
+   change plus rebuild can be committed for you. (Or edit it yourself in
+   `scripts/build_news.py` and run `python -m scripts.build_site`.)
 
-- **`AKISMET_KEY`.** Waline enables Akismet spam filtering by default using a
+**Environment variables — paste these:**
+
+```
+JWT_TOKEN        = <any long random string; this signs admin login tokens>
+SITE_NAME        = OpenOnco
+SITE_URL         = https://openonco.info
+SERVER_URL       = <your Vercel deployment URL, once you know it>
+SECURE_DOMAINS   = openonco.info
+AKISMET_KEY      = false
+```
+
+`SECURE_DOMAINS` restricts posting to your own site — without it, any website
+can point its comment box at your server and use it as a spam relay. Set it.
+
+**Two choices baked into the block above, and why:**
+
+- **`AKISMET_KEY = false`.** Waline defaults to Akismet spam filtering using a
   shared key hardcoded into every install, which means **every comment's text
-  is sent to a third party unless you opt out**. On a site where a comment may
-  mention someone's illness, that should be a conscious choice: either set your
-  own Akismet key, or set `AKISMET_KEY=false` and rely on the approval queue
-  and rate limiting.
-- **Storage region.** Waline's docs lead with LeanCloud, which is
-  China-hosted. For a Ukrainian and EU audience choose Postgres in an EU
-  region instead. This is a data-protection question, not a preference.
+  is sent to a third party unless you opt out**. On a page where a comment may
+  mention someone's illness, that default is wrong. Turning it off leans on the
+  approval queue, `IPQPS` rate limiting (default 60s) and `SECURE_DOMAINS`
+  instead. If spam becomes a real problem later, get your own Akismet key
+  rather than reinstating the shared one.
+- **Neon in an EU region, not LeanCloud.** Waline's docs lead with LeanCloud,
+  which is China-hosted. For a Ukrainian and EU audience the datastore region
+  is a data-protection question, not a preference — keep it in the EU.
 
-There is also a `GITHUB_REPO` storage backend that keeps comments as files in a
+**Optional — hold comments for approval.** If unmoderated comments on a
+cancer-information page feel too exposed, add `COMMENT_AUDIT = true`. New
+comments then stay hidden until you approve them in the admin UI. This trades
+"open" for "safe"; the default (immediate) is what "open comments" means, but
+the choice is yours.
+
+**Alternative storage — `GITHUB_REPO`.** Waline can keep comments as files in a
 git repository instead of a database. It does not scale to high volume, but it
 removes the database entirely, puts comments under version control, and fits
-this project's existing "YAML plus git history" storage model. Worth
-considering while comment volume is low.
+this project's existing "YAML plus git history" model. Worth considering while
+volume is low.
 
 ### Moderation
 
