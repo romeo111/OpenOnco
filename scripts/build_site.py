@@ -60,6 +60,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts import privacy_copy
+from scripts import public_trust_copy
 
 from knowledge_base.engine import (
     generate_diagnostic_brief,
@@ -1583,15 +1584,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     if is_en:
         title = "OpenOnco — free, cited cancer treatment options"
         kicker = "Free · open-source · no sign-up"
-        h1 = "A second opinion on cancer treatment — free, cited, and open."
-        sub = (
-            "Enter a case and OpenOnco lays out two treatment plans side by side — a "
-            "standard option and a more aggressive one — with a source you can open under "
-            "every line. Built on NCCN, ESMO and CIViC. Pick your path below.",
-        )
+        h1 = public_trust_copy.HEADLINE['en']
+        sub = (public_trust_copy.LEAD['en'],)
         primary = "Try the plan builder"
         diseases_href = "/diseases.html"
-        note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, so LLM hallucinations are excluded from the plan. The clinician remains the final authority (CHARTER §11)."
+        note = "Open-data inputs: CIViC (CC0) for biomarker actionability, ClinicalTrials.gov for trial-aware options, PubMed/PMID/DOI and DailyMed/openFDA for literature and drug-label context. No LLM chooses treatment: plans are rules-first with YAML provenance, source and input errors still require clinician verification. The clinician remains the final authority (CHARTER §11)."
         footer = "Informational tool for clinicians, requiring qualified clinician review (CHARTER §11 + §15)."
         try_href = "/try.html"
         gallery_href = "/gallery.html"
@@ -1701,17 +1698,11 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
     else:
         title = "OpenOnco — безкоштовні варіанти лікування раку з джерелами"
         kicker = "Безкоштовно · відкритий код · без реєстрації"
-        h1 = "Зрозумійте варіанти лікування раку — з доказовим джерелом під кожним рядком."
-        sub = (
-            "OpenOnco безкоштовно збирає докази з настанов NCCN, ESMO і бази CIViC у два "
-            "плани лікування поруч — стандартний і агресивніший. Лікарю це пришвидшує "
-            "підготовку туморборду, хворому — допомагає зрозуміти призначене лікування і "
-            "скласти питання до онколога, фармацевту — перевірити взаємодії та корекції доз. "
-            "Без реєстрації; правила оцінюються у браузері, а Туморборд передає текст серверу.",
-        )
+        h1 = public_trust_copy.HEADLINE['uk']
+        sub = (public_trust_copy.LEAD['uk'],)
         primary = "Спробувати конструктор плану"
         diseases_href = "/ukr/diseases.html"
-        note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому LLM-галюцинації виключені з плану. Фінальне рішення лишається за лікарем (CHARTER §11)."
+        note = "Відкриті джерела: CIViC (CC0) для біомаркерної клінічної значущості, ClinicalTrials.gov для trial-aware опцій, PubMed/PMID/DOI та DailyMed/openFDA для літератури й контексту інструкцій до препаратів. LLM не обирає лікування: план збирається rules-first із YAML provenance, тому лікар має перевірити джерела, вхідні дані й результат. Фінальне рішення лишається за лікарем (CHARTER §11)."
         footer = "Це інформаційний інструмент для лікаря, що потребує перегляду кваліфікованим лікарем (CHARTER §11 + §15)."
         try_href = "/ukr/try.html"
         gallery_href = "/ukr/gallery.html"
@@ -1922,6 +1913,7 @@ def _render_landing_v2(stats, *, target_lang: str = "en") -> str:
   </section>
 
   <section class="home-trust" aria-label="{'How OpenOnco stays safe' if is_en else 'Безпека OpenOnco'}">
+    {public_trust_copy.render_review_notice(target_lang)}
     <p class="home-trust-line">{trust}</p>
     <p class="home-note">{note}</p>
     <p class="home-explore" aria-label="{explore_label}">{explore_html}</p>
@@ -4413,6 +4405,7 @@ def render_ask(*, target_lang: str = "en") -> str:
     </div>
   </section>
 
+  {public_trust_copy.render_review_notice(target_lang)}
   <div class="ask-guidance">
     <div class="ask-guidance-card">
       <strong>{safety_heading}</strong>
@@ -4906,6 +4899,8 @@ def render_try(
   <p class="lead">
     {page_lead}
   </p>
+  {public_trust_copy.render_review_notice(target_lang)}
+  <p data-data-flow="local">{html.escape(privacy_copy.LOCAL_BODY[target_lang])}</p>
 
   <!-- Top status banner stays for loading/warnings. Success messages live in
        the lower status area so examples do not push the questionnaire down. -->
@@ -5144,7 +5139,7 @@ def render_try(
 <div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
   <div class="init-card">
     <h3>{'Starting the OpenOnco engine' if target_lang == 'en' else 'Готую двигун OpenOnco'}</h3>
-    <p class="init-lead">{'The first launch takes ~10–20 seconds — the engine loads directly into your browser. Patient data never leaves your device.' if target_lang == 'en' else 'Перший запуск триває ~10–20 секунд — двигун завантажується безпосередньо у твій браузер. Дані пацієнта не лишають твого пристрою.'}</p>
+    <p class="init-lead">{html.escape(privacy_copy.LOCAL_BODY[target_lang])}</p>
     <ol class="init-stages" id="initStages">
       <li data-stage="pyodide" class="stage pending">{'Loading the in-browser runtime (~6 MB)' if target_lang == 'en' else 'Готую обчислювач у браузері (~6 МБ)'}</li>
       <li data-stage="pydeps" class="stage pending">{'Setting up the environment' if target_lang == 'en' else 'Налаштовую середовище'}</li>
@@ -8658,6 +8653,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
       <p>Клінічний зміст має інформаційний характер; технічні перевірки не є схваленням лікування.</p>
     </div>
 
+    {public_trust_copy.render_review_notice('uk')}
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Огляд</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Engine</button>
@@ -8678,7 +8674,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
           Один JSON-профіль → <em>два плани лікування</em> з citation під кожною claim.
         </h2>
         <p class="pipeline-sub">
-          Без LLM у клінічному рішенні. Без серверу. Patient JSON залишається на машині.
+          <span>{privacy_copy.HOME['uk']}</span><br>
           Час обробки одного профілю — 50-200&nbsp;мс.
         </p>
 
@@ -8763,7 +8759,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacy by design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. Серверу немає. Patient JSON не покидає машину.</div>
+          <div class="pillar-text">{privacy_copy.HOME['uk']}</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Plan живе</div>
@@ -9011,8 +9007,9 @@ def _render_capabilities_uk_legacy(stats) -> str:
       </div>
 
       <div class="callout callout-good">
-        <strong>Privacy.</strong> Patient JSON ніколи не залишає машину користувача.
-        Немає логів, немає БД. Reproducibility:
+        <strong>{privacy_copy.LOCAL_TITLE['uk']}</strong><p>{privacy_copy.LOCAL_BODY['uk']}</p>
+        <strong>{privacy_copy.TRANSFER_TITLE['uk']}</strong><p>{privacy_copy.TRANSFER_BODY['uk']}</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> фіксує версію KB →
         same input + same KB = same output.
       </div>
@@ -9103,7 +9100,7 @@ def _render_capabilities_uk_legacy(stats) -> str:
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Two-reviewer merge</h3>
+            <h3>{public_trust_copy.REVIEW_TITLE['uk']}</h3>
             <p>Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.</p>
           </div>
           <div class="gap-card gap-hard">
@@ -9522,6 +9519,7 @@ def _render_capabilities_en(stats) -> str:
       <p>Clinical content is informational; technical checks are not treatment approval.</p>
     </div>
 
+    {public_trust_copy.render_review_notice('en')}
     <nav class="cap-tabs" role="tablist" aria-label="Sections">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Overview</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Engine</button>
@@ -9542,7 +9540,7 @@ def _render_capabilities_en(stats) -> str:
           One JSON profile → <em>two treatment plans</em>, every claim cited.
         </h2>
         <p class="pipeline-sub">
-          No LLM in the clinical decision. No server. Patient JSON stays on the machine.
+          <span>{privacy_copy.HOME['en']}</span><br>
           Per-profile processing: 50-200&nbsp;ms.
         </p>
 
@@ -9627,7 +9625,7 @@ def _render_capabilities_en(stats) -> str:
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacy by design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. No server. Patient JSON never leaves the machine.</div>
+          <div class="pillar-text">{privacy_copy.HOME['en']}</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Plan stays alive</div>
@@ -9877,8 +9875,9 @@ def _render_capabilities_en(stats) -> str:
       </div>
 
       <div class="callout callout-good">
-        <strong>Privacy.</strong> Patient JSON never leaves the user's machine.
-        No logs, no DB. Reproducibility:
+        <strong>{privacy_copy.LOCAL_TITLE['en']}</strong><p>{privacy_copy.LOCAL_BODY['en']}</p>
+        <strong>{privacy_copy.TRANSFER_TITLE['en']}</strong><p>{privacy_copy.TRANSFER_BODY['en']}</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> records the KB version →
         same input + same KB = same output.
       </div>
@@ -9970,7 +9969,7 @@ def _render_capabilities_en(stats) -> str:
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Two-reviewer merge</h3>
+            <h3>{public_trust_copy.REVIEW_TITLE['en']}</h3>
             <p>Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.</p>
           </div>
           <div class="gap-card gap-hard">
@@ -10181,7 +10180,7 @@ _DISEASES_PAGE_LABELS = {
         "th_bio": "Біомарк.", "th_drug": "Преп.",
         "th_ind": "Показ.", "th_reg": "Схеми лік.", "th_rf": "Трив. озн.",
         "th_1l": "1L", "th_2l": "2L+", "th_quest": "Опитувальник",
-        "th_fill": "Наповн.", "th_ver": "Вериф.",
+        "th_fill": "Наповн.", "th_ver": "Реценз., %",
         "yes": "✓", "no": "—",
         "metrics_title": "Позначення в таблиці",
         "search_placeholder": "Шукати хворобу або ICD-10 код…",
@@ -10192,7 +10191,7 @@ _DISEASES_PAGE_LABELS = {
             "<b>1L / 2L+</b> — наявність алгоритму для першої або другої й наступних ліній лікування.",
             "<b>Опитувальник</b> — ✓ якщо для хвороби є ручний клінічний опитувальник; — якщо його ще немає.",
             "<b>Наповненість</b> — зведена оцінка за ключовими типами сутностей: показання, схеми лікування, біомаркери, препарати, тривожні ознаки, алгоритм, опитувальник і workup.",
-            "<b>Верифікація</b> — частка показань із достатньою кількістю клінічних sign-off за правилами проєкту.",
+            public_trust_copy.REVIEW_METRIC['uk'],
         ],
         "verified_note": "",
         "table_title": "Покриття за хворобами",
@@ -10222,7 +10221,7 @@ _DISEASES_PAGE_LABELS = {
         "th_bio": "Bio", "th_drug": "Drug",
         "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
         "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
-        "th_fill": "Fill %", "th_ver": "Ver %",
+        "th_fill": "Fill %", "th_ver": "Review %",
         "yes": "✓", "no": "—",
         "metrics_title": "Metric definitions",
         "search_placeholder": "Search disease or ICD-10 code…",
@@ -10234,7 +10233,7 @@ _DISEASES_PAGE_LABELS = {
             "<b>1L / 2L</b> — Algorithm presence for first-line / second-line+",
             "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — absent",
             "<b>Fill %</b> — composite over 8 entity types: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
-            "<b>Ver %</b> — % of this disease's indications with reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+            public_trust_copy.REVIEW_METRIC['en'],
         ],
         "verified_note": (
             'Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.'
@@ -11083,7 +11082,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         principles = [
             ("Open by default", "Code is MIT-style; specifications and generated content are CC BY 4.0."),
             ("Synthetic public data", "The public site ships no real patient records and no patient-specific private artifacts."),
-            ("Clinical review gate", "Clinical content needs reviewer sign-off before it can become trusted content."),
+            (public_trust_copy.REVIEW_TITLE['en'], public_trust_copy.REVIEW_BODY['en']),
             ("Auditable automation", "Rules, sources and rendered reasoning are visible instead of hidden behind a black box."),
         ]
         stats_h = "Current public corpus"
@@ -11128,7 +11127,7 @@ def render_about(stats, *, target_lang: str = "en") -> str:
         ]
         principles_h = "На чому тримається довіра"
         principles = [
-            ("Жодних «вигаданих» призначень", "LLM не обирає лікування і не складає дози: варіанти збирає детермінований механізм із зафіксованих правил."),
+            (public_trust_copy.REVIEW_TITLE['uk'], public_trust_copy.REVIEW_BODY['uk']),
             ("Джерело під кожним твердженням", "Клінічна логіка пов’язана з настановами, дослідженнями та версіями бази знань — її можна простежити й перевірити."),
             ("Лікар лишається відповідальним", "OpenOnco показує матеріал для обговорення. Остаточне рішення завжди ухвалює кваліфікований лікар з урахуванням повної картини."),
             ("Приватність за задумом", "У публічному сайті немає реальних історій хвороби; приклади створено зі синтетичних, знеособлених даних."),

@@ -42,5 +42,36 @@ TRANSFER_BODY = {
 }
 
 
+_LOCAL_STORAGE = dict(zip(HOME, (
+    ' Drafts persist in this browser until you clear the form or site data. Downloaded exports remain on your device. Loading the site and its public assets still makes network requests. Use synthetic cases.',
+    ' Чернетки зберігаються в цьому браузері до очищення форми або даних сайту. Завантажені експорти залишаються на пристрої. Завантаження сайту й публічних ресурсів усе одно потребує мережевих запитів. Використовуйте синтетичні випадки.',
+    ' Los borradores permanecen en este navegador hasta borrar el formulario o los datos del sitio. Los archivos exportados permanecen en el dispositivo. Cargar el sitio y sus recursos públicos requiere solicitudes de red. Use casos sintéticos.',
+    ' Os rascunhos ficam neste navegador até limpar o formulário ou os dados do site. Os ficheiros exportados permanecem no dispositivo. Carregar o site e os recursos públicos requer pedidos de rede. Utilize casos sintéticos.',
+    ' Entwürfe bleiben in diesem Browser, bis Sie das Formular oder die Websitedaten löschen. Exportierte Dateien bleiben auf Ihrem Gerät. Das Laden der Website und öffentlicher Ressourcen erfordert Netzwerkzugriffe. Verwenden Sie synthetische Fälle.',
+    ' Les brouillons restent dans ce navigateur jusqu’à l’effacement du formulaire ou des données du site. Les fichiers exportés restent sur votre appareil. Le chargement du site et des ressources publiques nécessite des requêtes réseau. Utilisez des cas synthétiques.',
+    ' Le bozze restano in questo browser finché non cancelli il modulo o i dati del sito. I file esportati restano sul dispositivo. Il caricamento del sito e delle risorse pubbliche richiede richieste di rete. Usa casi sintetici.',
+    ' Udkast gemmes i denne browser, indtil du rydder formularen eller webstedets data. Eksporterede filer bliver på enheden. Indlæsning af webstedet og offentlige ressourcer kræver netværksanmodninger. Brug syntetiske tilfælde.',
+    ' Utkast sparas i denna webbläsare tills du rensar formuläret eller webbplatsdata. Exporterade filer finns kvar på enheten. Laddning av webbplatsen och offentliga resurser kräver nätverksanrop. Använd syntetiska fall.',
+    ' Utkast lagres i denne nettleseren til du tømmer skjemaet eller nettstedsdata. Eksporterte filer blir på enheten. Lasting av nettstedet og offentlige ressurser krever nettverksforespørsler. Bruk syntetiske tilfeller.',
+    ' Luonnokset säilyvät tässä selaimessa, kunnes tyhjennät lomakkeen tai sivuston tiedot. Viedyt tiedostot jäävät laitteellesi. Sivuston ja julkisten resurssien lataaminen edellyttää verkkopyyntöjä. Käytä synteettisiä tapauksia.',
+)))
+_SERVER_RETENTION = dict(zip(HOME, (
+    ' Retention and deletion depend on the hosting and model provider; this page does not establish their policies. Clearing the form does not delete text already submitted to them. Use synthetic cases.',
+    ' Зберігання й видалення залежать від хостингу та постачальника моделі; ця сторінка не встановлює їхніх політик. Очищення форми не видаляє вже надісланий їм текст. Використовуйте синтетичні випадки.',
+    ' La conservación y eliminación dependen del alojamiento y del proveedor del modelo; esta página no establece sus políticas. Borrar el formulario no elimina el texto ya enviado. Use casos sintéticos.',
+    ' A conservação e eliminação dependem do alojamento e do fornecedor do modelo; esta página não estabelece essas políticas. Limpar o formulário não elimina o texto já enviado. Utilize casos sintéticos.',
+    ' Aufbewahrung und Löschung hängen vom Hosting- und Modellanbieter ab; diese Seite legt deren Richtlinien nicht fest. Das Leeren des Formulars löscht bereits übermittelte Texte nicht. Verwenden Sie synthetische Fälle.',
+    ' La conservation et la suppression dépendent de l’hébergeur et du fournisseur du modèle ; cette page ne définit pas leurs politiques. Effacer le formulaire ne supprime pas le texte déjà transmis. Utilisez des cas synthétiques.',
+    ' Conservazione e cancellazione dipendono da hosting e fornitore del modello; questa pagina non ne stabilisce le politiche. Cancellare il modulo non elimina il testo già inviato. Usa casi sintetici.',
+    ' Opbevaring og sletning afhænger af hosting- og modeludbyderen; denne side fastlægger ikke deres politikker. Rydning af formularen sletter ikke allerede indsendt tekst. Brug syntetiske tilfælde.',
+    ' Lagring och radering beror på värd- och modellleverantören; denna sida fastställer inte deras policyer. Att rensa formuläret raderar inte redan inskickad text. Använd syntetiska fall.',
+    ' Lagring og sletting avhenger av hosting- og modellleverandøren; denne siden fastsetter ikke deres retningslinjer. Å tømme skjemaet sletter ikke tekst som allerede er sendt. Bruk syntetiske tilfeller.',
+    ' Säilytys ja poistaminen riippuvat hosting- ja mallipalveluntarjoajasta; tämä sivu ei määritä niiden käytäntöjä. Lomakkeen tyhjentäminen ei poista jo lähetettyä tekstiä. Käytä synteettisiä tapauksia.',
+)))
+for _locale in HOME:
+    LOCAL_BODY[_locale] += _LOCAL_STORAGE[_locale]
+    TRANSFER_BODY[_locale] += _SERVER_RETENTION[_locale]
+
+
 def messages_for(locale):
     return {table['en']:table[locale] for table in (HOME,LOCAL_TITLE,LOCAL_BODY,TRANSFER_TITLE,TRANSFER_BODY)}

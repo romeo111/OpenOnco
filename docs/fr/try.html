@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Générateur de plans</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="Run the OpenOnco browser demo on synthetic oncology profiles with auditable, source-grounded output.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -124,7 +125,7 @@
 <meta name="theme-color" content="#0a2e1a">
 <meta name="mobile-web-app-capable" content="yes">
 <link href="/style.css?v=layout-20261011" rel="stylesheet">
-<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="87630d8559549b0ca37e55119a2121a1711ae4d760bd0469226a0299d6e9184c"></head>
+<meta name="translation-review" content="pending_clinical_review"><meta name="translation-source-sha256" content="36461db7d8d744b9efe664e8a7fe602bc7fffcfae76d9fba5c2e7142eea80774"></head>
 <body><header class="top-bar site-header">
   <link rel="stylesheet" href="/header.css?v=layout-20261011">
   <div class="header-shell">
@@ -182,6 +183,8 @@
   <p class="lead">
     Préparez un brouillon de plan de traitement référencé à partir du profil d’un patient virtuel. Le moteur dans le navigateur montre quels champs de diagnostic, de stadification, de biomarqueurs et de sécurité modifient le plan. <strong>N’incluez aucune donnée réelle de patient.</strong> Les brouillons sont enregistrés dans ce navigateur.
   </p>
+  <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Ce que signifie le statut de relecture</strong><p style="margin:.5rem 0 0">Les contrôles techniques portent sur le logiciel, la structure des données et les liens ; ils ne prouvent pas l’exactitude clinique. Une relecture clinique enregistrée concerne uniquement le périmètre et la version indiqués, pas un plan individuel. Les relectures absentes ou périmées ne comptent pas comme actuelles. Aucune validation clinique formelle n’est revendiquée. Un oncologue qualifié doit vérifier chaque brouillon.</p></aside>
+  <p data-data-flow="local">Plan Builder télécharge les ressources publiques du moteur et de la base de connaissances et évalue les règles cliniques dans votre navigateur. Les brouillons restent dans ce navigateur jusqu’à l’effacement du formulaire ou des données du site. Les fichiers exportés restent sur votre appareil. Le chargement du site et des ressources publiques nécessite des requêtes réseau. Utilisez des cas synthétiques.</p>
 
   <!-- Top status banner stays for loading/warnings. Success messages live in
        the lower status area so examples do not push the questionnaire down. -->
@@ -403,7 +406,7 @@
 <div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
   <div class="init-card">
     <h3>Démarrage du moteur OpenOnco</h3>
-    <p class="init-lead">Le premier lancement prend ~10–20 secondes — le moteur se charge directement dans votre navigateur. Les données du patient ne quittent jamais votre appareil.</p>
+    <p class="init-lead">Plan Builder télécharge les ressources publiques du moteur et de la base de connaissances et évalue les règles cliniques dans votre navigateur. Les brouillons restent dans ce navigateur jusqu’à l’effacement du formulaire ou des données du site. Les fichiers exportés restent sur votre appareil. Le chargement du site et des ressources publiques nécessite des requêtes réseau. Utilisez des cas synthétiques.</p>
     <ol class="init-stages" id="initStages">
       <li data-stage="pyodide" class="stage pending">Chargement du temps d'exécution dans le navigateur (~6 Mo)</li>
       <li data-stage="pydeps" class="stage pending">Mise en place de l'environnement</li>

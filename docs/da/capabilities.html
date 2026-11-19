@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Muligheder</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -361,6 +362,7 @@
       <p>Klinisk indhold er oplysningsmæssigt; teknisk kontrol er ikke godkendelse af behandling.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Hvad gennemgangsstatus betyder</strong><p style="margin:.5rem 0 0">Tekniske kontroller omfatter software, datastruktur og kildelinks; de dokumenterer ikke klinisk korrekthed. En registreret klinisk gennemgang gælder kun det angivne omfang og den angivne version, ikke en individuel behandlingsplan. Manglende eller forældede gennemgange tæller ikke som aktuelle. Der hævdes ingen formel klinisk validering. En kvalificeret onkolog skal kontrollere hvert udkast.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Afdelinger">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Oversigt</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Motor</button>
@@ -375,13 +377,14 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — rørledning: JSON profil → motor → Plan med to spor">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · motor i to ord</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           En JSON profil → <em>to behandlingsplaner</em>, alle de nævnte påstande.
         </h2>
         <p class="pipeline-sub">
-          No LLM in the clinical decision. No server. Patient JSON stays on the machine. Per-profile processing: 50-200 ms.
+          <span>Plan Builder vurderer kliniske regler i din browser. Tumor Board sender den indtastede tekst til en server og kan bruge en konfigureret modeludbyder. Brug syntetiske tilfælde uden identificerende oplysninger; individuelle behandlingsbeslutninger kræver en kvalificeret kliniker.</span><br>
+          Per-profile processing: 50-200 ms.
         </p>
 
         <div class="pipeline-grid">
@@ -465,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacy by design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. No server. Patient JSON never leaves the machine.</div>
+          <div class="pillar-text">Plan Builder vurderer kliniske regler i din browser. Tumor Board sender den indtastede tekst til en server og kan bruge en konfigureret modeludbyder. Brug syntetiske tilfælde uden identificerende oplysninger; individuelle behandlingsbeslutninger kræver en kvalificeret kliniker.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Planen forbliver i live</div>
@@ -698,7 +701,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Privatliv.</strong> Patient JSON never leaves the user's machine. No logs, no DB. Reproducibility:
+        <strong>Lokal regelvurdering</strong><p>Plan Builder henter offentlige motor- og vidensbaseressourcer og vurderer kliniske regler i din browser. Udkast gemmes i denne browser, indtil du rydder formularen eller webstedets data. Eksporterede filer bliver på enheden. Indlæsning af webstedet og offentlige ressourcer kræver netværksanmodninger. Brug syntetiske tilfælde.</p>
+        <strong>Behandling hos server og udbyder</strong><p>Tumor Board sender den indtastede tekst til den konfigurerede API-server og kan bruge en modeludbyder. Kontrollér hosting- og udbyderpolitikkerne; send ikke oplysninger, der identificerer patienter. Opbevaring og sletning afhænger af hosting- og modeludbyderen; denne side fastlægger ikke deres politikker. Rydning af formularen sletter ikke allerede indsendt tekst. Brug syntetiske tilfælde.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> registrerer KB version → samme input + samme KB = samme output.
       </div>
     </section>
@@ -785,7 +790,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>To-reviewer fusion</h3>
+            <h3>Hvad gennemgangsstatus betyder</h3>
             <p>Solo-projektet. En vedligeholder leverer opdateringer med automatiske kontroller og kildesporbarhed. Ekstern klinisk gennemgang er valgfri og registreres separat.</p>
           </div>
           <div class="gap-card gap-hard">
