@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Capacidades</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -361,6 +362,7 @@
       <p>O conteúdo clínico é informativo; as verificações técnicas não constituem uma aprovação do tratamento.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>O que significa o estado de revisão</strong><p style="margin:.5rem 0 0">As verificações técnicas abrangem software, estrutura de dados e ligações; não demonstram precisão clínica. Uma revisão clínica registada aplica-se apenas ao âmbito e à versão indicados, não a um plano individual. Revisões ausentes ou desatualizadas não contam como atuais. Não se afirma validação clínica formal. Cada rascunho deve ser verificado por um oncologista qualificado.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Secções">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Visão geral</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Motor</button>
@@ -375,13 +377,14 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: perfil JSON → motor → Plano com duas faixas">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">Motor OpenOnco · em duas palavras</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Um perfil JSON → <em>dois planos de tratamento</em>, todas as alegações citadas.
         </h2>
         <p class="pipeline-sub">
-          No LLM in the clinical decision. No server. Patient JSON stays on the machine. Per-profile processing: 50-200 ms.
+          <span>Plan Builder avalia as regras clínicas no seu navegador. Tumor Board envia o texto introduzido para um servidor e pode utilizar um fornecedor de modelos configurado. Utilize casos sintéticos sem dados identificativos; as decisões de cuidados individuais exigem um profissional clínico qualificado.</span><br>
+          Per-profile processing: 50-200 ms.
         </p>
 
         <div class="pipeline-grid">
@@ -465,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacidade por design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. No server. Patient JSON never leaves the machine.</div>
+          <div class="pillar-text">Plan Builder avalia as regras clínicas no seu navegador. Tumor Board envia o texto introduzido para um servidor e pode utilizar um fornecedor de modelos configurado. Utilize casos sintéticos sem dados identificativos; as decisões de cuidados individuais exigem um profissional clínico qualificado.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>O plano mantém-se vivo</div>
@@ -698,7 +701,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Privacidade.</strong> Patient JSON never leaves the user's machine. No logs, no DB. Reproducibility:
+        <strong>Avaliação local das regras</strong><p>Plan Builder descarrega recursos públicos do motor e da base de conhecimentos e avalia as regras clínicas no navegador. Os rascunhos ficam neste navegador até limpar o formulário ou os dados do site. Os ficheiros exportados permanecem no dispositivo. Carregar o site e os recursos públicos requer pedidos de rede. Utilize casos sintéticos.</p>
+        <strong>Processamento pelo servidor e fornecedor</strong><p>Tumor Board envia o texto introduzido para o servidor API configurado e pode usar um fornecedor de modelos. Consulte as políticas do alojamento e do fornecedor; não envie dados que identifiquem pacientes. A conservação e eliminação dependem do alojamento e do fornecedor do modelo; esta página não estabelece essas políticas. Limpar o formulário não elimina o texto já enviado. Utilize casos sintéticos.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> grava a versão KB → mesma entrada + mesma KB = mesma saída.
       </div>
     </section>
@@ -785,7 +790,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>- Dois revisores fundem-se.</h3>
+            <h3>O que significa o estado de revisão</h3>
             <p>Projeto individual. Uma pessoa responsável publica as atualizações com verificações automáticas e rastreabilidade das fontes. A revisão clínica externa é opcional e registada separadamente.</p>
           </div>
           <div class="gap-card gap-hard">

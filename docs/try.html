@@ -182,6 +182,8 @@
   <p class="lead">
     Build a cited treatment-plan draft from a virtual patient profile. The in-browser engine shows which diagnosis, staging, biomarker and safety fields change the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.
   </p>
+  <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>What review status means</strong><p style="margin:.5rem 0 0">Technical checks cover software, data structure and source links; they do not establish clinical accuracy. A recorded clinical-content review applies only to its stated scope and revision, not to an individual treatment plan. Missing or outdated reviews do not count as current review. No formal clinical validation is claimed. Every draft requires verification by a qualified oncologist.</p></aside>
+  <p data-data-flow="local">Plan Builder downloads public engine and knowledge-base assets and evaluates clinical rules in your browser. Drafts persist in this browser until you clear the form or site data. Downloaded exports remain on your device. Loading the site and its public assets still makes network requests. Use synthetic cases.</p>
 
   <!-- Top status banner stays for loading/warnings. Success messages live in
        the lower status area so examples do not push the questionnaire down. -->
@@ -420,7 +422,7 @@
 <div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
   <div class="init-card">
     <h3>Starting the OpenOnco engine</h3>
-    <p class="init-lead">The first launch takes ~10–20 seconds — the engine loads directly into your browser. Patient data never leaves your device.</p>
+    <p class="init-lead">Plan Builder downloads public engine and knowledge-base assets and evaluates clinical rules in your browser. Drafts persist in this browser until you clear the form or site data. Downloaded exports remain on your device. Loading the site and its public assets still makes network requests. Use synthetic cases.</p>
     <ol class="init-stages" id="initStages">
       <li data-stage="pyodide" class="stage pending">Loading the in-browser runtime (~6 MB)</li>
       <li data-stage="pydeps" class="stage pending">Setting up the environment</li>

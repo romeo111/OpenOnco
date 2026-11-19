@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Fähigkeiten</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -361,6 +362,7 @@
       <p>Klinische Inhalte dienen der Information; technische Prüfungen sind keine Freigabe einer Behandlung.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Was der Prüfstatus bedeutet</strong><p style="margin:.5rem 0 0">Technische Prüfungen betreffen Software, Datenstruktur und Quellenlinks; sie belegen keine klinische Richtigkeit. Eine dokumentierte klinische Inhaltsprüfung gilt nur für den angegebenen Umfang und die Version, nicht für einen individuellen Behandlungsplan. Fehlende oder veraltete Prüfungen gelten nicht als aktuell. Eine formale klinische Validierung wird nicht beansprucht. Jeder Entwurf muss von einem qualifizierten Onkologen geprüft werden.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Abschnitt">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Überblick</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Motor</button>
@@ -375,13 +377,14 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — Pipeline: JSON-Profil → Motor → Planen Sie mit zwei Gleisen">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · Motor in zwei Worten</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Ein JSON-Profil → <em>zwei Behandlungspläne</em>, jeder zitierte Anspruch.
         </h2>
         <p class="pipeline-sub">
-          Kein LLM in der klinischen Entscheidung. Kein Server. Patient JSON bleibt auf der Maschine. Per-Profil-Verarbeitung: 50-200 ms.
+          <span>Plan Builder wertet klinische Regeln in Ihrem Browser aus. Tumor Board sendet eingegebenen Text an einen Server und kann einen konfigurierten Modellanbieter nutzen. Verwenden Sie synthetische Fälle ohne identifizierende Angaben; individuelle Behandlungsentscheidungen erfordern qualifiziertes medizinisches Fachpersonal.</span><br>
+          Per-profile processing: 50-200 ms.
         </p>
 
         <div class="pipeline-grid">
@@ -465,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privatsphäre nach Gestaltung</div>
-          <div class="pillar-text">CLI / Pyodide / Python Import. Kein Server. Patient JSON verlässt nie die Maschine.</div>
+          <div class="pillar-text">Plan Builder wertet klinische Regeln in Ihrem Browser aus. Tumor Board sendet eingegebenen Text an einen Server und kann einen konfigurierten Modellanbieter nutzen. Verwenden Sie synthetische Fälle ohne identifizierende Angaben; individuelle Behandlungsentscheidungen erfordern qualifiziertes medizinisches Fachpersonal.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Plan bleibt am Leben</div>
@@ -698,7 +701,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Privatsphäre.</strong> Patient JSON verlässt nie die Maschine des Benutzers. Keine Protokolle, keine DB. Reproduzierbarkeit:
+        <strong>Lokale Regelauswertung</strong><p>Plan Builder lädt öffentliche Engine- und Wissensdaten und wertet klinische Regeln in Ihrem Browser aus. Entwürfe bleiben in diesem Browser, bis Sie das Formular oder die Websitedaten löschen. Exportierte Dateien bleiben auf Ihrem Gerät. Das Laden der Website und öffentlicher Ressourcen erfordert Netzwerkzugriffe. Verwenden Sie synthetische Fälle.</p>
+        <strong>Server- und Anbieter-Verarbeitung</strong><p>Tumor Board sendet eingegebenen Text an den konfigurierten API-Server und kann einen Modellanbieter nutzen. Prüfen Sie die Richtlinien von Hosting und Anbieter; übermitteln Sie keine identifizierenden Patientendaten. Aufbewahrung und Löschung hängen vom Hosting- und Modellanbieter ab; diese Seite legt deren Richtlinien nicht fest. Das Leeren des Formulars löscht bereits übermittelte Texte nicht. Verwenden Sie synthetische Fälle.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> zeichnet die KB-Version → gleiche Eingabe + gleiche KB = gleiche Ausgabe auf.
       </div>
     </section>
@@ -785,7 +790,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Zwei-Reviewer-Zusammenführung</h3>
+            <h3>Was der Prüfstatus bedeutet</h3>
             <p>Einzelprojekt. Eine verantwortliche Person veröffentlicht Aktualisierungen mit automatisierten Prüfungen und nachvollziehbaren Quellen. Externe klinische Prüfungen sind optional und werden gesondert dokumentiert.</p>
           </div>
           <div class="gap-card gap-hard">

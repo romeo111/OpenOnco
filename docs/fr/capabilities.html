@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Opportunités d'OpenOnco</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -361,6 +362,7 @@
       <p>Le contenu clinique est informatif ; les contrôles techniques ne constituent pas une approbation du traitement.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Ce que signifie le statut de relecture</strong><p style="margin:.5rem 0 0">Les contrôles techniques portent sur le logiciel, la structure des données et les liens ; ils ne prouvent pas l’exactitude clinique. Une relecture clinique enregistrée concerne uniquement le périmètre et la version indiqués, pas un plan individuel. Les relectures absentes ou périmées ne comptent pas comme actuelles. Aucune validation clinique formelle n’est revendiquée. Un oncologue qualifié doit vérifier chaque brouillon.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Chapitres">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Aperçu général</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Moteur</button>
@@ -375,13 +377,14 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: profil JSON → moteur → Plan avec deux pistes">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · moteur en deux mots</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Un profil JSON → <em>deux plans de traitement</em>, toutes les revendications citées.
         </h2>
         <p class="pipeline-sub">
-          Pas de LLM dans la décision clinique. Pas de serveur. Patient JSON reste sur la machine. Traitement par profil: 50-200 ms.
+          <span>Plan Builder évalue les règles cliniques dans votre navigateur. Tumor Board envoie le texte saisi à un serveur et peut utiliser un fournisseur de modèles configuré. Utilisez des cas synthétiques sans données identifiantes ; les décisions de soins individuelles nécessitent un professionnel clinique qualifié.</span><br>
+          Per-profile processing: 50-200 ms.
         </p>
 
         <div class="pipeline-grid">
@@ -465,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Protection des renseignements personnels par conception</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. Pas de serveur. Patient JSON ne quitte jamais la machine.</div>
+          <div class="pillar-text">Plan Builder évalue les règles cliniques dans votre navigateur. Tumor Board envoie le texte saisi à un serveur et peut utiliser un fournisseur de modèles configuré. Utilisez des cas synthétiques sans données identifiantes ; les décisions de soins individuelles nécessitent un professionnel clinique qualifié.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Le plan reste en vie</div>
@@ -698,7 +701,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Intimité.</strong> Le patient JSON ne quitte jamais la machine de l'utilisateur. Pas de registres, pas de DB. Reproductibilité:
+        <strong>Évaluation locale des règles</strong><p>Plan Builder télécharge les ressources publiques du moteur et de la base de connaissances et évalue les règles cliniques dans votre navigateur. Les brouillons restent dans ce navigateur jusqu’à l’effacement du formulaire ou des données du site. Les fichiers exportés restent sur votre appareil. Le chargement du site et des ressources publiques nécessite des requêtes réseau. Utilisez des cas synthétiques.</p>
+        <strong>Traitement par le serveur et le fournisseur</strong><p>Tumor Board envoie le texte saisi au serveur API configuré et peut utiliser un fournisseur de modèles. Consultez les politiques de l’hébergement et du fournisseur ; n’envoyez pas de données permettant d’identifier un patient. La conservation et la suppression dépendent de l’hébergeur et du fournisseur du modèle ; cette page ne définit pas leurs politiques. Effacer le formulaire ne supprime pas le texte déjà transmis. Utilisez des cas synthétiques.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> enregistre la version KB → même entrée + même KB = même sortie.
       </div>
     </section>
@@ -785,7 +790,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Deux-réviseurs fusion</h3>
+            <h3>Ce que signifie le statut de relecture</h3>
             <p>Projet individuel. Une personne responsable publie les mises à jour avec des contrôles automatisés et des sources traçables. La relecture clinique externe est facultative et consignée séparément.</p>
           </div>
           <div class="gap-card gap-hard">

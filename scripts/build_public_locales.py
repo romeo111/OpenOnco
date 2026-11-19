@@ -43,6 +43,9 @@ class PublicHTML(LocalizedHTML):
 
 
 def localize_public_page(source, locale, page, available, catalog):
+    from scripts.public_trust_copy import messages_for as trust_messages
+    from scripts.privacy_copy import messages_for as privacy_messages
+    catalog = {**catalog, **trust_messages(locale), **privacy_messages(locale)}
     source = re.sub(r'<!-- openonco-seo:start -->.*?<!-- openonco-seo:end -->', '', source, flags=re.S)
     source = re.sub(r'<!-- openonco-geo-lang:start -->.*?<!-- openonco-geo-lang:end -->', '', source, flags=re.S)
     source = re.sub(r'<header class="top-bar site-header">.*?</header>', '', source, flags=re.S)

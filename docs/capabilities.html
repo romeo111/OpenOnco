@@ -362,6 +362,7 @@
       <p>Clinical content is informational; technical checks are not treatment approval.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>What review status means</strong><p style="margin:.5rem 0 0">Technical checks cover software, data structure and source links; they do not establish clinical accuracy. A recorded clinical-content review applies only to its stated scope and revision, not to an individual treatment plan. Missing or outdated reviews do not count as current review. No formal clinical validation is claimed. Every draft requires verification by a qualified oncologist.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Sections">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Overview</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Engine</button>
@@ -376,13 +377,13 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON profile → engine → Plan with two tracks">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine in two words</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           One JSON profile → <em>two treatment plans</em>, every claim cited.
         </h2>
         <p class="pipeline-sub">
-          No LLM in the clinical decision. No server. Patient JSON stays on the machine.
+          <span>Plan Builder evaluates clinical rules in your browser. Tumor Board sends submitted text to a server and may use a configured model provider. Use synthetic cases without identifying details; individual care decisions require a qualified clinician.</span><br>
           Per-profile processing: 50-200&nbsp;ms.
         </p>
 
@@ -467,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacy by design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. No server. Patient JSON never leaves the machine.</div>
+          <div class="pillar-text">Plan Builder evaluates clinical rules in your browser. Tumor Board sends submitted text to a server and may use a configured model provider. Use synthetic cases without identifying details; individual care decisions require a qualified clinician.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Plan stays alive</div>
@@ -717,8 +718,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Privacy.</strong> Patient JSON never leaves the user's machine.
-        No logs, no DB. Reproducibility:
+        <strong>Local rule evaluation</strong><p>Plan Builder downloads public engine and knowledge-base assets and evaluates clinical rules in your browser. Drafts persist in this browser until you clear the form or site data. Downloaded exports remain on your device. Loading the site and its public assets still makes network requests. Use synthetic cases.</p>
+        <strong>Server and provider processing</strong><p>Tumor Board sends submitted text to the configured API server and may use a model provider. Check hosting and provider policies; do not submit identifying patient information. Retention and deletion depend on the hosting and model provider; this page does not establish their policies. Clearing the form does not delete text already submitted to them. Use synthetic cases.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> records the KB version →
         same input + same KB = same output.
       </div>
@@ -810,7 +812,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Two-reviewer merge</h3>
+            <h3>What review status means</h3>
             <p>Solo project. One maintainer delivers updates with automated checks and source traceability. External clinical review is optional and is recorded separately.</p>
           </div>
           <div class="gap-card gap-hard">

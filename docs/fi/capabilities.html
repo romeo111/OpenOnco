@@ -80,6 +80,7 @@
 <!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Kykyt</title>
+
 <!-- openonco-seo:start -->
 <meta name="description" content="OpenOnco capabilities, coverage, limitations, and source-grounded oncology decision-support scope.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -361,6 +362,7 @@
       <p>Kliininen sisältö on informaation lähde; tekniset tarkastukset eivät ole hoidon hyväksyntää.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Mitä arviointitila tarkoittaa</strong><p style="margin:.5rem 0 0">Tekniset tarkistukset koskevat ohjelmistoa, tietorakennetta ja lähdelinkkejä; ne eivät osoita kliinistä oikeellisuutta. Kirjattu kliinisen sisällön arviointi koskee vain ilmoitettua laajuutta ja versiota, ei yksilöllistä hoitosuunnitelmaa. Puuttuvia tai vanhentuneita arviointeja ei lasketa ajantasaisiksi. Muodollista kliinistä validointia ei väitetä tehdyksi. Pätevän onkologin on tarkistettava jokainen luonnos.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Pääluokat">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Yleiskatsaus</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Moottori</button>
@@ -375,13 +377,14 @@
       <div class="pipeline" role="img" aria-label="OpenOnco – putki: JSON-profiili → moottori → Suunnittele kaksi kappaletta">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · moottori kahdella sanalla</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Yksi JSON-profiili → <em>kaksi hoitosuunnitelmaa</em>Jokainen väite on mainittu.
         </h2>
         <p class="pipeline-sub">
-          Ei LLM:tä kliinisessä päätöksessä, ei palvelinta. Potilas JSON pysyy koneessa. Profiileittainen käsittely: 50-200 ms.
+          <span>Plan Builder arvioi kliiniset säännöt selaimessasi. Tumor Board lähettää syötetyn tekstin palvelimelle ja voi käyttää määritettyä mallipalveluntarjoajaa. Käytä synteettisiä tapauksia ilman tunnistetietoja; yksilölliset hoitopäätökset edellyttävät pätevää terveydenhuollon ammattilaista.</span><br>
+          Per-profile processing: 50-200 ms.
         </p>
 
         <div class="pipeline-grid">
@@ -465,7 +468,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Yksityisyys suunnittelun mukaan</div>
-          <div class="pillar-text">CLI / Python / Pythonin tuonti. Ei palvelinta. Potilas JSON ei koskaan poistu koneesta.</div>
+          <div class="pillar-text">Plan Builder arvioi kliiniset säännöt selaimessasi. Tumor Board lähettää syötetyn tekstin palvelimelle ja voi käyttää määritettyä mallipalveluntarjoajaa. Käytä synteettisiä tapauksia ilman tunnistetietoja; yksilölliset hoitopäätökset edellyttävät pätevää terveydenhuollon ammattilaista.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Suunnitelma pysyy elossa</div>
@@ -698,7 +701,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Yksityisyys.</strong> Patient JSON never leaves the user's machine. No logs, no DB. Reproducibility:
+        <strong>Paikallinen sääntöjen arviointi</strong><p>Plan Builder lataa julkiset moottorin ja tietopohjan resurssit ja arvioi kliiniset säännöt selaimessasi. Luonnokset säilyvät tässä selaimessa, kunnes tyhjennät lomakkeen tai sivuston tiedot. Viedyt tiedostot jäävät laitteellesi. Sivuston ja julkisten resurssien lataaminen edellyttää verkkopyyntöjä. Käytä synteettisiä tapauksia.</p>
+        <strong>Palvelimen ja palveluntarjoajan käsittely</strong><p>Tumor Board lähettää tekstin määritetylle API-palvelimelle ja voi käyttää mallipalveluntarjoajaa. Tarkista hosting- ja palveluntarjoajakäytännöt; älä lähetä potilaita yksilöiviä tietoja. Säilytys ja poistaminen riippuvat hosting- ja mallipalveluntarjoajasta; tämä sivu ei määritä niiden käytäntöjä. Lomakkeen tyhjentäminen ei poista jo lähetettyä tekstiä. Käytä synteettisiä tapauksia.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> tallentaa KB-version → sama syöttö + sama KB = sama ulostulo.
       </div>
     </section>
@@ -785,7 +790,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Kaksiarvioijan yhdistäminen</h3>
+            <h3>Mitä arviointitila tarkoittaa</h3>
             <p>Yksi ylläpitäjistä toimittaa päivityksiä automaattisella tarkastuksella ja lähteen jäljityksellä. Ulkoinen kliininen arviointi on valinnainen ja se kirjataan erikseen.</p>
           </div>
           <div class="gap-card gap-hard">

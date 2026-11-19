@@ -363,6 +363,7 @@
       <p>Клінічний зміст має інформаційний характер; технічні перевірки не є схваленням лікування.</p>
     </div>
 
+    <aside class="public-review-notice" data-review-status="informational" style="margin:1rem 0;padding:1rem;border-left:3px solid #64748b;background:#f8fafc;color:#25364a;font-size:1rem;line-height:1.6"><strong>Що означає статус перевірки</strong><p style="margin:.5rem 0 0">Технічні перевірки охоплюють програму, структуру даних і посилання на джерела; вони не доводять клінічну правильність. Записана клінічна рецензія стосується лише зазначеного змісту й версії, а не індивідуального плану лікування. Відсутні або застарілі рецензії не означають актуальної перевірки. Формальна клінічна валідація не заявляється. Кожну чернетку має перевірити кваліфікований онколог.</p></aside>
     <nav class="cap-tabs" role="tablist" aria-label="Розділи">
       <button class="cap-tab is-active" role="tab" data-tab="overview" aria-selected="true"><span class="cap-tab-num">01</span>Огляд</button>
       <button class="cap-tab" role="tab" data-tab="engine" aria-selected="false"><span class="cap-tab-num">02</span>Engine</button>
@@ -377,13 +378,13 @@
       <div class="pipeline" role="img" aria-label="OpenOnco — pipeline: JSON-профіль → engine → Plan з двома треками">
         <div class="pipeline-head">
           <span class="pipeline-eyebrow">OpenOnco · engine у двох словах</span>
-          <span class="pipeline-version">v0.1.4 · 2026-11-18 16:34 UTC</span>
+          <span class="pipeline-version">v0.1.4 · 2026-11-19 09:19 UTC</span>
         </div>
         <h2 class="pipeline-title">
           Один JSON-профіль → <em>два плани лікування</em> з citation під кожною claim.
         </h2>
         <p class="pipeline-sub">
-          Без LLM у клінічному рішенні. Без серверу. Patient JSON залишається на машині.
+          <span>Конструктор плану оцінює клінічні правила у браузері. Туморборд надсилає введений текст серверу й може використовувати налаштованого постачальника моделі. Використовуйте синтетичні випадки без ідентифікаційних даних; індивідуальні рішення щодо лікування потребують кваліфікованого лікаря.</span><br>
           Час обробки одного профілю — 50-200&nbsp;мс.
         </p>
 
@@ -468,7 +469,7 @@
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">03</span>Privacy by design</div>
-          <div class="pillar-text">CLI / Pyodide / Python import. Серверу немає. Patient JSON не покидає машину.</div>
+          <div class="pillar-text">Конструктор плану оцінює клінічні правила у браузері. Туморборд надсилає введений текст серверу й може використовувати налаштованого постачальника моделі. Використовуйте синтетичні випадки без ідентифікаційних даних; індивідуальні рішення щодо лікування потребують кваліфікованого лікаря.</div>
         </div>
         <div class="pillar">
           <div class="pillar-title"><span class="pillar-ic">04</span>Plan живе</div>
@@ -716,8 +717,9 @@
       </div>
 
       <div class="callout callout-good">
-        <strong>Privacy.</strong> Patient JSON ніколи не залишає машину користувача.
-        Немає логів, немає БД. Reproducibility:
+        <strong>Локальна оцінка правил</strong><p>Конструктор плану завантажує публічні ресурси рушія та бази знань і оцінює клінічні правила у браузері. Чернетки зберігаються в цьому браузері до очищення форми або даних сайту. Завантажені експорти залишаються на пристрої. Завантаження сайту й публічних ресурсів усе одно потребує мережевих запитів. Використовуйте синтетичні випадки.</p>
+        <strong>Обробка сервером і постачальником</strong><p>Туморборд надсилає введений текст налаштованому API-серверу й може використовувати постачальника моделі. Перевірте політики хостингу та постачальника; не надсилайте дані, що ідентифікують пацієнта. Зберігання й видалення залежать від хостингу та постачальника моделі; ця сторінка не встановлює їхніх політик. Очищення форми не видаляє вже надісланий їм текст. Використовуйте синтетичні випадки.</p>
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> фіксує версію KB →
         same input + same KB = same output.
       </div>
@@ -808,7 +810,7 @@
           </div>
           <div class="gap-card gap-hard">
             <div class="gap-tag">§6.1</div>
-            <h3>Two-reviewer merge</h3>
+            <h3>Що означає статус перевірки</h3>
             <p>Солопроєкт. Один власник доставляє оновлення з автоматичними перевірками та простежуваними джерелами. Зовнішній клінічний перегляд є додатковим і записується окремо.</p>
           </div>
           <div class="gap-card gap-hard">
