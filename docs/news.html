@@ -2,121 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- openonco-geo-lang:start -->
-<script>
-(function(){
-  try{
-    if(window.top!==window.self) return;              // never redirect an embedded preview (try.html result frame)
-    var UARE=/^\/ukr(\/|$)/;
-    // Remember an explicit language choice so IP detection never overrides it.
-    document.addEventListener('click',function(e){
-      var a=e.target&&e.target.closest&&e.target.closest('.lang-switch a, a.lang-other, a.lang-current');
-      if(!a)return;
-      var href=a.getAttribute('href')||'';
-      var selected=a.getAttribute('hreflang')||(UARE.test(href)?'uk':'en');
-      try{localStorage.setItem('oo_lang',selected);}catch(_){}
-    },true);
-    var ua=navigator.userAgent||'';
-    // Bots: leave both language trees crawlable — no auto-redirect.
-    if(/bot|crawl|spider|slurp|mediapartners|bingpreview|facebookexternalhit|embedly|quora|pinterest|slack|twitter|whatsapp|telegram|discord|yandex|baidu|duckduck|applebot|petalbot|semrush|ahrefs/i.test(ua))return;
-    var path=location.pathname||'/';
-    if(/^\/(es|pt|de|fr|it|da|sv|nb|fi)(\/|$)/.test(path))return;    // explicit translated URLs always win
-    if(/^\/en(\/|$)/.test(path))return;               // legacy /en/ redirect stubs run their own redirect to root
-    var pageLang=UARE.test(path)?'uk':'en';
-    // Track first real interaction so a slow async lookup never discards typed
-    // input (e.g. the /try.html plan form) by navigating out from under the user.
-    var touched=false,mark=function(){touched=true;};
-    ['keydown','pointerdown','input','touchstart'].forEach(function(ev){
-      try{window.addEventListener(ev,mark,{once:true,passive:true,capture:true});}catch(_){try{window.addEventListener(ev,mark,true);}catch(__){}}
-    });
-    function mirror(){
-      var p=UARE.test(path)?(path.replace(/^\/ukr/,'')||'/'):('/ukr'+(path==='/'?'/':path));
-      return p+(location.search||'')+(location.hash||'');
-    }
-    function go(lang){
-      if(lang===pageLang)return;
-      var alternate=document.querySelector('link[rel="alternate"][hreflang="'+lang+'"]');
-      if(!alternate)return;                         // never guess a missing translated page
-      var target=alternate.href+(location.search||'')+(location.hash||'');
-      var key='oo_lr:'+path+'>'+target;                // one hop per session guards against mirror-mapping loops
-      try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');}catch(_){}
-      location.replace(target);
-    }
-    function want(cc){return cc==='UA'?'uk':'en';}
-    // 1) explicit choice wins
-    var pref=null;try{pref=localStorage.getItem('oo_lang');}catch(_){}
-    if(/^(es|pt|de|fr|it|da|sv|nb|fi)$/.test(pref||''))return;
-    if(pref==='uk'||pref==='en'){go(pref);return;}
-    // 2) cached IP-country (7 days) → decide synchronously, no flash on repeat visits
-    var cc=null;
-    try{var raw=localStorage.getItem('oo_geo');if(raw){var o=JSON.parse(raw);if(o&&o.cc&&o.t&&(Date.now()-o.t)<6048e5)cc=o.cc;}}catch(_){}
-    if(cc){go(want(cc));return;}
-    // 3) look up country by IP. Third-party surface kept minimal for a medical
-    //    site: GeoJS first (keyless, CORS, states no logging), ipapi.co as the
-    //    only fallback; both HTTPS + no-referrer. Any failure stays English.
-    var eps=[
-      ['https://get.geojs.io/v1/ip/country.json',function(j){return j&&j.country;}],
-      ['https://ipapi.co/json/',function(j){return j&&(j.country_code||j.country);}]
-    ];
-    (function tryEp(i){
-      if(i>=eps.length)return;                          // all endpoints failed → English default
-      var ctl=('AbortController'in window)?new AbortController():null;
-      var to=ctl?setTimeout(function(){ctl.abort();},1500):null;
-      fetch(eps[i][0],{signal:ctl?ctl.signal:undefined,referrerPolicy:'no-referrer'})
-        .then(function(r){return r.ok?r.json():Promise.reject();})
-        .then(function(j){
-          if(to)clearTimeout(to);
-          var code=((eps[i][1](j))||'').toString().toUpperCase();
-          if(/^[A-Z]{2}$/.test(code)){
-            try{localStorage.setItem('oo_geo',JSON.stringify({cc:code,t:Date.now()}));}catch(_){}
-            if(!touched)go(want(code));                 // don't yank a visitor who has started interacting
-          }else{tryEp(i+1);}
-        })
-        .catch(function(){if(to)clearTimeout(to);tryEp(i+1);});
-    })(0);
-  }catch(_){}
-})();
-</script>
-<!-- openonco-geo-lang:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · News</title>
-<!-- openonco-seo:start -->
-<meta name="description" content="Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible.">
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="ai-summary" content="Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible.">
-<meta name="ai-content-declaration" content="Public OpenOnco documentation, source-grounded oncology knowledge-base pages, and synthetic examples only; no real patient data; not a substitute for clinician judgment.">
-<link rel="canonical" href="https://openonco.info/news.html">
-<link rel="alternate" hreflang="en" href="https://openonco.info/news.html">
-<link rel="alternate" hreflang="uk" href="https://openonco.info/ukr/news.html">
-<link rel="alternate" hreflang="es" href="https://openonco.info/es/news.html">
-<link rel="alternate" hreflang="pt" href="https://openonco.info/pt/news.html">
-<link rel="alternate" hreflang="de" href="https://openonco.info/de/news.html">
-<link rel="alternate" hreflang="fr" href="https://openonco.info/fr/news.html">
-<link rel="alternate" hreflang="it" href="https://openonco.info/it/news.html">
-<link rel="alternate" hreflang="da" href="https://openonco.info/da/news.html">
-<link rel="alternate" hreflang="sv" href="https://openonco.info/sv/news.html">
-<link rel="alternate" hreflang="nb" href="https://openonco.info/nb/news.html">
-<link rel="alternate" hreflang="fi" href="https://openonco.info/fi/news.html">
-<link rel="alternate" hreflang="x-default" href="https://openonco.info/news.html">
-<meta property="og:site_name" content="OpenOnco">
-<meta property="og:type" content="website">
-<meta property="og:title" content="OpenOnco · News">
-<meta property="og:description" content="Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible.">
-<meta property="og:url" content="https://openonco.info/news.html">
-<meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OpenOnco · News">
-<meta name="twitter:description" content="Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"OpenOnco · News","description":"Recent OpenOnco project updates and source-cited oncology explainers, with evidence and limitations visible.","url":"https://openonco.info/news.html","inLanguage":"en-US","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpenOnco","url":"https://openonco.info","logo":"https://openonco.info/logo.svg","sameAs":["https://github.com/romeo111/OpenOnco"]},"license":"https://creativecommons.org/licenses/by/4.0/","isPartOf":{"@type":"WebSite","name":"OpenOnco","url":"https://openonco.info/","sameAs":["https://github.com/romeo111/OpenOnco"]},"keywords":["oncology clinical decision support","open source cancer treatment knowledge base","tumor board decision support","rules-first clinical decision support","source-cited oncology guidelines engine","NCCN ESMO guideline cross-check","CIViC biomarker actionability","MCP server for clinical decision support"],"about":["oncology decision support","source-grounded medical knowledge base","synthetic oncology examples","clinical AI retrieval"],"audience":[{"@type":"MedicalAudience","audienceType":"Clinicians"},{"@type":"Audience","audienceType":"Patients"},{"@type":"Audience","audienceType":"Laboratories"},{"@type":"Audience","audienceType":"Investors"}],"potentialAction":{"@type":"ReadAction","target":"https://openonco.info/news.html"}}</script>
-<!-- openonco-seo:end -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="/style.css?v=layout-20261011" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>
 <body>
 <header class="top-bar site-header">
@@ -175,8 +68,20 @@
     <p class="home-kicker">OpenOnco / News</p>
     <h1>What changed. What it means.</h1>
     <p class="lead">Fresh project updates and source-cited explainers, written for people who want to see the evidence and the limits.</p>
-    <p class="news-count"><span>96</span> <span>posts</span> · <span>Every post has English and Ukrainian text; selected posts have nine more full translations.</span></p>
-      <a class="case-card news-card news-feature" href="/news/aiforia-italy-pathology-ai-contract.html">
+    <p class="news-count"><span>97</span> <span>posts</span> · <span>Every post has English and Ukrainian text; selected posts have nine more full translations.</span></p>
+      <a class="case-card news-card news-feature" href="/news/signatur-breast-funding-validation.html">
+        <div class="news-card-meta">
+          <span>Startup watch</span>
+          <time datetime="2026-11-27">November 27, 2026</time>
+          <span>Retrospective</span>
+        </div>
+        <h3>Signatur funds a local breast cancer assay; equivalence remains unproven</h3>
+        <p>A $5 million package, including a €2.2 million grant, will move Signatur Breast toward manufacturing. Its independent patient-cohort verification is still planned.</p>
+        <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
+      </a>
+    <section class="news-group" aria-labelledby="news-latest">
+      <div class="news-group-head"><h2 id="news-latest">Just shipped</h2></div>
+      <div class="news-grid">      <a class="case-card news-card" href="/news/aiforia-italy-pathology-ai-contract.html">
         <div class="news-card-meta">
           <span>Startup watch</span>
           <time datetime="2026-11-26">November 26, 2026</time>
@@ -185,10 +90,29 @@
         <h3>Aiforia signs an Italian pathology AI deal; deployment and outcomes lie ahead</h3>
         <p>The two-year agreement covers six diagnostic areas, but deployment is expected in spring 2027. The announcement reports no local accuracy or patient-outcome data.</p>
         <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
-      </a>
-    <section class="news-group" aria-labelledby="news-latest">
-      <div class="news-group-head"><h2 id="news-latest">Just shipped</h2></div>
-      <div class="news-grid">      <a class="case-card news-card" href="/news/spctr-margin-imaging-funding.html">
+      </a>      <a class="case-card news-card" href="/news/spctr-margin-imaging-funding.html">
+        <div class="news-card-meta">
+          <span>Startup watch</span>
+          <time datetime="2026-11-26">November 26, 2026</time>
+        </div>
+        <h3>SPCTR funds an operating-room margin check; proof of clinical benefit is still ahead</h3>
+        <p>The Dutch startup raised €2.8 million for SPCTRone and a multicentre study. Surgical-margin accuracy and fewer repeat operations are still unproven.</p>
+        <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
+      </a></div>
+    </section>
+    <section class="news-group" aria-labelledby="news-explainers">
+      <div class="news-group-head"><h2 id="news-explainers">Worth understanding</h2>
+        <p>Source-cited background, not treatment advice.</p></div>
+      <div class="news-grid">      <a class="case-card news-card" href="/news/aiforia-italy-pathology-ai-contract.html">
+        <div class="news-card-meta">
+          <span>Startup watch</span>
+          <time datetime="2026-11-26">November 26, 2026</time>
+          <span>Retrospective</span>
+        </div>
+        <h3>Aiforia signs an Italian pathology AI deal; deployment and outcomes lie ahead</h3>
+        <p>The two-year agreement covers six diagnostic areas, but deployment is expected in spring 2027. The announcement reports no local accuracy or patient-outcome data.</p>
+        <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
+      </a>      <a class="case-card news-card" href="/news/spctr-margin-imaging-funding.html">
         <div class="news-card-meta">
           <span>Startup watch</span>
           <time datetime="2026-11-26">November 26, 2026</time>
@@ -207,27 +131,10 @@
         <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
       </a></div>
     </section>
-    <section class="news-group" aria-labelledby="news-explainers">
-      <div class="news-group-head"><h2 id="news-explainers">Worth understanding</h2>
-        <p>Source-cited background, not treatment advice.</p></div>
-      <div class="news-grid">      <a class="case-card news-card" href="/news/spctr-margin-imaging-funding.html">
-        <div class="news-card-meta">
-          <span>Startup watch</span>
-          <time datetime="2026-11-26">November 26, 2026</time>
-        </div>
-        <h3>SPCTR funds an operating-room margin check; proof of clinical benefit is still ahead</h3>
-        <p>The Dutch startup raised €2.8 million for SPCTRone and a multicentre study. Surgical-margin accuracy and fewer repeat operations are still unproven.</p>
-        <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
-      </a>      <a class="case-card news-card" href="/news/lidera-giredestrant-early-breast-cancer.html">
-        <div class="news-card-meta">
-          <span>Explainer</span>
-          <time datetime="2026-11-25">November 25, 2026</time>
-          <span>Retrospective</span>
-        </div>
-        <h3>Giredestrant after surgery: fewer early breast cancer events, survival still unknown</h3>
-        <p>In 4,170 people, three-year invasive disease-free survival was 92.4% versus 89.6%; overall survival remains uncertain.</p>
-        <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
-      </a>      <a class="case-card news-card" href="/news/tagomics-liquipath-seed-extension.html">
+    <details class="news-archive">
+      <summary>Browse the archive <span>93</span></summary>
+      <p>Earlier releases and explainers, newest first</p>
+      <div class="news-archive-list">      <a class="case-card news-card" href="/news/tagomics-liquipath-seed-extension.html">
         <div class="news-card-meta">
           <span>Startup watch</span>
           <time datetime="2026-11-24">November 24, 2026</time>
@@ -236,12 +143,7 @@
         <h3>Tagomics funds blood-based drug safety platform; lung test is still in development</h3>
         <p>A $13 million (£10 million) seed extension will expand LiquiPath and a lung cancer detection programme. It is funding and early access, not proof of clinical benefit.</p>
         <span class="news-card-link">Read the story <span aria-hidden="true">↗</span></span>
-      </a></div>
-    </section>
-    <details class="news-archive">
-      <summary>Browse the archive <span>92</span></summary>
-      <p>Earlier releases and explainers, newest first</p>
-      <div class="news-archive-list">      <a class="case-card news-card" href="/news/plan-builder-printable-draft.html">
+      </a>      <a class="case-card news-card" href="/news/plan-builder-printable-draft.html">
         <div class="news-card-meta">
           <span>Project update</span>
           <time datetime="2026-11-23">November 23, 2026</time>
